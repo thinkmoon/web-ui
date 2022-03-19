@@ -1,1 +1,0 @@
-import{y as t,k as a,z as o}from"./entry-0d66ef59.mjs";var s=t((l,r)=>{let e=a();if(console.log("auth:",e.auth),!e.auth&&!0&&!localStorage.getItem("token"))return console.log("auth fail"),o("/login")});export{s as default};

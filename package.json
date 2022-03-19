@@ -1,5 +1,6 @@
 {
   "private": true,
+  "version": "0.1.0",
   "scripts": {
     "dev": "nuxi dev",
     "build": "nuxi build",
@@ -9,7 +10,7 @@
     "@types/lodash": "^4.14.176",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "nuxt3": "3.0.0-27439932.78761c2"
+    "nuxt3": "^3.0.0-27439932.78761c2"
   },
   "dependencies": {
     "@kangc/v-md-editor": "^2.3.14",
@@ -17,6 +18,7 @@
     "axios": "^0.26.0",
     "element-plus": "^2.0.4",
     "lodash": "^4.17.21",
+    "moment": "^2.29.1",
     "pinia": "^2.0.11"
   }
 }

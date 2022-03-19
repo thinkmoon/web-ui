@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 Disallow: /admin/
-Sitemap: https://www.thinkmoon.cn/sitemap.xml
+Sitemap: https://www.thinkmoon.cn/sitemap.txt

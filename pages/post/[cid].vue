@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <Title>{{ data.title }} - 指尖魔法屋-醉月思的博客</Title>
+    <Title>{{ data.title }} | {{ config.TITLE }}</Title>
     <div class="article-content">
       <v-md-preview :text="content"/>
     </div>
@@ -12,6 +12,7 @@ import axios from 'axios'
 import PostApi from '~/api/PostApi';
 import { useRoute } from 'vue-router';
 
+const config = useRuntimeConfig();
 const route = useRoute();
 const url = `https://www.thinkmoon.cn/post/${route.params.cid}`;
 
@@ -32,5 +33,10 @@ if(process.server) {
   width: 70%;
   margin: auto;
   background: #fff;
+}
+@media (max-width: 1024px) {
+  .article-content {
+    width: 100%;
+  }
 }
 </style>
