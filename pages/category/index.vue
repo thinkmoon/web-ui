@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <Title>分类 - {{ config.TITLE }}</Title>
+    <Title>分类 | {{ config.TITLE }}</Title>
     <el-tag type="info" v-for="category in data" :key="category.mid" class="category-list">
 			<el-link type="info" :href="`/category/${category.mid}/1`">{{category.name}}</el-link>
 		</el-tag>
@@ -14,7 +14,7 @@ const { data } = await useAsyncData('category', () => CategoryApi.getCategory())
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .category-list {
 	margin: 10px;
 }

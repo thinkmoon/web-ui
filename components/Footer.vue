@@ -21,7 +21,6 @@ footer {
   height: 120px;
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
   font-size: 14px;
   justify-content: center;
 }
