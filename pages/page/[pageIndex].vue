@@ -35,21 +35,23 @@
                   height="16"
                   width="16"
                 />
-                <el-link href="https://thinkmoon.github.io" target="_blank">醉月思</el-link>
+                <el-link href="https://www.thinkmoon.cn" target="_blank">醉月思</el-link>
               </div>
               <div class="ico-cat">
-                <i class="el-icon-folder-opened" />
+                <el-icon><icon-FolderOpened /></el-icon>
                 <a>{{ item.category }}</a>
               </div>
               <div class="ico-time">
-                <i class="el-icon-time" />
+                <el-icon><icon-Calendar /></el-icon>
                 <a>{{ '2019-11-08' }}</a>
               </div>
               <div class="ico-eye">
-                <i class="el-icon-view" /> 138,666
+                <el-icon><icon-View /></el-icon> 
+                <span>138,666</span>
               </div>
               <div class="ico-like">
-                <i class="el-icon-star-off" /> 114
+                <el-icon><icon-Star /></el-icon> 
+                <span>114</span>
               </div>
             </div>
           </div>
@@ -159,6 +161,10 @@ if (process.server) {
   display: flex;
   align-content: center;
   align-items: center;
+  .post-author {
+    display: flex;
+    align-items: center;
+  }
 
   div {
     margin: 0 2px;
