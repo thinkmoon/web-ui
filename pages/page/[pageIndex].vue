@@ -28,30 +28,42 @@
           <div class="posts-default-content">
             <div class="posts-text">{{ item.desc }}</div>
             <div class="posts-default-info">
-              <div class="post-author">
-                <img
-                  style="border-radius:50% "
-                  src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg"
-                  height="16"
-                  width="16"
-                />
-                <el-link href="https://www.thinkmoon.cn" target="_blank">醉月思</el-link>
+              <div class="left">
+                <div class="post-author">
+                  <img
+                    style="border-radius:50% "
+                    src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg"
+                    height="16"
+                    width="16"
+                  />
+                  <el-link href="https://www.thinkmoon.cn" target="_blank">醉月思</el-link>
+                </div>
+                <div class="ico-warp">
+                  <el-icon>
+                    <icon-FolderOpened />
+                  </el-icon>
+                  <a>{{ item.category }}</a>
+                </div>
+                <div class="ico-warp">
+                  <el-icon>
+                    <icon-Calendar />
+                  </el-icon>
+                  <a>{{ $filters.time(item.created * 1000) }}</a>
+                </div>
               </div>
-              <div class="ico-cat">
-                <el-icon><icon-FolderOpened /></el-icon>
-                <a>{{ item.category }}</a>
-              </div>
-              <div class="ico-time">
-                <el-icon><icon-Calendar /></el-icon>
-                <a>{{ '2019-11-08' }}</a>
-              </div>
-              <div class="ico-eye">
-                <el-icon><icon-View /></el-icon> 
-                <span>138,666</span>
-              </div>
-              <div class="ico-like">
-                <el-icon><icon-Star /></el-icon> 
-                <span>114</span>
+              <div class="right">
+                <div class="ico-warp">
+                  <el-icon>
+                    <icon-View />
+                  </el-icon>
+                  <span>{{ item.views }}</span>
+                </div>
+                <div class="ico-warp">
+                  <el-icon>
+                    <icon-Star />
+                  </el-icon>
+                  <span>{{  item.likes }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -161,6 +173,19 @@ if (process.server) {
   display: flex;
   align-content: center;
   align-items: center;
+  justify-content: space-between;
+
+  .ico-warp {
+    display: flex;
+    align-items: center;
+    /deep/ .el-icon {
+      margin-right: 4px;
+    }
+  }
+
+  > div {
+    display: flex;
+  }
   .post-author {
     display: flex;
     align-items: center;
