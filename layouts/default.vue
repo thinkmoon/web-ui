@@ -5,11 +5,10 @@
       <slot></slot>
     </div>
     <Footer></Footer>
-    <el-backtop :bottom="100" v-if="isCustom"></el-backtop>
+    <ClientOnly><el-backtop :bottom="100"></el-backtop></ClientOnly>
   </div>
 </template>
 <script lang="ts" setup>
-const isCustom = !process.server
 </script>
 
 <style lang="less" scoped>
