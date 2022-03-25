@@ -40,7 +40,7 @@ definePageMeta({
     }
     .read {
       margin-top: 24px;
-      /deep/ .el-button,
+      :deep(.el-button),
       .el-link {
         font-weight: bold;
         background-color: transparent;

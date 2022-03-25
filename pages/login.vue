@@ -23,6 +23,10 @@ import { useUserStore } from '~/store/userStore';
 import { defineComponent } from 'vue';
 import UserApi from '~/api/UserApi';
 
+definePageMeta({
+  layout: false,
+});
+
 export default defineComponent({
   data() {
     return {

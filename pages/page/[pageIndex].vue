@@ -120,6 +120,7 @@ if (process.server) {
 <style lang="less" scoped>
 .page-content {
   margin: auto;
+  padding-bottom: 20px;
   width: 60%;
 
   .blog-posts {
@@ -160,6 +161,9 @@ if (process.server) {
     width: 90%;
     .blog-posts {
       width: 100%;
+      .posts-default-content .right,.post-author {
+        display: none;
+      }
     }
   }
 }
@@ -178,7 +182,7 @@ if (process.server) {
   .ico-warp {
     display: flex;
     align-items: center;
-    /deep/ .el-icon {
+    & :deep(.el-icon) {
       margin-right: 4px;
     }
   }
