@@ -22,6 +22,8 @@ onActivated(() => {
       console.log(res);
       data.value = res;
     });
+  } else {
+    data.value = {};
   }
 });
 
@@ -37,14 +39,14 @@ function saveArticle() {
 }
 </script>
 <style lang="less">
-
 .editor-container {
   display: flex;
   flex-direction: column;
   .title-input {
     margin: 6px 0;
   }
-  .left, .right {
+  .left,
+  .right {
     flex: 1;
     text-align: left;
   }

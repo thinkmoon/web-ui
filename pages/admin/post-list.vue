@@ -1,10 +1,9 @@
 <template>
   <div>
+    <el-button @click="addPost">新增</el-button>
     <el-table :data="tableData" height="560" stripe>
-      <el-table-column prop="title" label="标题" width="140">
-      </el-table-column>
-      <el-table-column prop="desc" label="摘要" width="200">
-      </el-table-column>
+      <el-table-column prop="title" label="标题" width="140"></el-table-column>
+      <el-table-column prop="desc" label="摘要" width="200"></el-table-column>
       <el-table-column prop="created" label="创建时间"></el-table-column>
       <el-table-column prop="updateTime" label="更新时间"></el-table-column>
       <el-table-column prop="operation" label="操作">
@@ -14,15 +13,14 @@
       </el-table-column>
     </el-table>
     <el-pagination
-        v-model:currentPage="pagination.index"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="pagination.size"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-    >
-    </el-pagination>
+      v-model:currentPage="pagination.index"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="pagination.size"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pagination.total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    ></el-pagination>
   </div>
 </template>
 <script lang="ts" setup>
@@ -49,6 +47,9 @@ export default defineComponent({
     this.loadData();
   },
   methods: {
+    addPost() {
+      this.$router.push('/admin/editor')
+    },
     loadData() {
       PostApi.getList({
         current: this.pagination.index,
