@@ -15,7 +15,7 @@ function request(options: AxiosRequestConfig) {
         reject(res);
       }
     }).catch(err => {
-      if (err.response.status === 401) {
+      if (err.response.?status === 401) {
         location.href = '/login';
       }
       console.error('请求出错', err.response.status, err);
