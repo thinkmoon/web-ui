@@ -62,7 +62,7 @@
                   <el-icon>
                     <icon-Star />
                   </el-icon>
-                  <span>{{  item.likes }}</span>
+                  <span>{{ item.likes }}</span>
                 </div>
               </div>
             </div>
@@ -86,6 +86,10 @@
         </div>
       </div>
     </div>
+    <div class="page-section">
+      <Search></Search>
+      <Announcement></Announcement>
+    </div>
   </div>
 </template>
 
@@ -93,6 +97,8 @@
 import axios from 'axios';
 import PostApi from '~/api/PostApi';
 import { useRoute, useRouter } from 'vue-router';
+import Search from '~~/components/section/Search.vue';
+import Announcement from '~~/components/section/Announcement.vue';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -121,10 +127,16 @@ if (process.server) {
 .page-content {
   margin: auto;
   padding-bottom: 20px;
-  width: 60%;
+  width: 70%;
+  display: flex;
 
   .blog-posts {
-    width: 70%;
+    flex: 1;
+  }
+
+  .page-section {
+    width: 300px;
+    padding: 20px;
   }
 
   .content-box {
@@ -161,9 +173,13 @@ if (process.server) {
     width: 90%;
     .blog-posts {
       width: 100%;
-      .posts-default-content .right,.post-author {
+      .posts-default-content .right,
+      .post-author {
         display: none;
       }
+    }
+    .page-section {
+      display: none;
     }
   }
 }
@@ -178,6 +194,7 @@ if (process.server) {
   align-content: center;
   align-items: center;
   justify-content: space-between;
+  color: #909399;
 
   .ico-warp {
     display: flex;

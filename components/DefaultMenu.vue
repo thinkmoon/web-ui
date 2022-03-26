@@ -6,9 +6,11 @@
       <el-menu-item index="/tag">标签</el-menu-item>
     </el-menu>
     <div class="right">
-      <el-icon :size="26" class="pointer">
-        <icon-User />
-      </el-icon>
+      <el-link href="/login" :underline="false">
+        <el-icon :size="26" class="pointer">
+          <icon-User />
+        </el-icon>
+      </el-link>
     </div>
   </div>
 </template>
