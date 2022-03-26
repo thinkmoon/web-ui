@@ -16,7 +16,7 @@ function request(options: AxiosRequestConfig) {
       }
     }).catch(err => {
       console.error(err);
-      if (err.response.?status === 401) {
+      if (Number(err.response?.status) === 401) {
         location.href = '/login';
       }
     });

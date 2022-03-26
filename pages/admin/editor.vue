@@ -1,42 +1,57 @@
 <template>
   <div class="editor-container">
-    <el-input class="title-input" v-model="data.title"></el-input>
-    <v-md-editor v-model="data.text" height="560px" @save="saveArticle"></v-md-editor>
+    <el-input class="title-input" v-model="article.title"></el-input>
+    <v-md-editor
+      v-model="article.text"
+      height="560px"
+      @save="saveArticle"
+      :disabled-menus="[]"
+      @upload-image="handleUploadImage"
+    ></v-md-editor>
   </div>
 </template>
 <script lang="ts" setup>
-import PostApi from '~/api/PostApi';
-import { useRoute } from 'vue-router';
-
 definePageMeta({
   keepalive: true
 });
+</script>
+<script lang="ts">
+import PostApi from '~/api/PostApi';
 
-let data = ref({});
-const route = useRoute();
+export default defineComponent({
+  data() {
+    return {
+      article: {
+        title: '',
+        text: ''
+      }
+    }
+  },
+  activated() {
+    if (this.$route.query.cid) {
+      PostApi.getDetail({ cid: this.$route.query.cid }).then(res => {
+        this.article = res;
+      });
+    } else {
+      this.data = {};
+    }
+  },
+  methods: {
+    saveArticle() {
+      let params = {
+        cid: Number(this.$route.query.cid),
+        title: this.article.title,
+        text: this.article.text
+      };
+      PostApi.update(params).then(() => {
+        this.$message.success('保存成功')
+      });
+    },
+    handleUploadImage() {
 
-onActivated(() => {
-  console.log('onActivated');
-  if (route.query.cid) {
-    PostApi.getDetail({ cid: route.query.cid }).then(res => {
-      console.log(res);
-      data.value = res;
-    });
-  } else {
-    data.value = {};
+    }
   }
-});
-
-
-function saveArticle() {
-  let params = {
-    cid: Number(route.query.cid),
-    title: data.value.title,
-    text: data.value.text
-  };
-  PostApi.update(params).then(() => {
-  });
-}
+})
 </script>
 <style lang="less">
 .editor-container {

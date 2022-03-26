@@ -1,14 +1,19 @@
 <template>
   <div>
-    <el-button @click="addPost">新增</el-button>
-    <el-table :data="tableData" height="560" stripe>
-      <el-table-column prop="title" label="标题" width="140"></el-table-column>
-      <el-table-column prop="desc" label="摘要" width="200"></el-table-column>
-      <el-table-column prop="created" label="创建时间"></el-table-column>
-      <el-table-column prop="updateTime" label="更新时间"></el-table-column>
+    <el-table :data="tableData" height="960" stripe>
+      <el-table-column prop="cid" label="序号" width="80" align="center"></el-table-column>
+      <el-table-column prop="title" label="标题" width="320"></el-table-column>
+      <el-table-column prop="desc" label="摘要" width="500"></el-table-column>
+      <el-table-column prop="created" label="创建时间">
+        <template #default="scope">
+          <span>{{ $filters.time(scope.row.created * 1000) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="updateTime" label="更新时间">
+      </el-table-column>
       <el-table-column prop="operation" label="操作">
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
