@@ -15,10 +15,10 @@ function request(options: AxiosRequestConfig) {
         reject(res);
       }
     }).catch(err => {
+      console.error(err);
       if (err.response.?status === 401) {
         location.href = '/login';
       }
-      console.error('请求出错', err.response.status, err);
     });
   });
 }
