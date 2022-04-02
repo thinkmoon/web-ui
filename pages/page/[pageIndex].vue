@@ -102,7 +102,6 @@ import Announcement from '~~/components/section/Announcement.vue';
 
 const config = useRuntimeConfig();
 const route = useRoute();
-const router = useRouter();
 let pageData = {
   total: 0,
   current: 0,

@@ -10,7 +10,7 @@
           mode="horizontal"
           active-text-color="#409eff"
         >
-          <el-menu-item index="/">主页</el-menu-item>
+          <el-menu-item index="/admin">主页</el-menu-item>
           <el-sub-menu index="2">
             <template #title>文章</template>
             <el-menu-item index="/admin/editor">新增文章</el-menu-item>
