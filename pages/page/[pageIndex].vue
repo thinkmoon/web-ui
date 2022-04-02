@@ -28,28 +28,42 @@
           <div class="posts-default-content">
             <div class="posts-text">{{ item.desc }}</div>
             <div class="posts-default-info">
-              <div class="post-author">
-                <img
-                  style="border-radius:50% "
-                  src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg"
-                  height="16"
-                  width="16"
-                />
-                <el-link href="https://thinkmoon.github.io" target="_blank">醉月思</el-link>
+              <div class="left">
+                <div class="post-author">
+                  <img
+                    style="border-radius:50% "
+                    src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg"
+                    height="16"
+                    width="16"
+                  />
+                  <el-link href="https://www.thinkmoon.cn" target="_blank">醉月思</el-link>
+                </div>
+                <div class="ico-warp">
+                  <el-icon>
+                    <icon-FolderOpened />
+                  </el-icon>
+                  <a>{{ item.category }}</a>
+                </div>
+                <div class="ico-warp">
+                  <el-icon>
+                    <icon-Calendar />
+                  </el-icon>
+                  <a>{{ $filters.time(item.created * 1000) }}</a>
+                </div>
               </div>
-              <div class="ico-cat">
-                <i class="el-icon-folder-opened" />
-                <a>{{ item.category }}</a>
-              </div>
-              <div class="ico-time">
-                <i class="el-icon-time" />
-                <a>{{ '2019-11-08' }}</a>
-              </div>
-              <div class="ico-eye">
-                <i class="el-icon-view" /> 138,666
-              </div>
-              <div class="ico-like">
-                <i class="el-icon-star-off" /> 114
+              <div class="right">
+                <div class="ico-warp">
+                  <el-icon>
+                    <icon-View />
+                  </el-icon>
+                  <span>{{ item.views }}</span>
+                </div>
+                <div class="ico-warp">
+                  <el-icon>
+                    <icon-Star />
+                  </el-icon>
+                  <span>{{ item.likes }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -72,6 +86,10 @@
         </div>
       </div>
     </div>
+    <div class="page-section">
+      <Search></Search>
+      <Announcement></Announcement>
+    </div>
   </div>
 </template>
 
@@ -79,10 +97,11 @@
 import axios from 'axios';
 import PostApi from '~/api/PostApi';
 import { useRoute, useRouter } from 'vue-router';
+import Search from '~~/components/section/Search.vue';
+import Announcement from '~~/components/section/Announcement.vue';
 
 const config = useRuntimeConfig();
 const route = useRoute();
-const router = useRouter();
 let pageData = {
   total: 0,
   current: 0,
@@ -106,10 +125,17 @@ if (process.server) {
 <style lang="less" scoped>
 .page-content {
   margin: auto;
-  width: 60%;
+  padding-bottom: 20px;
+  width: 70%;
+  display: flex;
 
   .blog-posts {
-    width: 70%;
+    flex: 1;
+  }
+
+  .page-section {
+    width: 300px;
+    padding: 20px;
   }
 
   .content-box {
@@ -146,6 +172,13 @@ if (process.server) {
     width: 90%;
     .blog-posts {
       width: 100%;
+      .posts-default-content .right,
+      .post-author {
+        display: none;
+      }
+    }
+    .page-section {
+      display: none;
     }
   }
 }
@@ -159,6 +192,24 @@ if (process.server) {
   display: flex;
   align-content: center;
   align-items: center;
+  justify-content: space-between;
+  color: #909399;
+
+  .ico-warp {
+    display: flex;
+    align-items: center;
+    & :deep(.el-icon) {
+      margin-right: 4px;
+    }
+  }
+
+  > div {
+    display: flex;
+  }
+  .post-author {
+    display: flex;
+    align-items: center;
+  }
 
   div {
     margin: 0 2px;
