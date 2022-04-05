@@ -4,13 +4,13 @@
   "scripts": {
     "dev": "nuxi dev",
     "build": "nuxi build",
-    "start": "node .output/server/index.mjs"
+    "start": "nuxi preview"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.176",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "nuxt3": "latest"
+    "nuxt3": "^3.0.0-27484505.9f6eff7"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
