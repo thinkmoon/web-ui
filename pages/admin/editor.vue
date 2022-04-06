@@ -1,13 +1,18 @@
 <template>
-  <div class="editor-container">
-    <el-input class="title-input" v-model="article.title"></el-input>
-    <v-md-editor
-      v-model="article.text"
-      height="560px"
-      @save="saveArticle"
-      :disabled-menus="[]"
-      @upload-image="handleUploadImage"
-    ></v-md-editor>
+  <div class="editor-wrapper">
+    <div class="flex-1"></div>
+    <div class="editor-container">
+      <el-input class="title-input" v-model="article.title"></el-input>
+      <v-md-editor
+        v-model="article.text"
+        mode="edit"
+        height="560px"
+        @save="saveArticle"
+        :disabled-menus="[]"
+        @upload-image="handleUploadImage"
+      ></v-md-editor>
+    </div>
+    <div class="flex-2"></div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -55,8 +60,12 @@ export default defineComponent({
 })
 </script>
 <style lang="less">
+.editor-wrapper {
+  display: flex;
+}
 .editor-container {
   display: flex;
+  flex: 4;
   flex-direction: column;
   .title-input {
     margin: 6px 0;
