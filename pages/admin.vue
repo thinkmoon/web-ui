@@ -3,11 +3,11 @@
     <el-container>
       <el-header class="admin-header">
         <el-menu
-          router
           :default-active="defaultActive"
           :collapse="false"
           unique-opened
           mode="horizontal"
+          @select="select"
           active-text-color="#409eff"
         >
           <el-menu-item index="/admin">主页</el-menu-item>
@@ -34,13 +34,18 @@
 </template>
 
 <script lang="ts" setup>
-
+import { useRoute } from 'vue-router';
 definePageMeta({
   layout: "admin",
   middleware: ["auth"]
 })
 
-let defaultActive = '/admin/post-list';
+const route = useRoute();
+let defaultActive = route.path;
+
+function select(url){
+  location.href = url
+}
 </script>
 <style lang="less" scoped>
 .app-container {

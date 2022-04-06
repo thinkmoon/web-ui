@@ -34,7 +34,9 @@ const form = reactive({
 function onSubmit() {
   UserApi.login(form).then((res: string) => {
     auth.value = res;
-    router.push('/admin');
+    if (!process.server) {
+      window.location.href = '/admin';
+    }
   })
 }
 
