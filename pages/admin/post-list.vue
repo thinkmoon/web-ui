@@ -9,8 +9,7 @@
           <span>{{ $filters.time(scope.row.created * 1000) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTime" label="更新时间">
-      </el-table-column>
+      <el-table-column prop="updateTime" label="更新时间"></el-table-column>
       <el-table-column prop="operation" label="操作">
         <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -59,7 +58,7 @@ export default defineComponent({
       PostApi.getList({
         current: this.pagination.index,
         size: this.pagination.size,
-      }).then(res => {
+      }).then((res: any) => {
         this.tableData = res.records;
         this.pagination.index = res.current;
         this.pagination.total = res.total;

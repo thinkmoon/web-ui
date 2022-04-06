@@ -45,6 +45,7 @@ export default defineComponent({
       };
       PostApi.update(params).then(() => {
         this.$message.success('保存成功')
+        this.$router.back();
       });
     },
     handleUploadImage() {
