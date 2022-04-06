@@ -18,9 +18,8 @@
 </template>
 <script lang="ts" setup>
 import UserApi from '~/api/UserApi';
-import { useRouter } from 'vue-router'
+const { $message } = useNuxtApp()
 const auth = useCookie('auth');
-const router = useRouter();
 
 definePageMeta({
   layout: false,
@@ -36,6 +35,10 @@ function onSubmit() {
     auth.value = res;
     if (!process.server) {
       window.location.href = '/admin';
+    }
+  }).catch(() => {
+    if (!process.server) {
+      $message.error('登录失败')
     }
   })
 }
