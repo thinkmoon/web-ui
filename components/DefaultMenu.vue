@@ -2,8 +2,10 @@
   <div class="top-menu">
     <el-menu mode="horizontal" @select="select" :default-active="defaultActive">
       <el-menu-item index="/">指尖魔法屋</el-menu-item>
-      <el-menu-item index="/category">分类</el-menu-item>
-      <el-menu-item index="/tag">标签</el-menu-item>
+      <el-menu-item index="/category">
+        <NuxtLink to="/category">分类</NuxtLink></el-menu-item>
+      <el-menu-item index="/tag">
+        <NuxtLink to="/tag">标签</NuxtLink></el-menu-item>
     </el-menu>
     <div class="right">
       <el-link href="/login" :underline="false">
@@ -25,6 +27,9 @@ function select(url){
 }
 </script>
 <style lang="less" scoped>
+a {
+  text-decoration:none
+}
 .top-menu {
   width: 100vw;
   z-index: 3;
