@@ -23,23 +23,16 @@ jobs:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
-    - run: yarn
-    - run: yarn run build
+    # - run: yarn
+    # - run: yarn run build
     
-    - name: Vue to Github Pages
-        # You may pin to the exact commit or the version.
-        # uses: xRealNeon/VuePagesAction@1fe4d0b38025bcbaafa71a359dd5c02f33bb03b7
-      uses: xRealNeon/VuePagesAction@1.0.0
+    - name: GitHub Pages Deploy
+    
+  # You may pin to the exact commit or the version.
+  # uses: appleboy/gh-pages-action@fffb0030bac4fd166320d35bed6532b3b64969bb
+      uses: appleboy/gh-pages-action@v0.0.2
       with:
-        # Your username
-        username: CI
-        reponame: web-ui
-        # Your Github token
-        token: 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
-        # Your git commit email
-        gitemail: ci@thinkmoon.cn
-        # Your git commit name
-        gitname: CI
-        # Your git commit message
-        gitmsg: deploy
-        # Your custom domain
+        # directory of content to sync
+        target_directory: src
+    
+
