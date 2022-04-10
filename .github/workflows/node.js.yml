@@ -30,7 +30,7 @@ jobs:
     # uses: peaceiris/actions-github-pages@b80a30e9bf3c1ec596532c3813f0aff094f555e2
         uses: peaceiris/actions-github-pages@v3.1.12
         with:
-          personal_token: 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
+          personal_token: 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
           # 
           publish_dir: .output # optional, default is public
           # 
