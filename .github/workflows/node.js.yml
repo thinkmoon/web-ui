@@ -26,18 +26,33 @@ jobs:
     - run: yarn
     # - run: yarn run build
     
-    - name: Deploy Github Pages
-    # You may pin to the exact commit or the version.
-    # uses: ptienchuan/deploy-github-pages-action@abff2ab6d0300d579780d56bd3e70254c5b15403
-      uses: ptienchuan/deploy-github-pages-action@1.0.0
-      with:
-        # [Optional] Determine the directory contains source code. Defaults to "docs"
-        source-directory: .output # optional, default is docs
-        # [Optional] Set target branch name for Github Pages. Defaults to "gh-pages"
-        target-branch: gh-pages # optional, default is gh-pages
-        # [Optional] Set author of deploying commit. Defaults to ""
-        user-name: CI # optional, default is github-actions[bot]
-        # [Optional] Set author of deploying commit. Defaults to ""
-        user-email: CI@thinkmoon.cn # optional, default is github-action[bot]@noreply.github.com
+   - name: GitHub Pages v3
+  # You may pin to the exact commit or the version.
+  # uses: peaceiris/actions-github-pages@b80a30e9bf3c1ec596532c3813f0aff094f555e2
+  uses: peaceiris/actions-github-pages@v3.1.12
+  with:
+    github_token: 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
+    # 
+    personal_token: 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
+    # 
+    publish_dir: .output # optional, default is public
+    # 
+    external_repository: # optional
+    # If empty commits should be made to the publication branch
+    allow_empty_commit: # optional, default is false
+    # If existing files in the publish branch should be not removed before deploying
+    keep_files: # optional, default is false
+    # Keep only the latest commit on a GitHub Pages branch
+    force_orphan: # optional, default is false
+    # Set Git user.name
+    user_name: # optional
+    # Set Git user.email
+    user_email: # optional
+    # Set custom commit message
+    commit_message: # optional
+    # Set tag name
+    tag_name: # optional
+    # Set tag message
+    tag_message: # optional
     
 
