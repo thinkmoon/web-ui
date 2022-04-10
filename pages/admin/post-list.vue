@@ -8,13 +8,21 @@
           <el-link @click="handleEdit(scope.$index, scope.row)">{{ scope.row.title }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="desc" label="摘要" width="500"></el-table-column>
+      <el-table-column prop="desc" label="摘要" width="500">
+        <template #default="scope">
+          {{ scope.row.fields.desc }}
+        </template>
+      </el-table-column>
       <el-table-column prop="created" label="创建时间">
         <template #default="scope">
           <span>{{ $filters.time(scope.row.created * 1000) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTime" label="更新时间"></el-table-column>
+      <el-table-column prop="modified" label="更新时间">
+        <template #default="scope">
+          <span>{{ $filters.time(scope.row.modified * 1000) }}</span>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination v-model:currentPage="pagination.index" :page-sizes="[10, 20, 30, 40]" :page-size="pagination.size"
       layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" @size-change="handleSizeChange"
@@ -53,6 +61,15 @@ export default defineComponent({
         size: this.pagination.size,
       }).then((res: any) => {
         this.tableData = res.records;
+        this.tableData.forEach(item => {
+          if (item.fields instanceof Array) {
+            let fields = {}
+            item.fields.forEach(i => {
+              fields[i.name] = i.value
+            })
+            item.fields = fields;
+          }
+        })
         this.pagination.index = res.current;
         this.pagination.total = res.total;
       });

@@ -12,7 +12,9 @@
         <div class="posts-default-box">
           <div class="posts-default-title">
             <div v-if="item.tag" class="post-entry-categories">
-              <el-tag v-for="tagItem in item.tag" :key="tagItem" rel="tag" class="post-tag">{{ tagItem.name }}</el-tag>
+              <el-tag v-for="tagItem in item.tag" :key="tagItem" rel="tag" class="post-tag">
+              <el-link type="primary" :href="`/tag/${tagItem.tid}/1`">{{ tagItem.name }}</el-link>
+              </el-tag>
             </div>
             <el-link :href="`/post/${item.cid}`" :underline="false" class="post-title">{{ item.title }}</el-link>
           </div>
@@ -30,7 +32,7 @@
                   <el-icon>
                     <icon-FolderOpened />
                   </el-icon>
-                  <a>{{ item.category }}</a>
+                  <el-link :href="`/category/${item.category_id}/1`">{{ item.category }}</el-link>
                 </div>
                 <div class="ico-warp">
                   <el-icon>
