@@ -31,4 +31,4 @@ jobs:
       with: 
         branch: output
         dist: .output
-        apps: nuxt3
+        apps: '{}'
