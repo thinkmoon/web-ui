@@ -27,8 +27,6 @@ jobs:
     - run: yarn run build
     
     - name: Deploy static app in branch to gh-pages
-  # You may pin to the exact commit or the version.
-  # uses: Sauloxd/review-apps@2564cf8a5e834c2813ace9af70dd7411f81433e4
       uses: Sauloxd/review-apps@v2.0.0
       with: 
         branch: output
