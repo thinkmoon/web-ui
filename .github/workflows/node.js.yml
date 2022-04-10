@@ -34,7 +34,7 @@ jobs:
         # Directory to deploy
         build_dir: .output # optional
         # Personnal access token
-        gh_token: 
+        gh_token: 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
         # FQDN to deploy in CNAME file
         # Branch targeted for the deployment
         target_branch: gh-pages # optional, default is gh-pages
