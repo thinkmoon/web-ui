@@ -11,48 +11,47 @@ on:
 
 jobs:
   build:
+   runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
-
-    strategy:
+   strategy:
       matrix:
         node-version: [16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    steps:
+  steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
     - run: yarn
     # - run: yarn run build
     
-   - name: GitHub Pages v3
+    - name: GitHub Pages v3
   # You may pin to the exact commit or the version.
   # uses: peaceiris/actions-github-pages@b80a30e9bf3c1ec596532c3813f0aff094f555e2
-  uses: peaceiris/actions-github-pages@v3.1.12
-  with:
-    github_token: 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
-    # 
-    personal_token: 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
-    # 
-    publish_dir: .output # optional, default is public
-    # 
-    external_repository: # optional
-    # If empty commits should be made to the publication branch
-    allow_empty_commit: # optional, default is false
-    # If existing files in the publish branch should be not removed before deploying
-    keep_files: # optional, default is false
-    # Keep only the latest commit on a GitHub Pages branch
-    force_orphan: # optional, default is false
-    # Set Git user.name
-    user_name: # optional
-    # Set Git user.email
-    user_email: # optional
-    # Set custom commit message
-    commit_message: # optional
-    # Set tag name
-    tag_name: # optional
-    # Set tag message
-    tag_message: # optional
+      uses: peaceiris/actions-github-pages@v3.1.12
+      with:
+        github_token: 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
+        # 
+        personal_token: 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
+        # 
+        publish_dir: .output # optional, default is public
+        # 
+        external_repository: # optional
+        # If empty commits should be made to the publication branch
+        allow_empty_commit: # optional, default is false
+        # If existing files in the publish branch should be not removed before deploying
+        keep_files: # optional, default is false
+        # Keep only the latest commit on a GitHub Pages branch
+        force_orphan: # optional, default is false
+        # Set Git user.name
+        user_name: # optional
+        # Set Git user.email
+        user_email: # optional
+        # Set custom commit message
+        commit_message: # optional
+        # Set tag name
+        tag_name: # optional
+        # Set tag message
+        tag_message: # optional
     
 
