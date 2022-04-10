@@ -26,9 +26,15 @@ jobs:
     - run: yarn
     - run: yarn run build
     
-    - name: Deploy static app in branch to gh-pages
-      uses: Sauloxd/review-apps@v2.0.0
-      with: 
-        branch: output
-        dist: .output
-        apps: '{}'
+    - name: GitHub Branch Deploy
+      # You may pin to the exact commit or the version.
+      # uses: zekth/gh-deploy-action@e6bea0af4cdbd72ddb5c9da220be65a6ba659686
+      uses: zekth/gh-deploy-action@1.0.0
+      with:
+        # Directory to deploy
+        build_dir: .output # optional
+        # Personnal access token
+        gh_token: 
+        # FQDN to deploy in CNAME file
+        # Branch targeted for the deployment
+        target_branch: gh-pages # optional, default is gh-pages
