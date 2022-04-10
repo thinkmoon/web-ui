@@ -11,7 +11,8 @@
         <span class="title">文章分类</span>
         <div class="content">
           <el-select v-model="article.category_id" key="category">
-            <el-option v-for="item of categoryList" :value="item.mid" :key="item.mid" :label="item.name">{{ item.name }}</el-option>
+            <el-option v-for="item of categoryList" :value="item.mid" :key="item.mid" :label="item.name">{{ item.name }}
+            </el-option>
           </el-select>
         </div>
       </section>
@@ -35,7 +36,7 @@ export default defineComponent({
       article: {
         title: '',
         text: '',
-        category_id:'',
+        category_id: '',
       },
       categoryList: []
     }
@@ -58,9 +59,13 @@ export default defineComponent({
         })
     },
     saveArticle() {
-      PostApi.update(this.article).then(() => {
+      let op = this.$route.query.cid ? 'update' : 'add'
+      if(!this.article.category_id){
+        return this.$message.error('请选择文章分类')
+      }
+      PostApi[op](this.article).then(() => {
         this.$message.success('保存成功');
-        this.$router.back();
+        location.href = '/admin/post-list';
       }).catch(err => {
         this.$message.error('保存失败');
         console.error(err);
