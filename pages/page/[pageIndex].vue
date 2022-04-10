@@ -13,11 +13,11 @@
           <div class="posts-default-title">
             <div v-if="item.tag" class="post-entry-categories">
               <el-tag
-                v-for="tagItem in item.tag.split(',')"
+                v-for="tagItem in item.tag"
                 :key="tagItem"
                 rel="tag"
                 class="post-tag"
-              >{{ tagItem }}</el-tag>
+              >{{ tagItem.name }}</el-tag>
             </div>
             <el-link
               :href="`/post/${item.cid}`"

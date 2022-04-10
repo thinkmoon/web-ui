@@ -2,7 +2,7 @@
   "private": true,
   "version": "0.1.2",
   "scripts": {
-    "dev": "nuxi dev",
+    "dev": "yarn upgrade-interactive && nuxi dev",
     "build": "nuxi build",
     "start": "nuxi preview"
   },

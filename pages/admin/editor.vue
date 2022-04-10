@@ -12,7 +12,16 @@
         @upload-image="handleUploadImage"
       ></v-md-editor>
     </div>
-    <div class="flex-2"></div>
+    <div class="flex-2 right">
+      <section>
+        <span class="title">文章分类</span>
+        <div class="content">
+          <el-select>
+            <el-option></el-option>
+          </el-select>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -22,6 +31,9 @@ definePageMeta({
 </script>
 <script lang="ts">
 import PostApi from '~/api/PostApi';
+import AttachmentApi from '~/api/AttachmentApi';
+import * as qiniu from "qiniu-js";
+import dayjs from 'dayjs';
 
 export default defineComponent({
   data() {
@@ -44,17 +56,31 @@ export default defineComponent({
   methods: {
     saveArticle() {
       let params = {
-        cid: Number(this.$route.query.cid),
+        cid: this.$route.query.cid,
         title: this.article.title,
         text: this.article.text
       };
       PostApi.update(params).then(() => {
-        this.$message.success('保存成功')
+        this.$message.success('保存成功');
         this.$router.back();
+      }).catch(err => {
+        this.$message.error('保存失败');
+        console.error(err);
       });
     },
-    handleUploadImage() {
-
+    handleUploadImage(event, insertImage, files) {
+      console.log(arguments)
+      AttachmentApi.getUploadToken()
+        .then((token: string) => {
+          let key = dayjs().format('YYYY-MM-DD/HH-mm-ss')
+          const observable = qiniu.upload(files[0], key, token)
+          const subscription = observable.subscribe(null, null, (res) => {
+            console.log(res);
+            insertImage({
+              url: `https://blog.cdn.thinkmoon.cn/${res.key}`,
+            });
+          })
+        })
     }
   }
 })
@@ -62,6 +88,15 @@ export default defineComponent({
 <style lang="less">
 .editor-wrapper {
   display: flex;
+  > .right {
+    margin: 42px 14px;
+    .title {
+      margin: 6px;
+    }
+    .content {
+      margin: 6px;
+    }
+  }
 }
 .editor-container {
   display: flex;
