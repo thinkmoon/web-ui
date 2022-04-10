@@ -1,6 +1,6 @@
 import request from "~/api/request";
 
-export default class CategoryApi {
+export default class attachmentApi {
   static getUploadToken() {
     return request({
       method: "get",

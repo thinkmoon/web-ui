@@ -1,8 +1,13 @@
 <template>
   <div>
     <el-table :data="tableData" height="960" stripe>
-      <el-table-column prop="cid" label="序号" width="80" align="center"></el-table-column>
-      <el-table-column prop="title" label="标题" width="320"></el-table-column>
+      <el-table-column prop="cid" label="序号" width="80" align="center">
+      </el-table-column>
+      <el-table-column prop="title" label="标题" width="320">
+        <template #default="scope">
+          <el-link @click="handleEdit(scope.$index, scope.row)">{{ scope.row.title }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column prop="desc" label="摘要" width="500"></el-table-column>
       <el-table-column prop="created" label="创建时间">
         <template #default="scope">
@@ -10,22 +15,10 @@
         </template>
       </el-table-column>
       <el-table-column prop="updateTime" label="更新时间"></el-table-column>
-      <el-table-column prop="operation" label="操作">
-        <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        </template>
-      </el-table-column>
     </el-table>
-    <el-pagination
-      v-model:currentPage="pagination.index"
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="pagination.size"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="pagination.total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    ></el-pagination>
-  </div>
+    <el-pagination v-model:currentPage="pagination.index" :page-sizes="[10, 20, 30, 40]" :page-size="pagination.size"
+      layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"></el-pagination>  </div>
 </template>
 <script lang="ts" setup>
 definePageMeta({

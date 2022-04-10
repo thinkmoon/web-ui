@@ -3,26 +3,19 @@
     <div class="flex-1"></div>
     <div class="editor-container">
       <el-input class="title-input" v-model="article.title"></el-input>
-      <v-md-editor
-        v-model="article.text"
-        mode="edit"
-        height="560px"
-        @save="saveArticle"
-        :disabled-menus="[]"
-        @upload-image="handleUploadImage"
-      ></v-md-editor>
+      <v-md-editor v-model="article.text" mode="edit" height="560px" @save="saveArticle" :disabled-menus="[]"
+        @upload-image="handleUploadImage"></v-md-editor>
     </div>
     <div class="flex-2 right">
       <section>
         <span class="title">文章分类</span>
         <div class="content">
-          <el-select>
-            <el-option></el-option>
+          <el-select v-model="article.category_id" key="category">
+            <el-option v-for="item of categoryList" :value="item.mid" :key="item.mid" :label="item.name">{{ item.name }}</el-option>
           </el-select>
         </div>
       </section>
-    </div>
-  </div>
+    </div>  </div>
 </template>
 <script lang="ts" setup>
 definePageMeta({
@@ -34,14 +27,17 @@ import PostApi from '~/api/PostApi';
 import AttachmentApi from '~/api/AttachmentApi';
 import * as qiniu from "qiniu-js";
 import dayjs from 'dayjs';
+import CategoryApi from '~/api/CategoryApi';
 
 export default defineComponent({
   data() {
     return {
       article: {
         title: '',
-        text: ''
-      }
+        text: '',
+        category_id:'',
+      },
+      categoryList: []
     }
   },
   activated() {
@@ -52,15 +48,17 @@ export default defineComponent({
     } else {
       this.data = {};
     }
+    this.getCategory();
   },
   methods: {
+    getCategory() {
+      CategoryApi.getCategory()
+        .then(res => {
+          this.categoryList = res;
+        })
+    },
     saveArticle() {
-      let params = {
-        cid: this.$route.query.cid,
-        title: this.article.title,
-        text: this.article.text
-      };
-      PostApi.update(params).then(() => {
+      PostApi.update(this.article).then(() => {
         this.$message.success('保存成功');
         this.$router.back();
       }).catch(err => {
@@ -88,23 +86,29 @@ export default defineComponent({
 <style lang="less">
 .editor-wrapper {
   display: flex;
-  > .right {
+
+  >.right {
     margin: 42px 14px;
+
     .title {
       margin: 6px;
     }
+
     .content {
       margin: 6px;
     }
   }
 }
+
 .editor-container {
   display: flex;
   flex: 4;
   flex-direction: column;
+
   .title-input {
     margin: 6px 0;
   }
+
   .left,
   .right {
     flex: 1;
