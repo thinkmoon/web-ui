@@ -17,7 +17,7 @@
             <el-link :href="`/post/${item.cid}`" :underline="false" class="post-title">{{ item.title }}</el-link>
           </div>
           <div class="posts-default-content">
-            <div class="posts-text">{{ item.desc }}</div>
+            <div class="posts-text">{{ item.fields.desc }}</div>
             <div class="posts-default-info">
               <div class="left">
                 <div class="post-author">
