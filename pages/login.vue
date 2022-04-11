@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <Title>登录</Title>
+    <Title>登录 | </Title>
     <div class="login-dialog">
       <el-form :model="form">
         <el-form-item label="账号">
