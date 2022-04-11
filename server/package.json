@@ -1,8 +1,8 @@
 {
   "private": true,
   "bundledDependencies": [
-    "axios",
     "dayjs",
+    "axios",
     "@kangc/v-md-editor",
     "qiniu-js",
     "highlight.js",
