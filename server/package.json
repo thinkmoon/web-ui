@@ -1,8 +1,8 @@
 {
   "private": true,
   "bundledDependencies": [
-    "dayjs",
     "axios",
+    "dayjs",
     "@kangc/v-md-editor",
     "qiniu-js",
     "highlight.js",
@@ -24,8 +24,8 @@
     "formdata-polyfill",
     "fetch-blob",
     "@babel/runtime-corejs2",
-    "data-uri-to-buffer",
     "vue-demi",
+    "data-uri-to-buffer",
     "vue",
     "@vue/devtools-api",
     "node-domexception",

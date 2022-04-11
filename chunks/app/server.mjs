@@ -4088,7 +4088,7 @@ function normalizeStyle(value) {
     return res;
   } else if (isString$2(value)) {
     return value;
-  } else if (isObject$3(value)) {
+  } else if (isObject$4(value)) {
     return value;
   }
 }
@@ -4129,7 +4129,7 @@ function normalizeClass(value) {
         res += normalized + " ";
       }
     }
-  } else if (isObject$3(value)) {
+  } else if (isObject$4(value)) {
     for (const name in value) {
       if (value[name]) {
         res += name + " ";
@@ -4221,8 +4221,8 @@ function looseEqual(a2, b2) {
   if (aValidType || bValidType) {
     return aValidType && bValidType ? looseCompareArrays(a2, b2) : false;
   }
-  aValidType = isObject$3(a2);
-  bValidType = isObject$3(b2);
+  aValidType = isObject$4(a2);
+  bValidType = isObject$4(b2);
   if (aValidType || bValidType) {
     if (!aValidType || !bValidType) {
       return false;
@@ -4246,7 +4246,7 @@ function looseIndexOf(arr, val) {
   return arr.findIndex((item) => looseEqual(item, val));
 }
 const toDisplayString = (val) => {
-  return isString$2(val) ? val : val == null ? "" : isArray$3(val) || isObject$3(val) && (val.toString === objectToString$2 || !isFunction$2(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
+  return isString$2(val) ? val : val == null ? "" : isArray$3(val) || isObject$4(val) && (val.toString === objectToString$2 || !isFunction$2(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
 };
 const replacer = (_key, val) => {
   if (val && val.__v_isRef) {
@@ -4262,7 +4262,7 @@ const replacer = (_key, val) => {
     return {
       [`Set(${val.size})`]: [...val.values()]
     };
-  } else if (isObject$3(val) && !isArray$3(val) && !isPlainObject(val)) {
+  } else if (isObject$4(val) && !isArray$3(val) && !isPlainObject(val)) {
     return String(val);
   }
   return val;
@@ -4291,9 +4291,9 @@ const isDate = (val) => val instanceof Date;
 const isFunction$2 = (val) => typeof val === "function";
 const isString$2 = (val) => typeof val === "string";
 const isSymbol$1 = (val) => typeof val === "symbol";
-const isObject$3 = (val) => val !== null && typeof val === "object";
+const isObject$4 = (val) => val !== null && typeof val === "object";
 const isPromise$1 = (val) => {
-  return isObject$3(val) && isFunction$2(val.then) && isFunction$2(val.catch);
+  return isObject$4(val) && isFunction$2(val.then) && isFunction$2(val.catch);
 };
 const objectToString$2 = Object.prototype.toString;
 const toTypeString$1 = (value) => objectToString$2.call(value);
@@ -4371,7 +4371,7 @@ shared_cjs_prod.isKnownSvgAttr = isKnownSvgAttr;
 shared_cjs_prod.isMap = isMap$2;
 shared_cjs_prod.isModelListener = isModelListener;
 shared_cjs_prod.isNoUnitNumericStyleProp = isNoUnitNumericStyleProp;
-shared_cjs_prod.isObject = isObject$3;
+shared_cjs_prod.isObject = isObject$4;
 shared_cjs_prod.isOn = isOn;
 shared_cjs_prod.isPlainObject = isPlainObject;
 shared_cjs_prod.isPromise = isPromise$1;
@@ -4711,6 +4711,39 @@ var renderHeadToString = (head) => {
     }
   };
 };
+function isObject$3(val) {
+  return val !== null && typeof val === "object";
+}
+function _defu(baseObj, defaults, namespace = ".", merger) {
+  if (!isObject$3(defaults)) {
+    return _defu(baseObj, {}, namespace, merger);
+  }
+  const obj = Object.assign({}, defaults);
+  for (const key in baseObj) {
+    if (key === "__proto__" || key === "constructor") {
+      continue;
+    }
+    const val = baseObj[key];
+    if (val === null || val === void 0) {
+      continue;
+    }
+    if (merger && merger(obj, key, val, namespace)) {
+      continue;
+    }
+    if (Array.isArray(val) && Array.isArray(obj[key])) {
+      obj[key] = val.concat(obj[key]);
+    } else if (isObject$3(val) && isObject$3(obj[key])) {
+      obj[key] = _defu(val, obj[key], (namespace ? `${namespace}.` : "") + key.toString(), merger);
+    } else {
+      obj[key] = val;
+    }
+  }
+  return obj;
+}
+function createDefu(merger) {
+  return (...args) => args.reduce((p2, c) => _defu(p2, c, "", merger), {});
+}
+const defu = createDefu();
 const vueuseHead_2536818a = defineNuxtPlugin((nuxtApp) => {
   const head = createHead();
   nuxtApp.vueApp.use(head);
@@ -4719,8 +4752,23 @@ const vueuseHead_2536818a = defineNuxtPlugin((nuxtApp) => {
       head.updateDOM();
     });
   });
+  const titleTemplate = vue_cjs_prod.ref();
   nuxtApp._useHead = (meta2) => {
-    const headObj = vue_cjs_prod.ref(meta2);
+    titleTemplate.value = vue_cjs_prod.unref(meta2).titleTemplate || titleTemplate.value;
+    const headObj = vue_cjs_prod.computed(() => {
+      const overrides = { meta: [] };
+      const val = vue_cjs_prod.unref(meta2);
+      if (titleTemplate.value && "title" in val) {
+        overrides.title = typeof titleTemplate.value === "function" ? titleTemplate.value(val.title) : titleTemplate.value.replace(/%s/g, val.title);
+      }
+      if (val.charset) {
+        overrides.meta.push({ key: "charset", charset: val.charset });
+      }
+      if (val.viewport) {
+        overrides.meta.push({ name: "viewport", content: val.viewport });
+      }
+      return defu(overrides, val);
+    });
     head.addHeadObjs(headObj);
     {
       return;
@@ -4922,7 +4970,7 @@ const Components$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.define
   Html,
   Body
 }, Symbol.toStringTag, { value: "Module" }));
-const metaConfig = { "globalMeta": { "meta": [{ "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "name": "keywords", "content": "thinkmoon,\u6307\u5C16\u9B54\u6CD5\u5C4B,\u9189\u6708\u601D\u7684\u535A\u5BA2" }, { "name": "description", "content": "web\u524D\u7AEF\u5F00\u53D1\u5DE5\u7A0B\u5E08\u3001\u9762\u5411\u9AD8\u4FDD\u771F\u7F16\u7A0B\u3001\u603B\u7ED3\u4E0E\u8BB0\u5F55\u662F\u4E24\u4E2A\u6781\u5176\u4F18\u79C0\u7684\u5B66\u4E60\u4E60\u60EF\u3001\u5BF9\u77E5\u8BC6\u548C\u6280\u672F\u4FDD\u6301\u656C\u754F\u4E4B\u5FC3\uFF01" }, { "charset": "utf-8" }, { "name": "viewport", "content": "width=device-width, initial-scale=1" }], "link": [], "style": [], "script": [{ "async": true, "src": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3208634444966567", "crossorigin": "anonymous" }] }, "mixinKey": "created" };
+const metaConfig = { "globalMeta": { "charset": "utf-8", "viewport": "width=device-width, initial-scale=1", "meta": [{ "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "name": "keywords", "content": "thinkmoon,\u6307\u5C16\u9B54\u6CD5\u5C4B,\u9189\u6708\u601D\u7684\u535A\u5BA2" }, { "name": "description", "content": "web\u524D\u7AEF\u5F00\u53D1\u5DE5\u7A0B\u5E08\u3001\u9762\u5411\u9AD8\u4FDD\u771F\u7F16\u7A0B\u3001\u603B\u7ED3\u4E0E\u8BB0\u5F55\u662F\u4E24\u4E2A\u6781\u5176\u4F18\u79C0\u7684\u5B66\u4E60\u4E60\u60EF\u3001\u5BF9\u77E5\u8BC6\u548C\u6280\u672F\u4FDD\u6301\u656C\u754F\u4E4B\u5FC3\uFF01" }], "link": [], "style": [], "script": [{ "async": true, "src": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3208634444966567", "crossorigin": "anonymous" }] }, "mixinKey": "created" };
 const metaMixin = {
   [metaConfig.mixinKey]() {
     var _a;
@@ -6996,7 +7044,7 @@ const PiniaNuxtPlugin = (context, inject2) => {
     }
   }
 };
-/*! Element Plus v2.1.8 */
+/*! Element Plus v2.1.9 */
 var freeGlobal = typeof global == "object" && global && globalThis.Object === Object && global;
 var freeGlobal$1 = freeGlobal;
 var freeSelf = typeof self == "object" && self && self.Object === Object && self;
@@ -8935,7 +8983,12 @@ function useResizeObserver(target, callback, options = {}) {
     stop
   };
 }
-function useElementBounding(target) {
+function useElementBounding(target, options = {}) {
+  const {
+    reset = true,
+    windowResize = true,
+    windowScroll = true
+  } = options;
   const height = vue_cjs_prod.ref(0);
   const bottom2 = vue_cjs_prod.ref(0);
   const left2 = vue_cjs_prod.ref(0);
@@ -8947,14 +9000,16 @@ function useElementBounding(target) {
   function update() {
     const el = unrefElement(target);
     if (!el) {
-      height.value = 0;
-      bottom2.value = 0;
-      left2.value = 0;
-      right2.value = 0;
-      top2.value = 0;
-      width.value = 0;
-      x2.value = 0;
-      y.value = 0;
+      if (reset) {
+        height.value = 0;
+        bottom2.value = 0;
+        left2.value = 0;
+        right2.value = 0;
+        top2.value = 0;
+        width.value = 0;
+        x2.value = 0;
+        y.value = 0;
+      }
       return;
     }
     const rect = el.getBoundingClientRect();
@@ -8967,9 +9022,12 @@ function useElementBounding(target) {
     x2.value = rect.x;
     y.value = rect.y;
   }
-  useEventListener("scroll", update, true);
   useResizeObserver(target, update);
   vue_cjs_prod.watch(() => unrefElement(target), (ele) => !ele && update());
+  if (windowScroll)
+    useEventListener("scroll", update, { passive: true });
+  if (windowResize)
+    useEventListener("resize", update, { passive: true });
   return {
     height,
     bottom: bottom2,
@@ -10044,6 +10102,14 @@ const UPDATE_MODEL_EVENT = "update:modelValue";
 const CHANGE_EVENT = "change";
 const INPUT_EVENT = "input";
 const componentSizes = ["", "default", "small", "large"];
+const componentSizeMap = {
+  large: 40,
+  default: 32,
+  small: 24
+};
+const getComponentSize = (size = "default") => {
+  return componentSizeMap[size || "default"];
+};
 const isValidComponentSize = (val) => ["", ...componentSizes].includes(val);
 const isValidDatePickType = (val) => [...datePickTypes].includes(val);
 var PatchFlags = /* @__PURE__ */ ((PatchFlags2) => {
@@ -10969,7 +11035,7 @@ const arrowMiddleware = ({
     }
   };
 };
-const version$1 = "2.1.8";
+const version$1 = "2.1.9";
 const INSTALLED_KEY = Symbol("INSTALLED_KEY");
 const makeInstaller = (components2 = []) => {
   const install = (app, options) => {
@@ -11538,7 +11604,29 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       setNativeInputValue();
       updateIconOffset();
     });
+    const innerSuffixRef = vue_cjs_prod.ref();
+    const innerPrefixRef = vue_cjs_prod.ref();
+    const inputStyleInner = vue_cjs_prod.ref({});
+    const getSuffixOrPrefixWidth = (slotElm, defaultVal) => {
+      if (slotElm.value) {
+        const slotElmWidth = slotElm.value.offsetWidth;
+        return slotElmWidth > 0 ? slotElmWidth + 16 : defaultVal;
+      }
+      return defaultVal;
+    };
+    const setInputPadding = () => {
+      inputStyleInner.value = __spreadValues({
+        paddingRight: `${getSuffixOrPrefixWidth(innerSuffixRef, 0)}px`,
+        paddingLeft: `${getSuffixOrPrefixWidth(innerPrefixRef, 11)}px`
+      }, props.inputStyle);
+    };
+    vue_cjs_prod.watch(showClear, () => {
+      vue_cjs_prod.nextTick(() => {
+        setInputPadding();
+      });
+    });
     vue_cjs_prod.onMounted(async () => {
+      setInputPadding();
       setNativeInputValue();
       updateIconOffset();
       await vue_cjs_prod.nextTick();
@@ -11601,7 +11689,7 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             tabindex: _ctx.tabindex,
             "aria-label": _ctx.label,
             placeholder: _ctx.placeholder,
-            style: _ctx.inputStyle,
+            style: inputStyleInner.value,
             onCompositionstart: handleCompositionStart,
             onCompositionupdate: handleCompositionUpdate,
             onCompositionend: handleCompositionEnd,
@@ -11617,6 +11705,8 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("prefix"))
           }, [
             vue_cjs_prod.createElementVNode("span", {
+              ref_key: "innerPrefixRef",
+              ref: innerPrefixRef,
               class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("prefix-inner"))
             }, [
               vue_cjs_prod.renderSlot(_ctx.$slots, "prefix"),
@@ -11637,6 +11727,8 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("suffix"))
           }, [
             vue_cjs_prod.createElementVNode("span", {
+              ref_key: "innerSuffixRef",
+              ref: innerSuffixRef,
               class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("suffix-inner"))
             }, [
               !vue_cjs_prod.unref(showClear) || !vue_cjs_prod.unref(showPwdVisible) || !vue_cjs_prod.unref(isWordLimitVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 0 }, [
@@ -12116,6 +12208,7 @@ const _sfc_main$2a = vue_cjs_prod.defineComponent({
       if (!props.native)
         vue_cjs_prod.nextTick(() => update());
     });
+    vue_cjs_prod.onUpdated(() => update());
     return {
       ns,
       scrollbar$,
@@ -13830,7 +13923,7 @@ const _sfc_main$26 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     const updatePopper = () => {
       var _a;
       (_a = vue_cjs_prod.unref(popperInstanceRef)) == null ? void 0 : _a.update();
-      contentZIndex.value = props.zIndex || nextZIndex();
+      contentZIndex.value = props.zIndex || contentZIndex.value || nextZIndex();
     };
     const togglePopperAlive = () => {
       var _a, _b;
@@ -15173,6 +15266,53 @@ const ElBreadcrumb = withInstall(Breadcrumb, {
   BreadcrumbItem
 });
 const ElBreadcrumbItem = withNoopInstall(BreadcrumbItem);
+const buttonTypes = [
+  "default",
+  "primary",
+  "success",
+  "warning",
+  "info",
+  "danger",
+  "text",
+  ""
+];
+const buttonNativeTypes = ["button", "submit", "reset"];
+const buttonProps = buildProps({
+  size: useSizeProp,
+  disabled: Boolean,
+  type: {
+    type: String,
+    values: buttonTypes,
+    default: ""
+  },
+  icon: {
+    type: iconPropType,
+    default: ""
+  },
+  nativeType: {
+    type: String,
+    values: buttonNativeTypes,
+    default: "button"
+  },
+  loading: Boolean,
+  loadingIcon: {
+    type: iconPropType,
+    default: () => loading
+  },
+  plain: Boolean,
+  autofocus: Boolean,
+  round: Boolean,
+  circle: Boolean,
+  color: String,
+  dark: Boolean,
+  autoInsertSpace: {
+    type: Boolean,
+    default: void 0
+  }
+});
+const buttonEmits = {
+  click: (evt) => evt instanceof MouseEvent
+};
 function bound01$1(n, max2) {
   if (isOnePointZero$1(n)) {
     n = "100%";
@@ -16041,52 +16181,58 @@ var TinyColor = function() {
   };
   return TinyColor2;
 }();
-const buttonTypes = [
-  "default",
-  "primary",
-  "success",
-  "warning",
-  "info",
-  "danger",
-  "text",
-  ""
-];
-const buttonNativeTypes = ["button", "submit", "reset"];
-const buttonProps = buildProps({
-  size: useSizeProp,
-  disabled: Boolean,
-  type: {
-    type: String,
-    values: buttonTypes,
-    default: ""
-  },
-  icon: {
-    type: iconPropType,
-    default: ""
-  },
-  nativeType: {
-    type: String,
-    values: buttonNativeTypes,
-    default: "button"
-  },
-  loading: Boolean,
-  loadingIcon: {
-    type: iconPropType,
-    default: () => loading
-  },
-  plain: Boolean,
-  autofocus: Boolean,
-  round: Boolean,
-  circle: Boolean,
-  color: String,
-  autoInsertSpace: {
-    type: Boolean,
-    default: void 0
-  }
-});
-const buttonEmits = {
-  click: (evt) => evt instanceof MouseEvent
-};
+function darken(color, amount = 20) {
+  return color.mix("#141414", amount).toString();
+}
+function useButtonCustomStyle(props) {
+  const _disabled = useDisabled$1();
+  return vue_cjs_prod.computed(() => {
+    let styles = {};
+    const buttonColor = props.color;
+    if (buttonColor) {
+      const color = new TinyColor(buttonColor);
+      const activeBgColor = props.dark ? color.tint(20).toString() : darken(color, 20);
+      if (props.plain) {
+        styles = {
+          "--el-button-bg-color": props.dark ? darken(color, 90) : color.tint(90).toString(),
+          "--el-button-text-color": buttonColor,
+          "--el-button-border-color": props.dark ? darken(color, 50) : color.tint(50).toString(),
+          "--el-button-hover-text-color": "var(--el-color-white)",
+          "--el-button-hover-bg-color": buttonColor,
+          "--el-button-hover-border-color": buttonColor,
+          "--el-button-active-bg-color": activeBgColor,
+          "--el-button-active-text-color": "var(--el-color-white)",
+          "--el-button-active-border-color": activeBgColor
+        };
+        if (_disabled.value) {
+          styles["--el-button-disabled-bg-color"] = props.dark ? darken(color, 90) : color.tint(90).toString();
+          styles["--el-button-disabled-text-color"] = props.dark ? darken(color, 50) : color.tint(50).toString();
+          styles["--el-button-disabled-border-color"] = props.dark ? darken(color, 80) : color.tint(80).toString();
+        }
+      } else {
+        const hoverBgColor = props.dark ? darken(color, 30) : color.tint(30).toString();
+        const textColor = color.isDark() ? "var(--el-color-white)" : "var(--el-color-black)";
+        styles = {
+          "--el-button-bg-color": buttonColor,
+          "--el-button-text-color": textColor,
+          "--el-button-border-color": buttonColor,
+          "--el-button-hover-bg-color": hoverBgColor,
+          "--el-button-hover-text-color": textColor,
+          "--el-button-hover-border-color": hoverBgColor,
+          "--el-button-active-bg-color": activeBgColor,
+          "--el-button-active-border-color": activeBgColor
+        };
+        if (_disabled.value) {
+          const disabledButtonColor = props.dark ? darken(color, 50) : color.tint(50).toString();
+          styles["--el-button-disabled-bg-color"] = disabledButtonColor;
+          styles["--el-button-disabled-text-color"] = props.dark ? "rgba(255, 255, 255, 0.5)" : "var(--el-color-white)";
+          styles["--el-button-disabled-border-color"] = disabledButtonColor;
+        }
+      }
+    }
+    return styles;
+  });
+}
 const _hoisted_1$V = ["disabled", "autofocus", "type"];
 const __default__$y = {
   name: "ElButton"
@@ -16121,42 +16267,7 @@ const _sfc_main$1X = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       }
       return false;
     });
-    const buttonStyle = vue_cjs_prod.computed(() => {
-      let styles = {};
-      const buttonColor = props.color;
-      if (buttonColor) {
-        const color = new TinyColor(buttonColor);
-        const shadeBgColor = color.shade(20).toString();
-        if (props.plain) {
-          styles = {
-            "--el-button-bg-color": color.tint(90).toString(),
-            "--el-button-text-color": buttonColor,
-            "--el-button-hover-text-color": "var(--el-color-white)",
-            "--el-button-hover-bg-color": buttonColor,
-            "--el-button-hover-border-color": buttonColor,
-            "--el-button-active-bg-color": shadeBgColor,
-            "--el-button-active-text-color": "var(--el-color-white)",
-            "--el-button-active-border-color": shadeBgColor
-          };
-        } else {
-          const tintBgColor = color.tint(30).toString();
-          styles = {
-            "--el-button-bg-color": buttonColor,
-            "--el-button-border-color": buttonColor,
-            "--el-button-hover-bg-color": tintBgColor,
-            "--el-button-hover-border-color": tintBgColor,
-            "--el-button-active-bg-color": shadeBgColor,
-            "--el-button-active-border-color": shadeBgColor
-          };
-        }
-        if (_disabled.value) {
-          const disabledButtonColor = color.tint(50).toString();
-          styles["--el-button-disabled-bg-color"] = disabledButtonColor;
-          styles["--el-button-disabled-border-color"] = disabledButtonColor;
-        }
-      }
-      return styles;
-    });
+    const buttonStyle = useButtonCustomStyle(props);
     const handleClick = (evt) => {
       if (props.nativeType === "reset") {
         form == null ? void 0 : form.resetFields();
@@ -30503,6 +30614,10 @@ const imageProps = buildProps({
   initialIndex: {
     type: Number,
     default: 0
+  },
+  infinite: {
+    type: Boolean,
+    default: true
   }
 });
 const imageEmits = {
@@ -30629,6 +30744,7 @@ const _sfc_main$Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
             key: 0,
             "z-index": _ctx.zIndex,
             "initial-index": vue_cjs_prod.unref(imageIndex),
+            infinite: _ctx.infinite,
             "url-list": _ctx.previewSrcList,
             "hide-on-click-modal": _ctx.hideOnClickModal,
             teleported: vue_cjs_prod.unref(teleported),
@@ -30641,7 +30757,7 @@ const _sfc_main$Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
               ])) : vue_cjs_prod.createCommentVNode("v-if", true)
             ]),
             _: 3
-          }, 8, ["z-index", "initial-index", "url-list", "hide-on-click-modal", "teleported"])) : vue_cjs_prod.createCommentVNode("v-if", true)
+          }, 8, ["z-index", "initial-index", "infinite", "url-list", "hide-on-click-modal", "teleported"])) : vue_cjs_prod.createCommentVNode("v-if", true)
         ], 2112)) : vue_cjs_prod.createCommentVNode("v-if", true)
       ], 6);
     };
@@ -32541,7 +32657,7 @@ const useSelect$3 = (props, states, ctx) => {
       const inputChildNodes = reference2.value.$el.childNodes;
       const input2 = Array.from(inputChildNodes).find((item) => item.tagName === "INPUT");
       const _tags = tags.value;
-      const sizeInMap = states.initialInputHeight || 40;
+      const sizeInMap = states.initialInputHeight || getComponentSize(selectSize.value || elForm.size);
       input2.style.height = states.selected.length === 0 ? `${sizeInMap}px` : `${Math.max(_tags ? _tags.clientHeight + (_tags.clientHeight > sizeInMap ? 6 : 0) : 0, sizeInMap)}px`;
       states.tagInMultiLine = Number.parseFloat(input2.style.height) >= sizeInMap;
       if (states.visible && emptyText.value !== false) {
@@ -33207,13 +33323,8 @@ const _sfc_main$N = vue_cjs_prod.defineComponent({
       }
       addResizeListener(selectWrapper.value);
       if (reference2.value && reference2.value.$el) {
-        const sizeMap = {
-          large: 36,
-          default: 32,
-          small: 28
-        };
         const input2 = reference2.value.input;
-        states.initialInputHeight = input2.getBoundingClientRect().height || sizeMap[selectSize.value];
+        states.initialInputHeight = input2.getBoundingClientRect().height || getComponentSize(selectSize.value);
       }
       if (props.remote && props.multiple) {
         resetInputHeight();
@@ -34583,6 +34694,7 @@ const _sfc_main$G = vue_cjs_prod.defineComponent({
       emit("after-enter");
     };
     const afterLeave = () => {
+      emit("update:visible", false);
       emit("after-leave");
     };
     return {
@@ -34924,7 +35036,7 @@ function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
         vue_cjs_prod.createElementVNode("path", {
           class: vue_cjs_prod.normalizeClass(_ctx.ns.be("circle", "track")),
           d: _ctx.trackPath,
-          stroke: "#e5e9f2",
+          stroke: "var(--el-fill-color-light, #e5e9f2)",
           "stroke-width": _ctx.relativeStrokeWidth,
           fill: "none",
           style: vue_cjs_prod.normalizeStyle(_ctx.trailPathStyle)
@@ -36504,7 +36616,16 @@ const createGrid = ({
             columnVisibleEnd
           ] = vue_cjs_prod.unref(columnsToRender);
           const [rowCacheStart, rowCacheEnd, rowVisibleStart, rowVisibleEnd] = vue_cjs_prod.unref(rowsToRender);
-          emit(ITEM_RENDER_EVT, columnCacheStart, columnCacheEnd, rowCacheStart, rowCacheEnd, columnVisibleStart, columnVisibleEnd, rowVisibleStart, rowVisibleEnd);
+          emit(ITEM_RENDER_EVT, {
+            columnCacheStart,
+            columnCacheEnd,
+            rowCacheStart,
+            rowCacheEnd,
+            columnVisibleStart,
+            columnVisibleEnd,
+            rowVisibleStart,
+            rowVisibleEnd
+          });
         }
         const {
           scrollLeft,
@@ -40767,6 +40888,7 @@ function useCurrent(watcherData) {
       _currentRow = (vue_cjs_prod.unref(data) || []).find((item) => getRowIdentity(item, rowKey.value) === key);
     }
     currentRow.value = _currentRow;
+    instance.emit("current-change", currentRow.value, null);
   };
   const updateCurrentRow = (_currentRow) => {
     const oldCurrentRow = currentRow.value;
@@ -44150,6 +44272,12 @@ function treeCellPrefix({
   }
   return ele;
 }
+function getAllAliases(props, aliases) {
+  return props.reduce((prev, cur) => {
+    prev[cur] = cur;
+    return prev;
+  }, aliases);
+}
 function useWatcher(owner, props_) {
   const instance = vue_cjs_prod.getCurrentInstance();
   const registerComplexWatchers = () => {
@@ -44158,10 +44286,7 @@ function useWatcher(owner, props_) {
       realWidth: "width",
       realMinWidth: "minWidth"
     };
-    const allAliases = props.reduce((prev, cur) => {
-      prev[cur] = cur;
-      return prev;
-    }, aliases);
+    const allAliases = getAllAliases(props, aliases);
     Object.keys(allAliases).forEach((key) => {
       const columnKey = aliases[key];
       if (hasOwn(props_, columnKey)) {
@@ -44198,10 +44323,7 @@ function useWatcher(owner, props_) {
       align: "realAlign",
       headerAlign: "realHeaderAlign"
     };
-    const allAliases = props.reduce((prev, cur) => {
-      prev[cur] = cur;
-      return prev;
-    }, aliases);
+    const allAliases = getAllAliases(props, aliases);
     Object.keys(allAliases).forEach((key) => {
       const columnKey = aliases[key];
       if (hasOwn(props_, columnKey)) {
