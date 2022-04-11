@@ -16,7 +16,8 @@
           </el-select>
         </div>
       </section>
-    </div>  </div>
+    </div>  
+  </div>
 </template>
 <script lang="ts" setup>
 definePageMeta({
@@ -60,7 +61,7 @@ export default defineComponent({
     },
     saveArticle() {
       let op = this.$route.query.cid ? 'update' : 'add'
-      if(!this.article.category_id){
+      if (!this.article.category_id) {
         return this.$message.error('请选择文章分类')
       }
       PostApi[op](this.article).then(() => {
