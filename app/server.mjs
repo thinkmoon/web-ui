@@ -4753,21 +4753,23 @@ const vueuseHead_2536818a = defineNuxtPlugin((nuxtApp) => {
     });
   });
   const titleTemplate = vue_cjs_prod.ref();
-  nuxtApp._useHead = (meta2) => {
-    titleTemplate.value = vue_cjs_prod.unref(meta2).titleTemplate || titleTemplate.value;
+  nuxtApp._useHead = (_meta) => {
+    const meta2 = vue_cjs_prod.ref(_meta);
+    if ("titleTemplate" in meta2.value) {
+      titleTemplate.value = meta2.value.titleTemplate;
+    }
     const headObj = vue_cjs_prod.computed(() => {
       const overrides = { meta: [] };
-      const val = vue_cjs_prod.unref(meta2);
-      if (titleTemplate.value && "title" in val) {
-        overrides.title = typeof titleTemplate.value === "function" ? titleTemplate.value(val.title) : titleTemplate.value.replace(/%s/g, val.title);
+      if (titleTemplate.value && "title" in meta2.value) {
+        overrides.title = typeof titleTemplate.value === "function" ? titleTemplate.value(meta2.value.title) : titleTemplate.value.replace(/%s/g, meta2.value.title);
       }
-      if (val.charset) {
-        overrides.meta.push({ key: "charset", charset: val.charset });
+      if (meta2.value.charset) {
+        overrides.meta.push({ key: "charset", charset: meta2.value.charset });
       }
-      if (val.viewport) {
-        overrides.meta.push({ name: "viewport", content: val.viewport });
+      if (meta2.value.viewport) {
+        overrides.meta.push({ name: "viewport", content: meta2.value.viewport });
       }
-      return defu(overrides, val);
+      return defu(overrides, meta2.value);
     });
     head.addHeadObjs(headObj);
     {
@@ -6172,20 +6174,20 @@ const _sfc_main$2_ = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       const _component_el_form_item = vue_cjs_prod.resolveComponent("el-form-item");
       const _component_el_input = vue_cjs_prod.resolveComponent("el-input");
       const _component_el_button = vue_cjs_prod.resolveComponent("el-button");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))} data-v-7e3a2326>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))} data-v-49679b27>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`\u767B\u5F55`);
+            _push2(`\u767B\u5F55 | `);
           } else {
             return [
-              vue_cjs_prod.createTextVNode("\u767B\u5F55")
+              vue_cjs_prod.createTextVNode("\u767B\u5F55 | ")
             ];
           }
         }),
         _: 1
       }, _parent));
-      _push(`<div class="login-dialog" data-v-7e3a2326>`);
+      _push(`<div class="login-dialog" data-v-49679b27>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_el_form, { model: vue_cjs_prod.unref(form) }, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -52432,20 +52434,20 @@ const _sfc_main$7 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       const _component_el_form_item = vue_cjs_prod.resolveComponent("el-form-item");
       const _component_el_input = vue_cjs_prod.resolveComponent("el-input");
       const _component_el_button = vue_cjs_prod.resolveComponent("el-button");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))} data-v-7e3a2326>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))} data-v-49679b27>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`\u767B\u5F55`);
+            _push2(`\u767B\u5F55 | `);
           } else {
             return [
-              vue_cjs_prod.createTextVNode("\u767B\u5F55")
+              vue_cjs_prod.createTextVNode("\u767B\u5F55 | ")
             ];
           }
         }),
         _: 1
       }, _parent));
-      _push(`<div class="login-dialog" data-v-7e3a2326>`);
+      _push(`<div class="login-dialog" data-v-49679b27>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_el_form, { model: vue_cjs_prod.unref(form) }, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -52571,7 +52573,7 @@ _sfc_main$7.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/login.vue");
   return _sfc_setup$7 ? _sfc_setup$7(props, ctx) : void 0;
 };
-const login = /* @__PURE__ */ _export_sfc$2(_sfc_main$7, [["__scopeId", "data-v-7e3a2326"]]);
+const login = /* @__PURE__ */ _export_sfc$2(_sfc_main$7, [["__scopeId", "data-v-49679b27"]]);
 const login$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": login

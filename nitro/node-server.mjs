@@ -11,7 +11,7 @@ import { snakeCase } from 'scule';
 import { hash } from 'ohash';
 import { createStorage } from 'unstorage';
 
-const _runtimeConfig = (function(a,b,c,d,e,f){return {app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""},nitro:{routes:{},envPrefix:"NUXT_"},TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,public:{TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,app:void 0}}}("指尖魔法屋-醉月思的博客","0.1.2","thinkmoon","指尖魔法屋","醉月思的博客","web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"));
+const _runtimeConfig = (function(a,b,c,d,e,f){return {app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""},nitro:{routes:{},envPrefix:"NUXT_"},TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,public:{TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f}}}("指尖魔法屋-醉月思的博客","0.1.2","thinkmoon","指尖魔法屋","醉月思的博客","web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"));
 const ENV_PREFIX = "NITRO_";
 const ENV_PREFIX_ALT = _runtimeConfig.nitro.envPrefix ?? process.env.NITRO_ENV_PREFIX ?? "_";
 const getEnv = (key) => {
