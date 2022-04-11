@@ -1,8 +1,0 @@
-node_modules
-.output
-*.log
-.idea
-.vscode
-.nuxt
-nuxt.d.ts
-/yarn.lock
