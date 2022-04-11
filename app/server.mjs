@@ -5533,7 +5533,7 @@ const meta$b = {
   layout: "admin",
   middleware: ["auth"]
 };
-axios.defaults.baseURL = "http://127.0.0.1:9447/api";
+axios.defaults.baseURL = "https://service.thinkmoon.cn/api";
 function request(options) {
   return new Promise((resolve, reject) => {
     axios(options).then((res) => {
