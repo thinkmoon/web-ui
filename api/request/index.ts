@@ -1,14 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-axios.defaults.baseURL = 'https://service.thinkmoon.cn/api';
-// axios.defaults.baseURL = 'http://127.0.0.1:9447/api';
-if (!process.server) {
-  const auth = useCookie('auth')
-  axios.defaults.headers.common['Authorization'] = auth.value;
-}
-
 function request(options: AxiosRequestConfig) {
   return new Promise((resolve, reject) => {
+    axios.defaults.baseURL = useRuntimeConfig().baseUrl;
+    if (!process.server) {
+      axios.defaults.headers.common['Authorization'] = useCookie('auth').value;
+    }
     axios(options).then(res => {
       if (res?.data?.code === 200) {
         resolve(res.data?.data);

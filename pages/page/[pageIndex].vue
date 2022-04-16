@@ -6,43 +6,33 @@
         <div class="posts-default-img">
           <a :href="`/post/${item.cid}`" :title="item.title">
             <div class="overlay" />
-            <el-image v-if="item.thumb" :src="item.thumb" fit="cover" lazy></el-image>
+            <el-image v-if="item.fields.thumb" :src="item.fields.thumb" fit="cover" lazy></el-image>
           </a>
         </div>
         <div class="posts-default-box">
           <div class="posts-default-title">
             <div v-if="item.tag" class="post-entry-categories">
-              <el-tag
-                v-for="tagItem in item.tag.split(',')"
-                :key="tagItem"
-                rel="tag"
-                class="post-tag"
-              >{{ tagItem }}</el-tag>
+              <el-tag v-for="tagItem in item.tag" :key="tagItem" rel="tag" class="post-tag">
+              <el-link type="primary" :href="`/tag/${tagItem.tid}/1`">{{ tagItem.name }}</el-link>
+              </el-tag>
             </div>
-            <el-link
-              :href="`/post/${item.cid}`"
-              :underline="false"
-              class="post-title"
-            >{{ item.title }}</el-link>
+            <el-link :href="`/post/${item.cid}`" :underline="false" class="post-title">{{ item.title }}</el-link>
           </div>
           <div class="posts-default-content">
-            <div class="posts-text">{{ item.desc }}</div>
+            <div class="posts-text">{{ item.fields.desc }}</div>
             <div class="posts-default-info">
               <div class="left">
                 <div class="post-author">
-                  <img
-                    style="border-radius:50% "
+                  <img style="border-radius:50% "
                     src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg"
-                    height="16"
-                    width="16"
-                  />
+                    height="16" width="16" />
                   <el-link href="https://www.thinkmoon.cn" target="_blank">醉月思</el-link>
                 </div>
                 <div class="ico-warp">
                   <el-icon>
                     <icon-FolderOpened />
                   </el-icon>
-                  <a>{{ item.category }}</a>
+                  <el-link :href="`/category/${item.category_id}/1`">{{ item.category }}</el-link>
                 </div>
                 <div class="ico-warp">
                   <el-icon>
@@ -71,26 +61,18 @@
       </div>
       <div class="pagination-div">
         <div>
-          <el-link
-            :href="`/page/${Number(pageIndex) - 1}`"
-            type="primary"
-            v-if="Number(pageIndex) !== 1"
-          >上一页</el-link>
+          <el-link :href="`/page/${Number(pageIndex) - 1}`" type="primary" v-if="Number(pageIndex) !== 1">上一页</el-link>
         </div>
         <div>
-          <el-link
-            :href="`/page/${Number(pageIndex) + 1}`"
-            type="primary"
-            v-if="Number(pageIndex) !== data.pages"
-          >下一页</el-link>
+          <el-link :href="`/page/${Number(pageIndex) + 1}`" type="primary" v-if="Number(pageIndex) !== data.pages">下一页
+          </el-link>
         </div>
       </div>
     </div>
     <div class="page-section">
       <Search></Search>
       <Announcement></Announcement>
-    </div>
-  </div>
+    </div>  </div>
 </template>
 
 <script lang="ts" setup>
@@ -110,7 +92,16 @@ let pageIndex = route.params.pageIndex;
 pageData.current = Number(pageIndex);
 const { data } = await useAsyncData('res', () => PostApi.getList({ current: pageIndex }));
 
-let postList = data.value.records;
+let postList = reactive(data.value.records);
+postList.forEach(item => {
+  if (item.fields instanceof Array) {
+    let fields = {}
+    item.fields.forEach(i => {
+      fields[i.name] = i.value
+    })
+    item.fields = fields;
+  }
+})
 pageData.total = data.value.total;
 if (process.server) {
   let url = `https://www.thinkmoon.cn/page/${route.params.pageIndex}`;
@@ -167,21 +158,26 @@ if (process.server) {
     }
   }
 }
+
 @media (max-width: 1024px) {
   .page-content {
     width: 90%;
+
     .blog-posts {
       width: 100%;
+
       .posts-default-content .right,
       .post-author {
         display: none;
       }
     }
+
     .page-section {
       display: none;
     }
   }
 }
+
 .pagination-div {
   display: flex;
   justify-content: space-between;
@@ -198,14 +194,16 @@ if (process.server) {
   .ico-warp {
     display: flex;
     align-items: center;
+
     & :deep(.el-icon) {
       margin-right: 4px;
     }
   }
 
-  > div {
+  >div {
     display: flex;
   }
+
   .post-author {
     display: flex;
     align-items: center;

@@ -1,16 +1,16 @@
 {
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.3",
   "scripts": {
-    "dev": "nuxi dev",
+    "dev": "yarn upgrade-interactive && nuxi dev",
     "build": "nuxi build",
-    "start": "node .output/server/index.mjs"
+    "start": "nuxi preview"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.176",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "nuxt3": "latest"
+    "nuxt3": "^3.0.0-27484505.9f6eff7"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
@@ -20,6 +20,7 @@
     "dayjs": "^1.11.0",
     "element-plus": "^2.0.4",
     "lodash": "^4.17.21",
-    "pinia": "^2.0.11"
+    "pinia": "^2.0.11",
+    "qiniu-js": "^3.4.0"
   }
 }

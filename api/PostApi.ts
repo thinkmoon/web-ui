@@ -22,4 +22,11 @@ export default class PostApi {
       data
     })
   }
+  static add(data){
+    return request({
+      method: 'post',
+      url: `/post/add`,
+      data
+    })
+  }
 }

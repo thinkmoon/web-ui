@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <Title>登录</Title>
+    <Title>登录 | </Title>
     <div class="login-dialog">
       <el-form :model="form">
         <el-form-item label="账号">
@@ -18,9 +18,8 @@
 </template>
 <script lang="ts" setup>
 import UserApi from '~/api/UserApi';
-import { useRouter } from 'vue-router'
+const { $message } = useNuxtApp()
 const auth = useCookie('auth');
-const router = useRouter();
 
 definePageMeta({
   layout: false,
@@ -34,7 +33,13 @@ const form = reactive({
 function onSubmit() {
   UserApi.login(form).then((res: string) => {
     auth.value = res;
-    router.push('/admin');
+    if (!process.server) {
+      window.location.href = '/admin';
+    }
+  }).catch(() => {
+    if (!process.server) {
+      $message.error('登录失败')
+    }
   })
 }
 

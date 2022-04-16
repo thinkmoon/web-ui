@@ -17,6 +17,7 @@ const route = useRoute();
 const url = `https://www.thinkmoon.cn/post/${route.params.cid}`;
 
 const { data } = await useAsyncData('article', () => PostApi.getDetail({ cid: route.params.cid }));
+console.log(data.value)
 let copyRight = `> 版权声明: 本文首发于[指尖魔法屋-${data.value.title}](${url}),转载或引用必须申明原指尖魔法屋来源及源地址！`
 const content = computed(() => `# ${data.value.title} \r\n ${data.value.text} \r\n ${copyRight}`);
 if (process.server) {
