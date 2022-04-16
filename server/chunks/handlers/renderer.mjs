@@ -10,6 +10,7 @@ import 'radix3';
 import 'unenv/runtime/fetch/index';
 import 'hookable';
 import 'scule';
+import 'defu';
 import 'ohash';
 import 'unstorage';
 
@@ -524,8 +525,7 @@ const htmlTemplate = (params) => `<!DOCTYPE html>
   ${params.APP}
 </body>
 
-</html>
-`;
+</html>`;
 
 const STATIC_ASSETS_BASE = process.env.NUXT_STATIC_BASE + "/" + process.env.NUXT_STATIC_VERSION;
 const NUXT_NO_SSR = process.env.NUXT_NO_SSR;
@@ -551,7 +551,7 @@ const getSPARenderer = cachedResult(async () => {
     ssrContext.nuxt = {
       serverRendered: false,
       config: {
-        ...config.public,
+        public: config.public,
         app: config.app
       }
     };
@@ -582,13 +582,12 @@ const renderer = eventHandler(async (event) => {
     isPayloadReq = true;
     url = url.slice(STATIC_ASSETS_BASE.length, url.length - PAYLOAD_JS.length) || "/";
   }
-  const config = useRuntimeConfig();
   const ssrContext = {
     url,
     event,
     req: event.req,
     res: event.res,
-    runtimeConfig: { private: config, public: { ...config.public, app: config.app } },
+    runtimeConfig: useRuntimeConfig(),
     noSSR: event.req.headers["x-nuxt-no-ssr"],
     error: ssrError,
     redirected: void 0,

@@ -24,6 +24,7 @@ import 'radix3';
 import 'unenv/runtime/fetch/index';
 import 'hookable';
 import 'scule';
+import 'defu';
 import 'ohash';
 import 'unstorage';
 
@@ -3464,9 +3465,27 @@ function createNuxtApp(options) {
     nuxtApp.ssrContext.payload = nuxtApp.payload;
   }
   {
-    nuxtApp.provide("config", options.ssrContext.runtimeConfig.private);
-    nuxtApp.payload.config = options.ssrContext.runtimeConfig.public;
+    nuxtApp.payload.config = {
+      public: options.ssrContext.runtimeConfig.public,
+      app: options.ssrContext.runtimeConfig.app
+    };
   }
+  const runtimeConfig = options.ssrContext.runtimeConfig;
+  const compatibilityConfig = new Proxy(runtimeConfig, {
+    get(target, prop) {
+      var _a;
+      if (prop === "public") {
+        return target.public;
+      }
+      return (_a = target[prop]) != null ? _a : target.public[prop];
+    },
+    set(target, prop, value) {
+      {
+        return false;
+      }
+    }
+  });
+  nuxtApp.provide("config", compatibilityConfig);
   return nuxtApp;
 }
 async function applyPlugin(nuxtApp, plugin) {
@@ -3533,6 +3552,7 @@ function useRuntimeConfig() {
 function defineGetter(obj, key, val) {
   Object.defineProperty(obj, key, { get: () => val });
 }
+const wrapInRef = (value) => vue_cjs_prod.isRef(value) ? value : vue_cjs_prod.ref(value);
 const getDefault = () => null;
 function useAsyncData(key, handler, options = {}) {
   var _a, _b, _c, _d, _e;
@@ -3564,7 +3584,7 @@ function useAsyncData(key, handler, options = {}) {
   }
   const useInitialCache = () => options.initialCache && nuxt.payload.data[key] !== void 0;
   const asyncData = {
-    data: vue_cjs_prod.ref((_d = nuxt.payload.data[key]) != null ? _d : options.default()),
+    data: wrapInRef((_d = nuxt.payload.data[key]) != null ? _d : options.default()),
     pending: vue_cjs_prod.ref(!useInitialCache()),
     error: vue_cjs_prod.ref((_e = nuxt.payload._errors[key]) != null ? _e : null)
   };
@@ -3619,7 +3639,12 @@ const useState = (key, init) => {
   const nuxt = useNuxtApp();
   const state = vue_cjs_prod.toRef(nuxt.payload.state, key);
   if (state.value === void 0 && init) {
-    state.value = init();
+    const initialValue = init();
+    if (vue_cjs_prod.isRef(initialValue)) {
+      nuxt.payload.state[key] = initialValue;
+      return initialValue;
+    }
+    state.value = initialValue;
   }
   return state;
 };
@@ -3813,7 +3838,7 @@ function useCookie(name, _opts) {
   var _a, _b;
   const opts = __spreadValues(__spreadValues({}, CookieDefaults), _opts);
   const cookies = readRawCookies(opts);
-  const cookie = vue_cjs_prod.ref((_b = cookies[name]) != null ? _b : (_a = opts.default) == null ? void 0 : _a.call(opts));
+  const cookie = wrapInRef((_b = cookies[name]) != null ? _b : (_a = opts.default) == null ? void 0 : _a.call(opts));
   {
     const initialValue = cookie.value;
     const nuxtApp = useNuxtApp();
@@ -4599,6 +4624,7 @@ var updateElements = (document2 = window.document, type4, tags) => {
 };
 var createHead = () => {
   let allHeadObjs = [];
+  let previousTags = /* @__PURE__ */ new Set();
   const head = {
     install(app) {
       app.config.globalProperties.$head = head;
@@ -4664,9 +4690,12 @@ var createHead = () => {
       }
       setAttrs(document2.documentElement, htmlAttrs);
       setAttrs(document2.body, bodyAttrs);
-      for (const name of Object.keys(actualTags)) {
-        updateElements(document2, name, actualTags[name]);
+      const tags = /* @__PURE__ */ new Set([...Object.keys(actualTags), ...previousTags]);
+      for (const tag of tags) {
+        updateElements(document2, tag, actualTags[tag] || []);
       }
+      previousTags.clear();
+      Object.keys(actualTags).forEach((i) => previousTags.add(i));
     }
   };
   return head;
@@ -5533,9 +5562,9 @@ const meta$b = {
   layout: "admin",
   middleware: ["auth"]
 };
-axios.defaults.baseURL = "https://service.thinkmoon.cn/api";
 function request(options) {
   return new Promise((resolve, reject) => {
+    axios.defaults.baseURL = useRuntimeConfig().baseUrl;
     axios(options).then((res) => {
       var _a, _b;
       if (((_a = res == null ? void 0 : res.data) == null ? void 0 : _a.code) === 200) {
@@ -6788,6 +6817,7 @@ const routes = [
     file: "/home/runner/work/web-ui/web-ui/pages/404.vue",
     children: [],
     meta: meta$c,
+    alias: (meta$c == null ? void 0 : meta$c.alias) || [],
     component: () => Promise.resolve().then(function() {
       return _404;
     })
@@ -6802,6 +6832,7 @@ const routes = [
         file: "/home/runner/work/web-ui/web-ui/pages/admin/editor.vue",
         children: [],
         meta: meta$a,
+        alias: (meta$a == null ? void 0 : meta$a.alias) || [],
         component: () => Promise.resolve().then(function() {
           return editor;
         })
@@ -6812,6 +6843,7 @@ const routes = [
         file: "/home/runner/work/web-ui/web-ui/pages/admin/index.vue",
         children: [],
         meta: meta$9,
+        alias: [],
         component: () => Promise.resolve().then(function() {
           return index$7;
         })
@@ -6822,12 +6854,14 @@ const routes = [
         file: "/home/runner/work/web-ui/web-ui/pages/admin/post-list.vue",
         children: [],
         meta: meta$8,
+        alias: (meta$8 == null ? void 0 : meta$8.alias) || [],
         component: () => Promise.resolve().then(function() {
           return postList;
         })
       }
     ],
     meta: meta$b,
+    alias: (meta$b == null ? void 0 : meta$b.alias) || [],
     component: () => Promise.resolve().then(function() {
       return admin$3;
     })
@@ -6838,6 +6872,7 @@ const routes = [
     file: "/home/runner/work/web-ui/web-ui/pages/category/[mid]/[pageIndex].vue",
     children: [],
     meta: meta$7,
+    alias: [],
     component: () => Promise.resolve().then(function() {
       return _pageIndex_$4;
     })
@@ -6848,6 +6883,7 @@ const routes = [
     file: "/home/runner/work/web-ui/web-ui/pages/category/index.vue",
     children: [],
     meta: meta$6,
+    alias: [],
     component: () => Promise.resolve().then(function() {
       return index$5;
     })
@@ -6858,6 +6894,7 @@ const routes = [
     file: "/home/runner/work/web-ui/web-ui/pages/index.vue",
     children: [],
     meta: meta$5,
+    alias: (meta$5 == null ? void 0 : meta$5.alias) || [],
     component: () => Promise.resolve().then(function() {
       return index$3;
     })
@@ -6868,6 +6905,7 @@ const routes = [
     file: "/home/runner/work/web-ui/web-ui/pages/login.vue",
     children: [],
     meta: meta$4,
+    alias: (meta$4 == null ? void 0 : meta$4.alias) || [],
     component: () => Promise.resolve().then(function() {
       return login$1;
     })
@@ -6878,6 +6916,7 @@ const routes = [
     file: "/home/runner/work/web-ui/web-ui/pages/page/[pageIndex].vue",
     children: [],
     meta: meta$3,
+    alias: [],
     component: () => Promise.resolve().then(function() {
       return _pageIndex_$2;
     })
@@ -6888,6 +6927,7 @@ const routes = [
     file: "/home/runner/work/web-ui/web-ui/pages/post/[cid].vue",
     children: [],
     meta: meta$2,
+    alias: [],
     component: () => Promise.resolve().then(function() {
       return _cid_$1;
     })
@@ -6898,6 +6938,7 @@ const routes = [
     file: "/home/runner/work/web-ui/web-ui/pages/tag/[tid]/[pageIndex].vue",
     children: [],
     meta: meta$1,
+    alias: [],
     component: () => Promise.resolve().then(function() {
       return _pageIndex_;
     })
@@ -6908,6 +6949,7 @@ const routes = [
     file: "/home/runner/work/web-ui/web-ui/pages/tag/index.vue",
     children: [],
     meta,
+    alias: [],
     component: () => Promise.resolve().then(function() {
       return index$1;
     })

@@ -77,8 +77,9 @@ function handleCacheHeaders(event, opts) {
     opts.cacheControls?.push(`max-age=${+opts.maxAge}`, `s-maxage=${+opts.maxAge}`);
   }
   if (opts.modifiedTime) {
+    const modifiedTime = new Date(opts.modifiedTime);
     const ifModifiedSince = event.req.headers["if-modified-since"];
-    event.res.setHeader("Last-Modified", +opts.modifiedTime + "");
+    event.res.setHeader("Last-Modified", modifiedTime.toUTCString());
     if (ifModifiedSince) {
       if (new Date(ifModifiedSince) >= opts.modifiedTime) {
         cacheMatched = true;
@@ -465,7 +466,11 @@ function createRouter() {
       routes[path] = route = { handlers: {} };
       _router.insert(path, route);
     }
-    route.handlers[method] = toEventHandler(handler);
+    if (Array.isArray(method)) {
+      method.forEach((m) => addRoute(path, handler, m));
+    } else {
+      route.handlers[method] = toEventHandler(handler);
+    }
     return router;
   };
   router.use = router.add = (path, handler, method) => addRoute(path, handler, method || "all");
