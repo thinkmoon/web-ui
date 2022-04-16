@@ -6679,7 +6679,13 @@ const _sfc_main$2W = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const route = vueRouter_cjs.useRoute();
     const url2 = `https://www.thinkmoon.cn/post/${route.params.cid}`;
     const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("article", () => PostApi.getDetail({ cid: route.params.cid }))), __temp = await __temp, __restore(), __temp);
-    console.log(data.value);
+    if (data.value.fields instanceof Array) {
+      let fields = {};
+      data.value.fields.forEach((i) => {
+        fields[i.name] = i.value;
+      });
+      data.value.fields = fields;
+    }
     let copyRight = `> \u7248\u6743\u58F0\u660E: \u672C\u6587\u9996\u53D1\u4E8E[\u6307\u5C16\u9B54\u6CD5\u5C4B-${data.value.title}](${url2}),\u8F6C\u8F7D\u6216\u5F15\u7528\u5FC5\u987B\u7533\u660E\u539F\u6307\u5C16\u9B54\u6CD5\u5C4B\u6765\u6E90\u53CA\u6E90\u5730\u5740\uFF01`;
     const content = vue_cjs_prod.computed(() => `# ${data.value.title} \r
  ${data.value.text} \r
@@ -6693,14 +6699,14 @@ const _sfc_main$2W = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     }
     useMeta({
       meta: [
-        { name: "keywords", content: data.value.tag || config.KEYWORDS },
-        { name: "description", content: data.value.desc || config.DESCRIPTION }
+        { name: "keywords", content: data.value.tag.map((i) => i.name).join(",") || config.KEYWORDS },
+        { name: "description", content: data.value.fields.desc || config.DESCRIPTION }
       ]
     });
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_v_md_preview = vue_cjs_prod.resolveComponent("v-md-preview");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))} data-v-605881e7>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))} data-v-b5234a06>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -6713,7 +6719,7 @@ const _sfc_main$2W = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`<div class="article-content" data-v-605881e7>`);
+      _push(`<div class="article-content" data-v-b5234a06>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_v_md_preview, { text: vue_cjs_prod.unref(content) }, null, _parent));
       _push(`</div></div>`);
     };
@@ -52895,7 +52901,13 @@ const _sfc_main$5 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const route = vueRouter_cjs.useRoute();
     const url2 = `https://www.thinkmoon.cn/post/${route.params.cid}`;
     const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("article", () => PostApi.getDetail({ cid: route.params.cid }))), __temp = await __temp, __restore(), __temp);
-    console.log(data.value);
+    if (data.value.fields instanceof Array) {
+      let fields = {};
+      data.value.fields.forEach((i) => {
+        fields[i.name] = i.value;
+      });
+      data.value.fields = fields;
+    }
     let copyRight = `> \u7248\u6743\u58F0\u660E: \u672C\u6587\u9996\u53D1\u4E8E[\u6307\u5C16\u9B54\u6CD5\u5C4B-${data.value.title}](${url2}),\u8F6C\u8F7D\u6216\u5F15\u7528\u5FC5\u987B\u7533\u660E\u539F\u6307\u5C16\u9B54\u6CD5\u5C4B\u6765\u6E90\u53CA\u6E90\u5730\u5740\uFF01`;
     const content = vue_cjs_prod.computed(() => `# ${data.value.title} \r
  ${data.value.text} \r
@@ -52909,14 +52921,14 @@ const _sfc_main$5 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     }
     useMeta({
       meta: [
-        { name: "keywords", content: data.value.tag || config.KEYWORDS },
-        { name: "description", content: data.value.desc || config.DESCRIPTION }
+        { name: "keywords", content: data.value.tag.map((i) => i.name).join(",") || config.KEYWORDS },
+        { name: "description", content: data.value.fields.desc || config.DESCRIPTION }
       ]
     });
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_v_md_preview = vue_cjs_prod.resolveComponent("v-md-preview");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))} data-v-605881e7>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))} data-v-b5234a06>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -52929,7 +52941,7 @@ const _sfc_main$5 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`<div class="article-content" data-v-605881e7>`);
+      _push(`<div class="article-content" data-v-b5234a06>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_v_md_preview, { text: vue_cjs_prod.unref(content) }, null, _parent));
       _push(`</div></div>`);
     };
@@ -52941,7 +52953,7 @@ _sfc_main$5.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/post/[cid].vue");
   return _sfc_setup$5 ? _sfc_setup$5(props, ctx) : void 0;
 };
-const _cid_ = /* @__PURE__ */ _export_sfc$2(_sfc_main$5, [["__scopeId", "data-v-605881e7"]]);
+const _cid_ = /* @__PURE__ */ _export_sfc$2(_sfc_main$5, [["__scopeId", "data-v-b5234a06"]]);
 const _cid_$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": _cid_
