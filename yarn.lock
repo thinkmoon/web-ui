@@ -442,6 +442,30 @@
     unimport "^0.1.5"
     untyped "^0.4.4"
 
+"@nuxt/kit@npm:@nuxt/kit-edge@latest":
+  version "3.0.0-27501460.04a72f8"
+  resolved "https://repo.huaweicloud.com/repository/npm/@nuxt/kit-edge/-/kit-edge-3.0.0-27501460.04a72f8.tgz#091a590c52a064d737da58b5e9e9c23d0271e1df"
+  integrity sha512-B7jujSfjPVnnkqGtkiZfCeGJsnDBn5yIjkz+Rw1fuT0ZzUVI4u+yYlYuRXp9chv+QodPt4dOQgljMlc0YuzHEw==
+  dependencies:
+    "@nuxt/schema" "npm:@nuxt/schema-edge@3.0.0-27501460.04a72f8"
+    c12 "^0.2.5"
+    consola "^2.15.3"
+    defu "^6.0.0"
+    globby "^13.1.1"
+    hash-sum "^2.0.0"
+    ignore "^5.2.0"
+    jiti "^1.13.0"
+    knitwork "^0.1.1"
+    lodash.template "^4.5.0"
+    mlly "^0.5.2"
+    pathe "^0.2.0"
+    pkg-types "^0.3.2"
+    scule "^0.2.1"
+    semver "^7.3.7"
+    unctx "^1.1.4"
+    unimport "^0.1.5"
+    untyped "^0.4.4"
+
 "@nuxt/schema@npm:@nuxt/schema-edge@3.0.0-27501460.04a72f8":
   version "3.0.0-27501460.04a72f8"
   resolved "https://registry.npmmirror.com/@nuxt/schema-edge/-/schema-edge-3.0.0-27501460.04a72f8.tgz#515bb0d4ed9d2ee92d182710f0295216aaf1f283"
@@ -869,9 +893,9 @@
     toml "^3.0.0"
     upath "^1.1.0"
 
-"@vueuse/core@^8.2.4":
+"@vueuse/core@8.2.6", "@vueuse/core@^8.2.4":
   version "8.2.6"
-  resolved "https://registry.npmmirror.com/@vueuse/core/-/core-8.2.6.tgz#baf674acadd678b0429c60477213c6dab08ea9e0"
+  resolved "https://repo.huaweicloud.com/repository/npm/@vueuse/core/-/core-8.2.6.tgz#baf674acadd678b0429c60477213c6dab08ea9e0"
   integrity sha512-fzlpM3B5oVe+UhCT1mXlhG1Zxdq2lq1Z2AvddSB8+RxrsSFzII7DKfsQEz8Vop7Lzc++4m8drTNbhPovYoFqHw==
   dependencies:
     "@vueuse/metadata" "8.2.6"
@@ -887,6 +911,17 @@
   version "8.2.6"
   resolved "https://registry.npmmirror.com/@vueuse/metadata/-/metadata-8.2.6.tgz#0e649ff5c784ac73d35f44f9758fac33f62e3e3f"
   integrity sha512-OBKtafCt+4RcEJlYDCjp1vl65pBCL2g4TmipEtdZ8/qphKlW6nakJbkY7XRN5grPmjqU99/ahJGtyGk5NHS2hw==
+
+"@vueuse/nuxt@^8.2.5":
+  version "8.2.6"
+  resolved "https://repo.huaweicloud.com/repository/npm/@vueuse/nuxt/-/nuxt-8.2.6.tgz#3c3664053c841d59d4626a27fcd742c5abd5e69f"
+  integrity sha512-PFblvuckcf3MIu727bY4Oa1qym17gEkLEFnFqfpP70rp0Yi63LnoLzp30eJd4ES7rsxYgJtPTwq3/nTHBhPJ8w==
+  dependencies:
+    "@nuxt/kit" "npm:@nuxt/kit-edge@latest"
+    "@vueuse/core" "8.2.6"
+    "@vueuse/metadata" "8.2.6"
+    local-pkg "^0.4.1"
+    vue-demi "*"
 
 "@vueuse/shared@8.2.6":
   version "8.2.6"

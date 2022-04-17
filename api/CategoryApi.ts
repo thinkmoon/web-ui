@@ -7,4 +7,11 @@ export default class CategoryApi {
 			url: `/category/list`
 		})
 	}
+
+	static getDetail(id){
+		return request({
+			method: 'get',
+			url: `/category/list/${id}`
+		})
+	}
 }

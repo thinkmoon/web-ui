@@ -17,5 +17,12 @@ export default defineNuxtConfig({
     ],
   },
   css: ["assets/css/index.less","element-plus/dist/index.css"],
-  buildModules: ["@pinia/nuxt"],
+  components: true,
+  vueuse: {
+    ssrHandlers: true,
+  },
+  buildModules: [
+    '@vueuse/nuxt',
+    "@pinia/nuxt",
+  ],
 });
