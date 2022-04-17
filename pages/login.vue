@@ -21,6 +21,10 @@ import UserApi from '~/api/UserApi';
 const { $message } = useNuxtApp()
 const auth = useCookie('auth');
 
+if(auth.value){
+  navigateTo({path: '/admin'})
+}
+
 definePageMeta({
   layout: false,
 });

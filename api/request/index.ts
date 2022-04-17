@@ -3,8 +3,10 @@ import axios, { AxiosRequestConfig } from 'axios';
 function request(options: AxiosRequestConfig) {
   return new Promise((resolve, reject) => {
     axios.defaults.baseURL = useRuntimeConfig().baseUrl;
+    let auth = null;
     if (!process.server) {
-      axios.defaults.headers.common['Authorization'] = useCookie('auth').value;
+      auth = useCookie('auth');
+      axios.defaults.headers.common['Authorization'] = auth.value;
     }
     axios(options).then(res => {
       if (res?.data?.code === 200) {
@@ -15,6 +17,7 @@ function request(options: AxiosRequestConfig) {
     }).catch(err => {
       console.error(err);
       if (Number(err.response?.status) === 401) {
+        auth.value = null;
         location.href = '/login';
       }
     });
