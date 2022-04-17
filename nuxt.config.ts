@@ -16,6 +16,6 @@ export default defineNuxtConfig({
       },
     ],
   },
-  css: ["assets/css/index.less"],
+  css: ["assets/css/index.less","element-plus/dist/index.css"],
   buildModules: ["@pinia/nuxt"],
 });
