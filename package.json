@@ -21,6 +21,7 @@
     "dayjs": "^1.11.0",
     "element-plus": "^2.0.4",
     "lodash": "^4.17.21",
+    "markdown-it-external-links": "^0.0.6",
     "pinia": "^2.0.11",
     "qiniu-js": "^3.4.0"
   }
