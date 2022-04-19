@@ -248,11 +248,15 @@ function renderPreloadLinks(ssrContext, rendererContext) {
 }
 function renderPrefetchLinks(ssrContext, rendererContext) {
   const { prefetch } = getRequestDependencies(ssrContext, rendererContext);
-  return Object.values(prefetch).map(({ path }) => `<link ${isModule(path) ? 'type="module" ' : ""}rel="prefetch${isCSS(path) ? " stylesheet" : ""}" href="${rendererContext.publicPath}${path}">`).join("");
+  return Object.values(prefetch).map(({ path }) => {
+    const rel = "prefetch" + (isCSS(path) ? " stylesheet" : "");
+    const as = isJS(path) ? ' as="script"' : "";
+    return `<link rel="${rel}"${as} href="${rendererContext.publicPath}${path}">`;
+  }).join("");
 }
 function renderScripts(ssrContext, rendererContext) {
   const { scripts } = getRequestDependencies(ssrContext, rendererContext);
-  return Object.values(scripts).map(({ path, type }) => `<script${type === "module" ? ' type="module"' : ""} src="${rendererContext.publicPath}${path}" defer><\/script>`).join("");
+  return Object.values(scripts).map(({ path, type }) => `<script${type === "module" ? ' type="module"' : ""} src="${rendererContext.publicPath}${path}"${type !== "module" ? " defer" : ""}><\/script>`).join("");
 }
 function createRenderer(createApp, renderOptions) {
   const rendererContext = createRendererContext(renderOptions);

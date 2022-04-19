@@ -11,6 +11,7 @@ import VMdEditor from '@kangc/v-md-editor';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import hljs from 'highlight.js';
 import VMdPreview from '@kangc/v-md-editor/lib/preview.js';
+import externalLinks from 'markdown-it-external-links';
 import { u as useRuntimeConfig$1 } from '../nitro/node-server.mjs';
 import 'unenv/runtime/mock/proxy';
 import 'stream';
@@ -5048,6 +5049,7 @@ const Fragment = {
 const _wrapIf = (component2, props, slots) => {
   return { default: () => props ? vue_cjs_prod.h(component2, props === true ? {} : props, slots) : vue_cjs_prod.h(Fragment, {}, slots) };
 };
+const isNestedKey = Symbol("isNested");
 const NuxtPage = vue_cjs_prod.defineComponent({
   name: "NuxtPage",
   props: {
@@ -5058,11 +5060,13 @@ const NuxtPage = vue_cjs_prod.defineComponent({
   },
   setup(props) {
     const nuxtApp = useNuxtApp();
+    const isNested = vue_cjs_prod.inject(isNestedKey, false);
+    vue_cjs_prod.provide(isNestedKey, true);
     return () => {
       return vue_cjs_prod.h(vueRouter_cjs.RouterView, {}, {
         default: (routeProps) => {
           var _a2;
-          return routeProps.Component && _wrapIf(vue_cjs_prod.Transition, (_a2 = routeProps.route.meta.pageTransition) != null ? _a2 : defaultPageTransition, wrapInKeepAlive(routeProps.route.meta.keepalive, vue_cjs_prod.h(vue_cjs_prod.Suspense, {
+          return routeProps.Component && _wrapIf(vue_cjs_prod.Transition, (_a2 = routeProps.route.meta.pageTransition) != null ? _a2 : defaultPageTransition, wrapInKeepAlive(routeProps.route.meta.keepalive, isNested ? vue_cjs_prod.h(routeProps.Component, { key: generateRouteKey(props.pageKey, routeProps) }) : vue_cjs_prod.h(vue_cjs_prod.Suspense, {
             onPending: () => nuxtApp.callHook("page:start", routeProps.Component),
             onResolve: () => nuxtApp.callHook("page:finish", routeProps.Component)
           }, { default: () => vue_cjs_prod.h(routeProps.Component, { key: generateRouteKey(props.pageKey, routeProps) }) }))).default();
@@ -7218,7 +7222,7 @@ setSSRHandler("getDefaultStorage", () => {
 }
 const ssrPlugin_65c79876 = () => {
 };
-/*! Element Plus v2.1.9 */
+/*! Element Plus v2.1.10 */
 var freeGlobal = typeof global == "object" && global && globalThis.Object === Object && global;
 var freeGlobal$1 = freeGlobal;
 var freeSelf = typeof self == "object" && self && self.Object === Object && self;
@@ -9368,7 +9372,7 @@ var _export_sfc$1 = (sfc, props) => {
 const _sfc_main$2U = vue_cjs_prod.defineComponent({
   name: "ArrowDown"
 });
-const _hoisted_1$1D = {
+const _hoisted_1$1B = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9380,13 +9384,13 @@ const _hoisted_3$_ = [
   _hoisted_2$1h
 ];
 function _sfc_render$22(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1D, _hoisted_3$_);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1B, _hoisted_3$_);
 }
 var arrowDown = /* @__PURE__ */ _export_sfc$1(_sfc_main$2U, [["render", _sfc_render$22]]);
 const _sfc_main$2T = vue_cjs_prod.defineComponent({
   name: "ArrowLeft"
 });
-const _hoisted_1$1C = {
+const _hoisted_1$1A = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9398,13 +9402,13 @@ const _hoisted_3$Z = [
   _hoisted_2$1g
 ];
 function _sfc_render$21(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1C, _hoisted_3$Z);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1A, _hoisted_3$Z);
 }
 var arrowLeft = /* @__PURE__ */ _export_sfc$1(_sfc_main$2T, [["render", _sfc_render$21]]);
 const _sfc_main$2S = vue_cjs_prod.defineComponent({
   name: "ArrowRight"
 });
-const _hoisted_1$1B = {
+const _hoisted_1$1z = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9416,13 +9420,13 @@ const _hoisted_3$Y = [
   _hoisted_2$1f
 ];
 function _sfc_render$20(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1B, _hoisted_3$Y);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1z, _hoisted_3$Y);
 }
 var arrowRight = /* @__PURE__ */ _export_sfc$1(_sfc_main$2S, [["render", _sfc_render$20]]);
 const _sfc_main$2R = vue_cjs_prod.defineComponent({
   name: "ArrowUp"
 });
-const _hoisted_1$1A = {
+const _hoisted_1$1y = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9434,13 +9438,13 @@ const _hoisted_3$X = [
   _hoisted_2$1e
 ];
 function _sfc_render$1$(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1A, _hoisted_3$X);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1y, _hoisted_3$X);
 }
 var arrowUp = /* @__PURE__ */ _export_sfc$1(_sfc_main$2R, [["render", _sfc_render$1$]]);
 const _sfc_main$2Q = vue_cjs_prod.defineComponent({
   name: "Back"
 });
-const _hoisted_1$1z = {
+const _hoisted_1$1x = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9452,18 +9456,18 @@ const _hoisted_3$W = /* @__PURE__ */ vue_cjs_prod.createElementVNode("path", {
   fill: "currentColor",
   d: "m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
 }, null, -1);
-const _hoisted_4$j = [
+const _hoisted_4$i = [
   _hoisted_2$1d,
   _hoisted_3$W
 ];
 function _sfc_render$1_(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1z, _hoisted_4$j);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1x, _hoisted_4$i);
 }
 var back = /* @__PURE__ */ _export_sfc$1(_sfc_main$2Q, [["render", _sfc_render$1_]]);
 const _sfc_main$2P = vue_cjs_prod.defineComponent({
   name: "Calendar"
 });
-const _hoisted_1$1y = {
+const _hoisted_1$1w = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9475,13 +9479,13 @@ const _hoisted_3$V = [
   _hoisted_2$1c
 ];
 function _sfc_render$1Z(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1y, _hoisted_3$V);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1w, _hoisted_3$V);
 }
 var calendar = /* @__PURE__ */ _export_sfc$1(_sfc_main$2P, [["render", _sfc_render$1Z]]);
 const _sfc_main$2O = vue_cjs_prod.defineComponent({
   name: "CaretRight"
 });
-const _hoisted_1$1x = {
+const _hoisted_1$1v = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9493,13 +9497,13 @@ const _hoisted_3$U = [
   _hoisted_2$1b
 ];
 function _sfc_render$1Y(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1x, _hoisted_3$U);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1v, _hoisted_3$U);
 }
 var caretRight = /* @__PURE__ */ _export_sfc$1(_sfc_main$2O, [["render", _sfc_render$1Y]]);
 const _sfc_main$2N = vue_cjs_prod.defineComponent({
   name: "CaretTop"
 });
-const _hoisted_1$1w = {
+const _hoisted_1$1u = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9511,13 +9515,13 @@ const _hoisted_3$T = [
   _hoisted_2$1a
 ];
 function _sfc_render$1X(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1w, _hoisted_3$T);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1u, _hoisted_3$T);
 }
 var caretTop = /* @__PURE__ */ _export_sfc$1(_sfc_main$2N, [["render", _sfc_render$1X]]);
 const _sfc_main$2M = vue_cjs_prod.defineComponent({
   name: "Check"
 });
-const _hoisted_1$1v = {
+const _hoisted_1$1t = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9529,13 +9533,13 @@ const _hoisted_3$S = [
   _hoisted_2$19
 ];
 function _sfc_render$1W(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1v, _hoisted_3$S);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1t, _hoisted_3$S);
 }
 var check = /* @__PURE__ */ _export_sfc$1(_sfc_main$2M, [["render", _sfc_render$1W]]);
 const _sfc_main$2L = vue_cjs_prod.defineComponent({
   name: "CircleCheckFilled"
 });
-const _hoisted_1$1u = {
+const _hoisted_1$1s = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9547,13 +9551,13 @@ const _hoisted_3$R = [
   _hoisted_2$18
 ];
 function _sfc_render$1V(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1u, _hoisted_3$R);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1s, _hoisted_3$R);
 }
 var circleCheckFilled = /* @__PURE__ */ _export_sfc$1(_sfc_main$2L, [["render", _sfc_render$1V]]);
 const _sfc_main$2K = vue_cjs_prod.defineComponent({
   name: "CircleCheck"
 });
-const _hoisted_1$1t = {
+const _hoisted_1$1r = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9565,18 +9569,18 @@ const _hoisted_3$Q = /* @__PURE__ */ vue_cjs_prod.createElementVNode("path", {
   fill: "currentColor",
   d: "M745.344 361.344a32 32 0 0 1 45.312 45.312l-288 288a32 32 0 0 1-45.312 0l-160-160a32 32 0 1 1 45.312-45.312L480 626.752l265.344-265.408z"
 }, null, -1);
-const _hoisted_4$i = [
+const _hoisted_4$h = [
   _hoisted_2$17,
   _hoisted_3$Q
 ];
 function _sfc_render$1U(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1t, _hoisted_4$i);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1r, _hoisted_4$h);
 }
 var circleCheck = /* @__PURE__ */ _export_sfc$1(_sfc_main$2K, [["render", _sfc_render$1U]]);
 const _sfc_main$2J = vue_cjs_prod.defineComponent({
   name: "CircleCloseFilled"
 });
-const _hoisted_1$1s = {
+const _hoisted_1$1q = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9588,13 +9592,13 @@ const _hoisted_3$P = [
   _hoisted_2$16
 ];
 function _sfc_render$1T(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1s, _hoisted_3$P);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1q, _hoisted_3$P);
 }
 var circleCloseFilled = /* @__PURE__ */ _export_sfc$1(_sfc_main$2J, [["render", _sfc_render$1T]]);
 const _sfc_main$2I = vue_cjs_prod.defineComponent({
   name: "CircleClose"
 });
-const _hoisted_1$1r = {
+const _hoisted_1$1p = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9606,18 +9610,18 @@ const _hoisted_3$O = /* @__PURE__ */ vue_cjs_prod.createElementVNode("path", {
   fill: "currentColor",
   d: "M512 896a384 384 0 1 0 0-768 384 384 0 0 0 0 768zm0 64a448 448 0 1 1 0-896 448 448 0 0 1 0 896z"
 }, null, -1);
-const _hoisted_4$h = [
+const _hoisted_4$g = [
   _hoisted_2$15,
   _hoisted_3$O
 ];
 function _sfc_render$1S(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1r, _hoisted_4$h);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1p, _hoisted_4$g);
 }
 var circleClose = /* @__PURE__ */ _export_sfc$1(_sfc_main$2I, [["render", _sfc_render$1S]]);
 const _sfc_main$2H = vue_cjs_prod.defineComponent({
   name: "Clock"
 });
-const _hoisted_1$1q = {
+const _hoisted_1$1o = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9629,23 +9633,23 @@ const _hoisted_3$N = /* @__PURE__ */ vue_cjs_prod.createElementVNode("path", {
   fill: "currentColor",
   d: "M480 256a32 32 0 0 1 32 32v256a32 32 0 0 1-64 0V288a32 32 0 0 1 32-32z"
 }, null, -1);
-const _hoisted_4$g = /* @__PURE__ */ vue_cjs_prod.createElementVNode("path", {
+const _hoisted_4$f = /* @__PURE__ */ vue_cjs_prod.createElementVNode("path", {
   fill: "currentColor",
   d: "M480 512h256q32 0 32 32t-32 32H480q-32 0-32-32t32-32z"
 }, null, -1);
-const _hoisted_5$a = [
+const _hoisted_5$9 = [
   _hoisted_2$14,
   _hoisted_3$N,
-  _hoisted_4$g
+  _hoisted_4$f
 ];
 function _sfc_render$1R(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1q, _hoisted_5$a);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1o, _hoisted_5$9);
 }
 var clock = /* @__PURE__ */ _export_sfc$1(_sfc_main$2H, [["render", _sfc_render$1R]]);
 const _sfc_main$2G = vue_cjs_prod.defineComponent({
   name: "Close"
 });
-const _hoisted_1$1p = {
+const _hoisted_1$1n = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9657,13 +9661,13 @@ const _hoisted_3$M = [
   _hoisted_2$13
 ];
 function _sfc_render$1Q(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1p, _hoisted_3$M);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1n, _hoisted_3$M);
 }
 var close$2 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2G, [["render", _sfc_render$1Q]]);
 const _sfc_main$2F = vue_cjs_prod.defineComponent({
   name: "DArrowLeft"
 });
-const _hoisted_1$1o = {
+const _hoisted_1$1m = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9675,13 +9679,13 @@ const _hoisted_3$L = [
   _hoisted_2$12
 ];
 function _sfc_render$1P(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1o, _hoisted_3$L);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1m, _hoisted_3$L);
 }
 var dArrowLeft = /* @__PURE__ */ _export_sfc$1(_sfc_main$2F, [["render", _sfc_render$1P]]);
 const _sfc_main$2E = vue_cjs_prod.defineComponent({
   name: "DArrowRight"
 });
-const _hoisted_1$1n = {
+const _hoisted_1$1l = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9693,13 +9697,13 @@ const _hoisted_3$K = [
   _hoisted_2$11
 ];
 function _sfc_render$1O(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1n, _hoisted_3$K);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1l, _hoisted_3$K);
 }
 var dArrowRight = /* @__PURE__ */ _export_sfc$1(_sfc_main$2E, [["render", _sfc_render$1O]]);
 const _sfc_main$2D = vue_cjs_prod.defineComponent({
   name: "Delete"
 });
-const _hoisted_1$1m = {
+const _hoisted_1$1k = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9711,13 +9715,13 @@ const _hoisted_3$J = [
   _hoisted_2$10
 ];
 function _sfc_render$1N(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1m, _hoisted_3$J);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1k, _hoisted_3$J);
 }
 var _delete = /* @__PURE__ */ _export_sfc$1(_sfc_main$2D, [["render", _sfc_render$1N]]);
 const _sfc_main$2C = vue_cjs_prod.defineComponent({
   name: "Document"
 });
-const _hoisted_1$1l = {
+const _hoisted_1$1j = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9729,13 +9733,13 @@ const _hoisted_3$I = [
   _hoisted_2$$
 ];
 function _sfc_render$1M(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1l, _hoisted_3$I);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1j, _hoisted_3$I);
 }
 var document$1 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2C, [["render", _sfc_render$1M]]);
 const _sfc_main$2B = vue_cjs_prod.defineComponent({
   name: "FullScreen"
 });
-const _hoisted_1$1k = {
+const _hoisted_1$1i = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9747,13 +9751,13 @@ const _hoisted_3$H = [
   _hoisted_2$_
 ];
 function _sfc_render$1L(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1k, _hoisted_3$H);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1i, _hoisted_3$H);
 }
 var fullScreen = /* @__PURE__ */ _export_sfc$1(_sfc_main$2B, [["render", _sfc_render$1L]]);
 const _sfc_main$2A = vue_cjs_prod.defineComponent({
   name: "Hide"
 });
-const _hoisted_1$1j = {
+const _hoisted_1$1h = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9765,18 +9769,18 @@ const _hoisted_3$G = /* @__PURE__ */ vue_cjs_prod.createElementVNode("path", {
   d: "M511.998 672c-12.8 0-25.6-3.2-38.4-6.4l-51.2 51.2c28.8 12.8 57.6 19.2 89.6 19.2 64 0 115.2-22.4 160-64 41.6-41.6 64-96 64-160 0-32-6.4-64-19.2-89.6l-51.2 51.2c3.2 12.8 6.4 25.6 6.4 38.4 0 44.8-16 83.2-48 112-32 28.8-67.2 48-112 48Z",
   fill: "currentColor"
 }, null, -1);
-const _hoisted_4$f = [
+const _hoisted_4$e = [
   _hoisted_2$Z,
   _hoisted_3$G
 ];
 function _sfc_render$1K(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1j, _hoisted_4$f);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1h, _hoisted_4$e);
 }
 var hide$2 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2A, [["render", _sfc_render$1K]]);
 const _sfc_main$2z = vue_cjs_prod.defineComponent({
   name: "InfoFilled"
 });
-const _hoisted_1$1i = {
+const _hoisted_1$1g = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9788,13 +9792,13 @@ const _hoisted_3$F = [
   _hoisted_2$Y
 ];
 function _sfc_render$1J(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1i, _hoisted_3$F);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1g, _hoisted_3$F);
 }
 var infoFilled = /* @__PURE__ */ _export_sfc$1(_sfc_main$2z, [["render", _sfc_render$1J]]);
 const _sfc_main$2y = vue_cjs_prod.defineComponent({
   name: "Loading"
 });
-const _hoisted_1$1h = {
+const _hoisted_1$1f = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9806,13 +9810,13 @@ const _hoisted_3$E = [
   _hoisted_2$X
 ];
 function _sfc_render$1I(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1h, _hoisted_3$E);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1f, _hoisted_3$E);
 }
 var loading = /* @__PURE__ */ _export_sfc$1(_sfc_main$2y, [["render", _sfc_render$1I]]);
 const _sfc_main$2x = vue_cjs_prod.defineComponent({
   name: "Minus"
 });
-const _hoisted_1$1g = {
+const _hoisted_1$1e = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9824,13 +9828,13 @@ const _hoisted_3$D = [
   _hoisted_2$W
 ];
 function _sfc_render$1H(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1g, _hoisted_3$D);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1e, _hoisted_3$D);
 }
 var minus = /* @__PURE__ */ _export_sfc$1(_sfc_main$2x, [["render", _sfc_render$1H]]);
 const _sfc_main$2w = vue_cjs_prod.defineComponent({
   name: "MoreFilled"
 });
-const _hoisted_1$1f = {
+const _hoisted_1$1d = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9842,13 +9846,13 @@ const _hoisted_3$C = [
   _hoisted_2$V
 ];
 function _sfc_render$1G(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1f, _hoisted_3$C);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1d, _hoisted_3$C);
 }
 var moreFilled = /* @__PURE__ */ _export_sfc$1(_sfc_main$2w, [["render", _sfc_render$1G]]);
 const _sfc_main$2v = vue_cjs_prod.defineComponent({
   name: "More"
 });
-const _hoisted_1$1e = {
+const _hoisted_1$1c = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9860,13 +9864,13 @@ const _hoisted_3$B = [
   _hoisted_2$U
 ];
 function _sfc_render$1F(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1e, _hoisted_3$B);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1c, _hoisted_3$B);
 }
 var more = /* @__PURE__ */ _export_sfc$1(_sfc_main$2v, [["render", _sfc_render$1F]]);
 const _sfc_main$2u = vue_cjs_prod.defineComponent({
   name: "PictureFilled"
 });
-const _hoisted_1$1d = {
+const _hoisted_1$1b = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9878,13 +9882,13 @@ const _hoisted_3$A = [
   _hoisted_2$T
 ];
 function _sfc_render$1E(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1d, _hoisted_3$A);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1b, _hoisted_3$A);
 }
 var pictureFilled = /* @__PURE__ */ _export_sfc$1(_sfc_main$2u, [["render", _sfc_render$1E]]);
 const _sfc_main$2t = vue_cjs_prod.defineComponent({
   name: "Plus"
 });
-const _hoisted_1$1c = {
+const _hoisted_1$1a = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9896,13 +9900,13 @@ const _hoisted_3$z = [
   _hoisted_2$S
 ];
 function _sfc_render$1D(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1c, _hoisted_3$z);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1a, _hoisted_3$z);
 }
 var plus = /* @__PURE__ */ _export_sfc$1(_sfc_main$2t, [["render", _sfc_render$1D]]);
 const _sfc_main$2s = vue_cjs_prod.defineComponent({
   name: "QuestionFilled"
 });
-const _hoisted_1$1b = {
+const _hoisted_1$19 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9914,13 +9918,13 @@ const _hoisted_3$y = [
   _hoisted_2$R
 ];
 function _sfc_render$1C(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1b, _hoisted_3$y);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$19, _hoisted_3$y);
 }
 var questionFilled = /* @__PURE__ */ _export_sfc$1(_sfc_main$2s, [["render", _sfc_render$1C]]);
 const _sfc_main$2r = vue_cjs_prod.defineComponent({
   name: "RefreshLeft"
 });
-const _hoisted_1$1a = {
+const _hoisted_1$18 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9932,13 +9936,13 @@ const _hoisted_3$x = [
   _hoisted_2$Q
 ];
 function _sfc_render$1B(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1a, _hoisted_3$x);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$18, _hoisted_3$x);
 }
 var refreshLeft = /* @__PURE__ */ _export_sfc$1(_sfc_main$2r, [["render", _sfc_render$1B]]);
 const _sfc_main$2q = vue_cjs_prod.defineComponent({
   name: "RefreshRight"
 });
-const _hoisted_1$19 = {
+const _hoisted_1$17 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9950,13 +9954,13 @@ const _hoisted_3$w = [
   _hoisted_2$P
 ];
 function _sfc_render$1A(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$19, _hoisted_3$w);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$17, _hoisted_3$w);
 }
 var refreshRight = /* @__PURE__ */ _export_sfc$1(_sfc_main$2q, [["render", _sfc_render$1A]]);
 const _sfc_main$2p = vue_cjs_prod.defineComponent({
   name: "ScaleToOriginal"
 });
-const _hoisted_1$18 = {
+const _hoisted_1$16 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9968,13 +9972,13 @@ const _hoisted_3$v = [
   _hoisted_2$O
 ];
 function _sfc_render$1z(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$18, _hoisted_3$v);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$16, _hoisted_3$v);
 }
 var scaleToOriginal = /* @__PURE__ */ _export_sfc$1(_sfc_main$2p, [["render", _sfc_render$1z]]);
 const _sfc_main$2o = vue_cjs_prod.defineComponent({
   name: "Search"
 });
-const _hoisted_1$17 = {
+const _hoisted_1$15 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -9986,13 +9990,13 @@ const _hoisted_3$u = [
   _hoisted_2$N
 ];
 function _sfc_render$1y(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$17, _hoisted_3$u);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$15, _hoisted_3$u);
 }
 var search = /* @__PURE__ */ _export_sfc$1(_sfc_main$2o, [["render", _sfc_render$1y]]);
 const _sfc_main$2n = vue_cjs_prod.defineComponent({
   name: "StarFilled"
 });
-const _hoisted_1$16 = {
+const _hoisted_1$14 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -10004,13 +10008,13 @@ const _hoisted_3$t = [
   _hoisted_2$M
 ];
 function _sfc_render$1x(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$16, _hoisted_3$t);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$14, _hoisted_3$t);
 }
 var starFilled = /* @__PURE__ */ _export_sfc$1(_sfc_main$2n, [["render", _sfc_render$1x]]);
 const _sfc_main$2m = vue_cjs_prod.defineComponent({
   name: "Star"
 });
-const _hoisted_1$15 = {
+const _hoisted_1$13 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -10022,13 +10026,13 @@ const _hoisted_3$s = [
   _hoisted_2$L
 ];
 function _sfc_render$1w(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$15, _hoisted_3$s);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$13, _hoisted_3$s);
 }
 var star = /* @__PURE__ */ _export_sfc$1(_sfc_main$2m, [["render", _sfc_render$1w]]);
 const _sfc_main$2l = vue_cjs_prod.defineComponent({
   name: "SuccessFilled"
 });
-const _hoisted_1$14 = {
+const _hoisted_1$12 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -10040,13 +10044,13 @@ const _hoisted_3$r = [
   _hoisted_2$K
 ];
 function _sfc_render$1v(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$14, _hoisted_3$r);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$12, _hoisted_3$r);
 }
 var successFilled = /* @__PURE__ */ _export_sfc$1(_sfc_main$2l, [["render", _sfc_render$1v]]);
 const _sfc_main$2k = vue_cjs_prod.defineComponent({
   name: "View"
 });
-const _hoisted_1$13 = {
+const _hoisted_1$11 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -10058,13 +10062,13 @@ const _hoisted_3$q = [
   _hoisted_2$J
 ];
 function _sfc_render$1u(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$13, _hoisted_3$q);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$11, _hoisted_3$q);
 }
 var view = /* @__PURE__ */ _export_sfc$1(_sfc_main$2k, [["render", _sfc_render$1u]]);
 const _sfc_main$2j = vue_cjs_prod.defineComponent({
   name: "WarningFilled"
 });
-const _hoisted_1$12 = {
+const _hoisted_1$10 = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -10076,13 +10080,13 @@ const _hoisted_3$p = [
   _hoisted_2$I
 ];
 function _sfc_render$1t(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$12, _hoisted_3$p);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$10, _hoisted_3$p);
 }
 var warningFilled = /* @__PURE__ */ _export_sfc$1(_sfc_main$2j, [["render", _sfc_render$1t]]);
 const _sfc_main$2i = vue_cjs_prod.defineComponent({
   name: "ZoomIn"
 });
-const _hoisted_1$11 = {
+const _hoisted_1$$ = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -10094,13 +10098,13 @@ const _hoisted_3$o = [
   _hoisted_2$H
 ];
 function _sfc_render$1s(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$11, _hoisted_3$o);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$$, _hoisted_3$o);
 }
 var zoomIn = /* @__PURE__ */ _export_sfc$1(_sfc_main$2i, [["render", _sfc_render$1s]]);
 const _sfc_main$2h = vue_cjs_prod.defineComponent({
   name: "ZoomOut"
 });
-const _hoisted_1$10 = {
+const _hoisted_1$_ = {
   viewBox: "0 0 1024 1024",
   xmlns: "http://www.w3.org/2000/svg"
 };
@@ -10112,7 +10116,7 @@ const _hoisted_3$n = [
   _hoisted_2$G
 ];
 function _sfc_render$1r(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$10, _hoisted_3$n);
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$_, _hoisted_3$n);
 }
 var zoomOut = /* @__PURE__ */ _export_sfc$1(_sfc_main$2h, [["render", _sfc_render$1r]]);
 const wrapperKey = Symbol();
@@ -10334,7 +10338,9 @@ const ensureOnlyChild = (children) => {
   }
   return children[0];
 };
-const cubic = (value) => value ** 3;
+const cubic = (value) => {
+  return value ** 3;
+};
 const easeInOutCubic = (value) => value < 0.5 ? cubic(value * 2) / 2 : 1 - cubic((1 - value) * 2) / 2;
 const unique = (arr) => [...new Set(arr)];
 const castArray = (arr) => {
@@ -11209,7 +11215,7 @@ const arrowMiddleware = ({
     }
   };
 };
-const version$1 = "2.1.9";
+const version$1 = "2.1.10";
 const INSTALLED_KEY = Symbol("INSTALLED_KEY");
 const makeInstaller = (components2 = []) => {
   const install = (app, options) => {
@@ -11604,7 +11610,7 @@ const inputEmits = {
   compositionupdate: (evt) => evt instanceof CompositionEvent,
   compositionend: (evt) => evt instanceof CompositionEvent
 };
-const _hoisted_1$$ = ["type", "disabled", "readonly", "autocomplete", "tabindex", "aria-label", "placeholder"];
+const _hoisted_1$Z = ["type", "disabled", "readonly", "autocomplete", "tabindex", "aria-label", "placeholder"];
 const _hoisted_2$F = ["tabindex", "disabled", "readonly", "autocomplete", "aria-label", "placeholder"];
 const __default__$J = {
   name: "ElInput",
@@ -11778,29 +11784,7 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       setNativeInputValue();
       updateIconOffset();
     });
-    const innerSuffixRef = vue_cjs_prod.ref();
-    const innerPrefixRef = vue_cjs_prod.ref();
-    const inputStyleInner = vue_cjs_prod.ref({});
-    const getSuffixOrPrefixWidth = (slotElm, defaultVal) => {
-      if (slotElm.value) {
-        const slotElmWidth = slotElm.value.offsetWidth;
-        return slotElmWidth > 0 ? slotElmWidth + 16 : defaultVal;
-      }
-      return defaultVal;
-    };
-    const setInputPadding = () => {
-      inputStyleInner.value = __spreadValues({
-        paddingRight: `${getSuffixOrPrefixWidth(innerSuffixRef, 0)}px`,
-        paddingLeft: `${getSuffixOrPrefixWidth(innerPrefixRef, 11)}px`
-      }, props.inputStyle);
-    };
-    vue_cjs_prod.watch(showClear, () => {
-      vue_cjs_prod.nextTick(() => {
-        setInputPadding();
-      });
-    });
     vue_cjs_prod.onMounted(async () => {
-      setInputPadding();
       setNativeInputValue();
       updateIconOffset();
       await vue_cjs_prod.nextTick();
@@ -11834,7 +11818,7 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             [vue_cjs_prod.unref(nsInput).bm("group", "prepend")]: _ctx.$slots.prepend,
             [vue_cjs_prod.unref(nsInput).m("prefix")]: _ctx.$slots.prefix || _ctx.prefixIcon,
             [vue_cjs_prod.unref(nsInput).m("suffix")]: _ctx.$slots.suffix || _ctx.suffixIcon || _ctx.clearable || _ctx.showPassword,
-            [vue_cjs_prod.unref(nsInput).m("suffix--password-clear")]: vue_cjs_prod.unref(showClear) && vue_cjs_prod.unref(showPwdVisible)
+            [vue_cjs_prod.unref(nsInput).bm("suffix", "password-clear")]: vue_cjs_prod.unref(showClear) && vue_cjs_prod.unref(showPwdVisible)
           },
           _ctx.$attrs.class
         ]),
@@ -11851,120 +11835,120 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
           }, [
             vue_cjs_prod.renderSlot(_ctx.$slots, "prepend")
           ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true),
-          vue_cjs_prod.createElementVNode("input", vue_cjs_prod.mergeProps({
-            ref_key: "input",
-            ref: input,
-            class: vue_cjs_prod.unref(nsInput).e("inner")
-          }, vue_cjs_prod.unref(attrs), {
-            type: _ctx.showPassword ? passwordVisible.value ? "text" : "password" : _ctx.type,
-            disabled: vue_cjs_prod.unref(inputDisabled),
-            readonly: _ctx.readonly,
-            autocomplete: _ctx.autocomplete,
-            tabindex: _ctx.tabindex,
-            "aria-label": _ctx.label,
-            placeholder: _ctx.placeholder,
-            style: inputStyleInner.value,
-            onCompositionstart: handleCompositionStart,
-            onCompositionupdate: handleCompositionUpdate,
-            onCompositionend: handleCompositionEnd,
-            onInput: handleInput,
-            onFocus: handleFocus,
-            onBlur: handleBlur,
-            onChange: handleChange,
-            onKeydown: handleKeydown
-          }), null, 16, _hoisted_1$$),
-          vue_cjs_prod.createCommentVNode(" prefix slot "),
-          _ctx.$slots.prefix || _ctx.prefixIcon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
-            key: 1,
-            class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("prefix"))
+          vue_cjs_prod.createElementVNode("div", {
+            class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(nsInput).e("wrapper"), vue_cjs_prod.unref(nsInput).is("focus", focused.value)])
           }, [
-            vue_cjs_prod.createElementVNode("span", {
-              ref_key: "innerPrefixRef",
-              ref: innerPrefixRef,
-              class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("prefix-inner"))
+            vue_cjs_prod.createCommentVNode(" prefix slot "),
+            _ctx.$slots.prefix || _ctx.prefixIcon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
+              key: 0,
+              class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("prefix"))
             }, [
-              vue_cjs_prod.renderSlot(_ctx.$slots, "prefix"),
-              _ctx.prefixIcon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
-                key: 0,
-                class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("icon"))
-              }, {
-                default: vue_cjs_prod.withCtx(() => [
-                  (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(_ctx.prefixIcon)))
-                ]),
-                _: 1
-              }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true)
-            ], 2)
-          ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true),
-          vue_cjs_prod.createCommentVNode(" suffix slot "),
-          vue_cjs_prod.unref(suffixVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
-            key: 2,
-            class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("suffix"))
-          }, [
-            vue_cjs_prod.createElementVNode("span", {
-              ref_key: "innerSuffixRef",
-              ref: innerSuffixRef,
-              class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("suffix-inner"))
-            }, [
-              !vue_cjs_prod.unref(showClear) || !vue_cjs_prod.unref(showPwdVisible) || !vue_cjs_prod.unref(isWordLimitVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 0 }, [
-                vue_cjs_prod.renderSlot(_ctx.$slots, "suffix"),
-                _ctx.suffixIcon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
+              vue_cjs_prod.createElementVNode("span", {
+                class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("prefix-inner"))
+              }, [
+                vue_cjs_prod.renderSlot(_ctx.$slots, "prefix"),
+                _ctx.prefixIcon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
                   key: 0,
                   class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("icon"))
                 }, {
                   default: vue_cjs_prod.withCtx(() => [
-                    (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(_ctx.suffixIcon)))
+                    (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(_ctx.prefixIcon)))
                   ]),
                   _: 1
                 }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true)
-              ], 64)) : vue_cjs_prod.createCommentVNode("v-if", true),
-              vue_cjs_prod.unref(showClear) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
-                key: 1,
-                class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(nsInput).e("icon"), vue_cjs_prod.unref(nsInput).e("clear")]),
-                onMousedown: _cache[0] || (_cache[0] = vue_cjs_prod.withModifiers(() => {
-                }, ["prevent"])),
-                onClick: clear
-              }, {
-                default: vue_cjs_prod.withCtx(() => [
-                  vue_cjs_prod.createVNode(vue_cjs_prod.unref(circleClose))
-                ]),
-                _: 1
-              }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true),
-              vue_cjs_prod.unref(showPwdVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
-                key: 2,
-                class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(nsInput).e("icon"), vue_cjs_prod.unref(nsInput).e("clear")]),
-                onClick: handlePasswordVisible
-              }, {
-                default: vue_cjs_prod.withCtx(() => [
-                  (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(vue_cjs_prod.unref(passwordIcon))))
-                ]),
-                _: 1
-              }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true),
-              vue_cjs_prod.unref(isWordLimitVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
-                key: 3,
-                class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("count"))
+              ], 2)
+            ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true),
+            vue_cjs_prod.createElementVNode("input", vue_cjs_prod.mergeProps({
+              ref_key: "input",
+              ref: input,
+              class: vue_cjs_prod.unref(nsInput).e("inner")
+            }, vue_cjs_prod.unref(attrs), {
+              type: _ctx.showPassword ? passwordVisible.value ? "text" : "password" : _ctx.type,
+              disabled: vue_cjs_prod.unref(inputDisabled),
+              readonly: _ctx.readonly,
+              autocomplete: _ctx.autocomplete,
+              tabindex: _ctx.tabindex,
+              "aria-label": _ctx.label,
+              placeholder: _ctx.placeholder,
+              style: _ctx.inputStyle,
+              onCompositionstart: handleCompositionStart,
+              onCompositionupdate: handleCompositionUpdate,
+              onCompositionend: handleCompositionEnd,
+              onInput: handleInput,
+              onFocus: handleFocus,
+              onBlur: handleBlur,
+              onChange: handleChange,
+              onKeydown: handleKeydown
+            }), null, 16, _hoisted_1$Z),
+            vue_cjs_prod.createCommentVNode(" suffix slot "),
+            vue_cjs_prod.unref(suffixVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
+              key: 1,
+              class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("suffix"))
+            }, [
+              vue_cjs_prod.createElementVNode("span", {
+                class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("suffix-inner"))
               }, [
-                vue_cjs_prod.createElementVNode("span", {
-                  class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("count-inner"))
-                }, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(textLength)) + " / " + vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(attrs).maxlength), 3)
-              ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
-            ], 2),
-            vue_cjs_prod.unref(validateState) && vue_cjs_prod.unref(validateIcon) && vue_cjs_prod.unref(needStatusIcon) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
-              key: 0,
-              class: vue_cjs_prod.normalizeClass([
-                vue_cjs_prod.unref(nsInput).e("icon"),
-                vue_cjs_prod.unref(nsInput).e("validateIcon"),
-                vue_cjs_prod.unref(nsInput).is("loading", vue_cjs_prod.unref(validateState) === "validating")
-              ])
-            }, {
-              default: vue_cjs_prod.withCtx(() => [
-                (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(vue_cjs_prod.unref(validateIcon))))
-              ]),
-              _: 1
-            }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true)
-          ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true),
+                !vue_cjs_prod.unref(showClear) || !vue_cjs_prod.unref(showPwdVisible) || !vue_cjs_prod.unref(isWordLimitVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 0 }, [
+                  vue_cjs_prod.renderSlot(_ctx.$slots, "suffix"),
+                  _ctx.suffixIcon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
+                    key: 0,
+                    class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("icon"))
+                  }, {
+                    default: vue_cjs_prod.withCtx(() => [
+                      (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(_ctx.suffixIcon)))
+                    ]),
+                    _: 1
+                  }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true)
+                ], 64)) : vue_cjs_prod.createCommentVNode("v-if", true),
+                vue_cjs_prod.unref(showClear) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
+                  key: 1,
+                  class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(nsInput).e("icon"), vue_cjs_prod.unref(nsInput).e("clear")]),
+                  onMousedown: _cache[0] || (_cache[0] = vue_cjs_prod.withModifiers(() => {
+                  }, ["prevent"])),
+                  onClick: clear
+                }, {
+                  default: vue_cjs_prod.withCtx(() => [
+                    vue_cjs_prod.createVNode(vue_cjs_prod.unref(circleClose))
+                  ]),
+                  _: 1
+                }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true),
+                vue_cjs_prod.unref(showPwdVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
+                  key: 2,
+                  class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(nsInput).e("icon"), vue_cjs_prod.unref(nsInput).e("password")]),
+                  onClick: handlePasswordVisible
+                }, {
+                  default: vue_cjs_prod.withCtx(() => [
+                    (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(vue_cjs_prod.unref(passwordIcon))))
+                  ]),
+                  _: 1
+                }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true),
+                vue_cjs_prod.unref(isWordLimitVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
+                  key: 3,
+                  class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("count"))
+                }, [
+                  vue_cjs_prod.createElementVNode("span", {
+                    class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("count-inner"))
+                  }, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(textLength)) + " / " + vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(attrs).maxlength), 3)
+                ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
+              ], 2),
+              vue_cjs_prod.unref(validateState) && vue_cjs_prod.unref(validateIcon) && vue_cjs_prod.unref(needStatusIcon) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
+                key: 0,
+                class: vue_cjs_prod.normalizeClass([
+                  vue_cjs_prod.unref(nsInput).e("icon"),
+                  vue_cjs_prod.unref(nsInput).e("validateIcon"),
+                  vue_cjs_prod.unref(nsInput).is("loading", vue_cjs_prod.unref(validateState) === "validating")
+                ])
+              }, {
+                default: vue_cjs_prod.withCtx(() => [
+                  (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(vue_cjs_prod.unref(validateIcon))))
+                ]),
+                _: 1
+              }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true)
+            ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
+          ], 2),
           vue_cjs_prod.createCommentVNode(" append slot "),
           _ctx.$slots.append ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
-            key: 3,
+            key: 1,
             class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).be("group", "append"))
           }, [
             vue_cjs_prod.renderSlot(_ctx.$slots, "append")
@@ -14094,10 +14078,10 @@ const _sfc_main$26 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       });
       return createPopper(referenceEl, popperContentEl, options);
     };
-    const updatePopper = () => {
+    const updatePopper = (shouldUpdateZIndex = true) => {
       var _a2;
       (_a2 = vue_cjs_prod.unref(popperInstanceRef)) == null ? void 0 : _a2.update();
-      contentZIndex.value = props.zIndex || contentZIndex.value || nextZIndex();
+      shouldUpdateZIndex && (contentZIndex.value = props.zIndex || nextZIndex());
     };
     const togglePopperAlive = () => {
       var _a2, _b2;
@@ -14105,7 +14089,7 @@ const _sfc_main$26 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       (_b2 = (_a2 = vue_cjs_prod.unref(popperInstanceRef)) == null ? void 0 : _a2.setOptions) == null ? void 0 : _b2.call(_a2, (options) => __spreadProps(__spreadValues({}, options), {
         modifiers: [...options.modifiers || [], monitorable]
       }));
-      updatePopper();
+      updatePopper(false);
     };
     vue_cjs_prod.onMounted(() => {
       let updateHandle;
@@ -14636,7 +14620,7 @@ const _sfc_main$22 = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$_ = ["innerHTML"];
+const _hoisted_1$Y = ["innerHTML"];
 const _hoisted_2$E = { key: 1 };
 function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_tooltip_trigger = vue_cjs_prod.resolveComponent("el-tooltip-trigger");
@@ -14687,7 +14671,7 @@ function _sfc_render$1k(_ctx, _cache, $props, $setup, $data, $options) {
             _ctx.rawContent ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
               key: 0,
               innerHTML: _ctx.content
-            }, null, 8, _hoisted_1$_)) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_2$E, vue_cjs_prod.toDisplayString(_ctx.content), 1))
+            }, null, 8, _hoisted_1$Y)) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_2$E, vue_cjs_prod.toDisplayString(_ctx.content), 1))
           ]),
           _ctx.compatShowArrow ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_popper_arrow, {
             key: 0,
@@ -14766,7 +14750,7 @@ const autocompleteEmits = {
   clear: () => true,
   select: (item) => isObject$1(item)
 };
-const _hoisted_1$Z = ["aria-expanded", "aria-owns"];
+const _hoisted_1$X = ["aria-expanded", "aria-owns"];
 const _hoisted_2$D = { key: 0 };
 const _hoisted_3$m = ["id", "aria-selected", "onClick"];
 const __default__$E = {
@@ -15064,7 +15048,7 @@ const _sfc_main$21 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                 ])
               } : void 0
             ]), 1040, ["model-value", "onKeydown"])
-          ], 14, _hoisted_1$Z)
+          ], 14, _hoisted_1$X)
         ]),
         _: 3
       }, 8, ["visible", "placement", "popper-class", "teleported", "transition"]);
@@ -15102,7 +15086,7 @@ const avatarProps = buildProps({
 const avatarEmits = {
   error: (evt) => evt instanceof Event
 };
-const _hoisted_1$Y = ["src", "alt", "srcset"];
+const _hoisted_1$W = ["src", "alt", "srcset"];
 const __default__$D = {
   name: "ElAvatar"
 };
@@ -15150,7 +15134,7 @@ const _sfc_main$20 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
           srcset: _ctx.srcSet,
           style: vue_cjs_prod.normalizeStyle(vue_cjs_prod.unref(fitStyle)),
           onError: handleError
-        }, null, 44, _hoisted_1$Y)) : _ctx.icon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), { key: 1 }, {
+        }, null, 44, _hoisted_1$W)) : _ctx.icon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), { key: 1 }, {
           default: vue_cjs_prod.withCtx(() => [
             (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(_ctx.icon)))
           ]),
@@ -15183,7 +15167,7 @@ const backtopProps = {
 const backtopEmits = {
   click: (evt) => evt instanceof MouseEvent
 };
-const _hoisted_1$X = ["onClick"];
+const _hoisted_1$V = ["onClick"];
 const __default__$C = {
   name: "ElBacktop"
 };
@@ -15262,7 +15246,7 @@ const _sfc_main$1$ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                 _: 1
               }, 8, ["class"])
             ])
-          ], 14, _hoisted_1$X)) : vue_cjs_prod.createCommentVNode("v-if", true)
+          ], 14, _hoisted_1$V)) : vue_cjs_prod.createCommentVNode("v-if", true)
         ]),
         _: 3
       }, 8, ["name"]);
@@ -15288,7 +15272,7 @@ const badgeProps = buildProps({
     default: "danger"
   }
 });
-const _hoisted_1$W = ["textContent"];
+const _hoisted_1$U = ["textContent"];
 const __default__$B = {
   name: "ElBadge"
 };
@@ -15325,7 +15309,7 @@ const _sfc_main$1_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                 vue_cjs_prod.unref(ns).is("dot", _ctx.isDot)
               ]),
               textContent: vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(content))
-            }, null, 10, _hoisted_1$W), [
+            }, null, 10, _hoisted_1$U), [
               [vue_cjs_prod.vShow, !_ctx.hidden && (vue_cjs_prod.unref(content) || vue_cjs_prod.unref(content) === "0" || _ctx.isDot)]
             ])
           ]),
@@ -15524,7 +15508,7 @@ function boundAlpha(a2) {
 }
 function convertToPercentage(n) {
   if (n <= 1) {
-    return Number(n) * 100 + "%";
+    return "".concat(Number(n) * 100, "%");
   }
   return n;
 }
@@ -15883,9 +15867,9 @@ function inputToRGB(color) {
 }
 var CSS_INTEGER = "[-\\+]?\\d+%?";
 var CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?";
-var CSS_UNIT = "(?:" + CSS_NUMBER + ")|(?:" + CSS_INTEGER + ")";
-var PERMISSIVE_MATCH3 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
-var PERMISSIVE_MATCH4 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+var CSS_UNIT = "(?:".concat(CSS_NUMBER, ")|(?:").concat(CSS_INTEGER, ")");
+var PERMISSIVE_MATCH3 = "[\\s|\\(]+(".concat(CSS_UNIT, ")[,|\\s]+(").concat(CSS_UNIT, ")[,|\\s]+(").concat(CSS_UNIT, ")\\s*\\)?");
+var PERMISSIVE_MATCH4 = "[\\s|\\(]+(".concat(CSS_UNIT, ")[,|\\s]+(").concat(CSS_UNIT, ")[,|\\s]+(").concat(CSS_UNIT, ")[,|\\s]+(").concat(CSS_UNIT, ")\\s*\\)?");
 var matchers = {
   CSS_UNIT: new RegExp(CSS_UNIT),
   rgb: new RegExp("rgb" + PERMISSIVE_MATCH3),
@@ -16066,7 +16050,7 @@ var TinyColor = function() {
     var h2 = Math.round(hsv.h * 360);
     var s = Math.round(hsv.s * 100);
     var v2 = Math.round(hsv.v * 100);
-    return this.a === 1 ? "hsv(" + h2 + ", " + s + "%, " + v2 + "%)" : "hsva(" + h2 + ", " + s + "%, " + v2 + "%, " + this.roundA + ")";
+    return this.a === 1 ? "hsv(".concat(h2, ", ").concat(s, "%, ").concat(v2, "%)") : "hsva(".concat(h2, ", ").concat(s, "%, ").concat(v2, "%, ").concat(this.roundA, ")");
   };
   TinyColor2.prototype.toHsl = function() {
     var hsl = rgbToHsl(this.r, this.g, this.b);
@@ -16077,7 +16061,7 @@ var TinyColor = function() {
     var h2 = Math.round(hsl.h * 360);
     var s = Math.round(hsl.s * 100);
     var l2 = Math.round(hsl.l * 100);
-    return this.a === 1 ? "hsl(" + h2 + ", " + s + "%, " + l2 + "%)" : "hsla(" + h2 + ", " + s + "%, " + l2 + "%, " + this.roundA + ")";
+    return this.a === 1 ? "hsl(".concat(h2, ", ").concat(s, "%, ").concat(l2, "%)") : "hsla(".concat(h2, ", ").concat(s, "%, ").concat(l2, "%, ").concat(this.roundA, ")");
   };
   TinyColor2.prototype.toHex = function(allow3Char) {
     if (allow3Char === void 0) {
@@ -16115,11 +16099,11 @@ var TinyColor = function() {
     var r = Math.round(this.r);
     var g = Math.round(this.g);
     var b2 = Math.round(this.b);
-    return this.a === 1 ? "rgb(" + r + ", " + g + ", " + b2 + ")" : "rgba(" + r + ", " + g + ", " + b2 + ", " + this.roundA + ")";
+    return this.a === 1 ? "rgb(".concat(r, ", ").concat(g, ", ").concat(b2, ")") : "rgba(".concat(r, ", ").concat(g, ", ").concat(b2, ", ").concat(this.roundA, ")");
   };
   TinyColor2.prototype.toPercentageRgb = function() {
     var fmt = function(x2) {
-      return Math.round(bound01$1(x2, 255) * 100) + "%";
+      return "".concat(Math.round(bound01$1(x2, 255) * 100), "%");
     };
     return {
       r: fmt(this.r),
@@ -16132,7 +16116,7 @@ var TinyColor = function() {
     var rnd = function(x2) {
       return Math.round(bound01$1(x2, 255) * 100);
     };
-    return this.a === 1 ? "rgb(" + rnd(this.r) + "%, " + rnd(this.g) + "%, " + rnd(this.b) + "%)" : "rgba(" + rnd(this.r) + "%, " + rnd(this.g) + "%, " + rnd(this.b) + "%, " + this.roundA + ")";
+    return this.a === 1 ? "rgb(".concat(rnd(this.r), "%, ").concat(rnd(this.g), "%, ").concat(rnd(this.b), "%)") : "rgba(".concat(rnd(this.r), "%, ").concat(rnd(this.g), "%, ").concat(rnd(this.b), "%, ").concat(this.roundA, ")");
   };
   TinyColor2.prototype.toName = function() {
     if (this.a === 0) {
@@ -16407,7 +16391,7 @@ function useButtonCustomStyle(props) {
     return styles;
   });
 }
-const _hoisted_1$V = ["disabled", "autofocus", "type"];
+const _hoisted_1$T = ["disabled", "autofocus", "type"];
 const __default__$y = {
   name: "ElButton"
 };
@@ -16497,7 +16481,7 @@ const _sfc_main$1X = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         }, [
           vue_cjs_prod.renderSlot(_ctx.$slots, "default")
         ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
-      ], 14, _hoisted_1$V);
+      ], 14, _hoisted_1$T);
     };
   }
 }));
@@ -17344,7 +17328,7 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
       if (userInput.value) {
         const value = parseUserInputToDayjs(displayValue.value);
         if (value) {
-          if (isValidValue(value)) {
+          if (isValidValue2(value)) {
             emitInput(Array.isArray(value) ? value.map((_2) => _2.toDate()) : value.toDate());
             userInput.value = null;
           }
@@ -17369,7 +17353,7 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
         return null;
       return pickerOptions.value.formatToString(value);
     };
-    const isValidValue = (value) => {
+    const isValidValue2 = (value) => {
       return pickerOptions.value.isValidValue(value);
     };
     const handleKeydown = (event) => {
@@ -17395,7 +17379,7 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
         return;
       }
       if (code === EVENT_CODE.enter || code === EVENT_CODE.numpadEnter) {
-        if (userInput.value === null || userInput.value === "" || isValidValue(parseUserInputToDayjs(displayValue.value))) {
+        if (userInput.value === null || userInput.value === "" || isValidValue2(parseUserInputToDayjs(displayValue.value))) {
           handleChange();
           pickerVisible.value = false;
         }
@@ -17432,7 +17416,7 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
       if (value && value.isValid()) {
         userInput.value = [formatDayjsToString(value), displayValue.value[1]];
         const newValue = [value, parsedValue.value && parsedValue.value[1]];
-        if (isValidValue(newValue)) {
+        if (isValidValue2(newValue)) {
           emitInput(newValue);
           userInput.value = null;
         }
@@ -17443,7 +17427,7 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
       if (value && value.isValid()) {
         userInput.value = [displayValue.value[0], formatDayjsToString(value)];
         const newValue = [parsedValue.value && parsedValue.value[0], value];
-        if (isValidValue(newValue)) {
+        if (isValidValue2(newValue)) {
           emitInput(newValue);
           userInput.value = null;
         }
@@ -17506,7 +17490,7 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$U = ["id", "name", "placeholder", "value", "disabled", "readonly"];
+const _hoisted_1$S = ["id", "name", "placeholder", "value", "disabled", "readonly"];
 const _hoisted_2$C = ["id", "name", "placeholder", "value", "disabled", "readonly"];
 function _sfc_render$1j(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
@@ -17621,7 +17605,7 @@ function _sfc_render$1j(_ctx, _cache, $props, $setup, $data, $options) {
           onInput: _cache[1] || (_cache[1] = (...args) => _ctx.handleStartInput && _ctx.handleStartInput(...args)),
           onChange: _cache[2] || (_cache[2] = (...args) => _ctx.handleStartChange && _ctx.handleStartChange(...args)),
           onFocus: _cache[3] || (_cache[3] = (...args) => _ctx.handleFocus && _ctx.handleFocus(...args))
-        }, null, 42, _hoisted_1$U),
+        }, null, 42, _hoisted_1$S),
         vue_cjs_prod.renderSlot(_ctx.$slots, "range-separator", {}, () => [
           vue_cjs_prod.createElementVNode("span", {
             class: vue_cjs_prod.normalizeClass(_ctx.nsRange.b("separator"))
@@ -18231,7 +18215,7 @@ const _sfc_main$1U = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$T = ["onClick"];
+const _hoisted_1$R = ["onClick"];
 const _hoisted_2$B = ["onMouseenter"];
 function _sfc_render$1i(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_scrollbar = vue_cjs_prod.resolveComponent("el-scrollbar");
@@ -18271,7 +18255,7 @@ function _sfc_render$1i(_ctx, _cache, $props, $setup, $data, $options) {
               ], 2112)) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 1 }, [
                 vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(("0" + key).slice(-2)), 1)
               ], 2112))
-            ], 10, _hoisted_1$T);
+            ], 10, _hoisted_1$R);
           }), 128))
         ]),
         _: 2
@@ -18370,7 +18354,7 @@ const _sfc_main$1T = vue_cjs_prod.defineComponent({
         return "a";
       return "";
     });
-    const isValidValue = (_date) => {
+    const isValidValue2 = (_date) => {
       const parsedDate = dayjs(_date).locale(lang.value);
       const result = getRangeAvailableTime(parsedDate);
       return parsedDate.isSame(result);
@@ -18454,7 +18438,7 @@ const _sfc_main$1T = vue_cjs_prod.defineComponent({
     const getDefaultValue = () => {
       return dayjs(defaultValue).locale(lang.value);
     };
-    ctx.emit("set-picker-option", ["isValidValue", isValidValue]);
+    ctx.emit("set-picker-option", ["isValidValue", isValidValue2]);
     ctx.emit("set-picker-option", ["formatToString", formatToString]);
     ctx.emit("set-picker-option", ["parseUserInput", parseUserInput]);
     ctx.emit("set-picker-option", ["handleKeydown", handleKeydown]);
@@ -18592,7 +18576,7 @@ const _sfc_main$1S = vue_cjs_prod.defineComponent({
     const handleMaxChange = (date4) => {
       handleChange(minDate.value, date4.millisecond(0));
     };
-    const isValidValue = (_date) => {
+    const isValidValue2 = (_date) => {
       const parsedDate = _date.map((_2) => dayjs(_2).locale(lang.value));
       const result = getRangeAvailableTime(parsedDate);
       return parsedDate[0].isSame(result[0]) && parsedDate[1].isSame(result[1]);
@@ -18731,7 +18715,7 @@ const _sfc_main$1S = vue_cjs_prod.defineComponent({
     };
     ctx.emit("set-picker-option", ["formatToString", formatToString]);
     ctx.emit("set-picker-option", ["parseUserInput", parseUserInput]);
-    ctx.emit("set-picker-option", ["isValidValue", isValidValue]);
+    ctx.emit("set-picker-option", ["isValidValue", isValidValue2]);
     ctx.emit("set-picker-option", ["handleKeydown", handleKeydown]);
     ctx.emit("set-picker-option", ["getDefaultValue", getDefaultValue]);
     ctx.emit("set-picker-option", [
@@ -18775,7 +18759,7 @@ const _sfc_main$1S = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$S = ["disabled"];
+const _hoisted_1$Q = ["disabled"];
 function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_time_spinner = vue_cjs_prod.resolveComponent("time-spinner");
   return _ctx.actualVisible ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
@@ -18859,7 +18843,7 @@ function _sfc_render$1g(_ctx, _cache, $props, $setup, $data, $options) {
         class: vue_cjs_prod.normalizeClass([_ctx.nsTime.be("panel", "btn"), "confirm"]),
         disabled: _ctx.btnConfirmDisabled,
         onClick: _cache[1] || (_cache[1] = ($event) => _ctx.handleConfirm())
-      }, vue_cjs_prod.toDisplayString(_ctx.t("el.datepicker.confirm")), 11, _hoisted_1$S)
+      }, vue_cjs_prod.toDisplayString(_ctx.t("el.datepicker.confirm")), 11, _hoisted_1$Q)
     ], 2)
   ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true);
 }
@@ -18947,7 +18931,7 @@ const dateTableProps = buildProps({
 const dateTableEmits = {
   pick: (value) => isObject$1(value)
 };
-const _hoisted_1$R = { key: 0 };
+const _hoisted_1$P = { key: 0 };
 const _hoisted_2$A = ["onClick"];
 const __default__$w = {
   name: "DateTable"
@@ -19051,7 +19035,7 @@ const _sfc_main$1R = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         cellspacing: "0",
         cellpadding: "0"
       }, [
-        !_ctx.hideHeader ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("thead", _hoisted_1$R, [
+        !_ctx.hideHeader ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("thead", _hoisted_1$P, [
           (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(vue_cjs_prod.unref(weekDays), (day) => {
             return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("th", { key: day }, vue_cjs_prod.toDisplayString(day), 1);
           }), 128))
@@ -19419,7 +19403,7 @@ const carouselProps = buildProps({
 const carouselEmits = {
   change: (current, prev) => [current, prev].every(isNumber)
 };
-const _hoisted_1$Q = ["onMouseenter", "onMouseleave"];
+const _hoisted_1$O = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$z = ["onMouseenter", "onClick"];
 const _hoisted_3$l = { key: 0 };
 const __default__$t = {
@@ -19718,7 +19702,7 @@ const _sfc_main$1O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             ], 42, _hoisted_2$z);
           }), 128))
         ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
-      ], 42, _hoisted_1$Q);
+      ], 42, _hoisted_1$O);
     };
   }
 }));
@@ -20081,10 +20065,10 @@ const _sfc_main$1M = vue_cjs_prod.defineComponent({
     }, useCheckbox(props));
   }
 });
-const _hoisted_1$P = ["id", "aria-controls"];
+const _hoisted_1$N = ["id", "aria-controls"];
 const _hoisted_2$y = ["tabindex", "role", "aria-checked"];
 const _hoisted_3$k = ["aria-hidden", "name", "tabindex", "disabled", "true-value", "false-value"];
-const _hoisted_4$e = ["aria-hidden", "disabled", "value", "name", "tabindex"];
+const _hoisted_4$d = ["aria-hidden", "disabled", "value", "name", "tabindex"];
 function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("label", {
     id: _ctx.id,
@@ -20141,7 +20125,7 @@ function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
         onChange: _cache[5] || (_cache[5] = (...args) => _ctx.handleChange && _ctx.handleChange(...args)),
         onFocus: _cache[6] || (_cache[6] = ($event) => _ctx.focus = true),
         onBlur: _cache[7] || (_cache[7] = ($event) => _ctx.focus = false)
-      }, null, 42, _hoisted_4$e)), [
+      }, null, 42, _hoisted_4$d)), [
         [vue_cjs_prod.vModelCheckbox, _ctx.model]
       ])
     ], 10, _hoisted_2$y),
@@ -20154,7 +20138,7 @@ function _sfc_render$1f(_ctx, _cache, $props, $setup, $data, $options) {
         vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(_ctx.label), 1)
       ], 2112)) : vue_cjs_prod.createCommentVNode("v-if", true)
     ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
-  ], 10, _hoisted_1$P);
+  ], 10, _hoisted_1$N);
 }
 var Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$1M, [["render", _sfc_render$1f], ["__file", "checkbox.vue"]]);
 const _sfc_main$1L = vue_cjs_prod.defineComponent({
@@ -20187,7 +20171,7 @@ const _sfc_main$1L = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$O = ["aria-checked", "aria-disabled"];
+const _hoisted_1$M = ["aria-checked", "aria-disabled"];
 const _hoisted_2$x = ["name", "tabindex", "disabled", "true-value", "false-value"];
 const _hoisted_3$j = ["name", "tabindex", "disabled", "value"];
 function _sfc_render$1e(_ctx, _cache, $props, $setup, $data, $options) {
@@ -20242,7 +20226,7 @@ function _sfc_render$1e(_ctx, _cache, $props, $setup, $data, $options) {
         vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(_ctx.label), 1)
       ])
     ], 6)) : vue_cjs_prod.createCommentVNode("v-if", true)
-  ], 10, _hoisted_1$O);
+  ], 10, _hoisted_1$M);
 }
 var CheckboxButton = /* @__PURE__ */ _export_sfc(_sfc_main$1L, [["render", _sfc_render$1e], ["__file", "checkbox-button.vue"]]);
 const _sfc_main$1K = vue_cjs_prod.defineComponent({
@@ -20404,7 +20388,7 @@ const _sfc_main$1J = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$N = ["aria-checked", "aria-disabled", "tabindex"];
+const _hoisted_1$L = ["aria-checked", "aria-disabled", "tabindex"];
 const _hoisted_2$w = ["value", "name", "disabled"];
 function _sfc_render$1d(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("label", {
@@ -20458,7 +20442,7 @@ function _sfc_render$1d(_ctx, _cache, $props, $setup, $data, $options) {
         vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(_ctx.label), 1)
       ])
     ], 34)
-  ], 42, _hoisted_1$N);
+  ], 42, _hoisted_1$L);
 }
 var Radio = /* @__PURE__ */ _export_sfc(_sfc_main$1J, [["render", _sfc_render$1d], ["__file", "radio.vue"]]);
 const radioButtonProps = buildProps(__spreadProps(__spreadValues({}, radioPropsBase), {
@@ -20503,7 +20487,7 @@ const _sfc_main$1I = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$M = ["aria-checked", "aria-disabled", "tabindex"];
+const _hoisted_1$K = ["aria-checked", "aria-disabled", "tabindex"];
 const _hoisted_2$v = ["value", "name", "disabled"];
 function _sfc_render$1c(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("label", {
@@ -20544,7 +20528,7 @@ function _sfc_render$1c(_ctx, _cache, $props, $setup, $data, $options) {
         vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(_ctx.label), 1)
       ])
     ], 38)
-  ], 42, _hoisted_1$M);
+  ], 42, _hoisted_1$K);
 }
 var RadioButton = /* @__PURE__ */ _export_sfc(_sfc_main$1I, [["render", _sfc_render$1c], ["__file", "radio-button.vue"]]);
 const radioGroupProps = buildProps({
@@ -20772,7 +20756,7 @@ const _sfc_main$1G = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$L = ["id", "aria-haspopup", "aria-owns", "aria-expanded", "tabindex"];
+const _hoisted_1$J = ["id", "aria-haspopup", "aria-owns", "aria-expanded", "tabindex"];
 const _hoisted_2$u = /* @__PURE__ */ vue_cjs_prod.createElementVNode("span", null, null, -1);
 function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_checkbox = vue_cjs_prod.resolveComponent("el-checkbox");
@@ -20855,7 +20839,7 @@ function _sfc_render$1a(_ctx, _cache, $props, $setup, $data, $options) {
         _: 1
       }, 8, ["class"]))
     ], 2112)) : vue_cjs_prod.createCommentVNode("v-if", true)
-  ], 42, _hoisted_1$L);
+  ], 42, _hoisted_1$J);
 }
 var ElCascaderNode = /* @__PURE__ */ _export_sfc(_sfc_main$1G, [["render", _sfc_render$1a], ["__file", "node.vue"]]);
 const _sfc_main$1F = vue_cjs_prod.defineComponent({
@@ -22018,10 +22002,10 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$K = { key: 0 };
+const _hoisted_1$I = { key: 0 };
 const _hoisted_2$t = { class: "el-cascader__collapse-tags" };
 const _hoisted_3$i = ["placeholder"];
-const _hoisted_4$d = ["onClick"];
+const _hoisted_4$c = ["onClick"];
 function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_circle_close = vue_cjs_prod.resolveComponent("circle-close");
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
@@ -22131,7 +22115,7 @@ function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
               onClose: ($event) => _ctx.deleteTag(tag)
             }, {
               default: vue_cjs_prod.withCtx(() => [
-                tag.isCollapseTag === false ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_1$K, vue_cjs_prod.toDisplayString(tag.text), 1)) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_tooltip, {
+                tag.isCollapseTag === false ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_1$I, vue_cjs_prod.toDisplayString(tag.text), 1)) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_tooltip, {
                   key: 1,
                   teleported: false,
                   disabled: _ctx.popperVisible || !_ctx.collapseTagsTooltip,
@@ -22234,7 +22218,7 @@ function _sfc_render$17(_ctx, _cache, $props, $setup, $data, $options) {
                 ]),
                 _: 1
               })) : vue_cjs_prod.createCommentVNode("v-if", true)
-            ], 10, _hoisted_4$d);
+            ], 10, _hoisted_4$c);
           }), 128)) : vue_cjs_prod.renderSlot(_ctx.$slots, "empty", { key: 1 }, () => [
             vue_cjs_prod.createElementVNode("li", {
               class: vue_cjs_prod.normalizeClass(_ctx.nsCascader.e("empty-text"))
@@ -22540,7 +22524,7 @@ const collapseItemProps = buildProps({
   },
   disabled: Boolean
 });
-const _hoisted_1$J = ["aria-expanded", "aria-controls", "aria-describedby"];
+const _hoisted_1$H = ["aria-expanded", "aria-controls", "aria-describedby"];
 const _hoisted_2$s = ["id", "tabindex", "onKeypress"];
 const _hoisted_3$h = ["id", "aria-hidden", "aria-labelledby"];
 const __default__$o = {
@@ -22618,7 +22602,7 @@ const _sfc_main$1y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
               _: 1
             }, 8, ["class"])
           ], 42, _hoisted_2$s)
-        ], 8, _hoisted_1$J),
+        ], 8, _hoisted_1$H),
         vue_cjs_prod.createVNode(vue_cjs_prod.unref(_CollapseTransition), null, {
           default: vue_cjs_prod.withCtx(() => [
             vue_cjs_prod.withDirectives(vue_cjs_prod.createElementVNode("div", {
@@ -23184,11 +23168,11 @@ const _sfc_main$1v = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$I = { class: "el-color-predefine" };
+const _hoisted_1$G = { class: "el-color-predefine" };
 const _hoisted_2$r = { class: "el-color-predefine__colors" };
 const _hoisted_3$g = ["onClick"];
 function _sfc_render$13(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_1$I, [
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_1$G, [
     vue_cjs_prod.createElementVNode("div", _hoisted_2$r, [
       (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.rgbaColors, (item, index2) => {
         return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
@@ -23266,10 +23250,10 @@ const _sfc_main$1u = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$H = /* @__PURE__ */ vue_cjs_prod.createElementVNode("div", { class: "el-color-svpanel__white" }, null, -1);
+const _hoisted_1$F = /* @__PURE__ */ vue_cjs_prod.createElementVNode("div", { class: "el-color-svpanel__white" }, null, -1);
 const _hoisted_2$q = /* @__PURE__ */ vue_cjs_prod.createElementVNode("div", { class: "el-color-svpanel__black" }, null, -1);
 const _hoisted_3$f = /* @__PURE__ */ vue_cjs_prod.createElementVNode("div", null, null, -1);
-const _hoisted_4$c = [
+const _hoisted_4$b = [
   _hoisted_3$f
 ];
 function _sfc_render$12(_ctx, _cache, $props, $setup, $data, $options) {
@@ -23279,7 +23263,7 @@ function _sfc_render$12(_ctx, _cache, $props, $setup, $data, $options) {
       backgroundColor: _ctx.background
     })
   }, [
-    _hoisted_1$H,
+    _hoisted_1$F,
     _hoisted_2$q,
     vue_cjs_prod.createElementVNode("div", {
       class: "el-color-svpanel__cursor",
@@ -23287,7 +23271,7 @@ function _sfc_render$12(_ctx, _cache, $props, $setup, $data, $options) {
         top: _ctx.cursorTop + "px",
         left: _ctx.cursorLeft + "px"
       })
-    }, _hoisted_4$c, 4)
+    }, _hoisted_4$b, 4)
   ], 4);
 }
 var SvPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1u, [["render", _sfc_render$12], ["__file", "sv-panel.vue"]]);
@@ -24265,7 +24249,7 @@ const _sfc_main$1n = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$G = { key: 0 };
+const _hoisted_1$E = { key: 0 };
 function _sfc_render$X(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_date_picker_cell = vue_cjs_prod.resolveComponent("el-date-picker-cell");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("table", {
@@ -24277,7 +24261,7 @@ function _sfc_render$X(_ctx, _cache, $props, $setup, $data, $options) {
   }, [
     vue_cjs_prod.createElementVNode("tbody", null, [
       vue_cjs_prod.createElementVNode("tr", null, [
-        _ctx.showWeekNumber ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("th", _hoisted_1$G, vue_cjs_prod.toDisplayString(_ctx.t("el.datepicker.week")), 1)) : vue_cjs_prod.createCommentVNode("v-if", true),
+        _ctx.showWeekNumber ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("th", _hoisted_1$E, vue_cjs_prod.toDisplayString(_ctx.t("el.datepicker.week")), 1)) : vue_cjs_prod.createCommentVNode("v-if", true),
         (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.WEEKS, (week, key) => {
           return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("th", { key }, vue_cjs_prod.toDisplayString(_ctx.t("el.datepicker.weeks." + week)), 1);
         }), 128))
@@ -24470,7 +24454,7 @@ const _sfc_main$1m = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$F = { class: "cell" };
+const _hoisted_1$D = { class: "cell" };
 function _sfc_render$W(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("table", {
     class: "el-month-table",
@@ -24486,7 +24470,7 @@ function _sfc_render$W(_ctx, _cache, $props, $setup, $data, $options) {
               class: vue_cjs_prod.normalizeClass(_ctx.getCellStyle(cell))
             }, [
               vue_cjs_prod.createElementVNode("div", null, [
-                vue_cjs_prod.createElementVNode("a", _hoisted_1$F, vue_cjs_prod.toDisplayString(_ctx.t("el.datepicker.months." + _ctx.months[cell.text])), 1)
+                vue_cjs_prod.createElementVNode("a", _hoisted_1$D, vue_cjs_prod.toDisplayString(_ctx.t("el.datepicker.months." + _ctx.months[cell.text])), 1)
               ])
             ], 2);
           }), 128))
@@ -24544,16 +24528,16 @@ const _sfc_main$1l = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$E = { class: "cell" };
+const _hoisted_1$C = { class: "cell" };
 const _hoisted_2$p = { class: "cell" };
 const _hoisted_3$e = { class: "cell" };
-const _hoisted_4$b = { class: "cell" };
-const _hoisted_5$9 = { class: "cell" };
-const _hoisted_6$6 = { class: "cell" };
-const _hoisted_7$5 = { class: "cell" };
-const _hoisted_8$5 = { class: "cell" };
-const _hoisted_9$5 = { class: "cell" };
-const _hoisted_10$5 = { class: "cell" };
+const _hoisted_4$a = { class: "cell" };
+const _hoisted_5$8 = { class: "cell" };
+const _hoisted_6$5 = { class: "cell" };
+const _hoisted_7$4 = { class: "cell" };
+const _hoisted_8$4 = { class: "cell" };
+const _hoisted_9$4 = { class: "cell" };
+const _hoisted_10$4 = { class: "cell" };
 const _hoisted_11$3 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("td", null, null, -1);
 const _hoisted_12$3 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("td", null, null, -1);
 function _sfc_render$V(_ctx, _cache, $props, $setup, $data, $options) {
@@ -24566,7 +24550,7 @@ function _sfc_render$V(_ctx, _cache, $props, $setup, $data, $options) {
         vue_cjs_prod.createElementVNode("td", {
           class: vue_cjs_prod.normalizeClass(["available", _ctx.getCellStyle(_ctx.startYear + 0)])
         }, [
-          vue_cjs_prod.createElementVNode("a", _hoisted_1$E, vue_cjs_prod.toDisplayString(_ctx.startYear), 1)
+          vue_cjs_prod.createElementVNode("a", _hoisted_1$C, vue_cjs_prod.toDisplayString(_ctx.startYear), 1)
         ], 2),
         vue_cjs_prod.createElementVNode("td", {
           class: vue_cjs_prod.normalizeClass(["available", _ctx.getCellStyle(_ctx.startYear + 1)])
@@ -24581,41 +24565,41 @@ function _sfc_render$V(_ctx, _cache, $props, $setup, $data, $options) {
         vue_cjs_prod.createElementVNode("td", {
           class: vue_cjs_prod.normalizeClass(["available", _ctx.getCellStyle(_ctx.startYear + 3)])
         }, [
-          vue_cjs_prod.createElementVNode("a", _hoisted_4$b, vue_cjs_prod.toDisplayString(_ctx.startYear + 3), 1)
+          vue_cjs_prod.createElementVNode("a", _hoisted_4$a, vue_cjs_prod.toDisplayString(_ctx.startYear + 3), 1)
         ], 2)
       ]),
       vue_cjs_prod.createElementVNode("tr", null, [
         vue_cjs_prod.createElementVNode("td", {
           class: vue_cjs_prod.normalizeClass(["available", _ctx.getCellStyle(_ctx.startYear + 4)])
         }, [
-          vue_cjs_prod.createElementVNode("a", _hoisted_5$9, vue_cjs_prod.toDisplayString(_ctx.startYear + 4), 1)
+          vue_cjs_prod.createElementVNode("a", _hoisted_5$8, vue_cjs_prod.toDisplayString(_ctx.startYear + 4), 1)
         ], 2),
         vue_cjs_prod.createElementVNode("td", {
           class: vue_cjs_prod.normalizeClass(["available", _ctx.getCellStyle(_ctx.startYear + 5)])
         }, [
-          vue_cjs_prod.createElementVNode("a", _hoisted_6$6, vue_cjs_prod.toDisplayString(_ctx.startYear + 5), 1)
+          vue_cjs_prod.createElementVNode("a", _hoisted_6$5, vue_cjs_prod.toDisplayString(_ctx.startYear + 5), 1)
         ], 2),
         vue_cjs_prod.createElementVNode("td", {
           class: vue_cjs_prod.normalizeClass(["available", _ctx.getCellStyle(_ctx.startYear + 6)])
         }, [
-          vue_cjs_prod.createElementVNode("a", _hoisted_7$5, vue_cjs_prod.toDisplayString(_ctx.startYear + 6), 1)
+          vue_cjs_prod.createElementVNode("a", _hoisted_7$4, vue_cjs_prod.toDisplayString(_ctx.startYear + 6), 1)
         ], 2),
         vue_cjs_prod.createElementVNode("td", {
           class: vue_cjs_prod.normalizeClass(["available", _ctx.getCellStyle(_ctx.startYear + 7)])
         }, [
-          vue_cjs_prod.createElementVNode("a", _hoisted_8$5, vue_cjs_prod.toDisplayString(_ctx.startYear + 7), 1)
+          vue_cjs_prod.createElementVNode("a", _hoisted_8$4, vue_cjs_prod.toDisplayString(_ctx.startYear + 7), 1)
         ], 2)
       ]),
       vue_cjs_prod.createElementVNode("tr", null, [
         vue_cjs_prod.createElementVNode("td", {
           class: vue_cjs_prod.normalizeClass(["available", _ctx.getCellStyle(_ctx.startYear + 8)])
         }, [
-          vue_cjs_prod.createElementVNode("a", _hoisted_9$5, vue_cjs_prod.toDisplayString(_ctx.startYear + 8), 1)
+          vue_cjs_prod.createElementVNode("a", _hoisted_9$4, vue_cjs_prod.toDisplayString(_ctx.startYear + 8), 1)
         ], 2),
         vue_cjs_prod.createElementVNode("td", {
           class: vue_cjs_prod.normalizeClass(["available", _ctx.getCellStyle(_ctx.startYear + 9)])
         }, [
-          vue_cjs_prod.createElementVNode("a", _hoisted_10$5, vue_cjs_prod.toDisplayString(_ctx.startYear + 9), 1)
+          vue_cjs_prod.createElementVNode("a", _hoisted_10$4, vue_cjs_prod.toDisplayString(_ctx.startYear + 9), 1)
         ], 2),
         _hoisted_11$3,
         _hoisted_12$3
@@ -24890,7 +24874,7 @@ const _sfc_main$1k = vue_cjs_prod.defineComponent({
         emit(innerDate.value, true);
       }
     };
-    const isValidValue = (date4) => {
+    const isValidValue2 = (date4) => {
       return dayjs.isDayjs(date4) && date4.isValid() && (disabledDate ? !disabledDate(date4.toDate()) : true);
     };
     const formatToString = (value) => {
@@ -24976,7 +24960,7 @@ const _sfc_main$1k = vue_cjs_prod.defineComponent({
     const handlePanelChange = (mode) => {
       ctx.emit("panel-change", innerDate.value.toDate(), mode, currentView.value);
     };
-    ctx.emit("set-picker-option", ["isValidValue", isValidValue]);
+    ctx.emit("set-picker-option", ["isValidValue", isValidValue2]);
     ctx.emit("set-picker-option", ["formatToString", formatToString]);
     ctx.emit("set-picker-option", ["parseUserInput", parseUserInput]);
     ctx.emit("set-picker-option", ["handleKeydown", handleKeydown]);
@@ -25036,22 +25020,22 @@ const _sfc_main$1k = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$D = { class: "el-picker-panel__body-wrapper" };
+const _hoisted_1$B = { class: "el-picker-panel__body-wrapper" };
 const _hoisted_2$o = {
   key: 0,
   class: "el-picker-panel__sidebar"
 };
 const _hoisted_3$d = ["onClick"];
-const _hoisted_4$a = { class: "el-picker-panel__body" };
-const _hoisted_5$8 = {
+const _hoisted_4$9 = { class: "el-picker-panel__body" };
+const _hoisted_5$7 = {
   key: 0,
   class: "el-date-picker__time-header"
 };
-const _hoisted_6$5 = { class: "el-date-picker__editor-wrap" };
-const _hoisted_7$4 = { class: "el-date-picker__editor-wrap" };
-const _hoisted_8$4 = ["aria-label"];
-const _hoisted_9$4 = ["aria-label"];
-const _hoisted_10$4 = ["aria-label"];
+const _hoisted_6$4 = { class: "el-date-picker__editor-wrap" };
+const _hoisted_7$3 = { class: "el-date-picker__editor-wrap" };
+const _hoisted_8$3 = ["aria-label"];
+const _hoisted_9$3 = ["aria-label"];
+const _hoisted_10$3 = ["aria-label"];
 const _hoisted_11$2 = ["aria-label"];
 const _hoisted_12$2 = { class: "el-picker-panel__content" };
 const _hoisted_13$2 = { class: "el-picker-panel__footer" };
@@ -25076,7 +25060,7 @@ function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
       }
     ]])
   }, [
-    vue_cjs_prod.createElementVNode("div", _hoisted_1$D, [
+    vue_cjs_prod.createElementVNode("div", _hoisted_1$B, [
       vue_cjs_prod.renderSlot(_ctx.$slots, "sidebar", { class: "el-picker-panel__sidebar" }),
       _ctx.hasShortcuts ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_2$o, [
         (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.shortcuts, (shortcut, key) => {
@@ -25088,9 +25072,9 @@ function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
           }, vue_cjs_prod.toDisplayString(shortcut.text), 9, _hoisted_3$d);
         }), 128))
       ])) : vue_cjs_prod.createCommentVNode("v-if", true),
-      vue_cjs_prod.createElementVNode("div", _hoisted_4$a, [
-        _ctx.showTime ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_5$8, [
-          vue_cjs_prod.createElementVNode("span", _hoisted_6$5, [
+      vue_cjs_prod.createElementVNode("div", _hoisted_4$9, [
+        _ctx.showTime ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_5$7, [
+          vue_cjs_prod.createElementVNode("span", _hoisted_6$4, [
             vue_cjs_prod.createVNode(_component_el_input, {
               placeholder: _ctx.t("el.datepicker.selectDate"),
               "model-value": _ctx.visibleDate,
@@ -25099,7 +25083,7 @@ function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
               onChange: _ctx.handleVisibleDateChange
             }, null, 8, ["placeholder", "model-value", "onChange"])
           ]),
-          vue_cjs_prod.withDirectives((vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_7$4, [
+          vue_cjs_prod.withDirectives((vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_7$3, [
             vue_cjs_prod.createVNode(_component_el_input, {
               placeholder: _ctx.t("el.datepicker.selectTime"),
               "model-value": _ctx.visibleTime,
@@ -25136,7 +25120,7 @@ function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
               ]),
               _: 1
             })
-          ], 8, _hoisted_8$4),
+          ], 8, _hoisted_8$3),
           vue_cjs_prod.withDirectives(vue_cjs_prod.createElementVNode("button", {
             type: "button",
             "aria-label": _ctx.t(`el.datepicker.prevMonth`),
@@ -25149,7 +25133,7 @@ function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
               ]),
               _: 1
             })
-          ], 8, _hoisted_9$4), [
+          ], 8, _hoisted_9$3), [
             [vue_cjs_prod.vShow, _ctx.currentView === "date"]
           ]),
           vue_cjs_prod.createElementVNode("span", {
@@ -25176,7 +25160,7 @@ function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
               ]),
               _: 1
             })
-          ], 8, _hoisted_10$4),
+          ], 8, _hoisted_10$3),
           vue_cjs_prod.withDirectives(vue_cjs_prod.createElementVNode("button", {
             type: "button",
             "aria-label": _ctx.t(`el.datepicker.nextMonth`),
@@ -25202,8 +25186,9 @@ function _sfc_render$U(_ctx, _cache, $props, $setup, $data, $options) {
             date: _ctx.innerDate,
             "parsed-value": _ctx.parsedValue,
             "disabled-date": _ctx.disabledDate,
+            "cell-class-name": _ctx.cellClassName,
             onPick: _ctx.handleDatePick
-          }, null, 8, ["selection-mode", "date", "parsed-value", "disabled-date", "onPick"])) : vue_cjs_prod.createCommentVNode("v-if", true),
+          }, null, 8, ["selection-mode", "date", "parsed-value", "disabled-date", "cell-class-name", "onPick"])) : vue_cjs_prod.createCommentVNode("v-if", true),
           _ctx.currentView === "year" ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_year_table, {
             key: 1,
             date: _ctx.innerDate,
@@ -25403,7 +25388,7 @@ const _sfc_main$1j = vue_cjs_prod.defineComponent({
     const enableYearArrow = vue_cjs_prod.computed(() => {
       return props.unlinkPanels && rightYear.value * 12 + rightMonth.value - (leftYear.value * 12 + leftMonth.value + 1) >= 12;
     });
-    const isValidValue = (value) => {
+    const isValidValue2 = (value) => {
       return Array.isArray(value) && value[0] && value[1] && value[0].valueOf() <= value[1].valueOf();
     };
     const rangeState = vue_cjs_prod.ref({
@@ -25411,7 +25396,7 @@ const _sfc_main$1j = vue_cjs_prod.defineComponent({
       selecting: false
     });
     const btnDisabled = vue_cjs_prod.computed(() => {
-      return !(minDate.value && maxDate.value && !rangeState.value.selecting && isValidValue([minDate.value, maxDate.value]));
+      return !(minDate.value && maxDate.value && !rangeState.value.selecting && isValidValue2([minDate.value, maxDate.value]));
     });
     const handleChangeRange = (val) => {
       rangeState.value = val;
@@ -25424,7 +25409,7 @@ const _sfc_main$1j = vue_cjs_prod.defineComponent({
     };
     const showTime = vue_cjs_prod.computed(() => props.type === "datetime" || props.type === "datetimerange");
     const handleConfirm = (visible = false) => {
-      if (isValidValue([minDate.value, maxDate.value])) {
+      if (isValidValue2([minDate.value, maxDate.value])) {
         ctx.emit("pick", [minDate.value, maxDate.value], visible);
       }
     };
@@ -25587,7 +25572,7 @@ const _sfc_main$1j = vue_cjs_prod.defineComponent({
       start2 = start2.locale(lang.value);
       return [start2, start2.add(1, "month")];
     };
-    ctx.emit("set-picker-option", ["isValidValue", isValidValue]);
+    ctx.emit("set-picker-option", ["isValidValue", isValidValue2]);
     ctx.emit("set-picker-option", ["parseUserInput", parseUserInput]);
     ctx.emit("set-picker-option", ["formatToString", formatToString]);
     ctx.emit("set-picker-option", ["handleClear", handleClear]);
@@ -25687,22 +25672,22 @@ const _sfc_main$1j = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$C = { class: "el-picker-panel__body-wrapper" };
+const _hoisted_1$A = { class: "el-picker-panel__body-wrapper" };
 const _hoisted_2$n = {
   key: 0,
   class: "el-picker-panel__sidebar"
 };
 const _hoisted_3$c = ["onClick"];
-const _hoisted_4$9 = { class: "el-picker-panel__body" };
-const _hoisted_5$7 = {
+const _hoisted_4$8 = { class: "el-picker-panel__body" };
+const _hoisted_5$6 = {
   key: 0,
   class: "el-date-range-picker__time-header"
 };
-const _hoisted_6$4 = { class: "el-date-range-picker__editors-wrap" };
-const _hoisted_7$3 = { class: "el-date-range-picker__time-picker-wrap" };
-const _hoisted_8$3 = { class: "el-date-range-picker__time-picker-wrap" };
-const _hoisted_9$3 = { class: "el-date-range-picker__editors-wrap is-right" };
-const _hoisted_10$3 = { class: "el-date-range-picker__time-picker-wrap" };
+const _hoisted_6$3 = { class: "el-date-range-picker__editors-wrap" };
+const _hoisted_7$2 = { class: "el-date-range-picker__time-picker-wrap" };
+const _hoisted_8$2 = { class: "el-date-range-picker__time-picker-wrap" };
+const _hoisted_9$2 = { class: "el-date-range-picker__editors-wrap is-right" };
+const _hoisted_10$2 = { class: "el-date-range-picker__time-picker-wrap" };
 const _hoisted_11$1 = { class: "el-date-range-picker__time-picker-wrap" };
 const _hoisted_12$1 = { class: "el-picker-panel__content el-date-range-picker__content is-left" };
 const _hoisted_13$1 = { class: "el-date-range-picker__header" };
@@ -25735,7 +25720,7 @@ function _sfc_render$T(_ctx, _cache, $props, $setup, $data, $options) {
       }
     ]])
   }, [
-    vue_cjs_prod.createElementVNode("div", _hoisted_1$C, [
+    vue_cjs_prod.createElementVNode("div", _hoisted_1$A, [
       vue_cjs_prod.renderSlot(_ctx.$slots, "sidebar", { class: "el-picker-panel__sidebar" }),
       _ctx.hasShortcuts ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_2$n, [
         (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.shortcuts, (shortcut, key) => {
@@ -25747,10 +25732,10 @@ function _sfc_render$T(_ctx, _cache, $props, $setup, $data, $options) {
           }, vue_cjs_prod.toDisplayString(shortcut.text), 9, _hoisted_3$c);
         }), 128))
       ])) : vue_cjs_prod.createCommentVNode("v-if", true),
-      vue_cjs_prod.createElementVNode("div", _hoisted_4$9, [
-        _ctx.showTime ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_5$7, [
-          vue_cjs_prod.createElementVNode("span", _hoisted_6$4, [
-            vue_cjs_prod.createElementVNode("span", _hoisted_7$3, [
+      vue_cjs_prod.createElementVNode("div", _hoisted_4$8, [
+        _ctx.showTime ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_5$6, [
+          vue_cjs_prod.createElementVNode("span", _hoisted_6$3, [
+            vue_cjs_prod.createElementVNode("span", _hoisted_7$2, [
               vue_cjs_prod.createVNode(_component_el_input, {
                 size: "small",
                 disabled: _ctx.rangeState.selecting,
@@ -25761,7 +25746,7 @@ function _sfc_render$T(_ctx, _cache, $props, $setup, $data, $options) {
                 onChange: _cache[1] || (_cache[1] = (val) => _ctx.handleDateChange(val, "min"))
               }, null, 8, ["disabled", "placeholder", "model-value"])
             ]),
-            vue_cjs_prod.withDirectives((vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_8$3, [
+            vue_cjs_prod.withDirectives((vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_8$2, [
               vue_cjs_prod.createVNode(_component_el_input, {
                 size: "small",
                 class: "el-date-range-picker__editor",
@@ -25792,8 +25777,8 @@ function _sfc_render$T(_ctx, _cache, $props, $setup, $data, $options) {
               _: 1
             })
           ]),
-          vue_cjs_prod.createElementVNode("span", _hoisted_9$3, [
-            vue_cjs_prod.createElementVNode("span", _hoisted_10$3, [
+          vue_cjs_prod.createElementVNode("span", _hoisted_9$2, [
+            vue_cjs_prod.createElementVNode("span", _hoisted_10$2, [
               vue_cjs_prod.createVNode(_component_el_input, {
                 size: "small",
                 class: "el-date-range-picker__editor",
@@ -26080,11 +26065,11 @@ const _sfc_main$1i = vue_cjs_prod.defineComponent({
         return;
       handleConfirm();
     };
-    const isValidValue = (value) => {
+    const isValidValue2 = (value) => {
       return Array.isArray(value) && value && value[0] && value[1] && value[0].valueOf() <= value[1].valueOf();
     };
     const handleConfirm = (visible = false) => {
-      if (isValidValue([minDate.value, maxDate.value])) {
+      if (isValidValue2([minDate.value, maxDate.value])) {
         ctx.emit("pick", [minDate.value, maxDate.value], visible);
       }
     };
@@ -26169,19 +26154,19 @@ const _sfc_main$1i = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$B = { class: "el-picker-panel__body-wrapper" };
+const _hoisted_1$z = { class: "el-picker-panel__body-wrapper" };
 const _hoisted_2$m = {
   key: 0,
   class: "el-picker-panel__sidebar"
 };
 const _hoisted_3$b = ["onClick"];
-const _hoisted_4$8 = { class: "el-picker-panel__body" };
-const _hoisted_5$6 = { class: "el-picker-panel__content el-date-range-picker__content is-left" };
-const _hoisted_6$3 = { class: "el-date-range-picker__header" };
-const _hoisted_7$2 = ["disabled"];
-const _hoisted_8$2 = { class: "el-picker-panel__content el-date-range-picker__content is-right" };
-const _hoisted_9$2 = { class: "el-date-range-picker__header" };
-const _hoisted_10$2 = ["disabled"];
+const _hoisted_4$7 = { class: "el-picker-panel__body" };
+const _hoisted_5$5 = { class: "el-picker-panel__content el-date-range-picker__content is-left" };
+const _hoisted_6$2 = { class: "el-date-range-picker__header" };
+const _hoisted_7$1 = ["disabled"];
+const _hoisted_8$1 = { class: "el-picker-panel__content el-date-range-picker__content is-right" };
+const _hoisted_9$1 = { class: "el-date-range-picker__header" };
+const _hoisted_10$1 = ["disabled"];
 function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_d_arrow_left = vue_cjs_prod.resolveComponent("d-arrow-left");
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
@@ -26194,7 +26179,7 @@ function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
       }
     ]])
   }, [
-    vue_cjs_prod.createElementVNode("div", _hoisted_1$B, [
+    vue_cjs_prod.createElementVNode("div", _hoisted_1$z, [
       vue_cjs_prod.renderSlot(_ctx.$slots, "sidebar", { class: "el-picker-panel__sidebar" }),
       _ctx.hasShortcuts ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_2$m, [
         (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.shortcuts, (shortcut, key) => {
@@ -26206,9 +26191,9 @@ function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
           }, vue_cjs_prod.toDisplayString(shortcut.text), 9, _hoisted_3$b);
         }), 128))
       ])) : vue_cjs_prod.createCommentVNode("v-if", true),
-      vue_cjs_prod.createElementVNode("div", _hoisted_4$8, [
-        vue_cjs_prod.createElementVNode("div", _hoisted_5$6, [
-          vue_cjs_prod.createElementVNode("div", _hoisted_6$3, [
+      vue_cjs_prod.createElementVNode("div", _hoisted_4$7, [
+        vue_cjs_prod.createElementVNode("div", _hoisted_5$5, [
+          vue_cjs_prod.createElementVNode("div", _hoisted_6$2, [
             vue_cjs_prod.createElementVNode("button", {
               type: "button",
               class: "el-picker-panel__icon-btn d-arrow-left",
@@ -26234,7 +26219,7 @@ function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
                 ]),
                 _: 1
               })
-            ], 10, _hoisted_7$2)) : vue_cjs_prod.createCommentVNode("v-if", true),
+            ], 10, _hoisted_7$1)) : vue_cjs_prod.createCommentVNode("v-if", true),
             vue_cjs_prod.createElementVNode("div", null, vue_cjs_prod.toDisplayString(_ctx.leftLabel), 1)
           ]),
           vue_cjs_prod.createVNode(_component_month_table, {
@@ -26249,8 +26234,8 @@ function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
             onSelect: _ctx.onSelect
           }, null, 8, ["date", "min-date", "max-date", "range-state", "disabled-date", "onChangerange", "onPick", "onSelect"])
         ]),
-        vue_cjs_prod.createElementVNode("div", _hoisted_8$2, [
-          vue_cjs_prod.createElementVNode("div", _hoisted_9$2, [
+        vue_cjs_prod.createElementVNode("div", _hoisted_8$1, [
+          vue_cjs_prod.createElementVNode("div", _hoisted_9$1, [
             _ctx.unlinkPanels ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("button", {
               key: 0,
               type: "button",
@@ -26264,7 +26249,7 @@ function _sfc_render$S(_ctx, _cache, $props, $setup, $data, $options) {
                 ]),
                 _: 1
               })
-            ], 10, _hoisted_10$2)) : vue_cjs_prod.createCommentVNode("v-if", true),
+            ], 10, _hoisted_10$1)) : vue_cjs_prod.createCommentVNode("v-if", true),
             vue_cjs_prod.createElementVNode("button", {
               type: "button",
               class: "el-picker-panel__icon-btn d-arrow-right",
@@ -26452,7 +26437,7 @@ const _sfc_main$1h = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$A = { key: 1 };
+const _hoisted_1$y = { key: 1 };
 function _sfc_render$R(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_descriptions_cell = vue_cjs_prod.resolveComponent("el-descriptions-cell");
   return _ctx.descriptions.direction === "vertical" ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 0 }, [
@@ -26476,7 +26461,7 @@ function _sfc_render$R(_ctx, _cache, $props, $setup, $data, $options) {
         }, null, 8, ["cell"]);
       }), 128))
     ])
-  ], 64)) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("tr", _hoisted_1$A, [
+  ], 64)) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("tr", _hoisted_1$y, [
     (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.row, (cell, index2) => {
       return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, {
         key: `tr3-${index2}`
@@ -26781,7 +26766,7 @@ const dialogContentProps = buildProps({
 const dialogContentEmits = {
   close: () => true
 };
-const _hoisted_1$z = ["aria-label"];
+const _hoisted_1$x = ["aria-label"];
 const __default__$n = { name: "ElDialogContent" };
 const _sfc_main$1f = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$n), {
   props: dialogContentProps,
@@ -26845,7 +26830,7 @@ const _sfc_main$1f = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             _: 1
           }, 8, ["class"])
         ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
-      ], 14, _hoisted_1$z);
+      ], 14, _hoisted_1$x);
     };
   }
 }));
@@ -27244,10 +27229,10 @@ const _sfc_main$1c = vue_cjs_prod.defineComponent({
     });
   }
 });
-const _hoisted_1$y = ["aria-labelledby", "aria-label"];
+const _hoisted_1$w = ["aria-labelledby", "aria-label"];
 const _hoisted_2$l = ["id"];
 const _hoisted_3$a = ["title"];
-const _hoisted_4$7 = ["aria-label"];
+const _hoisted_4$6 = ["aria-label"];
 function _sfc_render$P(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_close = vue_cjs_prod.resolveComponent("close");
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
@@ -27308,7 +27293,7 @@ function _sfc_render$P(_ctx, _cache, $props, $setup, $data, $options) {
                     ]),
                     _: 1
                   }, 8, ["class"])
-                ], 10, _hoisted_4$7)) : vue_cjs_prod.createCommentVNode("v-if", true)
+                ], 10, _hoisted_4$6)) : vue_cjs_prod.createCommentVNode("v-if", true)
               ], 10, _hoisted_2$l)) : vue_cjs_prod.createCommentVNode("v-if", true),
               _ctx.rendered ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("section", {
                 key: 1,
@@ -27322,7 +27307,7 @@ function _sfc_render$P(_ctx, _cache, $props, $setup, $data, $options) {
               }, [
                 vue_cjs_prod.renderSlot(_ctx.$slots, "footer")
               ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
-            ], 14, _hoisted_1$y)), [
+            ], 14, _hoisted_1$w)), [
               [_directive_trap_focus]
             ])
           ]),
@@ -28286,7 +28271,7 @@ const _sfc_main$14 = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$x = ["aria-disabled", "tabindex"];
+const _hoisted_1$v = ["aria-disabled", "tabindex"];
 function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, [
@@ -28313,7 +28298,7 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
         _: 1
       })) : vue_cjs_prod.createCommentVNode("v-if", true),
       vue_cjs_prod.renderSlot(_ctx.$slots, "default")
-    ], 16, _hoisted_1$x)
+    ], 16, _hoisted_1$v)
   ], 64);
 }
 var ElDropdownItemImpl = /* @__PURE__ */ _export_sfc(_sfc_main$14, [["render", _sfc_render$H], ["__file", "dropdown-item-impl.vue"]]);
@@ -28514,7 +28499,7 @@ const _sfc_main$11 = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$w = {
+const _hoisted_1$u = {
   viewBox: "0 0 79 86",
   version: "1.1",
   xmlns: "http://www.w3.org/2000/svg",
@@ -28525,28 +28510,28 @@ const _hoisted_3$9 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("stop", {
   "stop-color": "var(--el-empty-fill-color-1)",
   offset: "0%"
 }, null, -1);
-const _hoisted_4$6 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("stop", {
+const _hoisted_4$5 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("stop", {
   "stop-color": "var(--el-empty-fill-color-4)",
   offset: "100%"
 }, null, -1);
-const _hoisted_5$5 = [
+const _hoisted_5$4 = [
   _hoisted_3$9,
-  _hoisted_4$6
+  _hoisted_4$5
 ];
-const _hoisted_6$2 = ["id"];
-const _hoisted_7$1 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("stop", {
+const _hoisted_6$1 = ["id"];
+const _hoisted_7 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("stop", {
   "stop-color": "var(--el-empty-fill-color-1)",
   offset: "0%"
 }, null, -1);
-const _hoisted_8$1 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("stop", {
+const _hoisted_8 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("stop", {
   "stop-color": "var(--el-empty-fill-color-6)",
   offset: "100%"
 }, null, -1);
-const _hoisted_9$1 = [
-  _hoisted_7$1,
-  _hoisted_8$1
+const _hoisted_9 = [
+  _hoisted_7,
+  _hoisted_8
 ];
-const _hoisted_10$1 = ["id"];
+const _hoisted_10 = ["id"];
 const _hoisted_11 = {
   id: "Illustrations",
   stroke: "none",
@@ -28600,18 +28585,16 @@ const _hoisted_22 = {
   id: "Rectangle-Copy-17",
   transform: "translate(53.000000, 45.000000)"
 };
-const _hoisted_23 = ["id"];
-const _hoisted_24 = ["xlink:href"];
-const _hoisted_25 = ["xlink:href"];
-const _hoisted_26 = ["mask"];
-const _hoisted_27 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("polygon", {
+const _hoisted_23 = ["xlink:href"];
+const _hoisted_24 = ["mask"];
+const _hoisted_25 = /* @__PURE__ */ vue_cjs_prod.createElementVNode("polygon", {
   id: "Rectangle-Copy-18",
   fill: "var(--el-empty-fill-color-2)",
   transform: "translate(66.000000, 51.500000) scale(-1, 1) translate(-66.000000, -51.500000) ",
   points: "62 45 79 45 70 58 53 58"
 }, null, -1);
 function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$w, [
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$u, [
     vue_cjs_prod.createElementVNode("defs", null, [
       vue_cjs_prod.createElementVNode("linearGradient", {
         id: `linearGradient-1-${_ctx.id}`,
@@ -28619,21 +28602,21 @@ function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
         y1: "0%",
         x2: "61.1496914%",
         y2: "100%"
-      }, _hoisted_5$5, 8, _hoisted_2$k),
+      }, _hoisted_5$4, 8, _hoisted_2$k),
       vue_cjs_prod.createElementVNode("linearGradient", {
         id: `linearGradient-2-${_ctx.id}`,
         x1: "0%",
         y1: "9.5%",
         x2: "100%",
         y2: "90.5%"
-      }, _hoisted_9$1, 8, _hoisted_6$2),
+      }, _hoisted_9, 8, _hoisted_6$1),
       vue_cjs_prod.createElementVNode("rect", {
         id: `path-3-${_ctx.id}`,
         x: "0",
         y: "0",
         width: "17",
         height: "36"
-      }, null, 8, _hoisted_10$1)
+      }, null, 8, _hoisted_10)
     ]),
     vue_cjs_prod.createElementVNode("g", _hoisted_11, [
       vue_cjs_prod.createElementVNode("g", _hoisted_12, [
@@ -28663,29 +28646,21 @@ function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
             height: "36"
           }, null, 8, _hoisted_21),
           vue_cjs_prod.createElementVNode("g", _hoisted_22, [
-            vue_cjs_prod.createElementVNode("mask", {
-              id: `mask-4-${_ctx.id}`,
-              fill: "var(--el-empty-fill-color-0)"
-            }, [
-              vue_cjs_prod.createElementVNode("use", {
-                "xlink:href": `#path-3-${_ctx.id}`
-              }, null, 8, _hoisted_24)
-            ], 8, _hoisted_23),
             vue_cjs_prod.createElementVNode("use", {
               id: "Mask",
               fill: "var(--el-empty-fill-color-8)",
               transform: "translate(8.500000, 18.000000) scale(-1, 1) translate(-8.500000, -18.000000) ",
               "xlink:href": `#path-3-${_ctx.id}`
-            }, null, 8, _hoisted_25),
+            }, null, 8, _hoisted_23),
             vue_cjs_prod.createElementVNode("polygon", {
               id: "Rectangle-Copy",
               fill: "var(--el-empty-fill-color-9)",
               mask: `url(#mask-4-${_ctx.id})`,
               transform: "translate(12.000000, 9.000000) scale(-1, 1) translate(-12.000000, -9.000000) ",
-              points: "7 0 24 0 20 18 -1.70530257e-13 16"
-            }, null, 8, _hoisted_26)
+              points: "7 0 24 0 20 18 7 16.5"
+            }, null, 8, _hoisted_24)
           ]),
-          _hoisted_27
+          _hoisted_25
         ])
       ])
     ])
@@ -28703,7 +28678,7 @@ const emptyProps = {
     default: ""
   }
 };
-const _hoisted_1$v = ["src"];
+const _hoisted_1$t = ["src"];
 const _hoisted_2$j = { key: 1 };
 const __default__$k = {
   name: "ElEmpty"
@@ -28730,7 +28705,7 @@ const _sfc_main$10 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             key: 0,
             src: _ctx.image,
             ondragstart: "return false"
-          }, null, 8, _hoisted_1$v)) : vue_cjs_prod.renderSlot(_ctx.$slots, "image", { key: 1 }, () => [
+          }, null, 8, _hoisted_1$t)) : vue_cjs_prod.renderSlot(_ctx.$slots, "image", { key: 1 }, () => [
             vue_cjs_prod.createVNode(ImgEmpty)
           ])
         ], 6),
@@ -30003,10 +29978,10 @@ var FormLabelWrap = vue_cjs_prod.defineComponent({
   setup(props, {
     slots
   }) {
-    const formContext = vue_cjs_prod.inject(formContextKey);
+    const formContext = vue_cjs_prod.inject(formContextKey, void 0);
     const formItemContext = vue_cjs_prod.inject(formItemContextKey);
-    if (!formContext || !formItemContext)
-      throwError(COMPONENT_NAME$a, "usage: <el-form><el-form-item><label-wrap /></el-form-item></el-form>");
+    if (!formItemContext)
+      throwError(COMPONENT_NAME$a, "usage: <el-form-item><label-wrap /></el-form-item>");
     const ns = useNamespace("form");
     const el = vue_cjs_prod.ref();
     const computedWidth = vue_cjs_prod.ref(0);
@@ -30025,7 +30000,7 @@ var FormLabelWrap = vue_cjs_prod.defineComponent({
           if (action === "update") {
             computedWidth.value = getLabelWidth();
           } else if (action === "remove") {
-            formContext.deregisterLabelWidth(computedWidth.value);
+            formContext == null ? void 0 : formContext.deregisterLabelWidth(computedWidth.value);
           }
         }
       });
@@ -30040,7 +30015,7 @@ var FormLabelWrap = vue_cjs_prod.defineComponent({
     vue_cjs_prod.onUpdated(() => updateLabelWidthFn());
     vue_cjs_prod.watch(computedWidth, (val, oldVal) => {
       if (props.updateAll) {
-        formContext.registerLabelWidth(val, oldVal);
+        formContext == null ? void 0 : formContext.registerLabelWidth(val, oldVal);
       }
     });
     useResizeObserver(vue_cjs_prod.computed(() => {
@@ -30055,7 +30030,7 @@ var FormLabelWrap = vue_cjs_prod.defineComponent({
         isAutoWidth
       } = props;
       if (isAutoWidth) {
-        const autoLabelWidth = formContext.autoLabelWidth;
+        const autoLabelWidth = formContext == null ? void 0 : formContext.autoLabelWidth;
         const style = {};
         if (autoLabelWidth && autoLabelWidth !== "auto") {
           const marginWidth = Math.max(0, Number.parseInt(autoLabelWidth, 10) - computedWidth.value);
@@ -30077,7 +30052,7 @@ var FormLabelWrap = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _hoisted_1$u = ["for"];
+const _hoisted_1$s = ["for"];
 const __default__$i = {
   name: "ElFormItem"
 };
@@ -30085,11 +30060,8 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
   props: formItemProps,
   setup(__props, { expose }) {
     const props = __props;
-    const COMPONENT_NAME2 = "ElFormItem";
     const slots = vue_cjs_prod.useSlots();
-    const formContext = vue_cjs_prod.inject(formContextKey);
-    if (!formContext)
-      throwError(COMPONENT_NAME2, "usage: <el-form><el-form-item /></el-form>");
+    const formContext = vue_cjs_prod.inject(formContextKey, void 0);
     const parentFormItemContext = vue_cjs_prod.inject(formItemContextKey, void 0);
     const _size = useSize(void 0, { formItem: false });
     const ns = useNamespace("form-item");
@@ -30100,22 +30072,22 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
     let initialValue = void 0;
     let isResettingField = false;
     const labelStyle = vue_cjs_prod.computed(() => {
-      if (formContext.labelPosition === "top") {
+      if ((formContext == null ? void 0 : formContext.labelPosition) === "top") {
         return {};
       }
-      const labelWidth = addUnit(props.labelWidth || formContext.labelWidth || "");
+      const labelWidth = addUnit(props.labelWidth || (formContext == null ? void 0 : formContext.labelWidth) || "");
       if (labelWidth)
         return { width: labelWidth };
       return {};
     });
     const contentStyle = vue_cjs_prod.computed(() => {
-      if (formContext.labelPosition === "top" || formContext.inline) {
+      if ((formContext == null ? void 0 : formContext.labelPosition) === "top" || (formContext == null ? void 0 : formContext.inline)) {
         return {};
       }
       if (!props.label && !props.labelWidth && isNested) {
         return {};
       }
-      const labelWidth = addUnit(props.labelWidth || formContext.labelWidth || "");
+      const labelWidth = addUnit(props.labelWidth || (formContext == null ? void 0 : formContext.labelWidth) || "");
       if (!props.label && !slots.label) {
         return { marginLeft: labelWidth };
       }
@@ -30128,10 +30100,10 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       ns.is("validating", validateState.value === "validating"),
       ns.is("success", validateState.value === "success"),
       ns.is("required", isRequired.value || props.required),
-      ns.is("no-asterisk", formContext.hideRequiredAsterisk),
-      { [ns.m("feedback")]: formContext.statusIcon }
+      ns.is("no-asterisk", formContext == null ? void 0 : formContext.hideRequiredAsterisk),
+      { [ns.m("feedback")]: formContext == null ? void 0 : formContext.statusIcon }
     ]);
-    const _inlineMessage = vue_cjs_prod.computed(() => isBoolean(props.inlineMessage) ? props.inlineMessage : formContext.inlineMessage || false);
+    const _inlineMessage = vue_cjs_prod.computed(() => isBoolean(props.inlineMessage) ? props.inlineMessage : (formContext == null ? void 0 : formContext.inlineMessage) || false);
     const validateClasses = vue_cjs_prod.computed(() => [
       ns.e("error"),
       { [ns.em("error", "inline")]: _inlineMessage.value }
@@ -30144,7 +30116,7 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
     const labelFor = vue_cjs_prod.computed(() => props.for || propString.value);
     const isNested = !!parentFormItemContext;
     const fieldValue = vue_cjs_prod.computed(() => {
-      const model = formContext.model;
+      const model = formContext == null ? void 0 : formContext.model;
       if (!model || !props.prop) {
         return;
       }
@@ -30152,7 +30124,7 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
     });
     const _rules = vue_cjs_prod.computed(() => {
       const rules2 = props.rules ? castArray$1(props.rules) : [];
-      const formRules = formContext.rules;
+      const formRules = formContext == null ? void 0 : formContext.rules;
       if (formRules && props.prop) {
         const _rules2 = getProp(formRules, props.prop).value;
         if (_rules2) {
@@ -30181,8 +30153,11 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       });
     };
     const isRequired = vue_cjs_prod.computed(() => _rules.value.some((rule) => rule.required === true));
-    const shouldShowError = vue_cjs_prod.computed(() => validateStateDebounced.value === "error" && props.showMessage && formContext.showMessage);
-    const currentLabel = vue_cjs_prod.computed(() => `${props.label || ""}${formContext.labelSuffix || ""}`);
+    const shouldShowError = vue_cjs_prod.computed(() => {
+      var _a2;
+      return validateStateDebounced.value === "error" && props.showMessage && ((_a2 = formContext == null ? void 0 : formContext.showMessage) != null ? _a2 : true);
+    });
+    const currentLabel = vue_cjs_prod.computed(() => `${props.label || ""}${(formContext == null ? void 0 : formContext.labelSuffix) || ""}`);
     const setValidationState = (state) => {
       validateState.value = state;
     };
@@ -30194,11 +30169,11 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       }
       setValidationState("error");
       validateMessage.value = errors ? (_b2 = (_a2 = errors == null ? void 0 : errors[0]) == null ? void 0 : _a2.message) != null ? _b2 : `${props.prop} is required` : "";
-      formContext.emit("validate", props.prop, false, validateMessage.value);
+      formContext == null ? void 0 : formContext.emit("validate", props.prop, false, validateMessage.value);
     };
     const onValidationSucceeded = () => {
       setValidationState("success");
-      formContext.emit("validate", props.prop, true, "");
+      formContext == null ? void 0 : formContext.emit("validate", props.prop, true, "");
     };
     const doValidate = async (rules2) => {
       const modelName = propString.value;
@@ -30243,7 +30218,7 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       validateMessage.value = "";
     };
     const resetField = async () => {
-      const model = formContext.model;
+      const model = formContext == null ? void 0 : formContext.model;
       if (!model || !props.prop)
         return;
       const computedValue = getProp(model, props.prop);
@@ -30270,12 +30245,12 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
     vue_cjs_prod.provide(formItemContextKey, context);
     vue_cjs_prod.onMounted(() => {
       if (props.prop) {
-        formContext.addField(context);
+        formContext == null ? void 0 : formContext.addField(context);
         initialValue = clone(fieldValue.value);
       }
     });
     vue_cjs_prod.onBeforeUnmount(() => {
-      formContext.removeField(context);
+      formContext == null ? void 0 : formContext.removeField(context);
     });
     expose({
       size: _size,
@@ -30286,6 +30261,7 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       resetField
     });
     return (_ctx, _cache) => {
+      var _a2;
       return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
         ref_key: "formItemRef",
         ref: formItemRef,
@@ -30293,7 +30269,7 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       }, [
         vue_cjs_prod.createVNode(vue_cjs_prod.unref(FormLabelWrap), {
           "is-auto-width": vue_cjs_prod.unref(labelStyle).width === "auto",
-          "update-all": vue_cjs_prod.unref(formContext).labelWidth === "auto"
+          "update-all": ((_a2 = vue_cjs_prod.unref(formContext)) == null ? void 0 : _a2.labelWidth) === "auto"
         }, {
           default: vue_cjs_prod.withCtx(() => [
             _ctx.label || _ctx.$slots.label ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("label", {
@@ -30305,7 +30281,7 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
               vue_cjs_prod.renderSlot(_ctx.$slots, "label", { label: vue_cjs_prod.unref(currentLabel) }, () => [
                 vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(currentLabel)), 1)
               ])
-            ], 14, _hoisted_1$u)) : vue_cjs_prod.createCommentVNode("v-if", true)
+            ], 14, _hoisted_1$s)) : vue_cjs_prod.createCommentVNode("v-if", true)
           ]),
           _: 3
         }, 8, ["is-auto-width", "update-all"]),
@@ -30368,7 +30344,7 @@ const imageViewerEmits = {
   close: () => true,
   switch: (index2) => typeof index2 === "number"
 };
-const _hoisted_1$t = ["src"];
+const _hoisted_1$r = ["src"];
 const __default__$h = {
   name: "ElImageViewer"
 };
@@ -30733,7 +30709,7 @@ const _sfc_main$Z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
                     onLoad: handleImgLoad,
                     onError: handleImgError,
                     onMousedown: handleMouseDown
-                  }, null, 46, _hoisted_1$t)), [
+                  }, null, 46, _hoisted_1$r)), [
                     [vue_cjs_prod.vShow, i === index2.value]
                   ]);
                 }), 128))
@@ -30799,7 +30775,7 @@ const imageEmits = {
   switch: (val) => isNumber(val),
   close: () => true
 };
-const _hoisted_1$s = ["src"];
+const _hoisted_1$q = ["src"];
 const _hoisted_2$i = { key: 0 };
 const __default__$g = {
   name: "ElImage"
@@ -30912,7 +30888,7 @@ const _sfc_main$Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
           style: vue_cjs_prod.unref(imageStyle),
           class: [vue_cjs_prod.unref(ns).e("inner"), vue_cjs_prod.unref(preview2) ? vue_cjs_prod.unref(ns).e("preview") : ""],
           onClick: clickHandler
-        }), null, 16, _hoisted_1$s)),
+        }), null, 16, _hoisted_1$q)),
         vue_cjs_prod.unref(preview2) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 3 }, [
           showViewer.value ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElImageViewer), {
             key: 0,
@@ -31284,7 +31260,7 @@ const linkProps = buildProps({
 const linkEmits = {
   click: (evt) => evt instanceof MouseEvent
 };
-const _hoisted_1$r = ["href"];
+const _hoisted_1$p = ["href"];
 const __default__$f = {
   name: "ElLink"
 };
@@ -31322,7 +31298,7 @@ const _sfc_main$W = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
           vue_cjs_prod.renderSlot(_ctx.$slots, "default")
         ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true),
         _ctx.$slots.icon ? vue_cjs_prod.renderSlot(_ctx.$slots, "icon", { key: 2 }) : vue_cjs_prod.createCommentVNode("v-if", true)
-      ], 10, _hoisted_1$r);
+      ], 10, _hoisted_1$p);
     };
   }
 }));
@@ -31387,15 +31363,15 @@ class SubMenu$1 {
 }
 var SubMenu$2 = SubMenu$1;
 class MenuItem$1 {
-  constructor(domNode) {
+  constructor(domNode, namespace) {
     this.domNode = domNode;
     this.submenu = null;
     this.submenu = null;
-    this.init();
+    this.init(namespace);
   }
-  init() {
+  init(namespace) {
     this.domNode.setAttribute("tabindex", "0");
-    const menuChild = this.domNode.querySelector(".el-menu");
+    const menuChild = this.domNode.querySelector(`.${namespace}-menu`);
     if (menuChild) {
       this.submenu = new SubMenu$2(this, menuChild);
     }
@@ -31436,15 +31412,15 @@ class MenuItem$1 {
 }
 var MenuItem$2 = MenuItem$1;
 class Menu$1 {
-  constructor(domNode) {
+  constructor(domNode, namespace) {
     this.domNode = domNode;
-    this.init();
+    this.init(namespace);
   }
-  init() {
+  init(namespace) {
     const menuChildren = this.domNode.childNodes;
     Array.from(menuChildren).forEach((child) => {
       if (child.nodeType === 1) {
-        new MenuItem$2(child);
+        new MenuItem$2(child, namespace);
       }
     });
   }
@@ -31453,31 +31429,32 @@ var Menubar = Menu$1;
 const _sfc_main$V = vue_cjs_prod.defineComponent({
   name: "ElMenuCollapseTransition",
   setup() {
+    const ns = useNamespace("menu");
     const listeners = {
       onBeforeEnter: (el) => el.style.opacity = "0.2",
       onEnter(el, done) {
-        addClass(el, "el-opacity-transition");
+        addClass(el, `${ns.namespace.value}-opacity-transition`);
         el.style.opacity = "1";
         done();
       },
       onAfterEnter(el) {
-        removeClass(el, "el-opacity-transition");
+        removeClass(el, `${ns.namespace.value}-opacity-transition`);
         el.style.opacity = "";
       },
       onBeforeLeave(el) {
         if (!el.dataset) {
           el.dataset = {};
         }
-        if (hasClass(el, "el-menu--collapse")) {
-          removeClass(el, "el-menu--collapse");
+        if (hasClass(el, ns.m("collapse"))) {
+          removeClass(el, ns.m("collapse"));
           el.dataset.oldOverflow = el.style.overflow;
           el.dataset.scrollWidth = el.clientWidth.toString();
-          addClass(el, "el-menu--collapse");
+          addClass(el, ns.m("collapse"));
         } else {
-          addClass(el, "el-menu--collapse");
+          addClass(el, ns.m("collapse"));
           el.dataset.oldOverflow = el.style.overflow;
           el.dataset.scrollWidth = el.clientWidth.toString();
-          removeClass(el, "el-menu--collapse");
+          removeClass(el, ns.m("collapse"));
         }
         el.style.width = `${el.scrollWidth}px`;
         el.style.overflow = "hidden";
@@ -31599,6 +31576,8 @@ var SubMenu = vue_cjs_prod.defineComponent({
   setup(props, { slots, expose }) {
     const instance = vue_cjs_prod.getCurrentInstance();
     const { paddingStyle, indexPath, parentMenu } = useMenu(instance, vue_cjs_prod.computed(() => props.index));
+    const nsMenu = useNamespace("menu");
+    const nsSubMenu = useNamespace("sub-menu");
     const rootMenu = vue_cjs_prod.inject("rootMenu");
     if (!rootMenu)
       throwError(COMPONENT_NAME$9, "can not inject root menu");
@@ -31631,7 +31610,7 @@ var SubMenu = vue_cjs_prod.defineComponent({
     const appendToBody = vue_cjs_prod.computed(() => {
       return props.popperAppendToBody === void 0 ? isFirstLevel.value : Boolean(props.popperAppendToBody);
     });
-    const menuTransitionName = vue_cjs_prod.computed(() => rootMenu.props.collapse ? "el-zoom-in-left" : "el-zoom-in-top");
+    const menuTransitionName = vue_cjs_prod.computed(() => rootMenu.props.collapse ? `${nsMenu.namespace.value}-zoom-in-left` : `${nsMenu.namespace.value}-zoom-in-top`);
     const fallbackPlacements = vue_cjs_prod.computed(() => mode.value === "horizontal" && isFirstLevel.value ? [
       "bottom-start",
       "bottom-end",
@@ -31762,7 +31741,7 @@ var SubMenu = vue_cjs_prod.defineComponent({
       const titleTag = [
         (_a2 = slots.title) == null ? void 0 : _a2.call(slots),
         vue_cjs_prod.h(ElIcon, {
-          class: ["el-sub-menu__icon-arrow"]
+          class: nsSubMenu.e("icon-arrow")
         }, { default: () => vue_cjs_prod.h(subMenuTitleIcon.value) })
       ];
       const ulStyle = useMenuCssVar(rootMenu.props);
@@ -31784,22 +31763,23 @@ var SubMenu = vue_cjs_prod.defineComponent({
         content: () => {
           var _a22;
           return vue_cjs_prod.h("div", {
-            class: [`el-menu--${mode.value}`, props.popperClass],
+            class: [nsMenu.m(mode.value), props.popperClass],
             onMouseenter: (evt) => handleMouseenter(evt, 100),
             onMouseleave: () => handleMouseleave(true),
             onFocus: (evt) => handleMouseenter(evt, 100)
           }, [
             vue_cjs_prod.h("ul", {
               class: [
-                "el-menu el-menu--popup",
-                `el-menu--popup-${currentPlacement.value}`
+                nsMenu.b(),
+                nsMenu.m("popup"),
+                nsMenu.m(`popup-${currentPlacement.value}`)
               ],
               style: ulStyle.value
             }, [(_a22 = slots.default) == null ? void 0 : _a22.call(slots)])
           ]);
         },
         default: () => vue_cjs_prod.h("div", {
-          class: "el-sub-menu__title",
+          class: nsSubMenu.e("title"),
           style: [
             paddingStyle.value,
             titleStyle.value,
@@ -31809,7 +31789,7 @@ var SubMenu = vue_cjs_prod.defineComponent({
         }, titleTag)
       }) : vue_cjs_prod.h(vue_cjs_prod.Fragment, {}, [
         vue_cjs_prod.h("div", {
-          class: "el-sub-menu__title",
+          class: nsSubMenu.e("title"),
           style: [
             paddingStyle.value,
             titleStyle.value,
@@ -31823,7 +31803,7 @@ var SubMenu = vue_cjs_prod.defineComponent({
             var _a22;
             return vue_cjs_prod.withDirectives(vue_cjs_prod.h("ul", {
               role: "menu",
-              class: "el-menu el-menu--inline",
+              class: [nsMenu.b(), nsMenu.m("inline")],
               style: ulStyle.value
             }, [(_a22 = slots.default) == null ? void 0 : _a22.call(slots)]), [[vue_cjs_prod.vShow, opened.value]]);
           }
@@ -31831,12 +31811,10 @@ var SubMenu = vue_cjs_prod.defineComponent({
       ]);
       return vue_cjs_prod.h("li", {
         class: [
-          "el-sub-menu",
-          {
-            "is-active": active.value,
-            "is-opened": opened.value,
-            "is-disabled": props.disabled
-          }
+          nsSubMenu.b(),
+          nsSubMenu.is("active", active.value),
+          nsSubMenu.is("opened", opened.value),
+          nsSubMenu.is("disabled", props.disabled)
         ],
         role: "menuitem",
         ariaHaspopup: true,
@@ -31896,6 +31874,8 @@ var Menu = vue_cjs_prod.defineComponent({
     const instance = vue_cjs_prod.getCurrentInstance();
     const router = instance.appContext.config.globalProperties.$router;
     const menu = vue_cjs_prod.ref();
+    const nsMenu = useNamespace("menu");
+    const nsSubMenu = useNamespace("sub-menu");
     const openedMenus = vue_cjs_prod.ref(props.defaultOpeneds && !props.collapse ? props.defaultOpeneds.slice(0) : []);
     const activeIndex = vue_cjs_prod.ref(props.defaultActive);
     const items = vue_cjs_prod.ref({});
@@ -32022,7 +32002,7 @@ var Menu = vue_cjs_prod.defineComponent({
     vue_cjs_prod.onMounted(() => {
       initMenu();
       if (props.mode === "horizontal") {
-        new Menubar(instance.vnode.el);
+        new Menubar(instance.vnode.el, nsMenu.namespace.value);
       }
     });
     {
@@ -32074,10 +32054,10 @@ var Menu = vue_cjs_prod.defineComponent({
           slot = slotDefault;
           vShowMore.push(vue_cjs_prod.h(SubMenu, {
             index: "sub-menu-more",
-            class: "el-sub-menu__hide-arrow"
+            class: nsSubMenu.e("hide-arrow")
           }, {
             title: () => vue_cjs_prod.h(ElIcon, {
-              class: ["el-sub-menu__icon-more"]
+              class: nsSubMenu.e("icon-more")
             }, { default: () => vue_cjs_prod.h(more) }),
             default: () => slotMore
           }));
@@ -32091,9 +32071,9 @@ var Menu = vue_cjs_prod.defineComponent({
         ref: menu,
         style: ulStyle.value,
         class: {
-          "el-menu": true,
-          "el-menu--horizontal": props.mode === "horizontal",
-          "el-menu--collapse": props.collapse
+          [nsMenu.b()]: true,
+          [nsMenu.m("horizontal")]: props.mode === "horizontal",
+          [nsMenu.m("collapse")]: props.collapse
         }
       }, [...slot, ...vShowMore]));
       if (props.collapseTransition && props.mode === "vertical") {
@@ -32127,6 +32107,8 @@ const _sfc_main$U = vue_cjs_prod.defineComponent({
   setup(props, { emit }) {
     const instance = vue_cjs_prod.getCurrentInstance();
     const rootMenu = vue_cjs_prod.inject("rootMenu");
+    const nsMenu = useNamespace("menu");
+    const nsMenuItem = useNamespace("menu-item");
     if (!rootMenu)
       throwError(COMPONENT_NAME$8, "can not inject root menu");
     const { parentMenu, paddingStyle, indexPath } = useMenu(instance, vue_cjs_prod.toRef(props, "index"));
@@ -32163,18 +32145,20 @@ const _sfc_main$U = vue_cjs_prod.defineComponent({
       rootMenu,
       paddingStyle,
       active,
+      nsMenu,
+      nsMenuItem,
       handleClick
     };
   }
 });
-const _hoisted_1$q = { class: "el-menu-tooltip__trigger" };
 function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_tooltip = vue_cjs_prod.resolveComponent("el-tooltip");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
-    class: vue_cjs_prod.normalizeClass(["el-menu-item", {
-      "is-active": _ctx.active,
-      "is-disabled": _ctx.disabled
-    }]),
+    class: vue_cjs_prod.normalizeClass([
+      _ctx.nsMenuItem.b(),
+      _ctx.nsMenuItem.is("active", _ctx.active),
+      _ctx.nsMenuItem.is("disabled", _ctx.disabled)
+    ]),
     role: "menuitem",
     tabindex: "-1",
     style: vue_cjs_prod.normalizeStyle(_ctx.paddingStyle),
@@ -32191,9 +32175,11 @@ function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
         vue_cjs_prod.renderSlot(_ctx.$slots, "title")
       ]),
       default: vue_cjs_prod.withCtx(() => [
-        vue_cjs_prod.createElementVNode("div", _hoisted_1$q, [
+        vue_cjs_prod.createElementVNode("div", {
+          class: vue_cjs_prod.normalizeClass(_ctx.nsMenu.be("tooltip", "trigger"))
+        }, [
           vue_cjs_prod.renderSlot(_ctx.$slots, "default")
-        ])
+        ], 2)
       ]),
       _: 3
     }, 8, ["effect"])) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 1 }, [
@@ -32215,6 +32201,7 @@ const _sfc_main$T = vue_cjs_prod.defineComponent({
     const menu = vue_cjs_prod.inject("rootMenu");
     if (!menu)
       throwError(COMPONENT_NAME$7, "can not inject root menu");
+    const ns = useNamespace("menu-item-group");
     const levelPadding = vue_cjs_prod.computed(() => {
       if (menu.props.collapse)
         return 20;
@@ -32229,25 +32216,27 @@ const _sfc_main$T = vue_cjs_prod.defineComponent({
       return padding;
     });
     return {
-      levelPadding
+      levelPadding,
+      ns
     };
   }
 });
-const _hoisted_1$p = { class: "el-menu-item-group" };
 function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", _hoisted_1$p, [
+  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
+    class: vue_cjs_prod.normalizeClass(_ctx.ns.b())
+  }, [
     vue_cjs_prod.createElementVNode("div", {
-      class: "el-menu-item-group__title",
+      class: vue_cjs_prod.normalizeClass(_ctx.ns.e("title")),
       style: vue_cjs_prod.normalizeStyle({ paddingLeft: `${_ctx.levelPadding}px` })
     }, [
       !_ctx.$slots.title ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 0 }, [
         vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(_ctx.title), 1)
       ], 2112)) : vue_cjs_prod.renderSlot(_ctx.$slots, "title", { key: 1 })
-    ], 4),
+    ], 6),
     vue_cjs_prod.createElementVNode("ul", null, [
       vue_cjs_prod.renderSlot(_ctx.$slots, "default")
     ])
-  ]);
+  ], 2);
 }
 var MenuItemGroup = /* @__PURE__ */ _export_sfc(_sfc_main$T, [["render", _sfc_render$A], ["__file", "menu-item-group.vue"]]);
 const ElMenu = withInstall(Menu, {
@@ -32828,8 +32817,7 @@ const useSelect$3 = (props, states, ctx) => {
       var _a2, _b2;
       if (!reference2.value)
         return;
-      const inputChildNodes = reference2.value.$el.childNodes;
-      const input2 = Array.from(inputChildNodes).find((item) => item.tagName === "INPUT");
+      const input2 = reference2.value.$el.querySelector("input");
       const _tags = tags.value;
       const sizeInMap = states.initialInputHeight || getComponentSize(selectSize.value || elForm.size);
       input2.style.height = states.selected.length === 0 ? `${sizeInMap}px` : `${Math.max(_tags ? _tags.clientHeight + (_tags.clientHeight > sizeInMap ? 6 : 0) : 0, sizeInMap)}px`;
@@ -33833,7 +33821,7 @@ function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
             onMouseleave: _cache[22] || (_cache[22] = ($event) => _ctx.inputHovering = false)
           }, vue_cjs_prod.createSlots({
             suffix: vue_cjs_prod.withCtx(() => [
-              _ctx.iconComponent ? vue_cjs_prod.withDirectives((vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_icon, {
+              _ctx.iconComponent && !_ctx.showClose ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_icon, {
                 key: 0,
                 class: vue_cjs_prod.normalizeClass([_ctx.nsSelect.e("caret"), _ctx.nsSelect.e("icon"), _ctx.iconReverse])
               }, {
@@ -33841,9 +33829,7 @@ function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
                   (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(_ctx.iconComponent)))
                 ]),
                 _: 1
-              }, 8, ["class"])), [
-                [vue_cjs_prod.vShow, !_ctx.showClose]
-              ]) : vue_cjs_prod.createCommentVNode("v-if", true),
+              }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true),
               _ctx.showClose && _ctx.clearIcon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_icon, {
                 key: 1,
                 class: vue_cjs_prod.normalizeClass([_ctx.nsSelect.e("caret"), _ctx.nsSelect.e("icon")]),
@@ -35157,8 +35143,8 @@ const _sfc_main$F = vue_cjs_prod.defineComponent({
 const _hoisted_1$i = ["aria-valuenow"];
 const _hoisted_2$d = { viewBox: "0 0 100 100" };
 const _hoisted_3$6 = ["d", "stroke-width"];
-const _hoisted_4$5 = ["d", "stroke", "stroke-linecap", "stroke-width"];
-const _hoisted_5$4 = { key: 0 };
+const _hoisted_4$4 = ["d", "stroke", "stroke-linecap", "stroke-width"];
+const _hoisted_5$3 = { key: 0 };
 function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
@@ -35223,7 +35209,7 @@ function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
           "stroke-linecap": _ctx.strokeLinecap,
           "stroke-width": _ctx.percentage ? _ctx.relativeStrokeWidth : 0,
           style: vue_cjs_prod.normalizeStyle(_ctx.circlePathStyle)
-        }, null, 14, _hoisted_4$5)
+        }, null, 14, _hoisted_4$4)
       ]))
     ], 6)),
     (_ctx.showText || _ctx.$slots.default) && !_ctx.textInside ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
@@ -35232,7 +35218,7 @@ function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
       style: vue_cjs_prod.normalizeStyle({ fontSize: `${_ctx.progressTextSize}px` })
     }, [
       vue_cjs_prod.renderSlot(_ctx.$slots, "default", vue_cjs_prod.normalizeProps(vue_cjs_prod.guardReactiveProps(_ctx.slotData)), () => [
-        !_ctx.status ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_5$4, vue_cjs_prod.toDisplayString(_ctx.content), 1)) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_icon, { key: 1 }, {
+        !_ctx.status ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", _hoisted_5$3, vue_cjs_prod.toDisplayString(_ctx.content), 1)) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_icon, { key: 1 }, {
           default: vue_cjs_prod.withCtx(() => [
             (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(_ctx.statusIcon)))
           ]),
@@ -35763,7 +35749,7 @@ const useCache = () => {
   });
 };
 const DEFAULT_DYNAMIC_LIST_ITEM_SIZE = 50;
-const ITEM_RENDER_EVT = "item-rendered";
+const ITEM_RENDER_EVT = "itemRendered";
 const SCROLL_EVT = "scroll";
 const FORWARD = "forward";
 const BACKWARD = "backward";
@@ -35894,6 +35880,12 @@ const virtualizedListProps = buildProps(__spreadValues({
   total,
   itemSize
 }, virtualizedProps));
+const scrollbarSize = {
+  type: Number,
+  default: 6
+};
+const startGap = { type: Number, default: 2 };
+const endGap = { type: Number, default: 2 };
 const virtualizedGridProps = buildProps(__spreadValues({
   columnCache: cache,
   columnWidth: itemSize,
@@ -35904,9 +35896,15 @@ const virtualizedGridProps = buildProps(__spreadValues({
   rowCache: cache,
   rowHeight: itemSize,
   totalColumn: total,
-  totalRow: total
+  totalRow: total,
+  hScrollbarSize: scrollbarSize,
+  vScrollbarSize: scrollbarSize,
+  scrollbarStartGap: startGap,
+  scrollbarEndGap: endGap
 }, virtualizedProps));
 const virtualizedScrollbarProps = buildProps({
+  alwaysOn: Boolean,
+  class: String,
   layout,
   total,
   ratio: {
@@ -35921,6 +35919,9 @@ const virtualizedScrollbarProps = buildProps({
     type: Number,
     required: true
   },
+  scrollbarSize,
+  startGap,
+  endGap,
   visible: Boolean
 });
 const getScrollDir = (prev, cur) => prev < cur ? FORWARD : BACKWARD;
@@ -35975,7 +35976,9 @@ const ScrollBar = vue_cjs_prod.defineComponent({
   props: virtualizedScrollbarProps,
   emits: ["scroll", "start-move", "stop-move"],
   setup(props, { emit }) {
-    const GAP = 4;
+    const GAP = vue_cjs_prod.computed(() => props.startGap + props.endGap);
+    const nsVirtualScrollbar = useNamespace("virtual-scrollbar");
+    const nsScrollbar = useNamespace("scrollbar");
     const trackRef = vue_cjs_prod.ref();
     const thumbRef = vue_cjs_prod.ref();
     let frameHandle = null;
@@ -35985,11 +35988,11 @@ const ScrollBar = vue_cjs_prod.defineComponent({
       traveled: 0
     });
     const bar = vue_cjs_prod.computed(() => BAR_MAP[props.layout]);
-    const trackSize = vue_cjs_prod.computed(() => props.clientSize - GAP);
+    const trackSize = vue_cjs_prod.computed(() => props.clientSize - vue_cjs_prod.unref(GAP));
     const trackStyle = vue_cjs_prod.computed(() => ({
       position: "absolute",
-      width: HORIZONTAL === props.layout ? `${trackSize.value}px` : "6px",
-      height: HORIZONTAL === props.layout ? "6px" : `${trackSize.value}px`,
+      width: `${HORIZONTAL === props.layout ? trackSize.value : props.scrollbarSize}px`,
+      height: `${HORIZONTAL === props.layout ? props.scrollbarSize : trackSize.value}px`,
       [ScrollbarDirKey[props.layout]]: "2px",
       right: "2px",
       bottom: "2px",
@@ -36021,28 +36024,28 @@ const ScrollBar = vue_cjs_prod.defineComponent({
       }, props.layout);
       return style;
     });
-    const totalSteps = vue_cjs_prod.computed(() => Math.floor(props.clientSize - thumbSize.value - GAP));
+    const totalSteps = vue_cjs_prod.computed(() => Math.floor(props.clientSize - thumbSize.value - vue_cjs_prod.unref(GAP)));
     const attachEvents2 = () => {
-      on(window, "mousemove", onMouseMove);
-      on(window, "mouseup", onMouseUp);
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mouseup", onMouseUp);
       const thumbEl = vue_cjs_prod.unref(thumbRef);
       if (!thumbEl)
         return;
       onselectstartStore = document.onselectstart;
       document.onselectstart = () => false;
-      on(thumbEl, "touchmove", onMouseMove);
-      on(thumbEl, "touchend", onMouseUp);
+      thumbEl.addEventListener("touchmove", onMouseMove);
+      thumbEl.addEventListener("touchend", onMouseUp);
     };
     const detachEvents = () => {
-      off(window, "mousemove", onMouseMove);
-      off(window, "mouseup", onMouseUp);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
       document.onselectstart = onselectstartStore;
       onselectstartStore = null;
       const thumbEl = vue_cjs_prod.unref(thumbRef);
       if (!thumbEl)
         return;
-      off(thumbEl, "touchmove", onMouseMove);
-      off(thumbEl, "touchend", onMouseUp);
+      thumbEl.removeEventListener("touchmove", onMouseMove);
+      thumbEl.removeEventListener("touchend", onMouseUp);
     };
     const onThumbMouseDown = (e) => {
       e.stopImmediatePropagation();
@@ -36074,7 +36077,7 @@ const ScrollBar = vue_cjs_prod.defineComponent({
       const thumbClickPosition = thumbRef.value[bar.value.offset] - prevPage;
       const distance = offset2 - thumbClickPosition;
       frameHandle = rAF(() => {
-        state.traveled = Math.max(0, Math.min(distance, totalSteps.value));
+        state.traveled = Math.max(props.startGap, Math.min(distance, totalSteps.value));
         emit("scroll", distance, totalSteps.value);
       });
     };
@@ -36085,29 +36088,29 @@ const ScrollBar = vue_cjs_prod.defineComponent({
       state.traveled = Math.max(0, Math.min(distance, totalSteps.value));
       emit("scroll", distance, totalSteps.value);
     };
-    const onScrollbarTouchStart = (e) => e.preventDefault();
     vue_cjs_prod.watch(() => props.scrollFrom, (v2) => {
       if (state.isDragging)
         return;
       state.traveled = Math.ceil(v2 * totalSteps.value);
     });
-    vue_cjs_prod.onMounted(() => {
-      return;
-    });
     vue_cjs_prod.onBeforeUnmount(() => {
-      off(trackRef.value, "touchstart", onScrollbarTouchStart);
       detachEvents();
     });
     return () => {
       return vue_cjs_prod.h("div", {
         role: "presentation",
         ref: trackRef,
-        class: "el-virtual-scrollbar",
+        class: [
+          nsVirtualScrollbar.b(),
+          props.class,
+          (props.alwaysOn || state.isDragging) && "always-on"
+        ],
         style: trackStyle.value,
-        onMousedown: vue_cjs_prod.withModifiers(clickTrackHandler, ["stop", "prevent"])
+        onMousedown: vue_cjs_prod.withModifiers(clickTrackHandler, ["stop", "prevent"]),
+        onTouchstartPrevent: onThumbMouseDown
       }, vue_cjs_prod.h("div", {
         ref: thumbRef,
-        class: "el-scrollbar__thumb",
+        class: nsScrollbar.e("thumb"),
         style: thumbStyle.value,
         onMousedown: onThumbMouseDown
       }, []));
@@ -36134,6 +36137,7 @@ const createList = ({
     setup(props, { emit, expose }) {
       validateProps(props);
       const instance = vue_cjs_prod.getCurrentInstance();
+      const ns = useNamespace("vl");
       const dynamicSizeCache = vue_cjs_prod.ref(initCache(props, instance));
       const getItemStyleCache = useCache();
       const windowRef = vue_cjs_prod.ref();
@@ -36346,6 +36350,7 @@ const createList = ({
         }
       });
       const api = {
+        ns,
         clientSize,
         estimatedTotalSize,
         windowStyle,
@@ -36393,7 +36398,8 @@ const createList = ({
         onWheel,
         states,
         useIsScrolling,
-        windowStyle
+        windowStyle,
+        ns
       } = ctx;
       const [start2, end2] = itemsToRender;
       const Container2 = vue_cjs_prod.resolveDynamicComponent(containerElement);
@@ -36437,10 +36443,7 @@ const createList = ({
       }, !isString(Container2) ? { default: () => [InnerNode] } : [InnerNode]);
       return vue_cjs_prod.h("div", {
         key: 0,
-        class: [
-          "el-vl__wrapper",
-          states.scrollbarAlwaysOn ? "always-on" : ""
-        ]
+        class: [ns.e("wrapper"), states.scrollbarAlwaysOn ? "always-on" : ""]
       }, [listContainer, scrollbar]);
     }
   });
@@ -36659,8 +36662,13 @@ const useGridWheel = ({ atXEndEdge, atXStartEdge, atYEndEdge, atYStartEdge }, on
   };
   const onWheel = (e) => {
     cAF(frameHandle);
-    const x2 = e.deltaX;
-    const y = e.deltaY;
+    let x2 = e.deltaX;
+    let y = e.deltaY;
+    if (Math.abs(x2) > Math.abs(y)) {
+      y = 0;
+    } else {
+      x2 = 0;
+    }
     if (hasReachedEdge(xOffset, yOffset) && hasReachedEdge(xOffset + x2, yOffset + y))
       return;
     xOffset += x2;
@@ -36693,6 +36701,7 @@ const createGrid = ({
   getRowStartIndexForOffset,
   getRowStopIndexForStartIndex,
   initCache,
+  injectToInstance,
   validateProps
 }) => {
   return vue_cjs_prod.defineComponent({
@@ -36700,9 +36709,11 @@ const createGrid = ({
     props: virtualizedGridProps,
     emits: [ITEM_RENDER_EVT, SCROLL_EVT],
     setup(props, { emit, expose, slots }) {
+      const ns = useNamespace("vl");
       validateProps(props);
       const instance = vue_cjs_prod.getCurrentInstance();
       const cache2 = vue_cjs_prod.ref(initCache(props, instance));
+      injectToInstance == null ? void 0 : injectToInstance(instance, cache2);
       const windowRef = vue_cjs_prod.ref();
       const hScrollbar = vue_cjs_prod.ref();
       const vScrollbar = vue_cjs_prod.ref();
@@ -36808,7 +36819,13 @@ const createGrid = ({
           xAxisScrollDir,
           yAxisScrollDir
         } = vue_cjs_prod.unref(states);
-        emit(SCROLL_EVT, xAxisScrollDir, scrollLeft, yAxisScrollDir, scrollTop, updateRequested);
+        emit(SCROLL_EVT, {
+          xAxisScrollDir,
+          scrollLeft,
+          yAxisScrollDir,
+          scrollTop,
+          updateRequested
+        });
       };
       const onScroll = (e) => {
         const {
@@ -36838,11 +36855,12 @@ const createGrid = ({
           isScrolling: true,
           scrollLeft: _scrollLeft,
           scrollTop: Math.max(0, Math.min(scrollTop, scrollHeight - clientHeight)),
-          updateRequested: false,
+          updateRequested: true,
           xAxisScrollDir: getScrollDir(_states.scrollLeft, _scrollLeft),
           yAxisScrollDir: getScrollDir(_states.scrollTop, scrollTop)
         });
-        vue_cjs_prod.nextTick(resetIsScrolling);
+        vue_cjs_prod.nextTick(() => resetIsScrolling());
+        onUpdated2();
         emitEvents();
       };
       const onVerticalScroll = (distance, totalSteps) => {
@@ -36892,7 +36910,9 @@ const createGrid = ({
           scrollTop,
           updateRequested: true
         });
-        vue_cjs_prod.nextTick(resetIsScrolling);
+        vue_cjs_prod.nextTick(() => resetIsScrolling());
+        onUpdated2();
+        emitEvents();
       };
       const scrollToItem = (rowIndex = 0, columnIdx = 0, alignment = AUTO_ALIGNMENT) => {
         const _states = vue_cjs_prod.unref(states);
@@ -36939,7 +36959,7 @@ const createGrid = ({
       vue_cjs_prod.onMounted(() => {
         return;
       });
-      vue_cjs_prod.onUpdated(() => {
+      const onUpdated2 = () => {
         const { direction: direction2 } = props;
         const { scrollLeft, scrollTop, updateRequested } = vue_cjs_prod.unref(states);
         const windowElement = vue_cjs_prod.unref(windowRef);
@@ -36965,7 +36985,7 @@ const createGrid = ({
           }
           windowElement.scrollTop = Math.max(0, scrollTop);
         }
-      });
+      };
       expose({
         windowRef,
         innerRef,
@@ -36975,7 +36995,13 @@ const createGrid = ({
         states
       });
       const renderScrollbars = () => {
-        const { totalColumn, totalRow } = props;
+        const {
+          scrollbarAlwaysOn,
+          scrollbarStartGap,
+          scrollbarEndGap,
+          totalColumn,
+          totalRow
+        } = props;
         const width = vue_cjs_prod.unref(parsedWidth);
         const height = vue_cjs_prod.unref(parsedHeight);
         const estimatedWidth = vue_cjs_prod.unref(estimatedTotalWidth);
@@ -36983,6 +37009,10 @@ const createGrid = ({
         const { scrollLeft, scrollTop } = vue_cjs_prod.unref(states);
         const horizontalScrollbar = vue_cjs_prod.h(Scrollbar, {
           ref: hScrollbar,
+          alwaysOn: scrollbarAlwaysOn,
+          startGap: scrollbarStartGap,
+          endGap: scrollbarEndGap,
+          class: ns.e("horizontal"),
           clientSize: width,
           layout: "horizontal",
           onScroll: onHorizontalScroll,
@@ -36993,6 +37023,10 @@ const createGrid = ({
         });
         const verticalScrollbar = vue_cjs_prod.h(Scrollbar, {
           ref: vScrollbar,
+          alwaysOn: scrollbarAlwaysOn,
+          startGap: scrollbarStartGap,
+          endGap: scrollbarEndGap,
+          class: ns.e("vertical"),
           clientSize: height,
           layout: "vertical",
           onScroll: onVerticalScroll,
@@ -37046,7 +37080,7 @@ const createGrid = ({
         const Inner = renderInner();
         return vue_cjs_prod.h("div", {
           key: 0,
-          class: "el-vg__wrapper"
+          class: ns.e("wrapper")
         }, [
           vue_cjs_prod.h(Container2, {
             class: props.className,
@@ -37348,6 +37382,34 @@ createGrid$1({
       offset2 += getItemFromCache(props, stopIndex, cache2, "row").size;
     }
     return stopIndex;
+  },
+  injectToInstance: (instance, cache2) => {
+    const resetAfter = ({ columnIndex, rowIndex }, forceUpdate) => {
+      forceUpdate = isUndefined(forceUpdate) ? true : forceUpdate;
+      if (isNumber(columnIndex)) {
+        cache2.value.lastVisitedColumnIndex = Math.min(cache2.value.lastVisitedColumnIndex, columnIndex - 1);
+      }
+      if (isNumber(rowIndex)) {
+        cache2.value.lastVisitedRowIndex = Math.min(cache2.value.lastVisitedRowIndex, rowIndex - 1);
+      }
+      if (forceUpdate)
+        instance.update();
+    };
+    const resetAfterColumnIndex = (columnIndex, forceUpdate) => {
+      resetAfter({
+        columnIndex
+      }, forceUpdate);
+    };
+    const resetAfterRowIndex = (rowIndex, forceUpdate) => {
+      resetAfter({
+        rowIndex
+      }, forceUpdate);
+    };
+    Object.assign(instance.proxy, {
+      resetAfterColumnIndex,
+      resetAfterRowIndex,
+      resetAfter
+    });
   },
   initCache: ({
     estimatedColumnWidth = DEFAULT_DYNAMIC_LIST_ITEM_SIZE,
@@ -38489,8 +38551,8 @@ const _sfc_main$z = vue_cjs_prod.defineComponent({
 const _hoisted_1$f = { key: 0 };
 const _hoisted_2$b = ["id", "autocomplete", "aria-expanded", "aria-labelledby", "disabled", "readonly", "name", "unselectable"];
 const _hoisted_3$5 = ["textContent"];
-const _hoisted_4$4 = ["id", "aria-labelledby", "aria-expanded", "autocomplete", "disabled", "name", "readonly", "unselectable"];
-const _hoisted_5$3 = ["textContent"];
+const _hoisted_4$3 = ["id", "aria-labelledby", "aria-expanded", "autocomplete", "disabled", "name", "readonly", "unselectable"];
+const _hoisted_5$2 = ["textContent"];
 function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_tag = vue_cjs_prod.resolveComponent("el-tag");
   const _component_el_tooltip = vue_cjs_prod.resolveComponent("el-tooltip");
@@ -38747,7 +38809,7 @@ function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
                     _cache[20] || (_cache[20] = vue_cjs_prod.withKeys(vue_cjs_prod.withModifiers((...args) => _ctx.handleEsc && _ctx.handleEsc(...args), ["stop", "prevent"]), ["esc"]))
                   ],
                   "onUpdate:modelValue": _cache[21] || (_cache[21] = (...args) => _ctx.onUpdateInputValue && _ctx.onUpdateInputValue(...args))
-                }, null, 42, _hoisted_4$4), [
+                }, null, 42, _hoisted_4$3), [
                   [_directive_model_text, _ctx.states.displayInputValue]
                 ])
               ], 2),
@@ -38760,7 +38822,7 @@ function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
                   _ctx.nsSelectV2.e("input-calculator")
                 ]),
                 textContent: vue_cjs_prod.toDisplayString(_ctx.states.displayInputValue)
-              }, null, 10, _hoisted_5$3)) : vue_cjs_prod.createCommentVNode("v-if", true)
+              }, null, 10, _hoisted_5$2)) : vue_cjs_prod.createCommentVNode("v-if", true)
             ], 64)),
             _ctx.shouldShowPlaceholder ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
               key: 3,
@@ -40446,9 +40508,9 @@ const _sfc_main$q = vue_cjs_prod.defineComponent({
 const _hoisted_1$d = ["aria-checked", "aria-disabled"];
 const _hoisted_2$9 = ["id", "name", "true-value", "false-value", "disabled"];
 const _hoisted_3$4 = ["aria-hidden"];
-const _hoisted_4$3 = ["aria-hidden"];
-const _hoisted_5$2 = ["aria-hidden"];
-const _hoisted_6$1 = ["aria-hidden"];
+const _hoisted_4$2 = ["aria-hidden"];
+const _hoisted_5$1 = ["aria-hidden"];
+const _hoisted_6 = ["aria-hidden"];
 function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
   const _component_loading = vue_cjs_prod.resolveComponent("loading");
@@ -40523,12 +40585,12 @@ function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
             key: 0,
             class: vue_cjs_prod.normalizeClass([_ctx.ns.is("text"), _ctx.checked ? _ctx.ns.is("show") : _ctx.ns.is("hide")]),
             "aria-hidden": !_ctx.checked
-          }, vue_cjs_prod.toDisplayString(_ctx.activeText.substring(0, 3)), 11, _hoisted_4$3)) : vue_cjs_prod.createCommentVNode("v-if", true),
+          }, vue_cjs_prod.toDisplayString(_ctx.activeText.substring(0, 3)), 11, _hoisted_4$2)) : vue_cjs_prod.createCommentVNode("v-if", true),
           _ctx.inactiveText ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
             key: 1,
             class: vue_cjs_prod.normalizeClass([_ctx.ns.is("text"), !_ctx.checked ? _ctx.ns.is("show") : _ctx.ns.is("hide")]),
             "aria-hidden": _ctx.checked
-          }, vue_cjs_prod.toDisplayString(_ctx.inactiveText.substring(0, 3)), 11, _hoisted_5$2)) : vue_cjs_prod.createCommentVNode("v-if", true)
+          }, vue_cjs_prod.toDisplayString(_ctx.inactiveText.substring(0, 3)), 11, _hoisted_5$1)) : vue_cjs_prod.createCommentVNode("v-if", true)
         ], 64)) : vue_cjs_prod.createCommentVNode("v-if", true)
       ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true),
       vue_cjs_prod.createElementVNode("div", {
@@ -40562,7 +40624,7 @@ function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
       !_ctx.activeIcon && _ctx.activeText ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
         key: 1,
         "aria-hidden": !_ctx.checked
-      }, vue_cjs_prod.toDisplayString(_ctx.activeText), 9, _hoisted_6$1)) : vue_cjs_prod.createCommentVNode("v-if", true)
+      }, vue_cjs_prod.toDisplayString(_ctx.activeText), 9, _hoisted_6)) : vue_cjs_prod.createCommentVNode("v-if", true)
     ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
   ], 10, _hoisted_1$d);
 }
@@ -45543,6 +45605,7 @@ const _sfc_main$l = vue_cjs_prod.defineComponent({
   },
   emits: ["change", "blur", "focus", "update:modelValue"],
   setup(props) {
+    const nsInput = useNamespace("input");
     const select = vue_cjs_prod.ref(null);
     const value = vue_cjs_prod.computed(() => props.modelValue);
     const start2 = vue_cjs_prod.computed(() => {
@@ -45590,6 +45653,7 @@ const _sfc_main$l = vue_cjs_prod.defineComponent({
       (_b2 = (_a2 = select.value) == null ? void 0 : _a2.focus) == null ? void 0 : _b2.call(_a2);
     };
     return {
+      nsInput,
       select,
       value,
       items,
@@ -45621,13 +45685,13 @@ function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
     prefix: vue_cjs_prod.withCtx(() => [
       _ctx.prefixIcon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_icon, {
         key: 0,
-        class: "el-input__prefix-icon"
+        class: vue_cjs_prod.normalizeClass(_ctx.nsInput.e("prefix-icon"))
       }, {
         default: vue_cjs_prod.withCtx(() => [
           (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(_ctx.prefixIcon)))
         ]),
         _: 1
-      })) : vue_cjs_prod.createCommentVNode("v-if", true)
+      }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true)
     ]),
     default: vue_cjs_prod.withCtx(() => [
       (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.items, (item) => {
@@ -48493,7 +48557,17 @@ const useTree$1 = (props, { attrs, slots, emit }, {
   };
   return __spreadProps(__spreadValues(__spreadValues({}, pick$1(vue_cjs_prod.toRefs(props), Object.keys(_Tree.props))), attrs), {
     nodeKey: key,
-    defaultExpandedKeys: vue_cjs_prod.computed(() => props.defaultExpandedKeys ? props.defaultExpandedKeys.concat(props.modelValue) : toValidArray(props.modelValue)),
+    expandOnClickNode: vue_cjs_prod.computed(() => {
+      return !props.checkStrictly;
+    }),
+    defaultExpandedKeys: vue_cjs_prod.computed(() => {
+      const values = toValidArray(props.modelValue);
+      const parentKeys = tree.value ? values.map((item) => {
+        var _a2, _b2, _c;
+        return (_c = (_b2 = (_a2 = tree.value) == null ? void 0 : _a2.getNode(item)) == null ? void 0 : _b2.parent) == null ? void 0 : _c.key;
+      }).filter((item) => isValidValue(item)) : values;
+      return props.defaultExpandedKeys ? props.defaultExpandedKeys.concat(parentKeys) : parentKeys;
+    }),
     renderContent: (h2, { node, data, store }) => {
       return h2(TreeSelectOption, {
         value: getNodeValByProp("value", data),
@@ -48518,7 +48592,7 @@ const useTree$1 = (props, { attrs, slots, emit }, {
           (_c = select.value) == null ? void 0 : _c.handleOptionSelect(option, true);
         }
       } else {
-        e.ctx.handleExpandIconClick();
+        e.proxy.handleExpandIconClick();
       }
     },
     onCheck: (data, params) => {
@@ -48530,11 +48604,15 @@ const useTree$1 = (props, { attrs, slots, emit }, {
     }
   });
 };
+function isValidValue(val) {
+  return val || val === 0;
+}
 function toValidArray(val) {
-  return Array.isArray(val) ? val : val || val === 0 ? [val] : [];
+  return Array.isArray(val) ? val : isValidValue(val) ? [val] : [];
 }
 const _sfc_main$9$1 = vue_cjs_prod.defineComponent({
   name: "ElTreeSelect",
+  inheritAttrs: false,
   props: __spreadValues(__spreadValues({}, ElSelect.props), _Tree.props),
   setup(props, context) {
     const { slots, expose } = context;
@@ -49655,8 +49733,8 @@ const uploadListEmits = {
 const _hoisted_1$5 = ["onKeydown"];
 const _hoisted_2$4 = ["src"];
 const _hoisted_3$2 = ["onClick"];
-const _hoisted_4$2 = ["onClick"];
-const _hoisted_5$1 = ["onClick"];
+const _hoisted_4$1 = ["onClick"];
+const _hoisted_5 = ["onClick"];
 const __default__$3 = {
   name: "ElUploadList"
 };
@@ -49791,7 +49869,7 @@ const _sfc_main$6$1 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps
                       ]),
                       _: 1
                     }, 8, ["class"])
-                  ], 10, _hoisted_4$2),
+                  ], 10, _hoisted_4$1),
                   !_ctx.disabled ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", {
                     key: 0,
                     class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsUpload).be("list", "item-delete")),
@@ -49805,7 +49883,7 @@ const _sfc_main$6$1 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps
                       ]),
                       _: 1
                     }, 8, ["class"])
-                  ], 10, _hoisted_5$1)) : vue_cjs_prod.createCommentVNode("v-if", true)
+                  ], 10, _hoisted_5)) : vue_cjs_prod.createCommentVNode("v-if", true)
                 ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
               ])
             ], 42, _hoisted_1$5);
@@ -50839,6 +50917,7 @@ vue_cjs_prod.defineComponent({
   emits: ["vanish", "action"],
   setup(props, { emit }) {
     const { t } = useLocale();
+    const ns = useNamespace("message-box");
     const visible = vue_cjs_prod.ref(false);
     const { nextZIndex } = useZIndex();
     const state = vue_cjs_prod.reactive({
@@ -50877,7 +50956,7 @@ vue_cjs_prod.defineComponent({
     });
     const typeClass = vue_cjs_prod.computed(() => {
       const type4 = state.type;
-      return type4 && TypeComponentsMap[type4] ? `el-message-box-icon--${type4}` : "";
+      return { [ns.bm("icon", type4)]: type4 && TypeComponentsMap[type4] };
     });
     const btnSize = useSize(vue_cjs_prod.computed(() => props.buttonSize), { prop: true, form: true, formItem: true });
     const iconComponent = vue_cjs_prod.computed(() => state.icon || TypeComponentsMap[state.type] || "");
@@ -51008,6 +51087,7 @@ vue_cjs_prod.defineComponent({
     }
     useRestoreActive(visible);
     return __spreadProps(__spreadValues({}, vue_cjs_prod.toRefs(state)), {
+      ns,
       overlayEvent,
       visible,
       hasMessage,
@@ -51284,8 +51364,21 @@ const mdEditor_5fc2952f = defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(VMdEditor);
 });
 const mdPreview_1a2cb494 = defineNuxtPlugin((nuxtApp) => {
+  VMdPreview.xss.extend({
+    whiteList: {
+      a: ["target", "href", "title", "rel"]
+    }
+  });
   VMdPreview.use(githubTheme, {
-    Hljs: hljs
+    Hljs: hljs,
+    extend(md) {
+      md.use(externalLinks, {
+        externalClassName: "custom-external-link",
+        internalClassName: "custom-internal-link",
+        internalDomains: ["thinkmoon.cn"],
+        externalRel: "nofollow noopener noreferrer"
+      });
+    }
   });
   nuxtApp.vueApp.use(VMdPreview);
 });
@@ -51332,7 +51425,7 @@ const _sfc_main$k = {
   },
   setup(__props) {
     const props = __props;
-    useMeta({
+    useHead({
       title: `${props.statusCode} - ${props.statusMessage} | ${props.appName}`,
       script: [],
       style: [
@@ -51343,7 +51436,7 @@ const _sfc_main$k = {
     });
     return (_ctx, _push, _parent, _attrs) => {
       const _component_NuxtLink = __nuxt_component_0$2;
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "font-sans antialiased bg-white dark:bg-black text-black dark:text-white grid min-h-screen place-content-center overflow-hidden" }, _attrs))} data-v-7371678c><div class="fixed left-0 right-0 spotlight z-10" data-v-7371678c></div><div class="max-w-520px text-center z-20" data-v-7371678c><h1 class="text-8xl sm:text-10xl font-medium mb-8" data-v-7371678c>${__props.statusCode}</h1><p class="text-xl px-8 sm:px-0 sm:text-4xl font-light mb-16 leading-tight" data-v-7371678c>${__props.description}</p><div class="w-full flex items-center justify-center" data-v-7371678c>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "font-sans antialiased bg-white dark:bg-black text-black dark:text-white grid min-h-screen place-content-center overflow-hidden" }, _attrs))} data-v-b11ad3a6><div class="fixed left-0 right-0 spotlight z-10" data-v-b11ad3a6></div><div class="max-w-520px text-center z-20" data-v-b11ad3a6><h1 class="text-8xl sm:text-10xl font-medium mb-8" data-v-b11ad3a6>${__props.statusCode}</h1><p class="text-xl px-8 sm:px-0 sm:text-4xl font-light mb-16 leading-tight" data-v-b11ad3a6>${__props.description}</p><div class="w-full flex items-center justify-center" data-v-b11ad3a6>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
         to: "/",
         class: "gradient-border text-md sm:text-xl py-2 px-4 sm:py-3 sm:px-6 cursor-pointer"
@@ -51369,7 +51462,7 @@ _sfc_main$k.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/@nuxt/ui-templates/dist/templates/error-404.vue");
   return _sfc_setup$k ? _sfc_setup$k(props, ctx) : void 0;
 };
-const Error404 = /* @__PURE__ */ _export_sfc$2(_sfc_main$k, [["__scopeId", "data-v-7371678c"]]);
+const Error404 = /* @__PURE__ */ _export_sfc$2(_sfc_main$k, [["__scopeId", "data-v-b11ad3a6"]]);
 const _sfc_main$j = {
   __ssrInlineRender: true,
   props: {
@@ -51396,7 +51489,7 @@ const _sfc_main$j = {
   },
   setup(__props) {
     const props = __props;
-    useMeta({
+    useHead({
       title: `${props.statusCode} - ${props.statusMessage} | ${props.appName}`,
       script: [],
       style: [
@@ -51406,7 +51499,7 @@ const _sfc_main$j = {
       ]
     });
     return (_ctx, _push, _parent, _attrs) => {
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "font-sans antialiased bg-white dark:bg-black text-black dark:text-white grid min-h-screen place-content-center overflow-hidden" }, _attrs))} data-v-5d1604e8><div class="fixed -bottom-1/2 left-0 right-0 h-1/2 spotlight" data-v-5d1604e8></div><div class="max-w-520px text-center" data-v-5d1604e8><h1 class="text-8xl sm:text-10xl font-medium mb-8" data-v-5d1604e8>${__props.statusCode}</h1><p class="text-xl px-8 sm:px-0 sm:text-4xl font-light mb-16 leading-tight" data-v-5d1604e8>${__props.description}</p></div></div>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "font-sans antialiased bg-white dark:bg-black text-black dark:text-white grid min-h-screen place-content-center overflow-hidden" }, _attrs))} data-v-18181656><div class="fixed -bottom-1/2 left-0 right-0 h-1/2 spotlight" data-v-18181656></div><div class="max-w-520px text-center" data-v-18181656><h1 class="text-8xl sm:text-10xl font-medium mb-8" data-v-18181656>${__props.statusCode}</h1><p class="text-xl px-8 sm:px-0 sm:text-4xl font-light mb-16 leading-tight" data-v-18181656>${__props.description}</p></div></div>`);
     };
   }
 };
@@ -51416,7 +51509,7 @@ _sfc_main$j.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/@nuxt/ui-templates/dist/templates/error-500.vue");
   return _sfc_setup$j ? _sfc_setup$j(props, ctx) : void 0;
 };
-const Error500 = /* @__PURE__ */ _export_sfc$2(_sfc_main$j, [["__scopeId", "data-v-5d1604e8"]]);
+const Error500 = /* @__PURE__ */ _export_sfc$2(_sfc_main$j, [["__scopeId", "data-v-18181656"]]);
 const _sfc_main$h = {
   __ssrInlineRender: true,
   props: {
