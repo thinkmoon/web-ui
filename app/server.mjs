@@ -5076,6 +5076,25 @@ const NuxtPage = vue_cjs_prod.defineComponent({
   }
 });
 const defaultPageTransition = { name: "page", mode: "out-in" };
+const _sfc_main$38 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+  __ssrInlineRender: true,
+  setup(__props) {
+    return (_ctx, _push, _parent, _attrs) => {
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))}></div>`);
+    };
+  }
+});
+const _sfc_setup$B = _sfc_main$38.setup;
+_sfc_main$38.setup = (props, ctx) => {
+  const ssrContext = vue_cjs_prod.useSSRContext();
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/404.vue");
+  return _sfc_setup$B ? _sfc_setup$B(props, ctx) : void 0;
+};
+const meta$c = {
+  middleware() {
+    return navigateTo("/");
+  }
+};
 const _export_sfc$2 = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -5537,11 +5556,11 @@ const _sfc_main$37 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$z = _sfc_main$37.setup;
+const _sfc_setup$A = _sfc_main$37.setup;
 _sfc_main$37.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/admin.vue");
-  return _sfc_setup$z ? _sfc_setup$z(props, ctx) : void 0;
+  return _sfc_setup$A ? _sfc_setup$A(props, ctx) : void 0;
 };
 const meta$b = {
   layout: "admin",
@@ -5747,11 +5766,11 @@ const _sfc_main$36 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-const _sfc_setup$y = _sfc_main$36.setup;
+const _sfc_setup$z = _sfc_main$36.setup;
 _sfc_main$36.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/admin/editor.vue");
-  return _sfc_setup$y ? _sfc_setup$y(props, ctx) : void 0;
+  return _sfc_setup$z ? _sfc_setup$z(props, ctx) : void 0;
 };
 const meta$a = {
   keepalive: true
@@ -5979,11 +5998,11 @@ const _sfc_main$35 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-const _sfc_setup$x = _sfc_main$35.setup;
+const _sfc_setup$y = _sfc_main$35.setup;
 _sfc_main$35.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/admin/post-list.vue");
-  return _sfc_setup$x ? _sfc_setup$x(props, ctx) : void 0;
+  return _sfc_setup$y ? _sfc_setup$y(props, ctx) : void 0;
 };
 const meta$8 = {
   keepalive: true
@@ -6166,11 +6185,11 @@ const _sfc_main$34 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$w = _sfc_main$34.setup;
+const _sfc_setup$x = _sfc_main$34.setup;
 _sfc_main$34.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/PostList.vue");
-  return _sfc_setup$w ? _sfc_setup$w(props, ctx) : void 0;
+  return _sfc_setup$x ? _sfc_setup$x(props, ctx) : void 0;
 };
 const _sfc_main$33 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __ssrInlineRender: true,
@@ -6218,11 +6237,11 @@ const _sfc_main$33 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$v = _sfc_main$33.setup;
+const _sfc_setup$w = _sfc_main$33.setup;
 _sfc_main$33.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/category/[mid]/[pageIndex].vue");
-  return _sfc_setup$v ? _sfc_setup$v(props, ctx) : void 0;
+  return _sfc_setup$w ? _sfc_setup$w(props, ctx) : void 0;
 };
 const meta$7 = void 0;
 const _sfc_main$32 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
@@ -6293,11 +6312,11 @@ const _sfc_main$32 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$u = _sfc_main$32.setup;
+const _sfc_setup$v = _sfc_main$32.setup;
 _sfc_main$32.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/category/index.vue");
-  return _sfc_setup$u ? _sfc_setup$u(props, ctx) : void 0;
+  return _sfc_setup$v ? _sfc_setup$v(props, ctx) : void 0;
 };
 const meta$6 = void 0;
 const _sfc_main$31 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
@@ -6326,11 +6345,11 @@ const _sfc_main$31 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$t = _sfc_main$31.setup;
+const _sfc_setup$u = _sfc_main$31.setup;
 _sfc_main$31.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Footer.vue");
-  return _sfc_setup$t ? _sfc_setup$t(props, ctx) : void 0;
+  return _sfc_setup$u ? _sfc_setup$u(props, ctx) : void 0;
 };
 const __nuxt_component_1 = /* @__PURE__ */ _export_sfc$2(_sfc_main$31, [["__scopeId", "data-v-287cacb2"]]);
 const _sfc_main$30 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
@@ -6393,11 +6412,11 @@ const _sfc_main$30 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$s = _sfc_main$30.setup;
+const _sfc_setup$t = _sfc_main$30.setup;
 _sfc_main$30.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/index.vue");
-  return _sfc_setup$s ? _sfc_setup$s(props, ctx) : void 0;
+  return _sfc_setup$t ? _sfc_setup$t(props, ctx) : void 0;
 };
 const meta$5 = {
   layout: false
@@ -6568,11 +6587,11 @@ const _sfc_main$2$ = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$r = _sfc_main$2$.setup;
+const _sfc_setup$s = _sfc_main$2$.setup;
 _sfc_main$2$.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/login.vue");
-  return _sfc_setup$r ? _sfc_setup$r(props, ctx) : void 0;
+  return _sfc_setup$s ? _sfc_setup$s(props, ctx) : void 0;
 };
 const meta$4 = {
   layout: false
@@ -6613,11 +6632,11 @@ const _sfc_main$2_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-const _sfc_setup$q = _sfc_main$2_.setup;
+const _sfc_setup$r = _sfc_main$2_.setup;
 _sfc_main$2_.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/section/Search.vue");
-  return _sfc_setup$q ? _sfc_setup$q(props, ctx) : void 0;
+  return _sfc_setup$r ? _sfc_setup$r(props, ctx) : void 0;
 };
 const __default__$O = vue_cjs_prod.defineComponent({
   name: "Announcement"
@@ -6634,11 +6653,11 @@ const _sfc_main$2Z = /* @__PURE__ */ Object.assign(__default__$O, {
     };
   }
 });
-const _sfc_setup$p = _sfc_main$2Z.setup;
+const _sfc_setup$q = _sfc_main$2Z.setup;
 _sfc_main$2Z.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/section/Announcement.vue");
-  return _sfc_setup$p ? _sfc_setup$p(props, ctx) : void 0;
+  return _sfc_setup$q ? _sfc_setup$q(props, ctx) : void 0;
 };
 const _sfc_main$2Y = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __ssrInlineRender: true,
@@ -6733,11 +6752,11 @@ const _sfc_main$2Y = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$o = _sfc_main$2Y.setup;
+const _sfc_setup$p = _sfc_main$2Y.setup;
 _sfc_main$2Y.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/page/[pageIndex].vue");
-  return _sfc_setup$o ? _sfc_setup$o(props, ctx) : void 0;
+  return _sfc_setup$p ? _sfc_setup$p(props, ctx) : void 0;
 };
 const meta$3 = void 0;
 const _sfc_main$2X = /* @__PURE__ */ vue_cjs_prod.defineComponent({
@@ -6794,11 +6813,11 @@ const _sfc_main$2X = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$n = _sfc_main$2X.setup;
+const _sfc_setup$o = _sfc_main$2X.setup;
 _sfc_main$2X.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/post/[cid].vue");
-  return _sfc_setup$n ? _sfc_setup$n(props, ctx) : void 0;
+  return _sfc_setup$o ? _sfc_setup$o(props, ctx) : void 0;
 };
 const meta$2 = void 0;
 const _sfc_main$2W = /* @__PURE__ */ vue_cjs_prod.defineComponent({
@@ -6824,11 +6843,11 @@ const _sfc_main$2W = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$m = _sfc_main$2W.setup;
+const _sfc_setup$n = _sfc_main$2W.setup;
 _sfc_main$2W.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/tag/[tid]/[pageIndex].vue");
-  return _sfc_setup$m ? _sfc_setup$m(props, ctx) : void 0;
+  return _sfc_setup$n ? _sfc_setup$n(props, ctx) : void 0;
 };
 const meta$1 = void 0;
 class TagApi {
@@ -6907,14 +6926,25 @@ const _sfc_main$2V = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$l = _sfc_main$2V.setup;
+const _sfc_setup$m = _sfc_main$2V.setup;
 _sfc_main$2V.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/tag/index.vue");
-  return _sfc_setup$l ? _sfc_setup$l(props, ctx) : void 0;
+  return _sfc_setup$m ? _sfc_setup$m(props, ctx) : void 0;
 };
 const meta = void 0;
 const routes = [
+  {
+    name: "404",
+    path: "/:catchAll(.*)*",
+    file: "/home/runner/work/web-ui/web-ui/pages/404.vue",
+    children: [],
+    meta: meta$c,
+    alias: (meta$c == null ? void 0 : meta$c.alias) || [],
+    component: () => Promise.resolve().then(function() {
+      return _404;
+    })
+  },
   {
     path: "/admin",
     file: "/home/runner/work/web-ui/web-ui/pages/admin.vue",
@@ -45532,7 +45562,7 @@ const nextTime = (time, step) => {
   next.minutes = next.minutes % 60;
   return formatTime(next);
 };
-const _sfc_main$l = vue_cjs_prod.defineComponent({
+const _sfc_main$l$1 = vue_cjs_prod.defineComponent({
   name: "ElTimeSelect",
   components: { ElSelect, ElOption, ElIcon },
   model: {
@@ -45706,7 +45736,7 @@ function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["model-value", "disabled", "clearable", "clear-icon", "size", "effect", "placeholder", "filterable"]);
 }
-var TimeSelect = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["render", _sfc_render$a], ["__file", "time-select.vue"]]);
+var TimeSelect = /* @__PURE__ */ _export_sfc(_sfc_main$l$1, [["render", _sfc_render$a], ["__file", "time-select.vue"]]);
 TimeSelect.install = (app) => {
   app.component(TimeSelect.name, TimeSelect);
 };
@@ -51395,7 +51425,7 @@ const _plugins = [
   mdEditor_5fc2952f,
   mdPreview_1a2cb494
 ];
-const _sfc_main$k = {
+const _sfc_main$l = {
   __ssrInlineRender: true,
   props: {
     appName: {
@@ -51456,14 +51486,14 @@ const _sfc_main$k = {
     };
   }
 };
-const _sfc_setup$k = _sfc_main$k.setup;
-_sfc_main$k.setup = (props, ctx) => {
+const _sfc_setup$l = _sfc_main$l.setup;
+_sfc_main$l.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/@nuxt/ui-templates/dist/templates/error-404.vue");
-  return _sfc_setup$k ? _sfc_setup$k(props, ctx) : void 0;
+  return _sfc_setup$l ? _sfc_setup$l(props, ctx) : void 0;
 };
-const Error404 = /* @__PURE__ */ _export_sfc$2(_sfc_main$k, [["__scopeId", "data-v-b11ad3a6"]]);
-const _sfc_main$j = {
+const Error404 = /* @__PURE__ */ _export_sfc$2(_sfc_main$l, [["__scopeId", "data-v-b11ad3a6"]]);
+const _sfc_main$k = {
   __ssrInlineRender: true,
   props: {
     appName: {
@@ -51503,14 +51533,14 @@ const _sfc_main$j = {
     };
   }
 };
-const _sfc_setup$j = _sfc_main$j.setup;
-_sfc_main$j.setup = (props, ctx) => {
+const _sfc_setup$k = _sfc_main$k.setup;
+_sfc_main$k.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/@nuxt/ui-templates/dist/templates/error-500.vue");
-  return _sfc_setup$j ? _sfc_setup$j(props, ctx) : void 0;
+  return _sfc_setup$k ? _sfc_setup$k(props, ctx) : void 0;
 };
-const Error500 = /* @__PURE__ */ _export_sfc$2(_sfc_main$j, [["__scopeId", "data-v-18181656"]]);
-const _sfc_main$h = {
+const Error500 = /* @__PURE__ */ _export_sfc$2(_sfc_main$k, [["__scopeId", "data-v-18181656"]]);
+const _sfc_main$i = {
   __ssrInlineRender: true,
   props: {
     error: Object
@@ -51537,13 +51567,13 @@ const _sfc_main$h = {
     };
   }
 };
-const _sfc_setup$h = _sfc_main$h.setup;
-_sfc_main$h.setup = (props, ctx) => {
+const _sfc_setup$i = _sfc_main$i.setup;
+_sfc_main$i.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt3/dist/app/components/nuxt-error-page.vue");
-  return _sfc_setup$h ? _sfc_setup$h(props, ctx) : void 0;
+  return _sfc_setup$i ? _sfc_setup$i(props, ctx) : void 0;
 };
-const _sfc_main$g = {
+const _sfc_main$h = {
   __ssrInlineRender: true,
   setup(__props) {
     const nuxtApp = useNuxtApp();
@@ -51560,7 +51590,7 @@ const _sfc_main$g = {
       serverRenderer.exports.ssrRenderSuspense(_push, {
         default: () => {
           if (vue_cjs_prod.unref(error)) {
-            _push(serverRenderer.exports.ssrRenderComponent(vue_cjs_prod.unref(_sfc_main$h), { error: vue_cjs_prod.unref(error) }, null, _parent));
+            _push(serverRenderer.exports.ssrRenderComponent(vue_cjs_prod.unref(_sfc_main$i), { error: vue_cjs_prod.unref(error) }, null, _parent));
           } else {
             _push(serverRenderer.exports.ssrRenderComponent(_component_App, null, null, _parent));
           }
@@ -51570,11 +51600,11 @@ const _sfc_main$g = {
     };
   }
 };
-const _sfc_setup$g = _sfc_main$g.setup;
-_sfc_main$g.setup = (props, ctx) => {
+const _sfc_setup$h = _sfc_main$h.setup;
+_sfc_main$h.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt3/dist/app/components/nuxt-root.vue");
-  return _sfc_setup$g ? _sfc_setup$g(props, ctx) : void 0;
+  return _sfc_setup$h ? _sfc_setup$h(props, ctx) : void 0;
 };
 const layouts = {
   admin: vue_cjs_prod.defineAsyncComponent(() => Promise.resolve().then(function() {
@@ -51602,7 +51632,7 @@ const __nuxt_component_0$1 = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_main$f = {};
+const _sfc_main$g = {};
 function _sfc_ssrRender$3(_ctx, _push, _parent, _attrs) {
   const _component_NuxtLayout = __nuxt_component_0$1;
   const _component_NuxtPage = vue_cjs_prod.resolveComponent("NuxtPage");
@@ -51619,13 +51649,13 @@ function _sfc_ssrRender$3(_ctx, _push, _parent, _attrs) {
     _: 1
   }, _parent));
 }
-const _sfc_setup$f = _sfc_main$f.setup;
-_sfc_main$f.setup = (props, ctx) => {
+const _sfc_setup$g = _sfc_main$g.setup;
+_sfc_main$g.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt3/dist/pages/runtime/app.vue");
-  return _sfc_setup$f ? _sfc_setup$f(props, ctx) : void 0;
+  return _sfc_setup$g ? _sfc_setup$g(props, ctx) : void 0;
 };
-const AppComponent = /* @__PURE__ */ _export_sfc$2(_sfc_main$f, [["ssrRender", _sfc_ssrRender$3]]);
+const AppComponent = /* @__PURE__ */ _export_sfc$2(_sfc_main$g, [["ssrRender", _sfc_ssrRender$3]]);
 if (!globalThis.$fetch) {
   globalThis.$fetch = $fetch;
 }
@@ -51633,7 +51663,7 @@ let entry;
 const plugins = normalizePlugins(_plugins);
 {
   entry = async function createNuxtAppServer(ssrContext = {}) {
-    const vueApp = vue_cjs_prod.createApp(_sfc_main$g);
+    const vueApp = vue_cjs_prod.createApp(_sfc_main$h);
     vueApp.component("App", AppComponent);
     const nuxt = createNuxtApp({ vueApp, ssrContext });
     try {
@@ -51647,6 +51677,24 @@ const plugins = normalizePlugins(_plugins);
   };
 }
 const entry$1 = (ctx) => entry(ctx);
+const _sfc_main$f = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+  __ssrInlineRender: true,
+  setup(__props) {
+    return (_ctx, _push, _parent, _attrs) => {
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "app-container" }, _attrs))}></div>`);
+    };
+  }
+});
+const _sfc_setup$f = _sfc_main$f.setup;
+_sfc_main$f.setup = (props, ctx) => {
+  const ssrContext = vue_cjs_prod.useSSRContext();
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/404.vue");
+  return _sfc_setup$f ? _sfc_setup$f(props, ctx) : void 0;
+};
+const _404 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  "default": _sfc_main$f
+}, Symbol.toStringTag, { value: "Module" }));
 const __default__$1 = vue_cjs_prod.defineComponent({
   data() {
     return {
