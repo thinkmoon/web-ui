@@ -9,7 +9,7 @@ import 'radix3';
 import 'unenv/runtime/fetch/index';
 import 'hookable';
 import 'scule';
-import 'defu';
 import 'ohash';
 import 'unstorage';
 import 'ufo';
+//# sourceMappingURL=index.mjs.map

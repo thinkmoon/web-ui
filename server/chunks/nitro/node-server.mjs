@@ -8,26 +8,36 @@ import { createRouter as createRouter$1 } from 'radix3';
 import { createCall, createFetch } from 'unenv/runtime/fetch/index';
 import { createHooks } from 'hookable';
 import { snakeCase } from 'scule';
-import { createDefu } from 'defu';
 import { hash } from 'ohash';
 import { createStorage } from 'unstorage';
 import { withQuery } from 'ufo';
 
-const _runtimeConfig = (function(a,b,c,d,e,f,g){return {app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""},nitro:{routes:{},envPrefix:"NUXT_"},TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g,public:{TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g}}}("指尖魔法屋-醉月思的博客","0.1.4","thinkmoon","指尖魔法屋","醉月思的博客","web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！","https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"));
+const _runtimeConfig = (function(a,b,c,d,e,f,g){return {app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""},nitro:{routes:{},envPrefix:"NUXT_"},TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g,public:{TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g}}}("指尖魔法屋-醉月思的博客","0.1.5 · build-20220423-0751","thinkmoon","指尖魔法屋","醉月思的博客","web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！","https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"));
 const ENV_PREFIX = "NITRO_";
 const ENV_PREFIX_ALT = _runtimeConfig.nitro.envPrefix ?? process.env.NITRO_ENV_PREFIX ?? "_";
 const getEnv = (key) => {
   const envKey = snakeCase(key).toUpperCase();
   return destr(process.env[ENV_PREFIX + envKey] ?? process.env[ENV_PREFIX_ALT + envKey]);
 };
-const mergeWithEnvVariables = createDefu((obj, key, _value, namespace) => {
-  const override = getEnv(namespace ? `${namespace}.${key}` : key);
-  if (override !== void 0) {
-    obj[key] = override;
-    return true;
+function isObject(input) {
+  return typeof input === "object" && !Array.isArray(input);
+}
+function overrideConfig(obj, parentKey = "") {
+  for (const key in obj) {
+    const subKey = parentKey ? `${parentKey}_${key}` : key;
+    const envValue = getEnv(subKey);
+    if (isObject(obj[key])) {
+      if (isObject(envValue)) {
+        obj[key] = { ...obj[key], ...envValue };
+      }
+      overrideConfig(obj[key], subKey);
+    } else {
+      obj[key] = envValue ?? obj[key];
+    }
   }
-});
-const config = deepFreeze(mergeWithEnvVariables(_runtimeConfig, _runtimeConfig));
+}
+overrideConfig(_runtimeConfig);
+const config = deepFreeze(_runtimeConfig);
 const useRuntimeConfig = () => config;
 function deepFreeze(object) {
   const propNames = Object.getOwnPropertyNames(object);
@@ -190,7 +200,11 @@ function defineCachedEventHandler(handler, opts = defaultCacheOptions) {
       if (opts.magAge) {
         cacheControl.push(`s-maxage=${opts.magAge}`);
       }
-      cacheControl.push("stale-while-revalidate");
+      if (opts.staleMaxAge) {
+        cacheControl.push(`stale-while-revalidate=${opts.staleMaxAge}`);
+      } else {
+        cacheControl.push("stale-while-revalidate");
+      }
     } else if (opts.magAge) {
       cacheControl.push(`max-age=${opts.magAge}`);
     }
@@ -301,13 +315,13 @@ const errorHandler = (async function errorhandler(_error, event) {
   event.res.end(html);
 });
 
-const _ab2c5e = () => import('./static.mjs');
-const _23a333 = () => import('../handlers/renderer.mjs');
+const _33be66 = () => import('./static.mjs');
+const _cde06a = () => import('../handlers/renderer.mjs');
 
 const handlers = [
-  { route: '', handler: _ab2c5e, lazy: true, method: undefined },
-  { route: '/__nuxt_error', handler: _23a333, lazy: true, method: undefined },
-  { route: '/**', handler: _23a333, lazy: true, method: undefined }
+  { route: '', handler: _33be66, lazy: true, method: undefined },
+  { route: '/__nuxt_error', handler: _cde06a, lazy: true, method: undefined },
+  { route: '/**', handler: _cde06a, lazy: true, method: undefined }
 ];
 
 function createNitroApp() {
@@ -338,7 +352,7 @@ function createNitroApp() {
   h3App.use(config.app.baseURL, router);
   const localCall = createCall(h3App.nodeHandler);
   const localFetch = createFetch(localCall, globalThis.fetch);
-  const $fetch = createFetch$1({ fetch: localFetch, Headers });
+  const $fetch = createFetch$1({ fetch: localFetch, Headers, defaults: { baseURL: config.app.baseURL } });
   globalThis.$fetch = $fetch;
   const app = {
     hooks,
@@ -357,7 +371,7 @@ const cert = process.env.NITRO_SSL_CERT;
 const key = process.env.NITRO_SSL_KEY;
 const server = cert && key ? new Server({ key, cert }, nitroApp.h3App.nodeHandler) : new Server$1(nitroApp.h3App.nodeHandler);
 const port = destr(process.env.NITRO_PORT || process.env.PORT) || 3e3;
-const hostname = process.env.NITRO_HOST || process.env.HOST || "localhost";
+const hostname = process.env.NITRO_HOST || process.env.HOST || "0.0.0.0";
 server.listen(port, hostname, (err) => {
   if (err) {
     console.error(err);
@@ -369,3 +383,4 @@ server.listen(port, hostname, (err) => {
 const nodeServer = {};
 
 export { nodeServer as n, useRuntimeConfig as u };
+//# sourceMappingURL=node-server.mjs.map

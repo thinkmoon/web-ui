@@ -10,7 +10,6 @@ import 'radix3';
 import 'unenv/runtime/fetch/index';
 import 'hookable';
 import 'scule';
-import 'defu';
 import 'ohash';
 import 'unstorage';
 
@@ -243,7 +242,8 @@ function renderPreloadLinks(ssrContext, rendererContext) {
     const rel = file.type === "module" ? "modulepreload" : "preload";
     const as = file.type ? file.type === "module" ? ' as="script"' : ` as="${file.type}"` : "";
     const type = file.type === "font" ? ` type="font/${file.extension}" crossorigin` : "";
-    return `<link rel="${rel}" href="${rendererContext.publicPath}${file.path}"${as}${type}>`;
+    const crossorigin = file.type === "font" || file.type === "module" ? " crossorigin" : "";
+    return `<link rel="${rel}" href="${rendererContext.publicPath}${file.path}"${as}${type}${crossorigin}>`;
   }).join("");
 }
 function renderPrefetchLinks(ssrContext, rendererContext) {
@@ -256,7 +256,7 @@ function renderPrefetchLinks(ssrContext, rendererContext) {
 }
 function renderScripts(ssrContext, rendererContext) {
   const { scripts } = getRequestDependencies(ssrContext, rendererContext);
-  return Object.values(scripts).map(({ path, type }) => `<script${type === "module" ? ' type="module"' : ""} src="${rendererContext.publicPath}${path}"${type !== "module" ? " defer" : ""}><\/script>`).join("");
+  return Object.values(scripts).map(({ path, type }) => `<script${type === "module" ? ' type="module"' : ""} src="${rendererContext.publicPath}${path}"${type !== "module" ? " defer" : ""} crossorigin><\/script>`).join("");
 }
 function createRenderer(createApp, renderOptions) {
   const rendererContext = createRendererContext(renderOptions);
@@ -676,3 +676,4 @@ function cachedResult(fn) {
 }
 
 export { renderer as default };
+//# sourceMappingURL=renderer.mjs.map
