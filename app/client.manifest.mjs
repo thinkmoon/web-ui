@@ -1,6 +1,6 @@
 const client_manifest = {
   "node_modules/nuxt/dist/app/entry.mjs": {
-    "file": "entry-16993b9f.mjs",
+    "file": "entry-9ef3f4aa.mjs",
     "src": "node_modules/nuxt/dist/app/entry.mjs",
     "isEntry": true,
     "dynamicImports": [
@@ -22,14 +22,14 @@ const client_manifest = {
       "layouts/default.vue"
     ],
     "css": [
-      "entry.72bfc9fd.css"
+      "entry.1087a270.css"
     ],
     "assets": [
       "background.36a7be78.jpg"
     ]
   },
   "pages/404.vue": {
-    "file": "404-29dda00f.mjs",
+    "file": "404-c22c2899.mjs",
     "src": "pages/404.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -37,7 +37,7 @@ const client_manifest = {
     ]
   },
   "pages/admin/editor.vue": {
-    "file": "editor-7d97ccb7.mjs",
+    "file": "editor-170d0ad6.mjs",
     "src": "pages/admin/editor.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -45,7 +45,7 @@ const client_manifest = {
     ]
   },
   "pages/admin/index.vue": {
-    "file": "index-3d46c55a.mjs",
+    "file": "index-a0bcdc0d.mjs",
     "src": "pages/admin/index.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -53,7 +53,7 @@ const client_manifest = {
     ]
   },
   "pages/admin/post-list.vue": {
-    "file": "post-list-fe692329.mjs",
+    "file": "post-list-22a0022d.mjs",
     "src": "pages/admin/post-list.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -61,7 +61,7 @@ const client_manifest = {
     ]
   },
   "pages/admin.vue": {
-    "file": "admin-ff3c8105.mjs",
+    "file": "admin-8adeba05.mjs",
     "src": "pages/admin.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -69,53 +69,53 @@ const client_manifest = {
     ]
   },
   "pages/category/[name]/[pageIndex].vue": {
-    "file": "_pageIndex_-f0de54db.mjs",
+    "file": "_pageIndex_-e2abac41.mjs",
     "src": "pages/category/[name]/[pageIndex].vue",
     "isDynamicEntry": true,
     "imports": [
-      "_PostList-2420664f.mjs",
+      "_PostList-d8cb186b.mjs",
       "node_modules/nuxt/dist/app/entry.mjs",
-      "_asyncData-464e9f15.mjs"
+      "_asyncData-c159d78e.mjs"
     ]
   },
-  "_PostList-2420664f.mjs": {
-    "file": "PostList-2420664f.mjs",
+  "_PostList-d8cb186b.mjs": {
+    "file": "PostList-d8cb186b.mjs",
     "imports": [
       "node_modules/nuxt/dist/app/entry.mjs"
     ]
   },
-  "_asyncData-464e9f15.mjs": {
-    "file": "asyncData-464e9f15.mjs",
+  "_asyncData-c159d78e.mjs": {
+    "file": "asyncData-c159d78e.mjs",
     "imports": [
       "node_modules/nuxt/dist/app/entry.mjs"
     ]
   },
   "pages/category/index.vue": {
-    "file": "index-8f67fc9e.mjs",
+    "file": "index-3c43230d.mjs",
     "src": "pages/category/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.mjs",
-      "_asyncData-464e9f15.mjs"
+      "_asyncData-c159d78e.mjs"
     ]
   },
   "pages/index.vue": {
-    "file": "index-4764a8d6.mjs",
+    "file": "index-8af747db.mjs",
     "src": "pages/index.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_Footer-92e032ba.mjs",
+      "_Footer-c63e2f3b.mjs",
       "node_modules/nuxt/dist/app/entry.mjs"
     ]
   },
-  "_Footer-92e032ba.mjs": {
-    "file": "Footer-92e032ba.mjs",
+  "_Footer-c63e2f3b.mjs": {
+    "file": "Footer-c63e2f3b.mjs",
     "imports": [
       "node_modules/nuxt/dist/app/entry.mjs"
     ]
   },
   "pages/login.vue": {
-    "file": "login-add937b4.mjs",
+    "file": "login-29a3979c.mjs",
     "src": "pages/login.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -123,53 +123,53 @@ const client_manifest = {
     ]
   },
   "pages/page/[pageIndex].vue": {
-    "file": "_pageIndex_-3e97da8c.mjs",
+    "file": "_pageIndex_-541022ee.mjs",
     "src": "pages/page/[pageIndex].vue",
     "isDynamicEntry": true,
     "imports": [
-      "_PostList-2420664f.mjs",
+      "_PostList-d8cb186b.mjs",
       "node_modules/nuxt/dist/app/entry.mjs",
-      "_asyncData-464e9f15.mjs"
+      "_asyncData-c159d78e.mjs"
     ]
   },
   "pages/post/[cid].vue": {
-    "file": "_cid_-7daa3089.mjs",
+    "file": "_cid_-078df1ea.mjs",
     "src": "pages/post/[cid].vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.mjs",
-      "_asyncData-464e9f15.mjs"
+      "_asyncData-c159d78e.mjs"
     ]
   },
   "pages/tag/[name]/[pageIndex].vue": {
-    "file": "_pageIndex_-a3c8af2a.mjs",
+    "file": "_pageIndex_-6d28c22f.mjs",
     "src": "pages/tag/[name]/[pageIndex].vue",
     "isDynamicEntry": true,
     "imports": [
-      "_PostList-2420664f.mjs",
+      "_PostList-d8cb186b.mjs",
       "node_modules/nuxt/dist/app/entry.mjs",
-      "_asyncData-464e9f15.mjs",
-      "_TagApi-5c0c7ddf.mjs"
+      "_asyncData-c159d78e.mjs",
+      "_TagApi-2caf0d09.mjs"
     ]
   },
-  "_TagApi-5c0c7ddf.mjs": {
-    "file": "TagApi-5c0c7ddf.mjs",
+  "_TagApi-2caf0d09.mjs": {
+    "file": "TagApi-2caf0d09.mjs",
     "imports": [
       "node_modules/nuxt/dist/app/entry.mjs"
     ]
   },
   "pages/tag/index.vue": {
-    "file": "index-c0e7f2e3.mjs",
+    "file": "index-c35b2ec1.mjs",
     "src": "pages/tag/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.mjs",
-      "_asyncData-464e9f15.mjs",
-      "_TagApi-5c0c7ddf.mjs"
+      "_asyncData-c159d78e.mjs",
+      "_TagApi-2caf0d09.mjs"
     ]
   },
   "middleware/auth.ts": {
-    "file": "auth-fbfffebb.mjs",
+    "file": "auth-32509b2b.mjs",
     "src": "middleware/auth.ts",
     "isDynamicEntry": true,
     "imports": [
@@ -177,21 +177,21 @@ const client_manifest = {
     ]
   },
   "layouts/admin.vue": {
-    "file": "admin-ab79848d.mjs",
+    "file": "admin-fe831852.mjs",
     "src": "layouts/admin.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_Footer-92e032ba.mjs",
+      "_Footer-c63e2f3b.mjs",
       "node_modules/nuxt/dist/app/entry.mjs"
     ]
   },
   "layouts/default.vue": {
-    "file": "default-a2c0e51b.mjs",
+    "file": "default-0187f58a.mjs",
     "src": "layouts/default.vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.mjs",
-      "_Footer-92e032ba.mjs"
+      "_Footer-c63e2f3b.mjs"
     ],
     "css": [
       "default.1c2cafb9.css"

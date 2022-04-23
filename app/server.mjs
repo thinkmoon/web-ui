@@ -6328,7 +6328,7 @@ const _sfc_main$31 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const config = useRuntimeConfig();
     return (_ctx, _push, _parent, _attrs) => {
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "footer" }, _attrs))} data-v-6ffa6aaa><span data-v-6ffa6aaa>Copyright \xA9 2017-${serverRenderer.exports.ssrInterpolate(new Date().getFullYear())} \u6307\u5C16\u9B54\u6CD5\u5C4B. All rights reserved</span><span data-v-6ffa6aaa>POWERED BY thinkBlog \xB7 v${serverRenderer.exports.ssrInterpolate(vue_cjs_prod.unref(config).VERSION)}</span><span data-v-6ffa6aaa>\u7F51\u7AD9\u6301\u7EED\u642D\u5EFA\u4E2D\uFF0C\u611F\u8C22\u5173\u6CE8</span><span data-v-6ffa6aaa>\u672C\u7AD9\u5DF2\u987D\u5F3A\u8FD0\u884C\uFF1A\u86EE\u4E45\u4E86~</span><div data-v-6ffa6aaa>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "footer" }, _attrs))} data-v-68ae0dac><span data-v-68ae0dac>Copyright \xA9 2017-${serverRenderer.exports.ssrInterpolate(new Date().getFullYear())} \u6307\u5C16\u9B54\u6CD5\u5C4B. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog \xB7 v${serverRenderer.exports.ssrInterpolate(vue_cjs_prod.unref(config).VERSION)}</span><span data-v-68ae0dac>\u7F51\u7AD9\u6301\u7EED\u642D\u5EFA\u4E2D\uFF0C\u611F\u8C22\u5173\u6CE8</span><span data-v-68ae0dac>\u672C\u7AD9\u5DF2\u987D\u5F3A\u8FD0\u884C\uFF1A\u86EE\u4E45\u4E86~</span><div data-v-68ae0dac>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
         href: "http://beian.miit.gov.cn/",
         type: "primary"
@@ -6354,7 +6354,7 @@ _sfc_main$31.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Footer.vue");
   return _sfc_setup$u ? _sfc_setup$u(props, ctx) : void 0;
 };
-const __nuxt_component_1 = /* @__PURE__ */ _export_sfc$2(_sfc_main$31, [["__scopeId", "data-v-6ffa6aaa"]]);
+const __nuxt_component_2 = /* @__PURE__ */ _export_sfc$2(_sfc_main$31, [["__scopeId", "data-v-68ae0dac"]]);
 const _sfc_main$30 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
@@ -6363,7 +6363,7 @@ const _sfc_main$30 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
       const _component_el_button = vue_cjs_prod.resolveComponent("el-button");
-      const _component_Footer = __nuxt_component_1;
+      const _component_Footer = __nuxt_component_2;
       _push(`<!--[-->`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
@@ -52712,7 +52712,7 @@ const _sfc_main$8 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
       const _component_el_button = vue_cjs_prod.resolveComponent("el-button");
-      const _component_Footer = __nuxt_component_1;
+      const _component_Footer = __nuxt_component_2;
       _push(`<!--[-->`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
@@ -53255,7 +53255,7 @@ const auth$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
 }, Symbol.toStringTag, { value: "Module" }));
 const _sfc_main$2 = {};
 function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs) {
-  const _component_Footer = __nuxt_component_1;
+  const _component_Footer = __nuxt_component_2;
   _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)}><div class="app-container">`);
   serverRenderer.exports.ssrRenderSlot(_ctx.$slots, "default", {}, null, _push, _parent);
   _push(`</div>`);
@@ -53444,7 +53444,7 @@ _sfc_main$1.setup = (props, ctx) => {
   return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
 };
 const __nuxt_component_0 = /* @__PURE__ */ _export_sfc$2(_sfc_main$1, [["__scopeId", "data-v-1285d3c2"]]);
-const __nuxt_component_2 = vue_cjs_prod.defineComponent({
+const __nuxt_component_1 = vue_cjs_prod.defineComponent({
   name: "ClientOnly",
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
   setup(_2, { slots }) {
@@ -53470,15 +53470,14 @@ const __nuxt_component_2 = vue_cjs_prod.defineComponent({
 const _sfc_main = {};
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
   const _component_DefaultMenu = __nuxt_component_0;
-  const _component_Footer = __nuxt_component_1;
-  const _component_ClientOnly = __nuxt_component_2;
+  const _component_ClientOnly = __nuxt_component_1;
   const _component_el_backtop = vue_cjs_prod.resolveComponent("el-backtop");
-  _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)}>`);
+  const _component_Footer = __nuxt_component_2;
+  _push(`<!--[--><div>`);
   _push(serverRenderer.exports.ssrRenderComponent(_component_DefaultMenu, null, null, _parent));
   _push(`<div class="app-container">`);
   serverRenderer.exports.ssrRenderSlot(_ctx.$slots, "default", {}, null, _push, _parent);
   _push(`</div>`);
-  _push(serverRenderer.exports.ssrRenderComponent(_component_Footer, null, null, _parent));
   _push(serverRenderer.exports.ssrRenderComponent(_component_ClientOnly, null, {
     default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
       if (_push2) {
@@ -53492,6 +53491,8 @@ function _sfc_ssrRender(_ctx, _push, _parent, _attrs) {
     _: 1
   }, _parent));
   _push(`</div>`);
+  _push(serverRenderer.exports.ssrRenderComponent(_component_Footer, null, null, _parent));
+  _push(`<!--]-->`);
 }
 const _sfc_setup = _sfc_main.setup;
 _sfc_main.setup = (props, ctx) => {

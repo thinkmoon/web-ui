@@ -2,8 +2,6 @@
   "private": true,
   "bundledDependencies": [
     "source-map-support",
-    "destr",
-    "h3",
     "unenv",
     "ohmyfetch",
     "radix3",
@@ -22,9 +20,11 @@
     "highlight.js",
     "markdown-it-external-links",
     "@element-plus/icons-vue",
-    "cookie-es",
+    "destr",
+    "h3",
     "formdata-polyfill",
     "fetch-blob",
+    "cookie-es",
     "@babel/runtime-corejs2",
     "vue-demi",
     "data-uri-to-buffer",
@@ -45,8 +45,8 @@
     "debug",
     "@vue/reactivity",
     "ms",
-    "supports-color",
     "estree-walker",
+    "supports-color",
     "@babel/parser",
     "has-flag"
   ]
