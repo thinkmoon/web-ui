@@ -6049,7 +6049,7 @@ const _sfc_main$34 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
               default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
                 if (_push2) {
                   _push2(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
-                    href: `/tag/${tagItem.tid}/1`,
+                    href: `/tag/${tagItem.name}/1`,
                     type: "primary"
                   }, {
                     default: vue_cjs_prod.withCtx((_22, _push3, _parent3, _scopeId2) => {
@@ -6066,7 +6066,7 @@ const _sfc_main$34 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
                 } else {
                   return [
                     vue_cjs_prod.createVNode(_component_el_link, {
-                      href: `/tag/${tagItem.tid}/1`,
+                      href: `/tag/${tagItem.name}/1`,
                       type: "primary"
                     }, {
                       default: vue_cjs_prod.withCtx(() => [
@@ -6130,7 +6130,7 @@ const _sfc_main$34 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
           _: 2
         }, _parent));
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
-          href: `/category/${item.category_id}/1`
+          href: `/category/${item.category}/1`
         }, {
           default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
             if (_push2) {
