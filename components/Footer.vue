@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <div class="footer">
     <span>Copyright © 2017-{{ (new Date()).getFullYear() }} 指尖魔法屋. All rights reserved</span>
     <span>POWERED BY thinkBlog · v{{ config.VERSION }}</span>
     <span>网站持续搭建中，感谢关注</span>
@@ -12,14 +12,14 @@
         粤ICP备17055617号
       </el-link>
     </div>
-  </footer>
+  </div>
 </template>
 <script setup lang="ts">
 const config = useRuntimeConfig();
 
 </script>
 <style lang="less" scoped>
-footer {
+.footer {
   text-align: center;
   background: #303133;
   color: #909399;
