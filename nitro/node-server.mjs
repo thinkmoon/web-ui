@@ -12,7 +12,7 @@ import { hash } from 'ohash';
 import { createStorage } from 'unstorage';
 import { withQuery } from 'ufo';
 
-const _runtimeConfig = (function(a,b,c,d,e,f,g){return {app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""},nitro:{routes:{},envPrefix:"NUXT_"},TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g,public:{TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g}}}("指尖魔法屋-醉月思的博客","0.1.5 · build-20220423-0751","thinkmoon","指尖魔法屋","醉月思的博客","web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！","https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"));
+const _runtimeConfig = (function(a,b,c,d,e,f,g){return {app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""},nitro:{routes:{},envPrefix:"NUXT_"},TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g,public:{TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g}}}("指尖魔法屋-醉月思的博客","0.1.5 · build-20220423-0922","thinkmoon","指尖魔法屋","醉月思的博客","web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！","https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"));
 const ENV_PREFIX = "NITRO_";
 const ENV_PREFIX_ALT = _runtimeConfig.nitro.envPrefix ?? process.env.NITRO_ENV_PREFIX ?? "_";
 const getEnv = (key) => {

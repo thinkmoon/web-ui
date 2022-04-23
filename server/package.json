@@ -9,8 +9,8 @@
     "hookable",
     "unstorage",
     "pathe",
-    "ohash",
     "scule",
+    "ohash",
     "ufo",
     "pinia",
     "node-fetch",
@@ -45,8 +45,8 @@
     "debug",
     "@vue/reactivity",
     "ms",
-    "supports-color",
     "estree-walker",
+    "supports-color",
     "@babel/parser",
     "has-flag"
   ]

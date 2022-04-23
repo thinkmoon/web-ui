@@ -6043,14 +6043,14 @@ const _sfc_main$34 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
           serverRenderer.exports.ssrRenderList(item.tag, (tagItem) => {
             _push(serverRenderer.exports.ssrRenderComponent(_component_el_tag, {
               key: tagItem,
-              rel: "tag",
-              class: "post-tag"
+              class: "post-tag",
+              rel: "tag"
             }, {
               default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
                 if (_push2) {
                   _push2(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
-                    type: "primary",
-                    href: `/tag/${tagItem.tid}/1`
+                    href: `/tag/${tagItem.tid}/1`,
+                    type: "primary"
                   }, {
                     default: vue_cjs_prod.withCtx((_22, _push3, _parent3, _scopeId2) => {
                       if (_push3) {
@@ -6066,8 +6066,8 @@ const _sfc_main$34 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
                 } else {
                   return [
                     vue_cjs_prod.createVNode(_component_el_link, {
-                      type: "primary",
-                      href: `/tag/${tagItem.tid}/1`
+                      href: `/tag/${tagItem.tid}/1`,
+                      type: "primary"
                     }, {
                       default: vue_cjs_prod.withCtx(() => [
                         vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(tagItem.name), 1)
@@ -6100,17 +6100,17 @@ const _sfc_main$34 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
           }),
           _: 2
         }, _parent));
-        _push(`</div><div class="posts-default-content"><div class="posts-text">${serverRenderer.exports.ssrInterpolate(item.fields.desc)}</div><div class="posts-default-info"><div class="left"><div class="post-author"><img style="${serverRenderer.exports.ssrRenderStyle({ "border-radius": "50%" })}" src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg" height="16" width="16">`);
+        _push(`</div><div class="posts-default-content"><div class="posts-text">${serverRenderer.exports.ssrInterpolate(item.fields.desc)}</div><div class="posts-default-info"><div class="left"><div class="post-author"><img height="16" src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg" style="${serverRenderer.exports.ssrRenderStyle({ "border-radius": "50%" })}" width="16">`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: "https://www.thinkmoon.cn",
           target: "_blank"
         }, {
           default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
             if (_push2) {
-              _push2(`\u9189\u6708\u601D`);
+              _push2(` \u9189\u6708\u601D `);
             } else {
               return [
-                vue_cjs_prod.createTextVNode("\u9189\u6708\u601D")
+                vue_cjs_prod.createTextVNode(" \u9189\u6708\u601D ")
               ];
             }
           }),
@@ -6838,16 +6838,12 @@ const _sfc_main$2W = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     let __temp, __restore;
     const config = useRuntimeConfig();
     const route = vueRouter_cjs.useRoute();
-    const pageData = {
-      total: 0,
-      current: 0
-    };
-    pageData.current = Number(route.params.pageIndex);
+    Number(route.params.pageIndex);
     const [{ data: tag }, { data: post }] = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => Promise.all([
-      useAsyncData("category", () => TagApi.getTag({ name: route.params.name })),
-      useAsyncData("post", () => PostApi.getListByTag(__spreadProps(__spreadValues({}, pageData), { category: route.params.name })))
+      useAsyncData("tag", () => TagApi.getTag({ name: route.params.name })),
+      useAsyncData("post", () => PostApi.getListByTag({ name: route.params.name }))
     ])), __temp = await __temp, __restore(), __temp);
-    const postList2 = vue_cjs_prod.reactive(post.value.records);
+    const postList2 = vue_cjs_prod.reactive(post.value);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
         const fields = {};
@@ -6859,6 +6855,7 @@ const _sfc_main$2W = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     });
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
+      const _component_PostList = _sfc_main$34;
       _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)}>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
@@ -6872,6 +6869,7 @@ const _sfc_main$2W = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
+      _push(serverRenderer.exports.ssrRenderComponent(_component_PostList, { "post-list": vue_cjs_prod.unref(postList2) }, null, _parent));
       _push(`</div>`);
     };
   }
@@ -53120,16 +53118,12 @@ const _sfc_main$4 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     let __temp, __restore;
     const config = useRuntimeConfig();
     const route = vueRouter_cjs.useRoute();
-    const pageData = {
-      total: 0,
-      current: 0
-    };
-    pageData.current = Number(route.params.pageIndex);
+    Number(route.params.pageIndex);
     const [{ data: tag }, { data: post }] = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => Promise.all([
-      useAsyncData("category", () => TagApi.getTag({ name: route.params.name })),
-      useAsyncData("post", () => PostApi.getListByTag(__spreadProps(__spreadValues({}, pageData), { category: route.params.name })))
+      useAsyncData("tag", () => TagApi.getTag({ name: route.params.name })),
+      useAsyncData("post", () => PostApi.getListByTag({ name: route.params.name }))
     ])), __temp = await __temp, __restore(), __temp);
-    const postList2 = vue_cjs_prod.reactive(post.value.records);
+    const postList2 = vue_cjs_prod.reactive(post.value);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
         const fields = {};
@@ -53141,6 +53135,7 @@ const _sfc_main$4 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     });
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
+      const _component_PostList = _sfc_main$34;
       _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)}>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
@@ -53154,6 +53149,7 @@ const _sfc_main$4 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
+      _push(serverRenderer.exports.ssrRenderComponent(_component_PostList, { "post-list": vue_cjs_prod.unref(postList2) }, null, _parent));
       _push(`</div>`);
     };
   }
