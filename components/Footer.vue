@@ -6,8 +6,8 @@
     <span>本站已顽强运行：蛮久了~</span>
     <div>
       <el-link
-          href="http://beian.miit.gov.cn/"
-          type="primary"
+        href="http://beian.miit.gov.cn/"
+        type="primary"
       >
         粤ICP备17055617号
       </el-link>
