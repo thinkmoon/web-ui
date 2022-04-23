@@ -11,7 +11,7 @@ export default class CategoryApi {
 	static getDetail(id){
 		return request({
 			method: 'get',
-			url: `/category/list/${id}`
+			url: `/category/${id}`
 		})
 	}
 }

@@ -6,12 +6,6 @@
     "build": "nuxi build",
     "start": "nuxi preview"
   },
-  "devDependencies": {
-    "@types/lodash": "^4.14.176",
-    "less": "^4.1.2",
-    "less-loader": "^10.2.0",
-    "nuxt3": "^3.0.0-27484505.9f6eff7"
-  },
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
     "@kangc/v-md-editor": "^2.3.14",
@@ -24,5 +18,16 @@
     "markdown-it-external-links": "^0.0.6",
     "pinia": "^2.0.11",
     "qiniu-js": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.176",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
+    "@typescript-eslint/parser": "^5.20.0",
+    "eslint": "^8.14.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-vue": "^8.7.1",
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0",
+    "nuxt": "^3.0.0-rc.1"
   }
 }

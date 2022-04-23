@@ -20,7 +20,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       md.use(externalLinks, {
         externalClassName: 'custom-external-link',
         internalClassName: 'custom-internal-link',
-        internalDomains: ['thinkmoon.cn'],
+        internalDomains: ['www.thinkmoon.cn'],
         externalRel: 'nofollow noopener noreferrer',
       });
     },

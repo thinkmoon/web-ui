@@ -2,15 +2,22 @@
   <Title>{{ config.TITLE }}</Title>
   <div class="app-container">
     <div class="shadow center-read">
-      <div class="title">{{ config.TITLE }}</div>
+      <div class="title">
+        {{ config.TITLE }}
+      </div>
       <div class="read">
-        <el-link href="/page/1" :underline="false">
-          <el-button size="large">开始阅读</el-button>
+        <el-link
+          href="/page/1"
+          :underline="false"
+        >
+          <el-button size="large">
+            开始阅读
+          </el-button>
         </el-link>
       </div>
     </div>
   </div>
-  <Footer></Footer>
+  <Footer />
 </template>
 
 <script lang="ts" setup>

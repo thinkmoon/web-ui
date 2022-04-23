@@ -7,21 +7,31 @@
           :collapse="false"
           unique-opened
           mode="horizontal"
-          @select="select"
           active-text-color="#409eff"
+          @select="select"
         >
-          <el-menu-item index="/admin">主页</el-menu-item>
+          <el-menu-item index="/admin">
+            主页
+          </el-menu-item>
           <el-sub-menu index="2">
-            <template #title>文章</template>
-            <el-menu-item index="/admin/editor">新增文章</el-menu-item>
-            <el-menu-item index="/admin/post-list">文章列表</el-menu-item>
+            <template #title>
+              文章
+            </template>
+            <el-menu-item index="/admin/editor">
+              新增文章
+            </el-menu-item>
+            <el-menu-item index="/admin/post-list">
+              文章列表
+            </el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-header>
       <el-scrollbar>
         <el-main>
           <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/admin' }">管理端</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin' }">
+              管理端
+            </el-breadcrumb-item>
             <el-breadcrumb-item>
               <a href="/admin/post">文章</a>
             </el-breadcrumb-item>
@@ -34,17 +44,17 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
+import {useRoute} from 'vue-router';
 definePageMeta({
-  layout: "admin",
-  middleware: ["auth"]
-})
+  layout: 'admin',
+  middleware: ['auth'],
+});
 
 const route = useRoute();
-let defaultActive = route.path;
+const defaultActive = route.path;
 
-function select(url){
-  location.href = url
+function select(url) {
+  location.href = url;
 }
 </script>
 <style lang="less" scoped>

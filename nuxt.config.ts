@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from "nuxt3";
+import { defineNuxtConfig } from "nuxt";
 import runtimeConfig from "./runtime.config";
 export default defineNuxtConfig({
   publicRuntimeConfig: runtimeConfig,
