@@ -1,14 +1,14 @@
 <template>
   <div>
-    <DefaultMenu/>
+    <DefaultMenu />
     <div class="app-container">
-      <slot/>
+      <slot />
     </div>
     <ClientOnly>
-      <el-backtop :bottom="100"/>
+      <el-backtop :bottom="100" />
     </ClientOnly>
   </div>
-  <Footer/>
+  <Footer />
 </template>
 <script lang="ts" setup>
 </script>
