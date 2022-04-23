@@ -9,8 +9,8 @@
       class="tag-list"
     >
       <el-link
-        type="info"
-        :href="`/tag/${tag.tid}/1`"
+          type="info"
+          :href="`/tag/${tag.name}/1`"
       >
         {{ tag.name }}({{ tag.count }})
       </el-link>
@@ -20,6 +20,7 @@
 
 <script lang="ts" setup>
 import TagApi from '~/api/TagApi';
+
 const config = useRuntimeConfig();
 const {data} = await useAsyncData('tag', () => TagApi.getTag());
 

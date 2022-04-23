@@ -8,10 +8,10 @@
       class="category-list"
     >
       <el-link
-        type="info"
-        :href="`/category/${category.mid}/1`"
+          type="info"
+          :href="`/category/${category.name}/1`"
       >
-        {{ category.name }}
+        {{ category.name }}({{ category.count }})
       </el-link>
     </el-tag>
   </div>
@@ -19,6 +19,7 @@
 
 <script lang="ts" setup>
 import CategoryApi from '~/api/CategoryApi';
+
 const config = useRuntimeConfig();
 const {data} = await useAsyncData('category', () => CategoryApi.getCategory());
 

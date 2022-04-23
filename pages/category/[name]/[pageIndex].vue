@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Title>分类"{{ category.name }}"下的文章 | {{ config.TITLE }}</Title>
+    <Title>分类"{{ category[0].name }}"下的文章 | {{ config.TITLE }}</Title>
     <PostList :post-list="postList" />
   </div>
 </template>
@@ -18,8 +18,8 @@ const pageData = {
 };
 pageData.current = Number(route.params.pageIndex);
 const [{data: category}, {data: post}] = await Promise.all([
-  useAsyncData('category', () => CategoryApi.getDetail(route.params.mid)),
-  useAsyncData('post', () => PostApi.getList(pageData)),
+  useAsyncData('category', () => CategoryApi.getCategory({name: route.params.name})),
+  useAsyncData('post', () => PostApi.getList({...pageData, category: route.params.name})),
 ]);
 const postList = reactive(post.value.records);
 postList.forEach((item) => {
