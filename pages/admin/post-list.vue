@@ -1,40 +1,71 @@
 <template>
   <div>
-    <el-table :data="tableData" height="960" stripe>
-      <el-table-column prop="cid" label="序号" width="80" align="center">
-      </el-table-column>
-      <el-table-column prop="title" label="标题" width="320">
+    <el-table
+      :data="tableData"
+      height="960"
+      stripe
+    >
+      <el-table-column
+        prop="cid"
+        label="序号"
+        width="80"
+        align="center"
+      />
+      <el-table-column
+        prop="title"
+        label="标题"
+        width="320"
+      >
         <template #default="scope">
-          <el-link @click="handleEdit(scope.$index, scope.row)">{{ scope.row.title }}</el-link>
+          <el-link @click="handleEdit(scope.$index, scope.row)">
+            {{ scope.row.title }}
+          </el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="desc" label="摘要" width="500">
+      <el-table-column
+        prop="desc"
+        label="摘要"
+        width="500"
+      >
         <template #default="scope">
           {{ scope.row.fields.desc }}
         </template>
       </el-table-column>
-      <el-table-column prop="created" label="创建时间">
+      <el-table-column
+        prop="created"
+        label="创建时间"
+      >
         <template #default="scope">
           <span>{{ $filters.time(scope.row.created * 1000) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="modified" label="更新时间">
+      <el-table-column
+        prop="modified"
+        label="更新时间"
+      >
         <template #default="scope">
           <span>{{ $filters.time(scope.row.modified * 1000) }}</span>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination v-model:currentPage="pagination.index" :page-sizes="[10, 20, 30, 40]" :page-size="pagination.size"
-      layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"></el-pagination>  </div>
+    <el-pagination
+      v-model:currentPage="pagination.index"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="pagination.size"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pagination.total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </div>
 </template>
 <script lang="ts" setup>
 definePageMeta({
-  keepalive: true
+  keepalive: true,
 });
 </script>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 import PostApi from '~/api/PostApi';
 
 export default defineComponent({
@@ -44,8 +75,8 @@ export default defineComponent({
       pagination: {
         total: 0,
         index: 0,
-        size: 10
-      }
+        size: 10,
+      },
     };
   },
   created() {
@@ -53,7 +84,7 @@ export default defineComponent({
   },
   methods: {
     addPost() {
-      this.$router.push('/admin/editor')
+      this.$router.push('/admin/editor');
     },
     loadData() {
       PostApi.getList({
@@ -61,15 +92,15 @@ export default defineComponent({
         size: this.pagination.size,
       }).then((res: any) => {
         this.tableData = res.records;
-        this.tableData.forEach(item => {
+        this.tableData.forEach((item) => {
           if (item.fields instanceof Array) {
-            let fields = {}
-            item.fields.forEach(i => {
-              fields[i.name] = i.value
-            })
+            const fields = {};
+            item.fields.forEach((i) => {
+              fields[i.name] = i.value;
+            });
             item.fields = fields;
           }
-        })
+        });
         this.pagination.index = res.current;
         this.pagination.total = res.total;
       });
@@ -84,8 +115,8 @@ export default defineComponent({
     },
     handleEdit(index, row) {
       this.$router.push(`/admin/editor?cid=${row.cid}`);
-    }
-  }
+    },
+  },
 });
 </script>
 <style lang="less" scoped>

@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from "nuxt3";
+import { defineNuxtConfig } from "nuxt";
 import runtimeConfig from "./runtime.config";
 export default defineNuxtConfig({
   publicRuntimeConfig: runtimeConfig,
@@ -16,6 +16,13 @@ export default defineNuxtConfig({
       },
     ],
   },
-  css: ["assets/css/index.less"],
-  buildModules: ["@pinia/nuxt"],
+  css: ["assets/css/index.less","element-plus/dist/index.css"],
+  components: true,
+  vueuse: {
+    ssrHandlers: true,
+  },
+  buildModules: [
+    '@vueuse/nuxt',
+    "@pinia/nuxt",
+  ],
 });

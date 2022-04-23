@@ -1,32 +1,43 @@
-import request from "~/api/request";
+import request from '~/api/request';
 
 export default class PostApi {
-  static getList(params){
+  static getList(params) {
     return request({
       method: 'get',
       url: '/post/list',
-      params
-    })
+      params,
+    });
   }
-  static getDetail(params){
+
+  static getListByTag(params) {
+    return request({
+      method: 'get',
+      url: '/post/list-by-tag',
+      params,
+    });
+  }
+
+  static getDetail(params) {
     return request({
       method: 'get',
       url: `/post/${params.cid}`,
-      params
-    })
+      params,
+    });
   }
-  static update(data){
+
+  static update(data) {
     return request({
       method: 'post',
       url: `/post/update`,
-      data
-    })
+      data,
+    });
   }
-  static add(data){
+
+  static add(data) {
     return request({
       method: 'post',
       url: `/post/add`,
-      data
-    })
+      data,
+    });
   }
 }

@@ -4,13 +4,22 @@
     <div class="login-dialog">
       <el-form :model="form">
         <el-form-item label="账号">
-          <el-input v-model="form.account"></el-input>
+          <el-input v-model="form.account" />
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="form.password" type="password" show-password></el-input>
+          <el-input
+            v-model="form.password"
+            type="password"
+            show-password
+          />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">登录</el-button>
+          <el-button
+            type="primary"
+            @click="onSubmit"
+          >
+            登录
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -18,8 +27,12 @@
 </template>
 <script lang="ts" setup>
 import UserApi from '~/api/UserApi';
-const { $message } = useNuxtApp()
+const {$message} = useNuxtApp();
 const auth = useCookie('auth');
+
+if (auth.value) {
+  navigateTo({path: '/admin'});
+}
 
 definePageMeta({
   layout: false,
@@ -28,7 +41,7 @@ definePageMeta({
 const form = reactive({
   account: '',
   password: '',
-})
+});
 
 function onSubmit() {
   UserApi.login(form).then((res: string) => {
@@ -38,9 +51,9 @@ function onSubmit() {
     }
   }).catch(() => {
     if (!process.server) {
-      $message.error('登录失败')
+      $message.error('登录失败');
     }
-  })
+  });
 }
 
 </script>
