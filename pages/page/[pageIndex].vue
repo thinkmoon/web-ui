@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import axios from 'axios';
 import PostApi from '~/api/PostApi';
-import {useRoute, useRouter} from 'vue-router';
+import {useRoute} from 'vue-router';
 import Search from '~~/components/section/Search.vue';
 import Announcement from '~~/components/section/Announcement.vue';
 
