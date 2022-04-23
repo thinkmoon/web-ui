@@ -1,6 +1,7 @@
 <template>
   <div>
     <Title>标签" {{ tag[0].name }}"下的文章 | {{ config.TITLE }}</Title>
+    <PostList :post-list="postList"/>
   </div>
 </template>
 
@@ -17,12 +18,11 @@ const pageData = {
 };
 
 pageData.current = Number(route.params.pageIndex);
-
 const [{data: tag}, {data: post}] = await Promise.all([
-  useAsyncData('category', () => TagApi.getTag({name: route.params.name})),
-  useAsyncData('post', () => PostApi.getListByTag({...pageData, category: route.params.name})),
+  useAsyncData('tag', () => TagApi.getTag({name: route.params.name})),
+  useAsyncData('post', () => PostApi.getListByTag({name: route.params.name})),
 ]);
-const postList = reactive(post.value.records);
+const postList = reactive(post.value);
 postList.forEach((item) => {
   if (item.fields instanceof Array) {
     const fields = {};
