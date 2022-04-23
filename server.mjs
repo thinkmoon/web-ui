@@ -6328,7 +6328,7 @@ const _sfc_main$31 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const config = useRuntimeConfig();
     return (_ctx, _push, _parent, _attrs) => {
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
-      _push(`<footer${serverRenderer.exports.ssrRenderAttrs(_attrs)} data-v-03494890><span data-v-03494890>Copyright \xA9 2017-${serverRenderer.exports.ssrInterpolate(new Date().getFullYear())} \u6307\u5C16\u9B54\u6CD5\u5C4B. All rights reserved</span><span data-v-03494890>POWERED BY thinkBlog \xB7 v${serverRenderer.exports.ssrInterpolate(vue_cjs_prod.unref(config).VERSION)}</span><span data-v-03494890>\u7F51\u7AD9\u6301\u7EED\u642D\u5EFA\u4E2D\uFF0C\u611F\u8C22\u5173\u6CE8</span><span data-v-03494890>\u672C\u7AD9\u5DF2\u987D\u5F3A\u8FD0\u884C\uFF1A\u86EE\u4E45\u4E86~</span><div data-v-03494890>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "footer" }, _attrs))} data-v-6ffa6aaa><span data-v-6ffa6aaa>Copyright \xA9 2017-${serverRenderer.exports.ssrInterpolate(new Date().getFullYear())} \u6307\u5C16\u9B54\u6CD5\u5C4B. All rights reserved</span><span data-v-6ffa6aaa>POWERED BY thinkBlog \xB7 v${serverRenderer.exports.ssrInterpolate(vue_cjs_prod.unref(config).VERSION)}</span><span data-v-6ffa6aaa>\u7F51\u7AD9\u6301\u7EED\u642D\u5EFA\u4E2D\uFF0C\u611F\u8C22\u5173\u6CE8</span><span data-v-6ffa6aaa>\u672C\u7AD9\u5DF2\u987D\u5F3A\u8FD0\u884C\uFF1A\u86EE\u4E45\u4E86~</span><div data-v-6ffa6aaa>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
         href: "http://beian.miit.gov.cn/",
         type: "primary"
@@ -6344,7 +6344,7 @@ const _sfc_main$31 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`</div></footer>`);
+      _push(`</div></div>`);
     };
   }
 });
@@ -6354,7 +6354,7 @@ _sfc_main$31.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Footer.vue");
   return _sfc_setup$u ? _sfc_setup$u(props, ctx) : void 0;
 };
-const __nuxt_component_1 = /* @__PURE__ */ _export_sfc$2(_sfc_main$31, [["__scopeId", "data-v-03494890"]]);
+const __nuxt_component_1 = /* @__PURE__ */ _export_sfc$2(_sfc_main$31, [["__scopeId", "data-v-6ffa6aaa"]]);
 const _sfc_main$30 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
