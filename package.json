@@ -2,9 +2,10 @@
   "private": true,
   "version": "0.1.5",
   "scripts": {
-    "dev": "yarn upgrade-interactive && nuxi dev",
-    "build": "nuxi build",
-    "start": "nuxi preview"
+    "dev": "yarn upgrade-interactive && nuxt dev",
+    "build": "nuxt build",
+    "start": "nuxt preview",
+    "generate": "nuxt generate"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
