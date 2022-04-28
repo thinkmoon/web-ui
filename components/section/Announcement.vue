@@ -5,10 +5,10 @@
   </div>
 </template>
 <script setup>
-const content = "# 博客持续搭建中"
+const content = '# 博客持续搭建中';
 </script>
 <script>
 export default defineComponent({
-  name: 'Announcement'
-})
+  name: 'Announcement',
+});
 </script>

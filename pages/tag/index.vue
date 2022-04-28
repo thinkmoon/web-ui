@@ -9,8 +9,8 @@
       class="tag-list"
     >
       <el-link
-          type="info"
-          :href="`/tag/${tag.name}/1`"
+        :href="`/tag/${tag.name}/1`"
+        type="info"
       >
         {{ tag.name }}({{ tag.count }})
       </el-link>

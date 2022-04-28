@@ -1,15 +1,33 @@
 <template>
   <div class="top-menu">
-    <el-menu mode="horizontal" @select="select" :default-active="defaultActive">
-      <el-menu-item index="/">指尖魔法屋</el-menu-item>
+    <el-menu
+      :default-active="defaultActive"
+      mode="horizontal"
+      @select="select"
+    >
+      <el-menu-item index="/">
+        指尖魔法屋
+      </el-menu-item>
       <el-menu-item index="/category">
-        <NuxtLink to="/category">分类</NuxtLink></el-menu-item>
+        <NuxtLink to="/category">
+          分类
+        </NuxtLink>
+      </el-menu-item>
       <el-menu-item index="/tag">
-        <NuxtLink to="/tag">标签</NuxtLink></el-menu-item>
+        <NuxtLink to="/tag">
+          标签
+        </NuxtLink>
+      </el-menu-item>
     </el-menu>
     <div class="right">
-      <el-link href="/login" :underline="false">
-        <el-icon :size="26" class="pointer">
+      <el-link
+        :underline="false"
+        href="/login"
+      >
+        <el-icon
+          :size="26"
+          class="pointer"
+        >
           <icon-User />
         </el-icon>
       </el-link>
@@ -17,13 +35,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
+import {useRoute} from 'vue-router';
 
 const route = useRoute();
-let defaultActive = route.path;
+const defaultActive = route.path;
 
-function select(url){
-  location.href = url
+function select(url) {
+  location.href = url;
 }
 </script>
 <style lang="less" scoped>

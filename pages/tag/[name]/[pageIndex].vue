@@ -1,7 +1,7 @@
 <template>
   <div>
     <Title>标签" {{ tag[0].name }}"下的文章 | {{ config.TITLE }}</Title>
-    <PostList :post-list="postList"/>
+    <PostList :post-list="postList" />
   </div>
 </template>
 

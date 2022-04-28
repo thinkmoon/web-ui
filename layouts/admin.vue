@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="app-container">
-      <slot></slot>
+      <slot />
     </div>
-    <Footer></Footer>
+    <Footer />
   </div>
 </template>
 <script lang="ts" setup>
