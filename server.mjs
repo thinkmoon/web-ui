@@ -38,2859 +38,2859 @@ var vueRouter_cjs = {};
 
 (function (exports) {
 
-Object.defineProperty(exports, '__esModule', { value: true });
+	Object.defineProperty(exports, '__esModule', { value: true });
 
-var vue = vue_cjs_prod;
+	var vue = vue_cjs_prod;
 
-const hasSymbol = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
-const PolySymbol = (name) => 
-// vr = vue router
-hasSymbol
-    ? Symbol('[vue-router]: ' + name )
-    : ('[vue-router]: ' ) + name;
-// rvlm = Router View Location Matched
-/**
- * RouteRecord being rendered by the closest ancestor Router View. Used for
- * `onBeforeRouteUpdate` and `onBeforeRouteLeave`. rvlm stands for Router View
- * Location Matched
- *
- * @internal
- */
-const matchedRouteKey = /*#__PURE__*/ PolySymbol('router view location matched' );
-/**
- * Allows overriding the router view depth to control which component in
- * `matched` is rendered. rvd stands for Router View Depth
- *
- * @internal
- */
-const viewDepthKey = /*#__PURE__*/ PolySymbol('router view depth' );
-/**
- * Allows overriding the router instance returned by `useRouter` in tests. r
- * stands for router
- *
- * @internal
- */
-const routerKey = /*#__PURE__*/ PolySymbol('router' );
-/**
- * Allows overriding the current route returned by `useRoute` in tests. rl
- * stands for route location
- *
- * @internal
- */
-const routeLocationKey = /*#__PURE__*/ PolySymbol('route location' );
-/**
- * Allows overriding the current route used by router-view. Internally this is
- * used when the `route` prop is passed.
- *
- * @internal
- */
-const routerViewLocationKey = /*#__PURE__*/ PolySymbol('router view location' );
+	const hasSymbol = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
+	const PolySymbol = (name) => 
+	// vr = vue router
+	hasSymbol
+	    ? Symbol('[vue-router]: ' + name )
+	    : ('[vue-router]: ' ) + name;
+	// rvlm = Router View Location Matched
+	/**
+	 * RouteRecord being rendered by the closest ancestor Router View. Used for
+	 * `onBeforeRouteUpdate` and `onBeforeRouteLeave`. rvlm stands for Router View
+	 * Location Matched
+	 *
+	 * @internal
+	 */
+	const matchedRouteKey = /*#__PURE__*/ PolySymbol('router view location matched' );
+	/**
+	 * Allows overriding the router view depth to control which component in
+	 * `matched` is rendered. rvd stands for Router View Depth
+	 *
+	 * @internal
+	 */
+	const viewDepthKey = /*#__PURE__*/ PolySymbol('router view depth' );
+	/**
+	 * Allows overriding the router instance returned by `useRouter` in tests. r
+	 * stands for router
+	 *
+	 * @internal
+	 */
+	const routerKey = /*#__PURE__*/ PolySymbol('router' );
+	/**
+	 * Allows overriding the current route returned by `useRoute` in tests. rl
+	 * stands for route location
+	 *
+	 * @internal
+	 */
+	const routeLocationKey = /*#__PURE__*/ PolySymbol('route location' );
+	/**
+	 * Allows overriding the current route used by router-view. Internally this is
+	 * used when the `route` prop is passed.
+	 *
+	 * @internal
+	 */
+	const routerViewLocationKey = /*#__PURE__*/ PolySymbol('router view location' );
 
-function isESModule(obj) {
-    return obj.__esModule || (hasSymbol && obj[Symbol.toStringTag] === 'Module');
-}
-const assign = Object.assign;
-function applyToParams(fn, params) {
-    const newParams = {};
-    for (const key in params) {
-        const value = params[key];
-        newParams[key] = Array.isArray(value) ? value.map(fn) : fn(value);
-    }
-    return newParams;
-}
-const noop = () => { };
+	function isESModule(obj) {
+	    return obj.__esModule || (hasSymbol && obj[Symbol.toStringTag] === 'Module');
+	}
+	const assign = Object.assign;
+	function applyToParams(fn, params) {
+	    const newParams = {};
+	    for (const key in params) {
+	        const value = params[key];
+	        newParams[key] = Array.isArray(value) ? value.map(fn) : fn(value);
+	    }
+	    return newParams;
+	}
+	const noop = () => { };
 
-function warn(msg) {
-    // avoid using ...args as it breaks in older Edge builds
-    const args = Array.from(arguments).slice(1);
-    console.warn.apply(console, ['[Vue Router warn]: ' + msg].concat(args));
-}
+	function warn(msg) {
+	    // avoid using ...args as it breaks in older Edge builds
+	    const args = Array.from(arguments).slice(1);
+	    console.warn.apply(console, ['[Vue Router warn]: ' + msg].concat(args));
+	}
 
-const TRAILING_SLASH_RE = /\/$/;
-const removeTrailingSlash = (path) => path.replace(TRAILING_SLASH_RE, '');
-/**
- * Transforms an URI into a normalized history location
- *
- * @param parseQuery
- * @param location - URI to normalize
- * @param currentLocation - current absolute location. Allows resolving relative
- * paths. Must start with `/`. Defaults to `/`
- * @returns a normalized history location
- */
-function parseURL(parseQuery, location, currentLocation = '/') {
-    let path, query = {}, searchString = '', hash = '';
-    // Could use URL and URLSearchParams but IE 11 doesn't support it
-    const searchPos = location.indexOf('?');
-    const hashPos = location.indexOf('#', searchPos > -1 ? searchPos : 0);
-    if (searchPos > -1) {
-        path = location.slice(0, searchPos);
-        searchString = location.slice(searchPos + 1, hashPos > -1 ? hashPos : location.length);
-        query = parseQuery(searchString);
-    }
-    if (hashPos > -1) {
-        path = path || location.slice(0, hashPos);
-        // keep the # character
-        hash = location.slice(hashPos, location.length);
-    }
-    // no search and no query
-    path = resolveRelativePath(path != null ? path : location, currentLocation);
-    // empty path means a relative query or hash `?foo=f`, `#thing`
-    return {
-        fullPath: path + (searchString && '?') + searchString + hash,
-        path,
-        query,
-        hash,
-    };
-}
-/**
- * Stringifies a URL object
- *
- * @param stringifyQuery
- * @param location
- */
-function stringifyURL(stringifyQuery, location) {
-    const query = location.query ? stringifyQuery(location.query) : '';
-    return location.path + (query && '?') + query + (location.hash || '');
-}
-/**
- * Strips off the base from the beginning of a location.pathname in a non
- * case-sensitive way.
- *
- * @param pathname - location.pathname
- * @param base - base to strip off
- */
-function stripBase(pathname, base) {
-    // no base or base is not found at the beginning
-    if (!base || !pathname.toLowerCase().startsWith(base.toLowerCase()))
-        return pathname;
-    return pathname.slice(base.length) || '/';
-}
-/**
- * Checks if two RouteLocation are equal. This means that both locations are
- * pointing towards the same {@link RouteRecord} and that all `params`, `query`
- * parameters and `hash` are the same
- *
- * @param a - first {@link RouteLocation}
- * @param b - second {@link RouteLocation}
- */
-function isSameRouteLocation(stringifyQuery, a, b) {
-    const aLastIndex = a.matched.length - 1;
-    const bLastIndex = b.matched.length - 1;
-    return (aLastIndex > -1 &&
-        aLastIndex === bLastIndex &&
-        isSameRouteRecord(a.matched[aLastIndex], b.matched[bLastIndex]) &&
-        isSameRouteLocationParams(a.params, b.params) &&
-        stringifyQuery(a.query) === stringifyQuery(b.query) &&
-        a.hash === b.hash);
-}
-/**
- * Check if two `RouteRecords` are equal. Takes into account aliases: they are
- * considered equal to the `RouteRecord` they are aliasing.
- *
- * @param a - first {@link RouteRecord}
- * @param b - second {@link RouteRecord}
- */
-function isSameRouteRecord(a, b) {
-    // since the original record has an undefined value for aliasOf
-    // but all aliases point to the original record, this will always compare
-    // the original record
-    return (a.aliasOf || a) === (b.aliasOf || b);
-}
-function isSameRouteLocationParams(a, b) {
-    if (Object.keys(a).length !== Object.keys(b).length)
-        return false;
-    for (const key in a) {
-        if (!isSameRouteLocationParamsValue(a[key], b[key]))
-            return false;
-    }
-    return true;
-}
-function isSameRouteLocationParamsValue(a, b) {
-    return Array.isArray(a)
-        ? isEquivalentArray(a, b)
-        : Array.isArray(b)
-            ? isEquivalentArray(b, a)
-            : a === b;
-}
-/**
- * Check if two arrays are the same or if an array with one single entry is the
- * same as another primitive value. Used to check query and parameters
- *
- * @param a - array of values
- * @param b - array of values or a single value
- */
-function isEquivalentArray(a, b) {
-    return Array.isArray(b)
-        ? a.length === b.length && a.every((value, i) => value === b[i])
-        : a.length === 1 && a[0] === b;
-}
-/**
- * Resolves a relative path that starts with `.`.
- *
- * @param to - path location we are resolving
- * @param from - currentLocation.path, should start with `/`
- */
-function resolveRelativePath(to, from) {
-    if (to.startsWith('/'))
-        return to;
-    if (!from.startsWith('/')) {
-        warn(`Cannot resolve a relative location without an absolute path. Trying to resolve "${to}" from "${from}". It should look like "/${from}".`);
-        return to;
-    }
-    if (!to)
-        return from;
-    const fromSegments = from.split('/');
-    const toSegments = to.split('/');
-    let position = fromSegments.length - 1;
-    let toPosition;
-    let segment;
-    for (toPosition = 0; toPosition < toSegments.length; toPosition++) {
-        segment = toSegments[toPosition];
-        // can't go below zero
-        if (position === 1 || segment === '.')
-            continue;
-        if (segment === '..')
-            position--;
-        // found something that is not relative path
-        else
-            break;
-    }
-    return (fromSegments.slice(0, position).join('/') +
-        '/' +
-        toSegments
-            .slice(toPosition - (toPosition === toSegments.length ? 1 : 0))
-            .join('/'));
-}
+	const TRAILING_SLASH_RE = /\/$/;
+	const removeTrailingSlash = (path) => path.replace(TRAILING_SLASH_RE, '');
+	/**
+	 * Transforms an URI into a normalized history location
+	 *
+	 * @param parseQuery
+	 * @param location - URI to normalize
+	 * @param currentLocation - current absolute location. Allows resolving relative
+	 * paths. Must start with `/`. Defaults to `/`
+	 * @returns a normalized history location
+	 */
+	function parseURL(parseQuery, location, currentLocation = '/') {
+	    let path, query = {}, searchString = '', hash = '';
+	    // Could use URL and URLSearchParams but IE 11 doesn't support it
+	    const searchPos = location.indexOf('?');
+	    const hashPos = location.indexOf('#', searchPos > -1 ? searchPos : 0);
+	    if (searchPos > -1) {
+	        path = location.slice(0, searchPos);
+	        searchString = location.slice(searchPos + 1, hashPos > -1 ? hashPos : location.length);
+	        query = parseQuery(searchString);
+	    }
+	    if (hashPos > -1) {
+	        path = path || location.slice(0, hashPos);
+	        // keep the # character
+	        hash = location.slice(hashPos, location.length);
+	    }
+	    // no search and no query
+	    path = resolveRelativePath(path != null ? path : location, currentLocation);
+	    // empty path means a relative query or hash `?foo=f`, `#thing`
+	    return {
+	        fullPath: path + (searchString && '?') + searchString + hash,
+	        path,
+	        query,
+	        hash,
+	    };
+	}
+	/**
+	 * Stringifies a URL object
+	 *
+	 * @param stringifyQuery
+	 * @param location
+	 */
+	function stringifyURL(stringifyQuery, location) {
+	    const query = location.query ? stringifyQuery(location.query) : '';
+	    return location.path + (query && '?') + query + (location.hash || '');
+	}
+	/**
+	 * Strips off the base from the beginning of a location.pathname in a non
+	 * case-sensitive way.
+	 *
+	 * @param pathname - location.pathname
+	 * @param base - base to strip off
+	 */
+	function stripBase(pathname, base) {
+	    // no base or base is not found at the beginning
+	    if (!base || !pathname.toLowerCase().startsWith(base.toLowerCase()))
+	        return pathname;
+	    return pathname.slice(base.length) || '/';
+	}
+	/**
+	 * Checks if two RouteLocation are equal. This means that both locations are
+	 * pointing towards the same {@link RouteRecord} and that all `params`, `query`
+	 * parameters and `hash` are the same
+	 *
+	 * @param a - first {@link RouteLocation}
+	 * @param b - second {@link RouteLocation}
+	 */
+	function isSameRouteLocation(stringifyQuery, a, b) {
+	    const aLastIndex = a.matched.length - 1;
+	    const bLastIndex = b.matched.length - 1;
+	    return (aLastIndex > -1 &&
+	        aLastIndex === bLastIndex &&
+	        isSameRouteRecord(a.matched[aLastIndex], b.matched[bLastIndex]) &&
+	        isSameRouteLocationParams(a.params, b.params) &&
+	        stringifyQuery(a.query) === stringifyQuery(b.query) &&
+	        a.hash === b.hash);
+	}
+	/**
+	 * Check if two `RouteRecords` are equal. Takes into account aliases: they are
+	 * considered equal to the `RouteRecord` they are aliasing.
+	 *
+	 * @param a - first {@link RouteRecord}
+	 * @param b - second {@link RouteRecord}
+	 */
+	function isSameRouteRecord(a, b) {
+	    // since the original record has an undefined value for aliasOf
+	    // but all aliases point to the original record, this will always compare
+	    // the original record
+	    return (a.aliasOf || a) === (b.aliasOf || b);
+	}
+	function isSameRouteLocationParams(a, b) {
+	    if (Object.keys(a).length !== Object.keys(b).length)
+	        return false;
+	    for (const key in a) {
+	        if (!isSameRouteLocationParamsValue(a[key], b[key]))
+	            return false;
+	    }
+	    return true;
+	}
+	function isSameRouteLocationParamsValue(a, b) {
+	    return Array.isArray(a)
+	        ? isEquivalentArray(a, b)
+	        : Array.isArray(b)
+	            ? isEquivalentArray(b, a)
+	            : a === b;
+	}
+	/**
+	 * Check if two arrays are the same or if an array with one single entry is the
+	 * same as another primitive value. Used to check query and parameters
+	 *
+	 * @param a - array of values
+	 * @param b - array of values or a single value
+	 */
+	function isEquivalentArray(a, b) {
+	    return Array.isArray(b)
+	        ? a.length === b.length && a.every((value, i) => value === b[i])
+	        : a.length === 1 && a[0] === b;
+	}
+	/**
+	 * Resolves a relative path that starts with `.`.
+	 *
+	 * @param to - path location we are resolving
+	 * @param from - currentLocation.path, should start with `/`
+	 */
+	function resolveRelativePath(to, from) {
+	    if (to.startsWith('/'))
+	        return to;
+	    if (!from.startsWith('/')) {
+	        warn(`Cannot resolve a relative location without an absolute path. Trying to resolve "${to}" from "${from}". It should look like "/${from}".`);
+	        return to;
+	    }
+	    if (!to)
+	        return from;
+	    const fromSegments = from.split('/');
+	    const toSegments = to.split('/');
+	    let position = fromSegments.length - 1;
+	    let toPosition;
+	    let segment;
+	    for (toPosition = 0; toPosition < toSegments.length; toPosition++) {
+	        segment = toSegments[toPosition];
+	        // can't go below zero
+	        if (position === 1 || segment === '.')
+	            continue;
+	        if (segment === '..')
+	            position--;
+	        // found something that is not relative path
+	        else
+	            break;
+	    }
+	    return (fromSegments.slice(0, position).join('/') +
+	        '/' +
+	        toSegments
+	            .slice(toPosition - (toPosition === toSegments.length ? 1 : 0))
+	            .join('/'));
+	}
 
-var NavigationType;
-(function (NavigationType) {
-    NavigationType["pop"] = "pop";
-    NavigationType["push"] = "push";
-})(NavigationType || (NavigationType = {}));
-var NavigationDirection;
-(function (NavigationDirection) {
-    NavigationDirection["back"] = "back";
-    NavigationDirection["forward"] = "forward";
-    NavigationDirection["unknown"] = "";
-})(NavigationDirection || (NavigationDirection = {}));
-/**
- * Starting location for Histories
- */
-const START = '';
-// Generic utils
-/**
- * Normalizes a base by removing any trailing slash and reading the base tag if
- * present.
- *
- * @param base - base to normalize
- */
-function normalizeBase(base) {
-    if (!base) {
-        {
-            base = '/';
-        }
-    }
-    // ensure leading slash when it was removed by the regex above avoid leading
-    // slash with hash because the file could be read from the disk like file://
-    // and the leading slash would cause problems
-    if (base[0] !== '/' && base[0] !== '#')
-        base = '/' + base;
-    // remove the trailing slash so all other method can just do `base + fullPath`
-    // to build an href
-    return removeTrailingSlash(base);
-}
-// remove any character before the hash
-const BEFORE_HASH_RE = /^[^#]+#/;
-function createHref(base, location) {
-    return base.replace(BEFORE_HASH_RE, '#') + location;
-}
-const computeScrollPosition = () => ({
-    left: window.pageXOffset,
-    top: window.pageYOffset,
-});
-// TODO: RFC about how to save scroll position
-/**
- * ScrollBehavior instance used by the router to compute and restore the scroll
- * position when navigating.
- */
-// export interface ScrollHandler<ScrollPositionEntry extends HistoryStateValue, ScrollPosition extends ScrollPositionEntry> {
-//   // returns a scroll position that can be saved in history
-//   compute(): ScrollPositionEntry
-//   // can take an extended ScrollPositionEntry
-//   scroll(position: ScrollPosition): void
-// }
-// export const scrollHandler: ScrollHandler<ScrollPosition> = {
-//   compute: computeScroll,
-//   scroll: scrollToPosition,
-// }
+	var NavigationType;
+	(function (NavigationType) {
+	    NavigationType["pop"] = "pop";
+	    NavigationType["push"] = "push";
+	})(NavigationType || (NavigationType = {}));
+	var NavigationDirection;
+	(function (NavigationDirection) {
+	    NavigationDirection["back"] = "back";
+	    NavigationDirection["forward"] = "forward";
+	    NavigationDirection["unknown"] = "";
+	})(NavigationDirection || (NavigationDirection = {}));
+	/**
+	 * Starting location for Histories
+	 */
+	const START = '';
+	// Generic utils
+	/**
+	 * Normalizes a base by removing any trailing slash and reading the base tag if
+	 * present.
+	 *
+	 * @param base - base to normalize
+	 */
+	function normalizeBase(base) {
+	    if (!base) {
+	        {
+	            base = '/';
+	        }
+	    }
+	    // ensure leading slash when it was removed by the regex above avoid leading
+	    // slash with hash because the file could be read from the disk like file://
+	    // and the leading slash would cause problems
+	    if (base[0] !== '/' && base[0] !== '#')
+	        base = '/' + base;
+	    // remove the trailing slash so all other method can just do `base + fullPath`
+	    // to build an href
+	    return removeTrailingSlash(base);
+	}
+	// remove any character before the hash
+	const BEFORE_HASH_RE = /^[^#]+#/;
+	function createHref(base, location) {
+	    return base.replace(BEFORE_HASH_RE, '#') + location;
+	}
+	const computeScrollPosition = () => ({
+	    left: window.pageXOffset,
+	    top: window.pageYOffset,
+	});
+	// TODO: RFC about how to save scroll position
+	/**
+	 * ScrollBehavior instance used by the router to compute and restore the scroll
+	 * position when navigating.
+	 */
+	// export interface ScrollHandler<ScrollPositionEntry extends HistoryStateValue, ScrollPosition extends ScrollPositionEntry> {
+	//   // returns a scroll position that can be saved in history
+	//   compute(): ScrollPositionEntry
+	//   // can take an extended ScrollPositionEntry
+	//   scroll(position: ScrollPosition): void
+	// }
+	// export const scrollHandler: ScrollHandler<ScrollPosition> = {
+	//   compute: computeScroll,
+	//   scroll: scrollToPosition,
+	// }
 
-let createBaseLocation = () => location.protocol + '//' + location.host;
-/**
- * Creates a normalized history location from a window.location object
- * @param location -
- */
-function createCurrentLocation(base, location) {
-    const { pathname, search, hash } = location;
-    // allows hash bases like #, /#, #/, #!, #!/, /#!/, or even /folder#end
-    const hashPos = base.indexOf('#');
-    if (hashPos > -1) {
-        let slicePos = hash.includes(base.slice(hashPos))
-            ? base.slice(hashPos).length
-            : 1;
-        let pathFromHash = hash.slice(slicePos);
-        // prepend the starting slash to hash so the url starts with /#
-        if (pathFromHash[0] !== '/')
-            pathFromHash = '/' + pathFromHash;
-        return stripBase(pathFromHash, '');
-    }
-    const path = stripBase(pathname, base);
-    return path + search + hash;
-}
-function useHistoryListeners(base, historyState, currentLocation, replace) {
-    let listeners = [];
-    let teardowns = [];
-    // TODO: should it be a stack? a Dict. Check if the popstate listener
-    // can trigger twice
-    let pauseState = null;
-    const popStateHandler = ({ state, }) => {
-        const to = createCurrentLocation(base, location);
-        const from = currentLocation.value;
-        const fromState = historyState.value;
-        let delta = 0;
-        if (state) {
-            currentLocation.value = to;
-            historyState.value = state;
-            // ignore the popstate and reset the pauseState
-            if (pauseState && pauseState === from) {
-                pauseState = null;
-                return;
-            }
-            delta = fromState ? state.position - fromState.position : 0;
-        }
-        else {
-            replace(to);
-        }
-        // console.log({ deltaFromCurrent })
-        // Here we could also revert the navigation by calling history.go(-delta)
-        // this listener will have to be adapted to not trigger again and to wait for the url
-        // to be updated before triggering the listeners. Some kind of validation function would also
-        // need to be passed to the listeners so the navigation can be accepted
-        // call all listeners
-        listeners.forEach(listener => {
-            listener(currentLocation.value, from, {
-                delta,
-                type: NavigationType.pop,
-                direction: delta
-                    ? delta > 0
-                        ? NavigationDirection.forward
-                        : NavigationDirection.back
-                    : NavigationDirection.unknown,
-            });
-        });
-    };
-    function pauseListeners() {
-        pauseState = currentLocation.value;
-    }
-    function listen(callback) {
-        // setup the listener and prepare teardown callbacks
-        listeners.push(callback);
-        const teardown = () => {
-            const index = listeners.indexOf(callback);
-            if (index > -1)
-                listeners.splice(index, 1);
-        };
-        teardowns.push(teardown);
-        return teardown;
-    }
-    function beforeUnloadListener() {
-        const { history } = window;
-        if (!history.state)
-            return;
-        history.replaceState(assign({}, history.state, { scroll: computeScrollPosition() }), '');
-    }
-    function destroy() {
-        for (const teardown of teardowns)
-            teardown();
-        teardowns = [];
-        window.removeEventListener('popstate', popStateHandler);
-        window.removeEventListener('beforeunload', beforeUnloadListener);
-    }
-    // setup the listeners and prepare teardown callbacks
-    window.addEventListener('popstate', popStateHandler);
-    window.addEventListener('beforeunload', beforeUnloadListener);
-    return {
-        pauseListeners,
-        listen,
-        destroy,
-    };
-}
-/**
- * Creates a state object
- */
-function buildState(back, current, forward, replaced = false, computeScroll = false) {
-    return {
-        back,
-        current,
-        forward,
-        replaced,
-        position: window.history.length,
-        scroll: computeScroll ? computeScrollPosition() : null,
-    };
-}
-function useHistoryStateNavigation(base) {
-    const { history, location } = window;
-    // private variables
-    const currentLocation = {
-        value: createCurrentLocation(base, location),
-    };
-    const historyState = { value: history.state };
-    // build current history entry as this is a fresh navigation
-    if (!historyState.value) {
-        changeLocation(currentLocation.value, {
-            back: null,
-            current: currentLocation.value,
-            forward: null,
-            // the length is off by one, we need to decrease it
-            position: history.length - 1,
-            replaced: true,
-            // don't add a scroll as the user may have an anchor and we want
-            // scrollBehavior to be triggered without a saved position
-            scroll: null,
-        }, true);
-    }
-    function changeLocation(to, state, replace) {
-        /**
-         * if a base tag is provided and we are on a normal domain, we have to
-         * respect the provided `base` attribute because pushState() will use it and
-         * potentially erase anything before the `#` like at
-         * https://github.com/vuejs/router/issues/685 where a base of
-         * `/folder/#` but a base of `/` would erase the `/folder/` section. If
-         * there is no host, the `<base>` tag makes no sense and if there isn't a
-         * base tag we can just use everything after the `#`.
-         */
-        const hashIndex = base.indexOf('#');
-        const url = hashIndex > -1
-            ? (location.host && document.querySelector('base')
-                ? base
-                : base.slice(hashIndex)) + to
-            : createBaseLocation() + base + to;
-        try {
-            // BROWSER QUIRK
-            // NOTE: Safari throws a SecurityError when calling this function 100 times in 30 seconds
-            history[replace ? 'replaceState' : 'pushState'](state, '', url);
-            historyState.value = state;
-        }
-        catch (err) {
-            {
-                warn('Error with push/replace State', err);
-            }
-            // Force the navigation, this also resets the call count
-            location[replace ? 'replace' : 'assign'](url);
-        }
-    }
-    function replace(to, data) {
-        const state = assign({}, history.state, buildState(historyState.value.back, 
-        // keep back and forward entries but override current position
-        to, historyState.value.forward, true), data, { position: historyState.value.position });
-        changeLocation(to, state, true);
-        currentLocation.value = to;
-    }
-    function push(to, data) {
-        // Add to current entry the information of where we are going
-        // as well as saving the current position
-        const currentState = assign({}, 
-        // use current history state to gracefully handle a wrong call to
-        // history.replaceState
-        // https://github.com/vuejs/router/issues/366
-        historyState.value, history.state, {
-            forward: to,
-            scroll: computeScrollPosition(),
-        });
-        if (!history.state) {
-            warn(`history.state seems to have been manually replaced without preserving the necessary values. Make sure to preserve existing history state if you are manually calling history.replaceState:\n\n` +
-                `history.replaceState(history.state, '', url)\n\n` +
-                `You can find more information at https://next.router.vuejs.org/guide/migration/#usage-of-history-state.`);
-        }
-        changeLocation(currentState.current, currentState, true);
-        const state = assign({}, buildState(currentLocation.value, to, null), { position: currentState.position + 1 }, data);
-        changeLocation(to, state, false);
-        currentLocation.value = to;
-    }
-    return {
-        location: currentLocation,
-        state: historyState,
-        push,
-        replace,
-    };
-}
-/**
- * Creates an HTML5 history. Most common history for single page applications.
- *
- * @param base -
- */
-function createWebHistory(base) {
-    base = normalizeBase(base);
-    const historyNavigation = useHistoryStateNavigation(base);
-    const historyListeners = useHistoryListeners(base, historyNavigation.state, historyNavigation.location, historyNavigation.replace);
-    function go(delta, triggerListeners = true) {
-        if (!triggerListeners)
-            historyListeners.pauseListeners();
-        history.go(delta);
-    }
-    const routerHistory = assign({
-        // it's overridden right after
-        location: '',
-        base,
-        go,
-        createHref: createHref.bind(null, base),
-    }, historyNavigation, historyListeners);
-    Object.defineProperty(routerHistory, 'location', {
-        enumerable: true,
-        get: () => historyNavigation.location.value,
-    });
-    Object.defineProperty(routerHistory, 'state', {
-        enumerable: true,
-        get: () => historyNavigation.state.value,
-    });
-    return routerHistory;
-}
+	let createBaseLocation = () => location.protocol + '//' + location.host;
+	/**
+	 * Creates a normalized history location from a window.location object
+	 * @param location -
+	 */
+	function createCurrentLocation(base, location) {
+	    const { pathname, search, hash } = location;
+	    // allows hash bases like #, /#, #/, #!, #!/, /#!/, or even /folder#end
+	    const hashPos = base.indexOf('#');
+	    if (hashPos > -1) {
+	        let slicePos = hash.includes(base.slice(hashPos))
+	            ? base.slice(hashPos).length
+	            : 1;
+	        let pathFromHash = hash.slice(slicePos);
+	        // prepend the starting slash to hash so the url starts with /#
+	        if (pathFromHash[0] !== '/')
+	            pathFromHash = '/' + pathFromHash;
+	        return stripBase(pathFromHash, '');
+	    }
+	    const path = stripBase(pathname, base);
+	    return path + search + hash;
+	}
+	function useHistoryListeners(base, historyState, currentLocation, replace) {
+	    let listeners = [];
+	    let teardowns = [];
+	    // TODO: should it be a stack? a Dict. Check if the popstate listener
+	    // can trigger twice
+	    let pauseState = null;
+	    const popStateHandler = ({ state, }) => {
+	        const to = createCurrentLocation(base, location);
+	        const from = currentLocation.value;
+	        const fromState = historyState.value;
+	        let delta = 0;
+	        if (state) {
+	            currentLocation.value = to;
+	            historyState.value = state;
+	            // ignore the popstate and reset the pauseState
+	            if (pauseState && pauseState === from) {
+	                pauseState = null;
+	                return;
+	            }
+	            delta = fromState ? state.position - fromState.position : 0;
+	        }
+	        else {
+	            replace(to);
+	        }
+	        // console.log({ deltaFromCurrent })
+	        // Here we could also revert the navigation by calling history.go(-delta)
+	        // this listener will have to be adapted to not trigger again and to wait for the url
+	        // to be updated before triggering the listeners. Some kind of validation function would also
+	        // need to be passed to the listeners so the navigation can be accepted
+	        // call all listeners
+	        listeners.forEach(listener => {
+	            listener(currentLocation.value, from, {
+	                delta,
+	                type: NavigationType.pop,
+	                direction: delta
+	                    ? delta > 0
+	                        ? NavigationDirection.forward
+	                        : NavigationDirection.back
+	                    : NavigationDirection.unknown,
+	            });
+	        });
+	    };
+	    function pauseListeners() {
+	        pauseState = currentLocation.value;
+	    }
+	    function listen(callback) {
+	        // setup the listener and prepare teardown callbacks
+	        listeners.push(callback);
+	        const teardown = () => {
+	            const index = listeners.indexOf(callback);
+	            if (index > -1)
+	                listeners.splice(index, 1);
+	        };
+	        teardowns.push(teardown);
+	        return teardown;
+	    }
+	    function beforeUnloadListener() {
+	        const { history } = window;
+	        if (!history.state)
+	            return;
+	        history.replaceState(assign({}, history.state, { scroll: computeScrollPosition() }), '');
+	    }
+	    function destroy() {
+	        for (const teardown of teardowns)
+	            teardown();
+	        teardowns = [];
+	        window.removeEventListener('popstate', popStateHandler);
+	        window.removeEventListener('beforeunload', beforeUnloadListener);
+	    }
+	    // setup the listeners and prepare teardown callbacks
+	    window.addEventListener('popstate', popStateHandler);
+	    window.addEventListener('beforeunload', beforeUnloadListener);
+	    return {
+	        pauseListeners,
+	        listen,
+	        destroy,
+	    };
+	}
+	/**
+	 * Creates a state object
+	 */
+	function buildState(back, current, forward, replaced = false, computeScroll = false) {
+	    return {
+	        back,
+	        current,
+	        forward,
+	        replaced,
+	        position: window.history.length,
+	        scroll: computeScroll ? computeScrollPosition() : null,
+	    };
+	}
+	function useHistoryStateNavigation(base) {
+	    const { history, location } = window;
+	    // private variables
+	    const currentLocation = {
+	        value: createCurrentLocation(base, location),
+	    };
+	    const historyState = { value: history.state };
+	    // build current history entry as this is a fresh navigation
+	    if (!historyState.value) {
+	        changeLocation(currentLocation.value, {
+	            back: null,
+	            current: currentLocation.value,
+	            forward: null,
+	            // the length is off by one, we need to decrease it
+	            position: history.length - 1,
+	            replaced: true,
+	            // don't add a scroll as the user may have an anchor and we want
+	            // scrollBehavior to be triggered without a saved position
+	            scroll: null,
+	        }, true);
+	    }
+	    function changeLocation(to, state, replace) {
+	        /**
+	         * if a base tag is provided and we are on a normal domain, we have to
+	         * respect the provided `base` attribute because pushState() will use it and
+	         * potentially erase anything before the `#` like at
+	         * https://github.com/vuejs/router/issues/685 where a base of
+	         * `/folder/#` but a base of `/` would erase the `/folder/` section. If
+	         * there is no host, the `<base>` tag makes no sense and if there isn't a
+	         * base tag we can just use everything after the `#`.
+	         */
+	        const hashIndex = base.indexOf('#');
+	        const url = hashIndex > -1
+	            ? (location.host && document.querySelector('base')
+	                ? base
+	                : base.slice(hashIndex)) + to
+	            : createBaseLocation() + base + to;
+	        try {
+	            // BROWSER QUIRK
+	            // NOTE: Safari throws a SecurityError when calling this function 100 times in 30 seconds
+	            history[replace ? 'replaceState' : 'pushState'](state, '', url);
+	            historyState.value = state;
+	        }
+	        catch (err) {
+	            {
+	                warn('Error with push/replace State', err);
+	            }
+	            // Force the navigation, this also resets the call count
+	            location[replace ? 'replace' : 'assign'](url);
+	        }
+	    }
+	    function replace(to, data) {
+	        const state = assign({}, history.state, buildState(historyState.value.back, 
+	        // keep back and forward entries but override current position
+	        to, historyState.value.forward, true), data, { position: historyState.value.position });
+	        changeLocation(to, state, true);
+	        currentLocation.value = to;
+	    }
+	    function push(to, data) {
+	        // Add to current entry the information of where we are going
+	        // as well as saving the current position
+	        const currentState = assign({}, 
+	        // use current history state to gracefully handle a wrong call to
+	        // history.replaceState
+	        // https://github.com/vuejs/router/issues/366
+	        historyState.value, history.state, {
+	            forward: to,
+	            scroll: computeScrollPosition(),
+	        });
+	        if (!history.state) {
+	            warn(`history.state seems to have been manually replaced without preserving the necessary values. Make sure to preserve existing history state if you are manually calling history.replaceState:\n\n` +
+	                `history.replaceState(history.state, '', url)\n\n` +
+	                `You can find more information at https://next.router.vuejs.org/guide/migration/#usage-of-history-state.`);
+	        }
+	        changeLocation(currentState.current, currentState, true);
+	        const state = assign({}, buildState(currentLocation.value, to, null), { position: currentState.position + 1 }, data);
+	        changeLocation(to, state, false);
+	        currentLocation.value = to;
+	    }
+	    return {
+	        location: currentLocation,
+	        state: historyState,
+	        push,
+	        replace,
+	    };
+	}
+	/**
+	 * Creates an HTML5 history. Most common history for single page applications.
+	 *
+	 * @param base -
+	 */
+	function createWebHistory(base) {
+	    base = normalizeBase(base);
+	    const historyNavigation = useHistoryStateNavigation(base);
+	    const historyListeners = useHistoryListeners(base, historyNavigation.state, historyNavigation.location, historyNavigation.replace);
+	    function go(delta, triggerListeners = true) {
+	        if (!triggerListeners)
+	            historyListeners.pauseListeners();
+	        history.go(delta);
+	    }
+	    const routerHistory = assign({
+	        // it's overridden right after
+	        location: '',
+	        base,
+	        go,
+	        createHref: createHref.bind(null, base),
+	    }, historyNavigation, historyListeners);
+	    Object.defineProperty(routerHistory, 'location', {
+	        enumerable: true,
+	        get: () => historyNavigation.location.value,
+	    });
+	    Object.defineProperty(routerHistory, 'state', {
+	        enumerable: true,
+	        get: () => historyNavigation.state.value,
+	    });
+	    return routerHistory;
+	}
 
-/**
- * Creates a in-memory based history. The main purpose of this history is to handle SSR. It starts in a special location that is nowhere.
- * It's up to the user to replace that location with the starter location by either calling `router.push` or `router.replace`.
- *
- * @param base - Base applied to all urls, defaults to '/'
- * @returns a history object that can be passed to the router constructor
- */
-function createMemoryHistory(base = '') {
-    let listeners = [];
-    let queue = [START];
-    let position = 0;
-    base = normalizeBase(base);
-    function setLocation(location) {
-        position++;
-        if (position === queue.length) {
-            // we are at the end, we can simply append a new entry
-            queue.push(location);
-        }
-        else {
-            // we are in the middle, we remove everything from here in the queue
-            queue.splice(position);
-            queue.push(location);
-        }
-    }
-    function triggerListeners(to, from, { direction, delta }) {
-        const info = {
-            direction,
-            delta,
-            type: NavigationType.pop,
-        };
-        for (const callback of listeners) {
-            callback(to, from, info);
-        }
-    }
-    const routerHistory = {
-        // rewritten by Object.defineProperty
-        location: START,
-        // TODO: should be kept in queue
-        state: {},
-        base,
-        createHref: createHref.bind(null, base),
-        replace(to) {
-            // remove current entry and decrement position
-            queue.splice(position--, 1);
-            setLocation(to);
-        },
-        push(to, data) {
-            setLocation(to);
-        },
-        listen(callback) {
-            listeners.push(callback);
-            return () => {
-                const index = listeners.indexOf(callback);
-                if (index > -1)
-                    listeners.splice(index, 1);
-            };
-        },
-        destroy() {
-            listeners = [];
-            queue = [START];
-            position = 0;
-        },
-        go(delta, shouldTrigger = true) {
-            const from = this.location;
-            const direction = 
-            // we are considering delta === 0 going forward, but in abstract mode
-            // using 0 for the delta doesn't make sense like it does in html5 where
-            // it reloads the page
-            delta < 0 ? NavigationDirection.back : NavigationDirection.forward;
-            position = Math.max(0, Math.min(position + delta, queue.length - 1));
-            if (shouldTrigger) {
-                triggerListeners(this.location, from, {
-                    direction,
-                    delta,
-                });
-            }
-        },
-    };
-    Object.defineProperty(routerHistory, 'location', {
-        enumerable: true,
-        get: () => queue[position],
-    });
-    return routerHistory;
-}
+	/**
+	 * Creates a in-memory based history. The main purpose of this history is to handle SSR. It starts in a special location that is nowhere.
+	 * It's up to the user to replace that location with the starter location by either calling `router.push` or `router.replace`.
+	 *
+	 * @param base - Base applied to all urls, defaults to '/'
+	 * @returns a history object that can be passed to the router constructor
+	 */
+	function createMemoryHistory(base = '') {
+	    let listeners = [];
+	    let queue = [START];
+	    let position = 0;
+	    base = normalizeBase(base);
+	    function setLocation(location) {
+	        position++;
+	        if (position === queue.length) {
+	            // we are at the end, we can simply append a new entry
+	            queue.push(location);
+	        }
+	        else {
+	            // we are in the middle, we remove everything from here in the queue
+	            queue.splice(position);
+	            queue.push(location);
+	        }
+	    }
+	    function triggerListeners(to, from, { direction, delta }) {
+	        const info = {
+	            direction,
+	            delta,
+	            type: NavigationType.pop,
+	        };
+	        for (const callback of listeners) {
+	            callback(to, from, info);
+	        }
+	    }
+	    const routerHistory = {
+	        // rewritten by Object.defineProperty
+	        location: START,
+	        // TODO: should be kept in queue
+	        state: {},
+	        base,
+	        createHref: createHref.bind(null, base),
+	        replace(to) {
+	            // remove current entry and decrement position
+	            queue.splice(position--, 1);
+	            setLocation(to);
+	        },
+	        push(to, data) {
+	            setLocation(to);
+	        },
+	        listen(callback) {
+	            listeners.push(callback);
+	            return () => {
+	                const index = listeners.indexOf(callback);
+	                if (index > -1)
+	                    listeners.splice(index, 1);
+	            };
+	        },
+	        destroy() {
+	            listeners = [];
+	            queue = [START];
+	            position = 0;
+	        },
+	        go(delta, shouldTrigger = true) {
+	            const from = this.location;
+	            const direction = 
+	            // we are considering delta === 0 going forward, but in abstract mode
+	            // using 0 for the delta doesn't make sense like it does in html5 where
+	            // it reloads the page
+	            delta < 0 ? NavigationDirection.back : NavigationDirection.forward;
+	            position = Math.max(0, Math.min(position + delta, queue.length - 1));
+	            if (shouldTrigger) {
+	                triggerListeners(this.location, from, {
+	                    direction,
+	                    delta,
+	                });
+	            }
+	        },
+	    };
+	    Object.defineProperty(routerHistory, 'location', {
+	        enumerable: true,
+	        get: () => queue[position],
+	    });
+	    return routerHistory;
+	}
 
-/**
- * Creates a hash history. Useful for web applications with no host (e.g.
- * `file://`) or when configuring a server to handle any URL is not possible.
- *
- * @param base - optional base to provide. Defaults to `location.pathname +
- * location.search` If there is a `<base>` tag in the `head`, its value will be
- * ignored in favor of this parameter **but note it affects all the
- * history.pushState() calls**, meaning that if you use a `<base>` tag, it's
- * `href` value **has to match this parameter** (ignoring anything after the
- * `#`).
- *
- * @example
- * ```js
- * // at https://example.com/folder
- * createWebHashHistory() // gives a url of `https://example.com/folder#`
- * createWebHashHistory('/folder/') // gives a url of `https://example.com/folder/#`
- * // if the `#` is provided in the base, it won't be added by `createWebHashHistory`
- * createWebHashHistory('/folder/#/app/') // gives a url of `https://example.com/folder/#/app/`
- * // you should avoid doing this because it changes the original url and breaks copying urls
- * createWebHashHistory('/other-folder/') // gives a url of `https://example.com/other-folder/#`
- *
- * // at file:///usr/etc/folder/index.html
- * // for locations with no `host`, the base is ignored
- * createWebHashHistory('/iAmIgnored') // gives a url of `file:///usr/etc/folder/index.html#`
- * ```
- */
-function createWebHashHistory(base) {
-    // Make sure this implementation is fine in terms of encoding, specially for IE11
-    // for `file://`, directly use the pathname and ignore the base
-    // location.pathname contains an initial `/` even at the root: `https://example.com`
-    base = location.host ? base || location.pathname + location.search : '';
-    // allow the user to provide a `#` in the middle: `/base/#/app`
-    if (!base.includes('#'))
-        base += '#';
-    if (!base.endsWith('#/') && !base.endsWith('#')) {
-        warn(`A hash base must end with a "#":\n"${base}" should be "${base.replace(/#.*$/, '#')}".`);
-    }
-    return createWebHistory(base);
-}
+	/**
+	 * Creates a hash history. Useful for web applications with no host (e.g.
+	 * `file://`) or when configuring a server to handle any URL is not possible.
+	 *
+	 * @param base - optional base to provide. Defaults to `location.pathname +
+	 * location.search` If there is a `<base>` tag in the `head`, its value will be
+	 * ignored in favor of this parameter **but note it affects all the
+	 * history.pushState() calls**, meaning that if you use a `<base>` tag, it's
+	 * `href` value **has to match this parameter** (ignoring anything after the
+	 * `#`).
+	 *
+	 * @example
+	 * ```js
+	 * // at https://example.com/folder
+	 * createWebHashHistory() // gives a url of `https://example.com/folder#`
+	 * createWebHashHistory('/folder/') // gives a url of `https://example.com/folder/#`
+	 * // if the `#` is provided in the base, it won't be added by `createWebHashHistory`
+	 * createWebHashHistory('/folder/#/app/') // gives a url of `https://example.com/folder/#/app/`
+	 * // you should avoid doing this because it changes the original url and breaks copying urls
+	 * createWebHashHistory('/other-folder/') // gives a url of `https://example.com/other-folder/#`
+	 *
+	 * // at file:///usr/etc/folder/index.html
+	 * // for locations with no `host`, the base is ignored
+	 * createWebHashHistory('/iAmIgnored') // gives a url of `file:///usr/etc/folder/index.html#`
+	 * ```
+	 */
+	function createWebHashHistory(base) {
+	    // Make sure this implementation is fine in terms of encoding, specially for IE11
+	    // for `file://`, directly use the pathname and ignore the base
+	    // location.pathname contains an initial `/` even at the root: `https://example.com`
+	    base = location.host ? base || location.pathname + location.search : '';
+	    // allow the user to provide a `#` in the middle: `/base/#/app`
+	    if (!base.includes('#'))
+	        base += '#';
+	    if (!base.endsWith('#/') && !base.endsWith('#')) {
+	        warn(`A hash base must end with a "#":\n"${base}" should be "${base.replace(/#.*$/, '#')}".`);
+	    }
+	    return createWebHistory(base);
+	}
 
-function isRouteLocation(route) {
-    return typeof route === 'string' || (route && typeof route === 'object');
-}
-function isRouteName(name) {
-    return typeof name === 'string' || typeof name === 'symbol';
-}
+	function isRouteLocation(route) {
+	    return typeof route === 'string' || (route && typeof route === 'object');
+	}
+	function isRouteName(name) {
+	    return typeof name === 'string' || typeof name === 'symbol';
+	}
 
-/**
- * Initial route location where the router is. Can be used in navigation guards
- * to differentiate the initial navigation.
- *
- * @example
- * ```js
- * import { START_LOCATION } from 'vue-router'
- *
- * router.beforeEach((to, from) => {
- *   if (from === START_LOCATION) {
- *     // initial navigation
- *   }
- * })
- * ```
- */
-const START_LOCATION_NORMALIZED = {
-    path: '/',
-    name: undefined,
-    params: {},
-    query: {},
-    hash: '',
-    fullPath: '/',
-    matched: [],
-    meta: {},
-    redirectedFrom: undefined,
-};
+	/**
+	 * Initial route location where the router is. Can be used in navigation guards
+	 * to differentiate the initial navigation.
+	 *
+	 * @example
+	 * ```js
+	 * import { START_LOCATION } from 'vue-router'
+	 *
+	 * router.beforeEach((to, from) => {
+	 *   if (from === START_LOCATION) {
+	 *     // initial navigation
+	 *   }
+	 * })
+	 * ```
+	 */
+	const START_LOCATION_NORMALIZED = {
+	    path: '/',
+	    name: undefined,
+	    params: {},
+	    query: {},
+	    hash: '',
+	    fullPath: '/',
+	    matched: [],
+	    meta: {},
+	    redirectedFrom: undefined,
+	};
 
-const NavigationFailureSymbol = /*#__PURE__*/ PolySymbol('navigation failure' );
-/**
- * Enumeration with all possible types for navigation failures. Can be passed to
- * {@link isNavigationFailure} to check for specific failures.
- */
-exports.NavigationFailureType = void 0;
-(function (NavigationFailureType) {
-    /**
-     * An aborted navigation is a navigation that failed because a navigation
-     * guard returned `false` or called `next(false)`
-     */
-    NavigationFailureType[NavigationFailureType["aborted"] = 4] = "aborted";
-    /**
-     * A cancelled navigation is a navigation that failed because a more recent
-     * navigation finished started (not necessarily finished).
-     */
-    NavigationFailureType[NavigationFailureType["cancelled"] = 8] = "cancelled";
-    /**
-     * A duplicated navigation is a navigation that failed because it was
-     * initiated while already being at the exact same location.
-     */
-    NavigationFailureType[NavigationFailureType["duplicated"] = 16] = "duplicated";
-})(exports.NavigationFailureType || (exports.NavigationFailureType = {}));
-// DEV only debug messages
-const ErrorTypeMessages = {
-    [1 /* MATCHER_NOT_FOUND */]({ location, currentLocation }) {
-        return `No match for\n ${JSON.stringify(location)}${currentLocation
-            ? '\nwhile being at\n' + JSON.stringify(currentLocation)
-            : ''}`;
-    },
-    [2 /* NAVIGATION_GUARD_REDIRECT */]({ from, to, }) {
-        return `Redirected from "${from.fullPath}" to "${stringifyRoute(to)}" via a navigation guard.`;
-    },
-    [4 /* NAVIGATION_ABORTED */]({ from, to }) {
-        return `Navigation aborted from "${from.fullPath}" to "${to.fullPath}" via a navigation guard.`;
-    },
-    [8 /* NAVIGATION_CANCELLED */]({ from, to }) {
-        return `Navigation cancelled from "${from.fullPath}" to "${to.fullPath}" with a new navigation.`;
-    },
-    [16 /* NAVIGATION_DUPLICATED */]({ from, to }) {
-        return `Avoided redundant navigation to current location: "${from.fullPath}".`;
-    },
-};
-function createRouterError(type, params) {
-    // keep full error messages in cjs versions
-    {
-        return assign(new Error(ErrorTypeMessages[type](params)), {
-            type,
-            [NavigationFailureSymbol]: true,
-        }, params);
-    }
-}
-function isNavigationFailure(error, type) {
-    return (error instanceof Error &&
-        NavigationFailureSymbol in error &&
-        (type == null || !!(error.type & type)));
-}
-const propertiesToLog = ['params', 'query', 'hash'];
-function stringifyRoute(to) {
-    if (typeof to === 'string')
-        return to;
-    if ('path' in to)
-        return to.path;
-    const location = {};
-    for (const key of propertiesToLog) {
-        if (key in to)
-            location[key] = to[key];
-    }
-    return JSON.stringify(location, null, 2);
-}
+	const NavigationFailureSymbol = /*#__PURE__*/ PolySymbol('navigation failure' );
+	/**
+	 * Enumeration with all possible types for navigation failures. Can be passed to
+	 * {@link isNavigationFailure} to check for specific failures.
+	 */
+	exports.NavigationFailureType = void 0;
+	(function (NavigationFailureType) {
+	    /**
+	     * An aborted navigation is a navigation that failed because a navigation
+	     * guard returned `false` or called `next(false)`
+	     */
+	    NavigationFailureType[NavigationFailureType["aborted"] = 4] = "aborted";
+	    /**
+	     * A cancelled navigation is a navigation that failed because a more recent
+	     * navigation finished started (not necessarily finished).
+	     */
+	    NavigationFailureType[NavigationFailureType["cancelled"] = 8] = "cancelled";
+	    /**
+	     * A duplicated navigation is a navigation that failed because it was
+	     * initiated while already being at the exact same location.
+	     */
+	    NavigationFailureType[NavigationFailureType["duplicated"] = 16] = "duplicated";
+	})(exports.NavigationFailureType || (exports.NavigationFailureType = {}));
+	// DEV only debug messages
+	const ErrorTypeMessages = {
+	    [1 /* MATCHER_NOT_FOUND */]({ location, currentLocation }) {
+	        return `No match for\n ${JSON.stringify(location)}${currentLocation
+	            ? '\nwhile being at\n' + JSON.stringify(currentLocation)
+	            : ''}`;
+	    },
+	    [2 /* NAVIGATION_GUARD_REDIRECT */]({ from, to, }) {
+	        return `Redirected from "${from.fullPath}" to "${stringifyRoute(to)}" via a navigation guard.`;
+	    },
+	    [4 /* NAVIGATION_ABORTED */]({ from, to }) {
+	        return `Navigation aborted from "${from.fullPath}" to "${to.fullPath}" via a navigation guard.`;
+	    },
+	    [8 /* NAVIGATION_CANCELLED */]({ from, to }) {
+	        return `Navigation cancelled from "${from.fullPath}" to "${to.fullPath}" with a new navigation.`;
+	    },
+	    [16 /* NAVIGATION_DUPLICATED */]({ from, to }) {
+	        return `Avoided redundant navigation to current location: "${from.fullPath}".`;
+	    },
+	};
+	function createRouterError(type, params) {
+	    // keep full error messages in cjs versions
+	    {
+	        return assign(new Error(ErrorTypeMessages[type](params)), {
+	            type,
+	            [NavigationFailureSymbol]: true,
+	        }, params);
+	    }
+	}
+	function isNavigationFailure(error, type) {
+	    return (error instanceof Error &&
+	        NavigationFailureSymbol in error &&
+	        (type == null || !!(error.type & type)));
+	}
+	const propertiesToLog = ['params', 'query', 'hash'];
+	function stringifyRoute(to) {
+	    if (typeof to === 'string')
+	        return to;
+	    if ('path' in to)
+	        return to.path;
+	    const location = {};
+	    for (const key of propertiesToLog) {
+	        if (key in to)
+	            location[key] = to[key];
+	    }
+	    return JSON.stringify(location, null, 2);
+	}
 
-// default pattern for a param: non greedy everything but /
-const BASE_PARAM_PATTERN = '[^/]+?';
-const BASE_PATH_PARSER_OPTIONS = {
-    sensitive: false,
-    strict: false,
-    start: true,
-    end: true,
-};
-// Special Regex characters that must be escaped in static tokens
-const REGEX_CHARS_RE = /[.+*?^${}()[\]/\\]/g;
-/**
- * Creates a path parser from an array of Segments (a segment is an array of Tokens)
- *
- * @param segments - array of segments returned by tokenizePath
- * @param extraOptions - optional options for the regexp
- * @returns a PathParser
- */
-function tokensToParser(segments, extraOptions) {
-    const options = assign({}, BASE_PATH_PARSER_OPTIONS, extraOptions);
-    // the amount of scores is the same as the length of segments except for the root segment "/"
-    const score = [];
-    // the regexp as a string
-    let pattern = options.start ? '^' : '';
-    // extracted keys
-    const keys = [];
-    for (const segment of segments) {
-        // the root segment needs special treatment
-        const segmentScores = segment.length ? [] : [90 /* Root */];
-        // allow trailing slash
-        if (options.strict && !segment.length)
-            pattern += '/';
-        for (let tokenIndex = 0; tokenIndex < segment.length; tokenIndex++) {
-            const token = segment[tokenIndex];
-            // resets the score if we are inside a sub segment /:a-other-:b
-            let subSegmentScore = 40 /* Segment */ +
-                (options.sensitive ? 0.25 /* BonusCaseSensitive */ : 0);
-            if (token.type === 0 /* Static */) {
-                // prepend the slash if we are starting a new segment
-                if (!tokenIndex)
-                    pattern += '/';
-                pattern += token.value.replace(REGEX_CHARS_RE, '\\$&');
-                subSegmentScore += 40 /* Static */;
-            }
-            else if (token.type === 1 /* Param */) {
-                const { value, repeatable, optional, regexp } = token;
-                keys.push({
-                    name: value,
-                    repeatable,
-                    optional,
-                });
-                const re = regexp ? regexp : BASE_PARAM_PATTERN;
-                // the user provided a custom regexp /:id(\\d+)
-                if (re !== BASE_PARAM_PATTERN) {
-                    subSegmentScore += 10 /* BonusCustomRegExp */;
-                    // make sure the regexp is valid before using it
-                    try {
-                        new RegExp(`(${re})`);
-                    }
-                    catch (err) {
-                        throw new Error(`Invalid custom RegExp for param "${value}" (${re}): ` +
-                            err.message);
-                    }
-                }
-                // when we repeat we must take care of the repeating leading slash
-                let subPattern = repeatable ? `((?:${re})(?:/(?:${re}))*)` : `(${re})`;
-                // prepend the slash if we are starting a new segment
-                if (!tokenIndex)
-                    subPattern =
-                        // avoid an optional / if there are more segments e.g. /:p?-static
-                        // or /:p?-:p2
-                        optional && segment.length < 2
-                            ? `(?:/${subPattern})`
-                            : '/' + subPattern;
-                if (optional)
-                    subPattern += '?';
-                pattern += subPattern;
-                subSegmentScore += 20 /* Dynamic */;
-                if (optional)
-                    subSegmentScore += -8 /* BonusOptional */;
-                if (repeatable)
-                    subSegmentScore += -20 /* BonusRepeatable */;
-                if (re === '.*')
-                    subSegmentScore += -50 /* BonusWildcard */;
-            }
-            segmentScores.push(subSegmentScore);
-        }
-        // an empty array like /home/ -> [[{home}], []]
-        // if (!segment.length) pattern += '/'
-        score.push(segmentScores);
-    }
-    // only apply the strict bonus to the last score
-    if (options.strict && options.end) {
-        const i = score.length - 1;
-        score[i][score[i].length - 1] += 0.7000000000000001 /* BonusStrict */;
-    }
-    // TODO: dev only warn double trailing slash
-    if (!options.strict)
-        pattern += '/?';
-    if (options.end)
-        pattern += '$';
-    // allow paths like /dynamic to only match dynamic or dynamic/... but not dynamic_something_else
-    else if (options.strict)
-        pattern += '(?:/|$)';
-    const re = new RegExp(pattern, options.sensitive ? '' : 'i');
-    function parse(path) {
-        const match = path.match(re);
-        const params = {};
-        if (!match)
-            return null;
-        for (let i = 1; i < match.length; i++) {
-            const value = match[i] || '';
-            const key = keys[i - 1];
-            params[key.name] = value && key.repeatable ? value.split('/') : value;
-        }
-        return params;
-    }
-    function stringify(params) {
-        let path = '';
-        // for optional parameters to allow to be empty
-        let avoidDuplicatedSlash = false;
-        for (const segment of segments) {
-            if (!avoidDuplicatedSlash || !path.endsWith('/'))
-                path += '/';
-            avoidDuplicatedSlash = false;
-            for (const token of segment) {
-                if (token.type === 0 /* Static */) {
-                    path += token.value;
-                }
-                else if (token.type === 1 /* Param */) {
-                    const { value, repeatable, optional } = token;
-                    const param = value in params ? params[value] : '';
-                    if (Array.isArray(param) && !repeatable)
-                        throw new Error(`Provided param "${value}" is an array but it is not repeatable (* or + modifiers)`);
-                    const text = Array.isArray(param) ? param.join('/') : param;
-                    if (!text) {
-                        if (optional) {
-                            // if we have more than one optional param like /:a?-static we
-                            // don't need to care about the optional param
-                            if (segment.length < 2) {
-                                // remove the last slash as we could be at the end
-                                if (path.endsWith('/'))
-                                    path = path.slice(0, -1);
-                                // do not append a slash on the next iteration
-                                else
-                                    avoidDuplicatedSlash = true;
-                            }
-                        }
-                        else
-                            throw new Error(`Missing required param "${value}"`);
-                    }
-                    path += text;
-                }
-            }
-        }
-        return path;
-    }
-    return {
-        re,
-        score,
-        keys,
-        parse,
-        stringify,
-    };
-}
-/**
- * Compares an array of numbers as used in PathParser.score and returns a
- * number. This function can be used to `sort` an array
- *
- * @param a - first array of numbers
- * @param b - second array of numbers
- * @returns 0 if both are equal, < 0 if a should be sorted first, > 0 if b
- * should be sorted first
- */
-function compareScoreArray(a, b) {
-    let i = 0;
-    while (i < a.length && i < b.length) {
-        const diff = b[i] - a[i];
-        // only keep going if diff === 0
-        if (diff)
-            return diff;
-        i++;
-    }
-    // if the last subsegment was Static, the shorter segments should be sorted first
-    // otherwise sort the longest segment first
-    if (a.length < b.length) {
-        return a.length === 1 && a[0] === 40 /* Static */ + 40 /* Segment */
-            ? -1
-            : 1;
-    }
-    else if (a.length > b.length) {
-        return b.length === 1 && b[0] === 40 /* Static */ + 40 /* Segment */
-            ? 1
-            : -1;
-    }
-    return 0;
-}
-/**
- * Compare function that can be used with `sort` to sort an array of PathParser
- *
- * @param a - first PathParser
- * @param b - second PathParser
- * @returns 0 if both are equal, < 0 if a should be sorted first, > 0 if b
- */
-function comparePathParserScore(a, b) {
-    let i = 0;
-    const aScore = a.score;
-    const bScore = b.score;
-    while (i < aScore.length && i < bScore.length) {
-        const comp = compareScoreArray(aScore[i], bScore[i]);
-        // do not return if both are equal
-        if (comp)
-            return comp;
-        i++;
-    }
-    // if a and b share the same score entries but b has more, sort b first
-    return bScore.length - aScore.length;
-    // this is the ternary version
-    // return aScore.length < bScore.length
-    //   ? 1
-    //   : aScore.length > bScore.length
-    //   ? -1
-    //   : 0
-}
+	// default pattern for a param: non greedy everything but /
+	const BASE_PARAM_PATTERN = '[^/]+?';
+	const BASE_PATH_PARSER_OPTIONS = {
+	    sensitive: false,
+	    strict: false,
+	    start: true,
+	    end: true,
+	};
+	// Special Regex characters that must be escaped in static tokens
+	const REGEX_CHARS_RE = /[.+*?^${}()[\]/\\]/g;
+	/**
+	 * Creates a path parser from an array of Segments (a segment is an array of Tokens)
+	 *
+	 * @param segments - array of segments returned by tokenizePath
+	 * @param extraOptions - optional options for the regexp
+	 * @returns a PathParser
+	 */
+	function tokensToParser(segments, extraOptions) {
+	    const options = assign({}, BASE_PATH_PARSER_OPTIONS, extraOptions);
+	    // the amount of scores is the same as the length of segments except for the root segment "/"
+	    const score = [];
+	    // the regexp as a string
+	    let pattern = options.start ? '^' : '';
+	    // extracted keys
+	    const keys = [];
+	    for (const segment of segments) {
+	        // the root segment needs special treatment
+	        const segmentScores = segment.length ? [] : [90 /* Root */];
+	        // allow trailing slash
+	        if (options.strict && !segment.length)
+	            pattern += '/';
+	        for (let tokenIndex = 0; tokenIndex < segment.length; tokenIndex++) {
+	            const token = segment[tokenIndex];
+	            // resets the score if we are inside a sub segment /:a-other-:b
+	            let subSegmentScore = 40 /* Segment */ +
+	                (options.sensitive ? 0.25 /* BonusCaseSensitive */ : 0);
+	            if (token.type === 0 /* Static */) {
+	                // prepend the slash if we are starting a new segment
+	                if (!tokenIndex)
+	                    pattern += '/';
+	                pattern += token.value.replace(REGEX_CHARS_RE, '\\$&');
+	                subSegmentScore += 40 /* Static */;
+	            }
+	            else if (token.type === 1 /* Param */) {
+	                const { value, repeatable, optional, regexp } = token;
+	                keys.push({
+	                    name: value,
+	                    repeatable,
+	                    optional,
+	                });
+	                const re = regexp ? regexp : BASE_PARAM_PATTERN;
+	                // the user provided a custom regexp /:id(\\d+)
+	                if (re !== BASE_PARAM_PATTERN) {
+	                    subSegmentScore += 10 /* BonusCustomRegExp */;
+	                    // make sure the regexp is valid before using it
+	                    try {
+	                        new RegExp(`(${re})`);
+	                    }
+	                    catch (err) {
+	                        throw new Error(`Invalid custom RegExp for param "${value}" (${re}): ` +
+	                            err.message);
+	                    }
+	                }
+	                // when we repeat we must take care of the repeating leading slash
+	                let subPattern = repeatable ? `((?:${re})(?:/(?:${re}))*)` : `(${re})`;
+	                // prepend the slash if we are starting a new segment
+	                if (!tokenIndex)
+	                    subPattern =
+	                        // avoid an optional / if there are more segments e.g. /:p?-static
+	                        // or /:p?-:p2
+	                        optional && segment.length < 2
+	                            ? `(?:/${subPattern})`
+	                            : '/' + subPattern;
+	                if (optional)
+	                    subPattern += '?';
+	                pattern += subPattern;
+	                subSegmentScore += 20 /* Dynamic */;
+	                if (optional)
+	                    subSegmentScore += -8 /* BonusOptional */;
+	                if (repeatable)
+	                    subSegmentScore += -20 /* BonusRepeatable */;
+	                if (re === '.*')
+	                    subSegmentScore += -50 /* BonusWildcard */;
+	            }
+	            segmentScores.push(subSegmentScore);
+	        }
+	        // an empty array like /home/ -> [[{home}], []]
+	        // if (!segment.length) pattern += '/'
+	        score.push(segmentScores);
+	    }
+	    // only apply the strict bonus to the last score
+	    if (options.strict && options.end) {
+	        const i = score.length - 1;
+	        score[i][score[i].length - 1] += 0.7000000000000001 /* BonusStrict */;
+	    }
+	    // TODO: dev only warn double trailing slash
+	    if (!options.strict)
+	        pattern += '/?';
+	    if (options.end)
+	        pattern += '$';
+	    // allow paths like /dynamic to only match dynamic or dynamic/... but not dynamic_something_else
+	    else if (options.strict)
+	        pattern += '(?:/|$)';
+	    const re = new RegExp(pattern, options.sensitive ? '' : 'i');
+	    function parse(path) {
+	        const match = path.match(re);
+	        const params = {};
+	        if (!match)
+	            return null;
+	        for (let i = 1; i < match.length; i++) {
+	            const value = match[i] || '';
+	            const key = keys[i - 1];
+	            params[key.name] = value && key.repeatable ? value.split('/') : value;
+	        }
+	        return params;
+	    }
+	    function stringify(params) {
+	        let path = '';
+	        // for optional parameters to allow to be empty
+	        let avoidDuplicatedSlash = false;
+	        for (const segment of segments) {
+	            if (!avoidDuplicatedSlash || !path.endsWith('/'))
+	                path += '/';
+	            avoidDuplicatedSlash = false;
+	            for (const token of segment) {
+	                if (token.type === 0 /* Static */) {
+	                    path += token.value;
+	                }
+	                else if (token.type === 1 /* Param */) {
+	                    const { value, repeatable, optional } = token;
+	                    const param = value in params ? params[value] : '';
+	                    if (Array.isArray(param) && !repeatable)
+	                        throw new Error(`Provided param "${value}" is an array but it is not repeatable (* or + modifiers)`);
+	                    const text = Array.isArray(param) ? param.join('/') : param;
+	                    if (!text) {
+	                        if (optional) {
+	                            // if we have more than one optional param like /:a?-static we
+	                            // don't need to care about the optional param
+	                            if (segment.length < 2) {
+	                                // remove the last slash as we could be at the end
+	                                if (path.endsWith('/'))
+	                                    path = path.slice(0, -1);
+	                                // do not append a slash on the next iteration
+	                                else
+	                                    avoidDuplicatedSlash = true;
+	                            }
+	                        }
+	                        else
+	                            throw new Error(`Missing required param "${value}"`);
+	                    }
+	                    path += text;
+	                }
+	            }
+	        }
+	        return path;
+	    }
+	    return {
+	        re,
+	        score,
+	        keys,
+	        parse,
+	        stringify,
+	    };
+	}
+	/**
+	 * Compares an array of numbers as used in PathParser.score and returns a
+	 * number. This function can be used to `sort` an array
+	 *
+	 * @param a - first array of numbers
+	 * @param b - second array of numbers
+	 * @returns 0 if both are equal, < 0 if a should be sorted first, > 0 if b
+	 * should be sorted first
+	 */
+	function compareScoreArray(a, b) {
+	    let i = 0;
+	    while (i < a.length && i < b.length) {
+	        const diff = b[i] - a[i];
+	        // only keep going if diff === 0
+	        if (diff)
+	            return diff;
+	        i++;
+	    }
+	    // if the last subsegment was Static, the shorter segments should be sorted first
+	    // otherwise sort the longest segment first
+	    if (a.length < b.length) {
+	        return a.length === 1 && a[0] === 40 /* Static */ + 40 /* Segment */
+	            ? -1
+	            : 1;
+	    }
+	    else if (a.length > b.length) {
+	        return b.length === 1 && b[0] === 40 /* Static */ + 40 /* Segment */
+	            ? 1
+	            : -1;
+	    }
+	    return 0;
+	}
+	/**
+	 * Compare function that can be used with `sort` to sort an array of PathParser
+	 *
+	 * @param a - first PathParser
+	 * @param b - second PathParser
+	 * @returns 0 if both are equal, < 0 if a should be sorted first, > 0 if b
+	 */
+	function comparePathParserScore(a, b) {
+	    let i = 0;
+	    const aScore = a.score;
+	    const bScore = b.score;
+	    while (i < aScore.length && i < bScore.length) {
+	        const comp = compareScoreArray(aScore[i], bScore[i]);
+	        // do not return if both are equal
+	        if (comp)
+	            return comp;
+	        i++;
+	    }
+	    // if a and b share the same score entries but b has more, sort b first
+	    return bScore.length - aScore.length;
+	    // this is the ternary version
+	    // return aScore.length < bScore.length
+	    //   ? 1
+	    //   : aScore.length > bScore.length
+	    //   ? -1
+	    //   : 0
+	}
 
-const ROOT_TOKEN = {
-    type: 0 /* Static */,
-    value: '',
-};
-const VALID_PARAM_RE = /[a-zA-Z0-9_]/;
-// After some profiling, the cache seems to be unnecessary because tokenizePath
-// (the slowest part of adding a route) is very fast
-// const tokenCache = new Map<string, Token[][]>()
-function tokenizePath(path) {
-    if (!path)
-        return [[]];
-    if (path === '/')
-        return [[ROOT_TOKEN]];
-    if (!path.startsWith('/')) {
-        throw new Error(`Route paths should start with a "/": "${path}" should be "/${path}".`
-            );
-    }
-    // if (tokenCache.has(path)) return tokenCache.get(path)!
-    function crash(message) {
-        throw new Error(`ERR (${state})/"${buffer}": ${message}`);
-    }
-    let state = 0 /* Static */;
-    let previousState = state;
-    const tokens = [];
-    // the segment will always be valid because we get into the initial state
-    // with the leading /
-    let segment;
-    function finalizeSegment() {
-        if (segment)
-            tokens.push(segment);
-        segment = [];
-    }
-    // index on the path
-    let i = 0;
-    // char at index
-    let char;
-    // buffer of the value read
-    let buffer = '';
-    // custom regexp for a param
-    let customRe = '';
-    function consumeBuffer() {
-        if (!buffer)
-            return;
-        if (state === 0 /* Static */) {
-            segment.push({
-                type: 0 /* Static */,
-                value: buffer,
-            });
-        }
-        else if (state === 1 /* Param */ ||
-            state === 2 /* ParamRegExp */ ||
-            state === 3 /* ParamRegExpEnd */) {
-            if (segment.length > 1 && (char === '*' || char === '+'))
-                crash(`A repeatable param (${buffer}) must be alone in its segment. eg: '/:ids+.`);
-            segment.push({
-                type: 1 /* Param */,
-                value: buffer,
-                regexp: customRe,
-                repeatable: char === '*' || char === '+',
-                optional: char === '*' || char === '?',
-            });
-        }
-        else {
-            crash('Invalid state to consume buffer');
-        }
-        buffer = '';
-    }
-    function addCharToBuffer() {
-        buffer += char;
-    }
-    while (i < path.length) {
-        char = path[i++];
-        if (char === '\\' && state !== 2 /* ParamRegExp */) {
-            previousState = state;
-            state = 4 /* EscapeNext */;
-            continue;
-        }
-        switch (state) {
-            case 0 /* Static */:
-                if (char === '/') {
-                    if (buffer) {
-                        consumeBuffer();
-                    }
-                    finalizeSegment();
-                }
-                else if (char === ':') {
-                    consumeBuffer();
-                    state = 1 /* Param */;
-                }
-                else {
-                    addCharToBuffer();
-                }
-                break;
-            case 4 /* EscapeNext */:
-                addCharToBuffer();
-                state = previousState;
-                break;
-            case 1 /* Param */:
-                if (char === '(') {
-                    state = 2 /* ParamRegExp */;
-                }
-                else if (VALID_PARAM_RE.test(char)) {
-                    addCharToBuffer();
-                }
-                else {
-                    consumeBuffer();
-                    state = 0 /* Static */;
-                    // go back one character if we were not modifying
-                    if (char !== '*' && char !== '?' && char !== '+')
-                        i--;
-                }
-                break;
-            case 2 /* ParamRegExp */:
-                // TODO: is it worth handling nested regexp? like :p(?:prefix_([^/]+)_suffix)
-                // it already works by escaping the closing )
-                // https://paths.esm.dev/?p=AAMeJbiAwQEcDKbAoAAkP60PG2R6QAvgNaA6AFACM2ABuQBB#
-                // is this really something people need since you can also write
-                // /prefix_:p()_suffix
-                if (char === ')') {
-                    // handle the escaped )
-                    if (customRe[customRe.length - 1] == '\\')
-                        customRe = customRe.slice(0, -1) + char;
-                    else
-                        state = 3 /* ParamRegExpEnd */;
-                }
-                else {
-                    customRe += char;
-                }
-                break;
-            case 3 /* ParamRegExpEnd */:
-                // same as finalizing a param
-                consumeBuffer();
-                state = 0 /* Static */;
-                // go back one character if we were not modifying
-                if (char !== '*' && char !== '?' && char !== '+')
-                    i--;
-                customRe = '';
-                break;
-            default:
-                crash('Unknown state');
-                break;
-        }
-    }
-    if (state === 2 /* ParamRegExp */)
-        crash(`Unfinished custom RegExp for param "${buffer}"`);
-    consumeBuffer();
-    finalizeSegment();
-    // tokenCache.set(path, tokens)
-    return tokens;
-}
+	const ROOT_TOKEN = {
+	    type: 0 /* Static */,
+	    value: '',
+	};
+	const VALID_PARAM_RE = /[a-zA-Z0-9_]/;
+	// After some profiling, the cache seems to be unnecessary because tokenizePath
+	// (the slowest part of adding a route) is very fast
+	// const tokenCache = new Map<string, Token[][]>()
+	function tokenizePath(path) {
+	    if (!path)
+	        return [[]];
+	    if (path === '/')
+	        return [[ROOT_TOKEN]];
+	    if (!path.startsWith('/')) {
+	        throw new Error(`Route paths should start with a "/": "${path}" should be "/${path}".`
+	            );
+	    }
+	    // if (tokenCache.has(path)) return tokenCache.get(path)!
+	    function crash(message) {
+	        throw new Error(`ERR (${state})/"${buffer}": ${message}`);
+	    }
+	    let state = 0 /* Static */;
+	    let previousState = state;
+	    const tokens = [];
+	    // the segment will always be valid because we get into the initial state
+	    // with the leading /
+	    let segment;
+	    function finalizeSegment() {
+	        if (segment)
+	            tokens.push(segment);
+	        segment = [];
+	    }
+	    // index on the path
+	    let i = 0;
+	    // char at index
+	    let char;
+	    // buffer of the value read
+	    let buffer = '';
+	    // custom regexp for a param
+	    let customRe = '';
+	    function consumeBuffer() {
+	        if (!buffer)
+	            return;
+	        if (state === 0 /* Static */) {
+	            segment.push({
+	                type: 0 /* Static */,
+	                value: buffer,
+	            });
+	        }
+	        else if (state === 1 /* Param */ ||
+	            state === 2 /* ParamRegExp */ ||
+	            state === 3 /* ParamRegExpEnd */) {
+	            if (segment.length > 1 && (char === '*' || char === '+'))
+	                crash(`A repeatable param (${buffer}) must be alone in its segment. eg: '/:ids+.`);
+	            segment.push({
+	                type: 1 /* Param */,
+	                value: buffer,
+	                regexp: customRe,
+	                repeatable: char === '*' || char === '+',
+	                optional: char === '*' || char === '?',
+	            });
+	        }
+	        else {
+	            crash('Invalid state to consume buffer');
+	        }
+	        buffer = '';
+	    }
+	    function addCharToBuffer() {
+	        buffer += char;
+	    }
+	    while (i < path.length) {
+	        char = path[i++];
+	        if (char === '\\' && state !== 2 /* ParamRegExp */) {
+	            previousState = state;
+	            state = 4 /* EscapeNext */;
+	            continue;
+	        }
+	        switch (state) {
+	            case 0 /* Static */:
+	                if (char === '/') {
+	                    if (buffer) {
+	                        consumeBuffer();
+	                    }
+	                    finalizeSegment();
+	                }
+	                else if (char === ':') {
+	                    consumeBuffer();
+	                    state = 1 /* Param */;
+	                }
+	                else {
+	                    addCharToBuffer();
+	                }
+	                break;
+	            case 4 /* EscapeNext */:
+	                addCharToBuffer();
+	                state = previousState;
+	                break;
+	            case 1 /* Param */:
+	                if (char === '(') {
+	                    state = 2 /* ParamRegExp */;
+	                }
+	                else if (VALID_PARAM_RE.test(char)) {
+	                    addCharToBuffer();
+	                }
+	                else {
+	                    consumeBuffer();
+	                    state = 0 /* Static */;
+	                    // go back one character if we were not modifying
+	                    if (char !== '*' && char !== '?' && char !== '+')
+	                        i--;
+	                }
+	                break;
+	            case 2 /* ParamRegExp */:
+	                // TODO: is it worth handling nested regexp? like :p(?:prefix_([^/]+)_suffix)
+	                // it already works by escaping the closing )
+	                // https://paths.esm.dev/?p=AAMeJbiAwQEcDKbAoAAkP60PG2R6QAvgNaA6AFACM2ABuQBB#
+	                // is this really something people need since you can also write
+	                // /prefix_:p()_suffix
+	                if (char === ')') {
+	                    // handle the escaped )
+	                    if (customRe[customRe.length - 1] == '\\')
+	                        customRe = customRe.slice(0, -1) + char;
+	                    else
+	                        state = 3 /* ParamRegExpEnd */;
+	                }
+	                else {
+	                    customRe += char;
+	                }
+	                break;
+	            case 3 /* ParamRegExpEnd */:
+	                // same as finalizing a param
+	                consumeBuffer();
+	                state = 0 /* Static */;
+	                // go back one character if we were not modifying
+	                if (char !== '*' && char !== '?' && char !== '+')
+	                    i--;
+	                customRe = '';
+	                break;
+	            default:
+	                crash('Unknown state');
+	                break;
+	        }
+	    }
+	    if (state === 2 /* ParamRegExp */)
+	        crash(`Unfinished custom RegExp for param "${buffer}"`);
+	    consumeBuffer();
+	    finalizeSegment();
+	    // tokenCache.set(path, tokens)
+	    return tokens;
+	}
 
-function createRouteRecordMatcher(record, parent, options) {
-    const parser = tokensToParser(tokenizePath(record.path), options);
-    // warn against params with the same name
-    {
-        const existingKeys = new Set();
-        for (const key of parser.keys) {
-            if (existingKeys.has(key.name))
-                warn(`Found duplicated params with name "${key.name}" for path "${record.path}". Only the last one will be available on "$route.params".`);
-            existingKeys.add(key.name);
-        }
-    }
-    const matcher = assign(parser, {
-        record,
-        parent,
-        // these needs to be populated by the parent
-        children: [],
-        alias: [],
-    });
-    if (parent) {
-        // both are aliases or both are not aliases
-        // we don't want to mix them because the order is used when
-        // passing originalRecord in Matcher.addRoute
-        if (!matcher.record.aliasOf === !parent.record.aliasOf)
-            parent.children.push(matcher);
-    }
-    return matcher;
-}
+	function createRouteRecordMatcher(record, parent, options) {
+	    const parser = tokensToParser(tokenizePath(record.path), options);
+	    // warn against params with the same name
+	    {
+	        const existingKeys = new Set();
+	        for (const key of parser.keys) {
+	            if (existingKeys.has(key.name))
+	                warn(`Found duplicated params with name "${key.name}" for path "${record.path}". Only the last one will be available on "$route.params".`);
+	            existingKeys.add(key.name);
+	        }
+	    }
+	    const matcher = assign(parser, {
+	        record,
+	        parent,
+	        // these needs to be populated by the parent
+	        children: [],
+	        alias: [],
+	    });
+	    if (parent) {
+	        // both are aliases or both are not aliases
+	        // we don't want to mix them because the order is used when
+	        // passing originalRecord in Matcher.addRoute
+	        if (!matcher.record.aliasOf === !parent.record.aliasOf)
+	            parent.children.push(matcher);
+	    }
+	    return matcher;
+	}
 
-/**
- * Creates a Router Matcher.
- *
- * @internal
- * @param routes - array of initial routes
- * @param globalOptions - global route options
- */
-function createRouterMatcher(routes, globalOptions) {
-    // normalized ordered array of matchers
-    const matchers = [];
-    const matcherMap = new Map();
-    globalOptions = mergeOptions({ strict: false, end: true, sensitive: false }, globalOptions);
-    function getRecordMatcher(name) {
-        return matcherMap.get(name);
-    }
-    function addRoute(record, parent, originalRecord) {
-        // used later on to remove by name
-        const isRootAdd = !originalRecord;
-        const mainNormalizedRecord = normalizeRouteRecord(record);
-        // we might be the child of an alias
-        mainNormalizedRecord.aliasOf = originalRecord && originalRecord.record;
-        const options = mergeOptions(globalOptions, record);
-        // generate an array of records to correctly handle aliases
-        const normalizedRecords = [
-            mainNormalizedRecord,
-        ];
-        if ('alias' in record) {
-            const aliases = typeof record.alias === 'string' ? [record.alias] : record.alias;
-            for (const alias of aliases) {
-                normalizedRecords.push(assign({}, mainNormalizedRecord, {
-                    // this allows us to hold a copy of the `components` option
-                    // so that async components cache is hold on the original record
-                    components: originalRecord
-                        ? originalRecord.record.components
-                        : mainNormalizedRecord.components,
-                    path: alias,
-                    // we might be the child of an alias
-                    aliasOf: originalRecord
-                        ? originalRecord.record
-                        : mainNormalizedRecord,
-                    // the aliases are always of the same kind as the original since they
-                    // are defined on the same record
-                }));
-            }
-        }
-        let matcher;
-        let originalMatcher;
-        for (const normalizedRecord of normalizedRecords) {
-            const { path } = normalizedRecord;
-            // Build up the path for nested routes if the child isn't an absolute
-            // route. Only add the / delimiter if the child path isn't empty and if the
-            // parent path doesn't have a trailing slash
-            if (parent && path[0] !== '/') {
-                const parentPath = parent.record.path;
-                const connectingSlash = parentPath[parentPath.length - 1] === '/' ? '' : '/';
-                normalizedRecord.path =
-                    parent.record.path + (path && connectingSlash + path);
-            }
-            if (normalizedRecord.path === '*') {
-                throw new Error('Catch all routes ("*") must now be defined using a param with a custom regexp.\n' +
-                    'See more at https://next.router.vuejs.org/guide/migration/#removed-star-or-catch-all-routes.');
-            }
-            // create the object before hand so it can be passed to children
-            matcher = createRouteRecordMatcher(normalizedRecord, parent, options);
-            if (parent && path[0] === '/')
-                checkMissingParamsInAbsolutePath(matcher, parent);
-            // if we are an alias we must tell the original record that we exist
-            // so we can be removed
-            if (originalRecord) {
-                originalRecord.alias.push(matcher);
-                {
-                    checkSameParams(originalRecord, matcher);
-                }
-            }
-            else {
-                // otherwise, the first record is the original and others are aliases
-                originalMatcher = originalMatcher || matcher;
-                if (originalMatcher !== matcher)
-                    originalMatcher.alias.push(matcher);
-                // remove the route if named and only for the top record (avoid in nested calls)
-                // this works because the original record is the first one
-                if (isRootAdd && record.name && !isAliasRecord(matcher))
-                    removeRoute(record.name);
-            }
-            if ('children' in mainNormalizedRecord) {
-                const children = mainNormalizedRecord.children;
-                for (let i = 0; i < children.length; i++) {
-                    addRoute(children[i], matcher, originalRecord && originalRecord.children[i]);
-                }
-            }
-            // if there was no original record, then the first one was not an alias and all
-            // other alias (if any) need to reference this record when adding children
-            originalRecord = originalRecord || matcher;
-            // TODO: add normalized records for more flexibility
-            // if (parent && isAliasRecord(originalRecord)) {
-            //   parent.children.push(originalRecord)
-            // }
-            insertMatcher(matcher);
-        }
-        return originalMatcher
-            ? () => {
-                // since other matchers are aliases, they should be removed by the original matcher
-                removeRoute(originalMatcher);
-            }
-            : noop;
-    }
-    function removeRoute(matcherRef) {
-        if (isRouteName(matcherRef)) {
-            const matcher = matcherMap.get(matcherRef);
-            if (matcher) {
-                matcherMap.delete(matcherRef);
-                matchers.splice(matchers.indexOf(matcher), 1);
-                matcher.children.forEach(removeRoute);
-                matcher.alias.forEach(removeRoute);
-            }
-        }
-        else {
-            const index = matchers.indexOf(matcherRef);
-            if (index > -1) {
-                matchers.splice(index, 1);
-                if (matcherRef.record.name)
-                    matcherMap.delete(matcherRef.record.name);
-                matcherRef.children.forEach(removeRoute);
-                matcherRef.alias.forEach(removeRoute);
-            }
-        }
-    }
-    function getRoutes() {
-        return matchers;
-    }
-    function insertMatcher(matcher) {
-        let i = 0;
-        while (i < matchers.length &&
-            comparePathParserScore(matcher, matchers[i]) >= 0 &&
-            // Adding children with empty path should still appear before the parent
-            // https://github.com/vuejs/router/issues/1124
-            (matcher.record.path !== matchers[i].record.path ||
-                !isRecordChildOf(matcher, matchers[i])))
-            i++;
-        matchers.splice(i, 0, matcher);
-        // only add the original record to the name map
-        if (matcher.record.name && !isAliasRecord(matcher))
-            matcherMap.set(matcher.record.name, matcher);
-    }
-    function resolve(location, currentLocation) {
-        let matcher;
-        let params = {};
-        let path;
-        let name;
-        if ('name' in location && location.name) {
-            matcher = matcherMap.get(location.name);
-            if (!matcher)
-                throw createRouterError(1 /* MATCHER_NOT_FOUND */, {
-                    location,
-                });
-            name = matcher.record.name;
-            params = assign(
-            // paramsFromLocation is a new object
-            paramsFromLocation(currentLocation.params, 
-            // only keep params that exist in the resolved location
-            // TODO: only keep optional params coming from a parent record
-            matcher.keys.filter(k => !k.optional).map(k => k.name)), location.params);
-            // throws if cannot be stringified
-            path = matcher.stringify(params);
-        }
-        else if ('path' in location) {
-            // no need to resolve the path with the matcher as it was provided
-            // this also allows the user to control the encoding
-            path = location.path;
-            if (!path.startsWith('/')) {
-                warn(`The Matcher cannot resolve relative paths but received "${path}". Unless you directly called \`matcher.resolve("${path}")\`, this is probably a bug in vue-router. Please open an issue at https://new-issue.vuejs.org/?repo=vuejs/router.`);
-            }
-            matcher = matchers.find(m => m.re.test(path));
-            // matcher should have a value after the loop
-            if (matcher) {
-                // TODO: dev warning of unused params if provided
-                // we know the matcher works because we tested the regexp
-                params = matcher.parse(path);
-                name = matcher.record.name;
-            }
-            // location is a relative path
-        }
-        else {
-            // match by name or path of current route
-            matcher = currentLocation.name
-                ? matcherMap.get(currentLocation.name)
-                : matchers.find(m => m.re.test(currentLocation.path));
-            if (!matcher)
-                throw createRouterError(1 /* MATCHER_NOT_FOUND */, {
-                    location,
-                    currentLocation,
-                });
-            name = matcher.record.name;
-            // since we are navigating to the same location, we don't need to pick the
-            // params like when `name` is provided
-            params = assign({}, currentLocation.params, location.params);
-            path = matcher.stringify(params);
-        }
-        const matched = [];
-        let parentMatcher = matcher;
-        while (parentMatcher) {
-            // reversed order so parents are at the beginning
-            matched.unshift(parentMatcher.record);
-            parentMatcher = parentMatcher.parent;
-        }
-        return {
-            name,
-            path,
-            params,
-            matched,
-            meta: mergeMetaFields(matched),
-        };
-    }
-    // add initial routes
-    routes.forEach(route => addRoute(route));
-    return { addRoute, resolve, removeRoute, getRoutes, getRecordMatcher };
-}
-function paramsFromLocation(params, keys) {
-    const newParams = {};
-    for (const key of keys) {
-        if (key in params)
-            newParams[key] = params[key];
-    }
-    return newParams;
-}
-/**
- * Normalizes a RouteRecordRaw. Creates a copy
- *
- * @param record
- * @returns the normalized version
- */
-function normalizeRouteRecord(record) {
-    return {
-        path: record.path,
-        redirect: record.redirect,
-        name: record.name,
-        meta: record.meta || {},
-        aliasOf: undefined,
-        beforeEnter: record.beforeEnter,
-        props: normalizeRecordProps(record),
-        children: record.children || [],
-        instances: {},
-        leaveGuards: new Set(),
-        updateGuards: new Set(),
-        enterCallbacks: {},
-        components: 'components' in record
-            ? record.components || {}
-            : { default: record.component },
-    };
-}
-/**
- * Normalize the optional `props` in a record to always be an object similar to
- * components. Also accept a boolean for components.
- * @param record
- */
-function normalizeRecordProps(record) {
-    const propsObject = {};
-    // props does not exist on redirect records but we can set false directly
-    const props = record.props || false;
-    if ('component' in record) {
-        propsObject.default = props;
-    }
-    else {
-        // NOTE: we could also allow a function to be applied to every component.
-        // Would need user feedback for use cases
-        for (const name in record.components)
-            propsObject[name] = typeof props === 'boolean' ? props : props[name];
-    }
-    return propsObject;
-}
-/**
- * Checks if a record or any of its parent is an alias
- * @param record
- */
-function isAliasRecord(record) {
-    while (record) {
-        if (record.record.aliasOf)
-            return true;
-        record = record.parent;
-    }
-    return false;
-}
-/**
- * Merge meta fields of an array of records
- *
- * @param matched - array of matched records
- */
-function mergeMetaFields(matched) {
-    return matched.reduce((meta, record) => assign(meta, record.meta), {});
-}
-function mergeOptions(defaults, partialOptions) {
-    const options = {};
-    for (const key in defaults) {
-        options[key] = key in partialOptions ? partialOptions[key] : defaults[key];
-    }
-    return options;
-}
-function isSameParam(a, b) {
-    return (a.name === b.name &&
-        a.optional === b.optional &&
-        a.repeatable === b.repeatable);
-}
-/**
- * Check if a path and its alias have the same required params
- *
- * @param a - original record
- * @param b - alias record
- */
-function checkSameParams(a, b) {
-    for (const key of a.keys) {
-        if (!key.optional && !b.keys.find(isSameParam.bind(null, key)))
-            return warn(`Alias "${b.record.path}" and the original record: "${a.record.path}" should have the exact same param named "${key.name}"`);
-    }
-    for (const key of b.keys) {
-        if (!key.optional && !a.keys.find(isSameParam.bind(null, key)))
-            return warn(`Alias "${b.record.path}" and the original record: "${a.record.path}" should have the exact same param named "${key.name}"`);
-    }
-}
-function checkMissingParamsInAbsolutePath(record, parent) {
-    for (const key of parent.keys) {
-        if (!record.keys.find(isSameParam.bind(null, key)))
-            return warn(`Absolute path "${record.record.path}" should have the exact same param named "${key.name}" as its parent "${parent.record.path}".`);
-    }
-}
-function isRecordChildOf(record, parent) {
-    return parent.children.some(child => child === record || isRecordChildOf(record, child));
-}
+	/**
+	 * Creates a Router Matcher.
+	 *
+	 * @internal
+	 * @param routes - array of initial routes
+	 * @param globalOptions - global route options
+	 */
+	function createRouterMatcher(routes, globalOptions) {
+	    // normalized ordered array of matchers
+	    const matchers = [];
+	    const matcherMap = new Map();
+	    globalOptions = mergeOptions({ strict: false, end: true, sensitive: false }, globalOptions);
+	    function getRecordMatcher(name) {
+	        return matcherMap.get(name);
+	    }
+	    function addRoute(record, parent, originalRecord) {
+	        // used later on to remove by name
+	        const isRootAdd = !originalRecord;
+	        const mainNormalizedRecord = normalizeRouteRecord(record);
+	        // we might be the child of an alias
+	        mainNormalizedRecord.aliasOf = originalRecord && originalRecord.record;
+	        const options = mergeOptions(globalOptions, record);
+	        // generate an array of records to correctly handle aliases
+	        const normalizedRecords = [
+	            mainNormalizedRecord,
+	        ];
+	        if ('alias' in record) {
+	            const aliases = typeof record.alias === 'string' ? [record.alias] : record.alias;
+	            for (const alias of aliases) {
+	                normalizedRecords.push(assign({}, mainNormalizedRecord, {
+	                    // this allows us to hold a copy of the `components` option
+	                    // so that async components cache is hold on the original record
+	                    components: originalRecord
+	                        ? originalRecord.record.components
+	                        : mainNormalizedRecord.components,
+	                    path: alias,
+	                    // we might be the child of an alias
+	                    aliasOf: originalRecord
+	                        ? originalRecord.record
+	                        : mainNormalizedRecord,
+	                    // the aliases are always of the same kind as the original since they
+	                    // are defined on the same record
+	                }));
+	            }
+	        }
+	        let matcher;
+	        let originalMatcher;
+	        for (const normalizedRecord of normalizedRecords) {
+	            const { path } = normalizedRecord;
+	            // Build up the path for nested routes if the child isn't an absolute
+	            // route. Only add the / delimiter if the child path isn't empty and if the
+	            // parent path doesn't have a trailing slash
+	            if (parent && path[0] !== '/') {
+	                const parentPath = parent.record.path;
+	                const connectingSlash = parentPath[parentPath.length - 1] === '/' ? '' : '/';
+	                normalizedRecord.path =
+	                    parent.record.path + (path && connectingSlash + path);
+	            }
+	            if (normalizedRecord.path === '*') {
+	                throw new Error('Catch all routes ("*") must now be defined using a param with a custom regexp.\n' +
+	                    'See more at https://next.router.vuejs.org/guide/migration/#removed-star-or-catch-all-routes.');
+	            }
+	            // create the object before hand so it can be passed to children
+	            matcher = createRouteRecordMatcher(normalizedRecord, parent, options);
+	            if (parent && path[0] === '/')
+	                checkMissingParamsInAbsolutePath(matcher, parent);
+	            // if we are an alias we must tell the original record that we exist
+	            // so we can be removed
+	            if (originalRecord) {
+	                originalRecord.alias.push(matcher);
+	                {
+	                    checkSameParams(originalRecord, matcher);
+	                }
+	            }
+	            else {
+	                // otherwise, the first record is the original and others are aliases
+	                originalMatcher = originalMatcher || matcher;
+	                if (originalMatcher !== matcher)
+	                    originalMatcher.alias.push(matcher);
+	                // remove the route if named and only for the top record (avoid in nested calls)
+	                // this works because the original record is the first one
+	                if (isRootAdd && record.name && !isAliasRecord(matcher))
+	                    removeRoute(record.name);
+	            }
+	            if ('children' in mainNormalizedRecord) {
+	                const children = mainNormalizedRecord.children;
+	                for (let i = 0; i < children.length; i++) {
+	                    addRoute(children[i], matcher, originalRecord && originalRecord.children[i]);
+	                }
+	            }
+	            // if there was no original record, then the first one was not an alias and all
+	            // other alias (if any) need to reference this record when adding children
+	            originalRecord = originalRecord || matcher;
+	            // TODO: add normalized records for more flexibility
+	            // if (parent && isAliasRecord(originalRecord)) {
+	            //   parent.children.push(originalRecord)
+	            // }
+	            insertMatcher(matcher);
+	        }
+	        return originalMatcher
+	            ? () => {
+	                // since other matchers are aliases, they should be removed by the original matcher
+	                removeRoute(originalMatcher);
+	            }
+	            : noop;
+	    }
+	    function removeRoute(matcherRef) {
+	        if (isRouteName(matcherRef)) {
+	            const matcher = matcherMap.get(matcherRef);
+	            if (matcher) {
+	                matcherMap.delete(matcherRef);
+	                matchers.splice(matchers.indexOf(matcher), 1);
+	                matcher.children.forEach(removeRoute);
+	                matcher.alias.forEach(removeRoute);
+	            }
+	        }
+	        else {
+	            const index = matchers.indexOf(matcherRef);
+	            if (index > -1) {
+	                matchers.splice(index, 1);
+	                if (matcherRef.record.name)
+	                    matcherMap.delete(matcherRef.record.name);
+	                matcherRef.children.forEach(removeRoute);
+	                matcherRef.alias.forEach(removeRoute);
+	            }
+	        }
+	    }
+	    function getRoutes() {
+	        return matchers;
+	    }
+	    function insertMatcher(matcher) {
+	        let i = 0;
+	        while (i < matchers.length &&
+	            comparePathParserScore(matcher, matchers[i]) >= 0 &&
+	            // Adding children with empty path should still appear before the parent
+	            // https://github.com/vuejs/router/issues/1124
+	            (matcher.record.path !== matchers[i].record.path ||
+	                !isRecordChildOf(matcher, matchers[i])))
+	            i++;
+	        matchers.splice(i, 0, matcher);
+	        // only add the original record to the name map
+	        if (matcher.record.name && !isAliasRecord(matcher))
+	            matcherMap.set(matcher.record.name, matcher);
+	    }
+	    function resolve(location, currentLocation) {
+	        let matcher;
+	        let params = {};
+	        let path;
+	        let name;
+	        if ('name' in location && location.name) {
+	            matcher = matcherMap.get(location.name);
+	            if (!matcher)
+	                throw createRouterError(1 /* MATCHER_NOT_FOUND */, {
+	                    location,
+	                });
+	            name = matcher.record.name;
+	            params = assign(
+	            // paramsFromLocation is a new object
+	            paramsFromLocation(currentLocation.params, 
+	            // only keep params that exist in the resolved location
+	            // TODO: only keep optional params coming from a parent record
+	            matcher.keys.filter(k => !k.optional).map(k => k.name)), location.params);
+	            // throws if cannot be stringified
+	            path = matcher.stringify(params);
+	        }
+	        else if ('path' in location) {
+	            // no need to resolve the path with the matcher as it was provided
+	            // this also allows the user to control the encoding
+	            path = location.path;
+	            if (!path.startsWith('/')) {
+	                warn(`The Matcher cannot resolve relative paths but received "${path}". Unless you directly called \`matcher.resolve("${path}")\`, this is probably a bug in vue-router. Please open an issue at https://new-issue.vuejs.org/?repo=vuejs/router.`);
+	            }
+	            matcher = matchers.find(m => m.re.test(path));
+	            // matcher should have a value after the loop
+	            if (matcher) {
+	                // TODO: dev warning of unused params if provided
+	                // we know the matcher works because we tested the regexp
+	                params = matcher.parse(path);
+	                name = matcher.record.name;
+	            }
+	            // location is a relative path
+	        }
+	        else {
+	            // match by name or path of current route
+	            matcher = currentLocation.name
+	                ? matcherMap.get(currentLocation.name)
+	                : matchers.find(m => m.re.test(currentLocation.path));
+	            if (!matcher)
+	                throw createRouterError(1 /* MATCHER_NOT_FOUND */, {
+	                    location,
+	                    currentLocation,
+	                });
+	            name = matcher.record.name;
+	            // since we are navigating to the same location, we don't need to pick the
+	            // params like when `name` is provided
+	            params = assign({}, currentLocation.params, location.params);
+	            path = matcher.stringify(params);
+	        }
+	        const matched = [];
+	        let parentMatcher = matcher;
+	        while (parentMatcher) {
+	            // reversed order so parents are at the beginning
+	            matched.unshift(parentMatcher.record);
+	            parentMatcher = parentMatcher.parent;
+	        }
+	        return {
+	            name,
+	            path,
+	            params,
+	            matched,
+	            meta: mergeMetaFields(matched),
+	        };
+	    }
+	    // add initial routes
+	    routes.forEach(route => addRoute(route));
+	    return { addRoute, resolve, removeRoute, getRoutes, getRecordMatcher };
+	}
+	function paramsFromLocation(params, keys) {
+	    const newParams = {};
+	    for (const key of keys) {
+	        if (key in params)
+	            newParams[key] = params[key];
+	    }
+	    return newParams;
+	}
+	/**
+	 * Normalizes a RouteRecordRaw. Creates a copy
+	 *
+	 * @param record
+	 * @returns the normalized version
+	 */
+	function normalizeRouteRecord(record) {
+	    return {
+	        path: record.path,
+	        redirect: record.redirect,
+	        name: record.name,
+	        meta: record.meta || {},
+	        aliasOf: undefined,
+	        beforeEnter: record.beforeEnter,
+	        props: normalizeRecordProps(record),
+	        children: record.children || [],
+	        instances: {},
+	        leaveGuards: new Set(),
+	        updateGuards: new Set(),
+	        enterCallbacks: {},
+	        components: 'components' in record
+	            ? record.components || {}
+	            : { default: record.component },
+	    };
+	}
+	/**
+	 * Normalize the optional `props` in a record to always be an object similar to
+	 * components. Also accept a boolean for components.
+	 * @param record
+	 */
+	function normalizeRecordProps(record) {
+	    const propsObject = {};
+	    // props does not exist on redirect records but we can set false directly
+	    const props = record.props || false;
+	    if ('component' in record) {
+	        propsObject.default = props;
+	    }
+	    else {
+	        // NOTE: we could also allow a function to be applied to every component.
+	        // Would need user feedback for use cases
+	        for (const name in record.components)
+	            propsObject[name] = typeof props === 'boolean' ? props : props[name];
+	    }
+	    return propsObject;
+	}
+	/**
+	 * Checks if a record or any of its parent is an alias
+	 * @param record
+	 */
+	function isAliasRecord(record) {
+	    while (record) {
+	        if (record.record.aliasOf)
+	            return true;
+	        record = record.parent;
+	    }
+	    return false;
+	}
+	/**
+	 * Merge meta fields of an array of records
+	 *
+	 * @param matched - array of matched records
+	 */
+	function mergeMetaFields(matched) {
+	    return matched.reduce((meta, record) => assign(meta, record.meta), {});
+	}
+	function mergeOptions(defaults, partialOptions) {
+	    const options = {};
+	    for (const key in defaults) {
+	        options[key] = key in partialOptions ? partialOptions[key] : defaults[key];
+	    }
+	    return options;
+	}
+	function isSameParam(a, b) {
+	    return (a.name === b.name &&
+	        a.optional === b.optional &&
+	        a.repeatable === b.repeatable);
+	}
+	/**
+	 * Check if a path and its alias have the same required params
+	 *
+	 * @param a - original record
+	 * @param b - alias record
+	 */
+	function checkSameParams(a, b) {
+	    for (const key of a.keys) {
+	        if (!key.optional && !b.keys.find(isSameParam.bind(null, key)))
+	            return warn(`Alias "${b.record.path}" and the original record: "${a.record.path}" should have the exact same param named "${key.name}"`);
+	    }
+	    for (const key of b.keys) {
+	        if (!key.optional && !a.keys.find(isSameParam.bind(null, key)))
+	            return warn(`Alias "${b.record.path}" and the original record: "${a.record.path}" should have the exact same param named "${key.name}"`);
+	    }
+	}
+	function checkMissingParamsInAbsolutePath(record, parent) {
+	    for (const key of parent.keys) {
+	        if (!record.keys.find(isSameParam.bind(null, key)))
+	            return warn(`Absolute path "${record.record.path}" should have the exact same param named "${key.name}" as its parent "${parent.record.path}".`);
+	    }
+	}
+	function isRecordChildOf(record, parent) {
+	    return parent.children.some(child => child === record || isRecordChildOf(record, child));
+	}
 
-/**
- * Encoding Rules ␣ = Space Path: ␣ " < > # ? { } Query: ␣ " < > # & = Hash: ␣ "
- * < > `
- *
- * On top of that, the RFC3986 (https://tools.ietf.org/html/rfc3986#section-2.2)
- * defines some extra characters to be encoded. Most browsers do not encode them
- * in encodeURI https://github.com/whatwg/url/issues/369, so it may be safer to
- * also encode `!'()*`. Leaving unencoded only ASCII alphanumeric(`a-zA-Z0-9`)
- * plus `-._~`. This extra safety should be applied to query by patching the
- * string returned by encodeURIComponent encodeURI also encodes `[\]^`. `\`
- * should be encoded to avoid ambiguity. Browsers (IE, FF, C) transform a `\`
- * into a `/` if directly typed in. The _backtick_ (`````) should also be
- * encoded everywhere because some browsers like FF encode it when directly
- * written while others don't. Safari and IE don't encode ``"<>{}``` in hash.
- */
-// const EXTRA_RESERVED_RE = /[!'()*]/g
-// const encodeReservedReplacer = (c: string) => '%' + c.charCodeAt(0).toString(16)
-const HASH_RE = /#/g; // %23
-const AMPERSAND_RE = /&/g; // %26
-const SLASH_RE = /\//g; // %2F
-const EQUAL_RE = /=/g; // %3D
-const IM_RE = /\?/g; // %3F
-const PLUS_RE = /\+/g; // %2B
-/**
- * NOTE: It's not clear to me if we should encode the + symbol in queries, it
- * seems to be less flexible than not doing so and I can't find out the legacy
- * systems requiring this for regular requests like text/html. In the standard,
- * the encoding of the plus character is only mentioned for
- * application/x-www-form-urlencoded
- * (https://url.spec.whatwg.org/#urlencoded-parsing) and most browsers seems lo
- * leave the plus character as is in queries. To be more flexible, we allow the
- * plus character on the query but it can also be manually encoded by the user.
- *
- * Resources:
- * - https://url.spec.whatwg.org/#urlencoded-parsing
- * - https://stackoverflow.com/questions/1634271/url-encoding-the-space-character-or-20
- */
-const ENC_BRACKET_OPEN_RE = /%5B/g; // [
-const ENC_BRACKET_CLOSE_RE = /%5D/g; // ]
-const ENC_CARET_RE = /%5E/g; // ^
-const ENC_BACKTICK_RE = /%60/g; // `
-const ENC_CURLY_OPEN_RE = /%7B/g; // {
-const ENC_PIPE_RE = /%7C/g; // |
-const ENC_CURLY_CLOSE_RE = /%7D/g; // }
-const ENC_SPACE_RE = /%20/g; // }
-/**
- * Encode characters that need to be encoded on the path, search and hash
- * sections of the URL.
- *
- * @internal
- * @param text - string to encode
- * @returns encoded string
- */
-function commonEncode(text) {
-    return encodeURI('' + text)
-        .replace(ENC_PIPE_RE, '|')
-        .replace(ENC_BRACKET_OPEN_RE, '[')
-        .replace(ENC_BRACKET_CLOSE_RE, ']');
-}
-/**
- * Encode characters that need to be encoded on the hash section of the URL.
- *
- * @param text - string to encode
- * @returns encoded string
- */
-function encodeHash(text) {
-    return commonEncode(text)
-        .replace(ENC_CURLY_OPEN_RE, '{')
-        .replace(ENC_CURLY_CLOSE_RE, '}')
-        .replace(ENC_CARET_RE, '^');
-}
-/**
- * Encode characters that need to be encoded query values on the query
- * section of the URL.
- *
- * @param text - string to encode
- * @returns encoded string
- */
-function encodeQueryValue(text) {
-    return (commonEncode(text)
-        // Encode the space as +, encode the + to differentiate it from the space
-        .replace(PLUS_RE, '%2B')
-        .replace(ENC_SPACE_RE, '+')
-        .replace(HASH_RE, '%23')
-        .replace(AMPERSAND_RE, '%26')
-        .replace(ENC_BACKTICK_RE, '`')
-        .replace(ENC_CURLY_OPEN_RE, '{')
-        .replace(ENC_CURLY_CLOSE_RE, '}')
-        .replace(ENC_CARET_RE, '^'));
-}
-/**
- * Like `encodeQueryValue` but also encodes the `=` character.
- *
- * @param text - string to encode
- */
-function encodeQueryKey(text) {
-    return encodeQueryValue(text).replace(EQUAL_RE, '%3D');
-}
-/**
- * Encode characters that need to be encoded on the path section of the URL.
- *
- * @param text - string to encode
- * @returns encoded string
- */
-function encodePath(text) {
-    return commonEncode(text).replace(HASH_RE, '%23').replace(IM_RE, '%3F');
-}
-/**
- * Encode characters that need to be encoded on the path section of the URL as a
- * param. This function encodes everything {@link encodePath} does plus the
- * slash (`/`) character. If `text` is `null` or `undefined`, returns an empty
- * string instead.
- *
- * @param text - string to encode
- * @returns encoded string
- */
-function encodeParam(text) {
-    return text == null ? '' : encodePath(text).replace(SLASH_RE, '%2F');
-}
-/**
- * Decode text using `decodeURIComponent`. Returns the original text if it
- * fails.
- *
- * @param text - string to decode
- * @returns decoded string
- */
-function decode(text) {
-    try {
-        return decodeURIComponent('' + text);
-    }
-    catch (err) {
-        warn(`Error decoding "${text}". Using original value`);
-    }
-    return '' + text;
-}
+	/**
+	 * Encoding Rules ␣ = Space Path: ␣ " < > # ? { } Query: ␣ " < > # & = Hash: ␣ "
+	 * < > `
+	 *
+	 * On top of that, the RFC3986 (https://tools.ietf.org/html/rfc3986#section-2.2)
+	 * defines some extra characters to be encoded. Most browsers do not encode them
+	 * in encodeURI https://github.com/whatwg/url/issues/369, so it may be safer to
+	 * also encode `!'()*`. Leaving unencoded only ASCII alphanumeric(`a-zA-Z0-9`)
+	 * plus `-._~`. This extra safety should be applied to query by patching the
+	 * string returned by encodeURIComponent encodeURI also encodes `[\]^`. `\`
+	 * should be encoded to avoid ambiguity. Browsers (IE, FF, C) transform a `\`
+	 * into a `/` if directly typed in. The _backtick_ (`````) should also be
+	 * encoded everywhere because some browsers like FF encode it when directly
+	 * written while others don't. Safari and IE don't encode ``"<>{}``` in hash.
+	 */
+	// const EXTRA_RESERVED_RE = /[!'()*]/g
+	// const encodeReservedReplacer = (c: string) => '%' + c.charCodeAt(0).toString(16)
+	const HASH_RE = /#/g; // %23
+	const AMPERSAND_RE = /&/g; // %26
+	const SLASH_RE = /\//g; // %2F
+	const EQUAL_RE = /=/g; // %3D
+	const IM_RE = /\?/g; // %3F
+	const PLUS_RE = /\+/g; // %2B
+	/**
+	 * NOTE: It's not clear to me if we should encode the + symbol in queries, it
+	 * seems to be less flexible than not doing so and I can't find out the legacy
+	 * systems requiring this for regular requests like text/html. In the standard,
+	 * the encoding of the plus character is only mentioned for
+	 * application/x-www-form-urlencoded
+	 * (https://url.spec.whatwg.org/#urlencoded-parsing) and most browsers seems lo
+	 * leave the plus character as is in queries. To be more flexible, we allow the
+	 * plus character on the query but it can also be manually encoded by the user.
+	 *
+	 * Resources:
+	 * - https://url.spec.whatwg.org/#urlencoded-parsing
+	 * - https://stackoverflow.com/questions/1634271/url-encoding-the-space-character-or-20
+	 */
+	const ENC_BRACKET_OPEN_RE = /%5B/g; // [
+	const ENC_BRACKET_CLOSE_RE = /%5D/g; // ]
+	const ENC_CARET_RE = /%5E/g; // ^
+	const ENC_BACKTICK_RE = /%60/g; // `
+	const ENC_CURLY_OPEN_RE = /%7B/g; // {
+	const ENC_PIPE_RE = /%7C/g; // |
+	const ENC_CURLY_CLOSE_RE = /%7D/g; // }
+	const ENC_SPACE_RE = /%20/g; // }
+	/**
+	 * Encode characters that need to be encoded on the path, search and hash
+	 * sections of the URL.
+	 *
+	 * @internal
+	 * @param text - string to encode
+	 * @returns encoded string
+	 */
+	function commonEncode(text) {
+	    return encodeURI('' + text)
+	        .replace(ENC_PIPE_RE, '|')
+	        .replace(ENC_BRACKET_OPEN_RE, '[')
+	        .replace(ENC_BRACKET_CLOSE_RE, ']');
+	}
+	/**
+	 * Encode characters that need to be encoded on the hash section of the URL.
+	 *
+	 * @param text - string to encode
+	 * @returns encoded string
+	 */
+	function encodeHash(text) {
+	    return commonEncode(text)
+	        .replace(ENC_CURLY_OPEN_RE, '{')
+	        .replace(ENC_CURLY_CLOSE_RE, '}')
+	        .replace(ENC_CARET_RE, '^');
+	}
+	/**
+	 * Encode characters that need to be encoded query values on the query
+	 * section of the URL.
+	 *
+	 * @param text - string to encode
+	 * @returns encoded string
+	 */
+	function encodeQueryValue(text) {
+	    return (commonEncode(text)
+	        // Encode the space as +, encode the + to differentiate it from the space
+	        .replace(PLUS_RE, '%2B')
+	        .replace(ENC_SPACE_RE, '+')
+	        .replace(HASH_RE, '%23')
+	        .replace(AMPERSAND_RE, '%26')
+	        .replace(ENC_BACKTICK_RE, '`')
+	        .replace(ENC_CURLY_OPEN_RE, '{')
+	        .replace(ENC_CURLY_CLOSE_RE, '}')
+	        .replace(ENC_CARET_RE, '^'));
+	}
+	/**
+	 * Like `encodeQueryValue` but also encodes the `=` character.
+	 *
+	 * @param text - string to encode
+	 */
+	function encodeQueryKey(text) {
+	    return encodeQueryValue(text).replace(EQUAL_RE, '%3D');
+	}
+	/**
+	 * Encode characters that need to be encoded on the path section of the URL.
+	 *
+	 * @param text - string to encode
+	 * @returns encoded string
+	 */
+	function encodePath(text) {
+	    return commonEncode(text).replace(HASH_RE, '%23').replace(IM_RE, '%3F');
+	}
+	/**
+	 * Encode characters that need to be encoded on the path section of the URL as a
+	 * param. This function encodes everything {@link encodePath} does plus the
+	 * slash (`/`) character. If `text` is `null` or `undefined`, returns an empty
+	 * string instead.
+	 *
+	 * @param text - string to encode
+	 * @returns encoded string
+	 */
+	function encodeParam(text) {
+	    return text == null ? '' : encodePath(text).replace(SLASH_RE, '%2F');
+	}
+	/**
+	 * Decode text using `decodeURIComponent`. Returns the original text if it
+	 * fails.
+	 *
+	 * @param text - string to decode
+	 * @returns decoded string
+	 */
+	function decode(text) {
+	    try {
+	        return decodeURIComponent('' + text);
+	    }
+	    catch (err) {
+	        warn(`Error decoding "${text}". Using original value`);
+	    }
+	    return '' + text;
+	}
 
-/**
- * Transforms a queryString into a {@link LocationQuery} object. Accept both, a
- * version with the leading `?` and without Should work as URLSearchParams
+	/**
+	 * Transforms a queryString into a {@link LocationQuery} object. Accept both, a
+	 * version with the leading `?` and without Should work as URLSearchParams
 
- * @internal
- *
- * @param search - search string to parse
- * @returns a query object
- */
-function parseQuery(search) {
-    const query = {};
-    // avoid creating an object with an empty key and empty value
-    // because of split('&')
-    if (search === '' || search === '?')
-        return query;
-    const hasLeadingIM = search[0] === '?';
-    const searchParams = (hasLeadingIM ? search.slice(1) : search).split('&');
-    for (let i = 0; i < searchParams.length; ++i) {
-        // pre decode the + into space
-        const searchParam = searchParams[i].replace(PLUS_RE, ' ');
-        // allow the = character
-        const eqPos = searchParam.indexOf('=');
-        const key = decode(eqPos < 0 ? searchParam : searchParam.slice(0, eqPos));
-        const value = eqPos < 0 ? null : decode(searchParam.slice(eqPos + 1));
-        if (key in query) {
-            // an extra variable for ts types
-            let currentValue = query[key];
-            if (!Array.isArray(currentValue)) {
-                currentValue = query[key] = [currentValue];
-            }
-            currentValue.push(value);
-        }
-        else {
-            query[key] = value;
-        }
-    }
-    return query;
-}
-/**
- * Stringifies a {@link LocationQueryRaw} object. Like `URLSearchParams`, it
- * doesn't prepend a `?`
- *
- * @internal
- *
- * @param query - query object to stringify
- * @returns string version of the query without the leading `?`
- */
-function stringifyQuery(query) {
-    let search = '';
-    for (let key in query) {
-        const value = query[key];
-        key = encodeQueryKey(key);
-        if (value == null) {
-            // only null adds the value
-            if (value !== undefined) {
-                search += (search.length ? '&' : '') + key;
-            }
-            continue;
-        }
-        // keep null values
-        const values = Array.isArray(value)
-            ? value.map(v => v && encodeQueryValue(v))
-            : [value && encodeQueryValue(value)];
-        values.forEach(value => {
-            // skip undefined values in arrays as if they were not present
-            // smaller code than using filter
-            if (value !== undefined) {
-                // only append & with non-empty search
-                search += (search.length ? '&' : '') + key;
-                if (value != null)
-                    search += '=' + value;
-            }
-        });
-    }
-    return search;
-}
-/**
- * Transforms a {@link LocationQueryRaw} into a {@link LocationQuery} by casting
- * numbers into strings, removing keys with an undefined value and replacing
- * undefined with null in arrays
- *
- * @param query - query object to normalize
- * @returns a normalized query object
- */
-function normalizeQuery(query) {
-    const normalizedQuery = {};
-    for (const key in query) {
-        const value = query[key];
-        if (value !== undefined) {
-            normalizedQuery[key] = Array.isArray(value)
-                ? value.map(v => (v == null ? null : '' + v))
-                : value == null
-                    ? value
-                    : '' + value;
-        }
-    }
-    return normalizedQuery;
-}
+	 * @internal
+	 *
+	 * @param search - search string to parse
+	 * @returns a query object
+	 */
+	function parseQuery(search) {
+	    const query = {};
+	    // avoid creating an object with an empty key and empty value
+	    // because of split('&')
+	    if (search === '' || search === '?')
+	        return query;
+	    const hasLeadingIM = search[0] === '?';
+	    const searchParams = (hasLeadingIM ? search.slice(1) : search).split('&');
+	    for (let i = 0; i < searchParams.length; ++i) {
+	        // pre decode the + into space
+	        const searchParam = searchParams[i].replace(PLUS_RE, ' ');
+	        // allow the = character
+	        const eqPos = searchParam.indexOf('=');
+	        const key = decode(eqPos < 0 ? searchParam : searchParam.slice(0, eqPos));
+	        const value = eqPos < 0 ? null : decode(searchParam.slice(eqPos + 1));
+	        if (key in query) {
+	            // an extra variable for ts types
+	            let currentValue = query[key];
+	            if (!Array.isArray(currentValue)) {
+	                currentValue = query[key] = [currentValue];
+	            }
+	            currentValue.push(value);
+	        }
+	        else {
+	            query[key] = value;
+	        }
+	    }
+	    return query;
+	}
+	/**
+	 * Stringifies a {@link LocationQueryRaw} object. Like `URLSearchParams`, it
+	 * doesn't prepend a `?`
+	 *
+	 * @internal
+	 *
+	 * @param query - query object to stringify
+	 * @returns string version of the query without the leading `?`
+	 */
+	function stringifyQuery(query) {
+	    let search = '';
+	    for (let key in query) {
+	        const value = query[key];
+	        key = encodeQueryKey(key);
+	        if (value == null) {
+	            // only null adds the value
+	            if (value !== undefined) {
+	                search += (search.length ? '&' : '') + key;
+	            }
+	            continue;
+	        }
+	        // keep null values
+	        const values = Array.isArray(value)
+	            ? value.map(v => v && encodeQueryValue(v))
+	            : [value && encodeQueryValue(value)];
+	        values.forEach(value => {
+	            // skip undefined values in arrays as if they were not present
+	            // smaller code than using filter
+	            if (value !== undefined) {
+	                // only append & with non-empty search
+	                search += (search.length ? '&' : '') + key;
+	                if (value != null)
+	                    search += '=' + value;
+	            }
+	        });
+	    }
+	    return search;
+	}
+	/**
+	 * Transforms a {@link LocationQueryRaw} into a {@link LocationQuery} by casting
+	 * numbers into strings, removing keys with an undefined value and replacing
+	 * undefined with null in arrays
+	 *
+	 * @param query - query object to normalize
+	 * @returns a normalized query object
+	 */
+	function normalizeQuery(query) {
+	    const normalizedQuery = {};
+	    for (const key in query) {
+	        const value = query[key];
+	        if (value !== undefined) {
+	            normalizedQuery[key] = Array.isArray(value)
+	                ? value.map(v => (v == null ? null : '' + v))
+	                : value == null
+	                    ? value
+	                    : '' + value;
+	        }
+	    }
+	    return normalizedQuery;
+	}
 
-/**
- * Create a list of callbacks that can be reset. Used to create before and after navigation guards list
- */
-function useCallbacks() {
-    let handlers = [];
-    function add(handler) {
-        handlers.push(handler);
-        return () => {
-            const i = handlers.indexOf(handler);
-            if (i > -1)
-                handlers.splice(i, 1);
-        };
-    }
-    function reset() {
-        handlers = [];
-    }
-    return {
-        add,
-        list: () => handlers,
-        reset,
-    };
-}
+	/**
+	 * Create a list of callbacks that can be reset. Used to create before and after navigation guards list
+	 */
+	function useCallbacks() {
+	    let handlers = [];
+	    function add(handler) {
+	        handlers.push(handler);
+	        return () => {
+	            const i = handlers.indexOf(handler);
+	            if (i > -1)
+	                handlers.splice(i, 1);
+	        };
+	    }
+	    function reset() {
+	        handlers = [];
+	    }
+	    return {
+	        add,
+	        list: () => handlers,
+	        reset,
+	    };
+	}
 
-function registerGuard(record, name, guard) {
-    const removeFromList = () => {
-        record[name].delete(guard);
-    };
-    vue.onUnmounted(removeFromList);
-    vue.onDeactivated(removeFromList);
-    vue.onActivated(() => {
-        record[name].add(guard);
-    });
-    record[name].add(guard);
-}
-/**
- * Add a navigation guard that triggers whenever the component for the current
- * location is about to be left. Similar to {@link beforeRouteLeave} but can be
- * used in any component. The guard is removed when the component is unmounted.
- *
- * @param leaveGuard - {@link NavigationGuard}
- */
-function onBeforeRouteLeave(leaveGuard) {
-    if (!vue.getCurrentInstance()) {
-        warn('getCurrentInstance() returned null. onBeforeRouteLeave() must be called at the top of a setup function');
-        return;
-    }
-    const activeRecord = vue.inject(matchedRouteKey, 
-    // to avoid warning
-    {}).value;
-    if (!activeRecord) {
-        warn('No active route record was found when calling `onBeforeRouteLeave()`. Make sure you call this function inside of a component child of <router-view>. Maybe you called it inside of App.vue?');
-        return;
-    }
-    registerGuard(activeRecord, 'leaveGuards', leaveGuard);
-}
-/**
- * Add a navigation guard that triggers whenever the current location is about
- * to be updated. Similar to {@link beforeRouteUpdate} but can be used in any
- * component. The guard is removed when the component is unmounted.
- *
- * @param updateGuard - {@link NavigationGuard}
- */
-function onBeforeRouteUpdate(updateGuard) {
-    if (!vue.getCurrentInstance()) {
-        warn('getCurrentInstance() returned null. onBeforeRouteUpdate() must be called at the top of a setup function');
-        return;
-    }
-    const activeRecord = vue.inject(matchedRouteKey, 
-    // to avoid warning
-    {}).value;
-    if (!activeRecord) {
-        warn('No active route record was found when calling `onBeforeRouteUpdate()`. Make sure you call this function inside of a component child of <router-view>. Maybe you called it inside of App.vue?');
-        return;
-    }
-    registerGuard(activeRecord, 'updateGuards', updateGuard);
-}
-function guardToPromiseFn(guard, to, from, record, name) {
-    // keep a reference to the enterCallbackArray to prevent pushing callbacks if a new navigation took place
-    const enterCallbackArray = record &&
-        // name is defined if record is because of the function overload
-        (record.enterCallbacks[name] = record.enterCallbacks[name] || []);
-    return () => new Promise((resolve, reject) => {
-        const next = (valid) => {
-            if (valid === false)
-                reject(createRouterError(4 /* NAVIGATION_ABORTED */, {
-                    from,
-                    to,
-                }));
-            else if (valid instanceof Error) {
-                reject(valid);
-            }
-            else if (isRouteLocation(valid)) {
-                reject(createRouterError(2 /* NAVIGATION_GUARD_REDIRECT */, {
-                    from: to,
-                    to: valid,
-                }));
-            }
-            else {
-                if (enterCallbackArray &&
-                    // since enterCallbackArray is truthy, both record and name also are
-                    record.enterCallbacks[name] === enterCallbackArray &&
-                    typeof valid === 'function')
-                    enterCallbackArray.push(valid);
-                resolve();
-            }
-        };
-        // wrapping with Promise.resolve allows it to work with both async and sync guards
-        const guardReturn = guard.call(record && record.instances[name], to, from, canOnlyBeCalledOnce(next, to, from) );
-        let guardCall = Promise.resolve(guardReturn);
-        if (guard.length < 3)
-            guardCall = guardCall.then(next);
-        if (guard.length > 2) {
-            const message = `The "next" callback was never called inside of ${guard.name ? '"' + guard.name + '"' : ''}:\n${guard.toString()}\n. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
-            if (typeof guardReturn === 'object' && 'then' in guardReturn) {
-                guardCall = guardCall.then(resolvedValue => {
-                    // @ts-expect-error: _called is added at canOnlyBeCalledOnce
-                    if (!next._called) {
-                        warn(message);
-                        return Promise.reject(new Error('Invalid navigation guard'));
-                    }
-                    return resolvedValue;
-                });
-                // TODO: test me!
-            }
-            else if (guardReturn !== undefined) {
-                // @ts-expect-error: _called is added at canOnlyBeCalledOnce
-                if (!next._called) {
-                    warn(message);
-                    reject(new Error('Invalid navigation guard'));
-                    return;
-                }
-            }
-        }
-        guardCall.catch(err => reject(err));
-    });
-}
-function canOnlyBeCalledOnce(next, to, from) {
-    let called = 0;
-    return function () {
-        if (called++ === 1)
-            warn(`The "next" callback was called more than once in one navigation guard when going from "${from.fullPath}" to "${to.fullPath}". It should be called exactly one time in each navigation guard. This will fail in production.`);
-        // @ts-expect-error: we put it in the original one because it's easier to check
-        next._called = true;
-        if (called === 1)
-            next.apply(null, arguments);
-    };
-}
-function extractComponentsGuards(matched, guardType, to, from) {
-    const guards = [];
-    for (const record of matched) {
-        for (const name in record.components) {
-            let rawComponent = record.components[name];
-            {
-                if (!rawComponent ||
-                    (typeof rawComponent !== 'object' &&
-                        typeof rawComponent !== 'function')) {
-                    warn(`Component "${name}" in record with path "${record.path}" is not` +
-                        ` a valid component. Received "${String(rawComponent)}".`);
-                    // throw to ensure we stop here but warn to ensure the message isn't
-                    // missed by the user
-                    throw new Error('Invalid route component');
-                }
-                else if ('then' in rawComponent) {
-                    // warn if user wrote import('/component.vue') instead of () =>
-                    // import('./component.vue')
-                    warn(`Component "${name}" in record with path "${record.path}" is a ` +
-                        `Promise instead of a function that returns a Promise. Did you ` +
-                        `write "import('./MyPage.vue')" instead of ` +
-                        `"() => import('./MyPage.vue')" ? This will break in ` +
-                        `production if not fixed.`);
-                    const promise = rawComponent;
-                    rawComponent = () => promise;
-                }
-                else if (rawComponent.__asyncLoader &&
-                    // warn only once per component
-                    !rawComponent.__warnedDefineAsync) {
-                    rawComponent.__warnedDefineAsync = true;
-                    warn(`Component "${name}" in record with path "${record.path}" is defined ` +
-                        `using "defineAsyncComponent()". ` +
-                        `Write "() => import('./MyPage.vue')" instead of ` +
-                        `"defineAsyncComponent(() => import('./MyPage.vue'))".`);
-                }
-            }
-            // skip update and leave guards if the route component is not mounted
-            if (guardType !== 'beforeRouteEnter' && !record.instances[name])
-                continue;
-            if (isRouteComponent(rawComponent)) {
-                // __vccOpts is added by vue-class-component and contain the regular options
-                const options = rawComponent.__vccOpts || rawComponent;
-                const guard = options[guardType];
-                guard && guards.push(guardToPromiseFn(guard, to, from, record, name));
-            }
-            else {
-                // start requesting the chunk already
-                let componentPromise = rawComponent();
-                if (!('catch' in componentPromise)) {
-                    warn(`Component "${name}" in record with path "${record.path}" is a function that does not return a Promise. If you were passing a functional component, make sure to add a "displayName" to the component. This will break in production if not fixed.`);
-                    componentPromise = Promise.resolve(componentPromise);
-                }
-                guards.push(() => componentPromise.then(resolved => {
-                    if (!resolved)
-                        return Promise.reject(new Error(`Couldn't resolve component "${name}" at "${record.path}"`));
-                    const resolvedComponent = isESModule(resolved)
-                        ? resolved.default
-                        : resolved;
-                    // replace the function with the resolved component
-                    record.components[name] = resolvedComponent;
-                    // __vccOpts is added by vue-class-component and contain the regular options
-                    const options = resolvedComponent.__vccOpts || resolvedComponent;
-                    const guard = options[guardType];
-                    return guard && guardToPromiseFn(guard, to, from, record, name)();
-                }));
-            }
-        }
-    }
-    return guards;
-}
-/**
- * Allows differentiating lazy components from functional components and vue-class-component
- *
- * @param component
- */
-function isRouteComponent(component) {
-    return (typeof component === 'object' ||
-        'displayName' in component ||
-        'props' in component ||
-        '__vccOpts' in component);
-}
+	function registerGuard(record, name, guard) {
+	    const removeFromList = () => {
+	        record[name].delete(guard);
+	    };
+	    vue.onUnmounted(removeFromList);
+	    vue.onDeactivated(removeFromList);
+	    vue.onActivated(() => {
+	        record[name].add(guard);
+	    });
+	    record[name].add(guard);
+	}
+	/**
+	 * Add a navigation guard that triggers whenever the component for the current
+	 * location is about to be left. Similar to {@link beforeRouteLeave} but can be
+	 * used in any component. The guard is removed when the component is unmounted.
+	 *
+	 * @param leaveGuard - {@link NavigationGuard}
+	 */
+	function onBeforeRouteLeave(leaveGuard) {
+	    if (!vue.getCurrentInstance()) {
+	        warn('getCurrentInstance() returned null. onBeforeRouteLeave() must be called at the top of a setup function');
+	        return;
+	    }
+	    const activeRecord = vue.inject(matchedRouteKey, 
+	    // to avoid warning
+	    {}).value;
+	    if (!activeRecord) {
+	        warn('No active route record was found when calling `onBeforeRouteLeave()`. Make sure you call this function inside of a component child of <router-view>. Maybe you called it inside of App.vue?');
+	        return;
+	    }
+	    registerGuard(activeRecord, 'leaveGuards', leaveGuard);
+	}
+	/**
+	 * Add a navigation guard that triggers whenever the current location is about
+	 * to be updated. Similar to {@link beforeRouteUpdate} but can be used in any
+	 * component. The guard is removed when the component is unmounted.
+	 *
+	 * @param updateGuard - {@link NavigationGuard}
+	 */
+	function onBeforeRouteUpdate(updateGuard) {
+	    if (!vue.getCurrentInstance()) {
+	        warn('getCurrentInstance() returned null. onBeforeRouteUpdate() must be called at the top of a setup function');
+	        return;
+	    }
+	    const activeRecord = vue.inject(matchedRouteKey, 
+	    // to avoid warning
+	    {}).value;
+	    if (!activeRecord) {
+	        warn('No active route record was found when calling `onBeforeRouteUpdate()`. Make sure you call this function inside of a component child of <router-view>. Maybe you called it inside of App.vue?');
+	        return;
+	    }
+	    registerGuard(activeRecord, 'updateGuards', updateGuard);
+	}
+	function guardToPromiseFn(guard, to, from, record, name) {
+	    // keep a reference to the enterCallbackArray to prevent pushing callbacks if a new navigation took place
+	    const enterCallbackArray = record &&
+	        // name is defined if record is because of the function overload
+	        (record.enterCallbacks[name] = record.enterCallbacks[name] || []);
+	    return () => new Promise((resolve, reject) => {
+	        const next = (valid) => {
+	            if (valid === false)
+	                reject(createRouterError(4 /* NAVIGATION_ABORTED */, {
+	                    from,
+	                    to,
+	                }));
+	            else if (valid instanceof Error) {
+	                reject(valid);
+	            }
+	            else if (isRouteLocation(valid)) {
+	                reject(createRouterError(2 /* NAVIGATION_GUARD_REDIRECT */, {
+	                    from: to,
+	                    to: valid,
+	                }));
+	            }
+	            else {
+	                if (enterCallbackArray &&
+	                    // since enterCallbackArray is truthy, both record and name also are
+	                    record.enterCallbacks[name] === enterCallbackArray &&
+	                    typeof valid === 'function')
+	                    enterCallbackArray.push(valid);
+	                resolve();
+	            }
+	        };
+	        // wrapping with Promise.resolve allows it to work with both async and sync guards
+	        const guardReturn = guard.call(record && record.instances[name], to, from, canOnlyBeCalledOnce(next, to, from) );
+	        let guardCall = Promise.resolve(guardReturn);
+	        if (guard.length < 3)
+	            guardCall = guardCall.then(next);
+	        if (guard.length > 2) {
+	            const message = `The "next" callback was never called inside of ${guard.name ? '"' + guard.name + '"' : ''}:\n${guard.toString()}\n. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
+	            if (typeof guardReturn === 'object' && 'then' in guardReturn) {
+	                guardCall = guardCall.then(resolvedValue => {
+	                    // @ts-expect-error: _called is added at canOnlyBeCalledOnce
+	                    if (!next._called) {
+	                        warn(message);
+	                        return Promise.reject(new Error('Invalid navigation guard'));
+	                    }
+	                    return resolvedValue;
+	                });
+	                // TODO: test me!
+	            }
+	            else if (guardReturn !== undefined) {
+	                // @ts-expect-error: _called is added at canOnlyBeCalledOnce
+	                if (!next._called) {
+	                    warn(message);
+	                    reject(new Error('Invalid navigation guard'));
+	                    return;
+	                }
+	            }
+	        }
+	        guardCall.catch(err => reject(err));
+	    });
+	}
+	function canOnlyBeCalledOnce(next, to, from) {
+	    let called = 0;
+	    return function () {
+	        if (called++ === 1)
+	            warn(`The "next" callback was called more than once in one navigation guard when going from "${from.fullPath}" to "${to.fullPath}". It should be called exactly one time in each navigation guard. This will fail in production.`);
+	        // @ts-expect-error: we put it in the original one because it's easier to check
+	        next._called = true;
+	        if (called === 1)
+	            next.apply(null, arguments);
+	    };
+	}
+	function extractComponentsGuards(matched, guardType, to, from) {
+	    const guards = [];
+	    for (const record of matched) {
+	        for (const name in record.components) {
+	            let rawComponent = record.components[name];
+	            {
+	                if (!rawComponent ||
+	                    (typeof rawComponent !== 'object' &&
+	                        typeof rawComponent !== 'function')) {
+	                    warn(`Component "${name}" in record with path "${record.path}" is not` +
+	                        ` a valid component. Received "${String(rawComponent)}".`);
+	                    // throw to ensure we stop here but warn to ensure the message isn't
+	                    // missed by the user
+	                    throw new Error('Invalid route component');
+	                }
+	                else if ('then' in rawComponent) {
+	                    // warn if user wrote import('/component.vue') instead of () =>
+	                    // import('./component.vue')
+	                    warn(`Component "${name}" in record with path "${record.path}" is a ` +
+	                        `Promise instead of a function that returns a Promise. Did you ` +
+	                        `write "import('./MyPage.vue')" instead of ` +
+	                        `"() => import('./MyPage.vue')" ? This will break in ` +
+	                        `production if not fixed.`);
+	                    const promise = rawComponent;
+	                    rawComponent = () => promise;
+	                }
+	                else if (rawComponent.__asyncLoader &&
+	                    // warn only once per component
+	                    !rawComponent.__warnedDefineAsync) {
+	                    rawComponent.__warnedDefineAsync = true;
+	                    warn(`Component "${name}" in record with path "${record.path}" is defined ` +
+	                        `using "defineAsyncComponent()". ` +
+	                        `Write "() => import('./MyPage.vue')" instead of ` +
+	                        `"defineAsyncComponent(() => import('./MyPage.vue'))".`);
+	                }
+	            }
+	            // skip update and leave guards if the route component is not mounted
+	            if (guardType !== 'beforeRouteEnter' && !record.instances[name])
+	                continue;
+	            if (isRouteComponent(rawComponent)) {
+	                // __vccOpts is added by vue-class-component and contain the regular options
+	                const options = rawComponent.__vccOpts || rawComponent;
+	                const guard = options[guardType];
+	                guard && guards.push(guardToPromiseFn(guard, to, from, record, name));
+	            }
+	            else {
+	                // start requesting the chunk already
+	                let componentPromise = rawComponent();
+	                if (!('catch' in componentPromise)) {
+	                    warn(`Component "${name}" in record with path "${record.path}" is a function that does not return a Promise. If you were passing a functional component, make sure to add a "displayName" to the component. This will break in production if not fixed.`);
+	                    componentPromise = Promise.resolve(componentPromise);
+	                }
+	                guards.push(() => componentPromise.then(resolved => {
+	                    if (!resolved)
+	                        return Promise.reject(new Error(`Couldn't resolve component "${name}" at "${record.path}"`));
+	                    const resolvedComponent = isESModule(resolved)
+	                        ? resolved.default
+	                        : resolved;
+	                    // replace the function with the resolved component
+	                    record.components[name] = resolvedComponent;
+	                    // __vccOpts is added by vue-class-component and contain the regular options
+	                    const options = resolvedComponent.__vccOpts || resolvedComponent;
+	                    const guard = options[guardType];
+	                    return guard && guardToPromiseFn(guard, to, from, record, name)();
+	                }));
+	            }
+	        }
+	    }
+	    return guards;
+	}
+	/**
+	 * Allows differentiating lazy components from functional components and vue-class-component
+	 *
+	 * @param component
+	 */
+	function isRouteComponent(component) {
+	    return (typeof component === 'object' ||
+	        'displayName' in component ||
+	        'props' in component ||
+	        '__vccOpts' in component);
+	}
 
-// TODO: we could allow currentRoute as a prop to expose `isActive` and
-// `isExactActive` behavior should go through an RFC
-function useLink(props) {
-    const router = vue.inject(routerKey);
-    const currentRoute = vue.inject(routeLocationKey);
-    const route = vue.computed(() => router.resolve(vue.unref(props.to)));
-    const activeRecordIndex = vue.computed(() => {
-        const { matched } = route.value;
-        const { length } = matched;
-        const routeMatched = matched[length - 1];
-        const currentMatched = currentRoute.matched;
-        if (!routeMatched || !currentMatched.length)
-            return -1;
-        const index = currentMatched.findIndex(isSameRouteRecord.bind(null, routeMatched));
-        if (index > -1)
-            return index;
-        // possible parent record
-        const parentRecordPath = getOriginalPath(matched[length - 2]);
-        return (
-        // we are dealing with nested routes
-        length > 1 &&
-            // if the parent and matched route have the same path, this link is
-            // referring to the empty child. Or we currently are on a different
-            // child of the same parent
-            getOriginalPath(routeMatched) === parentRecordPath &&
-            // avoid comparing the child with its parent
-            currentMatched[currentMatched.length - 1].path !== parentRecordPath
-            ? currentMatched.findIndex(isSameRouteRecord.bind(null, matched[length - 2]))
-            : index);
-    });
-    const isActive = vue.computed(() => activeRecordIndex.value > -1 &&
-        includesParams(currentRoute.params, route.value.params));
-    const isExactActive = vue.computed(() => activeRecordIndex.value > -1 &&
-        activeRecordIndex.value === currentRoute.matched.length - 1 &&
-        isSameRouteLocationParams(currentRoute.params, route.value.params));
-    function navigate(e = {}) {
-        if (guardEvent(e)) {
-            return router[vue.unref(props.replace) ? 'replace' : 'push'](vue.unref(props.to)
-            // avoid uncaught errors are they are logged anyway
-            ).catch(noop);
-        }
-        return Promise.resolve();
-    }
-    return {
-        route,
-        href: vue.computed(() => route.value.href),
-        isActive,
-        isExactActive,
-        navigate,
-    };
-}
-const RouterLinkImpl = /*#__PURE__*/ vue.defineComponent({
-    name: 'RouterLink',
-    props: {
-        to: {
-            type: [String, Object],
-            required: true,
-        },
-        replace: Boolean,
-        activeClass: String,
-        // inactiveClass: String,
-        exactActiveClass: String,
-        custom: Boolean,
-        ariaCurrentValue: {
-            type: String,
-            default: 'page',
-        },
-    },
-    useLink,
-    setup(props, { slots }) {
-        const link = vue.reactive(useLink(props));
-        const { options } = vue.inject(routerKey);
-        const elClass = vue.computed(() => ({
-            [getLinkClass(props.activeClass, options.linkActiveClass, 'router-link-active')]: link.isActive,
-            // [getLinkClass(
-            //   props.inactiveClass,
-            //   options.linkInactiveClass,
-            //   'router-link-inactive'
-            // )]: !link.isExactActive,
-            [getLinkClass(props.exactActiveClass, options.linkExactActiveClass, 'router-link-exact-active')]: link.isExactActive,
-        }));
-        return () => {
-            const children = slots.default && slots.default(link);
-            return props.custom
-                ? children
-                : vue.h('a', {
-                    'aria-current': link.isExactActive
-                        ? props.ariaCurrentValue
-                        : null,
-                    href: link.href,
-                    // this would override user added attrs but Vue will still add
-                    // the listener so we end up triggering both
-                    onClick: link.navigate,
-                    class: elClass.value,
-                }, children);
-        };
-    },
-});
-// export the public type for h/tsx inference
-// also to avoid inline import() in generated d.ts files
-/**
- * Component to render a link that triggers a navigation on click.
- */
-const RouterLink = RouterLinkImpl;
-function guardEvent(e) {
-    // don't redirect with control keys
-    if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey)
-        return;
-    // don't redirect when preventDefault called
-    if (e.defaultPrevented)
-        return;
-    // don't redirect on right click
-    if (e.button !== undefined && e.button !== 0)
-        return;
-    // don't redirect if `target="_blank"`
-    // @ts-expect-error getAttribute does exist
-    if (e.currentTarget && e.currentTarget.getAttribute) {
-        // @ts-expect-error getAttribute exists
-        const target = e.currentTarget.getAttribute('target');
-        if (/\b_blank\b/i.test(target))
-            return;
-    }
-    // this may be a Weex event which doesn't have this method
-    if (e.preventDefault)
-        e.preventDefault();
-    return true;
-}
-function includesParams(outer, inner) {
-    for (const key in inner) {
-        const innerValue = inner[key];
-        const outerValue = outer[key];
-        if (typeof innerValue === 'string') {
-            if (innerValue !== outerValue)
-                return false;
-        }
-        else {
-            if (!Array.isArray(outerValue) ||
-                outerValue.length !== innerValue.length ||
-                innerValue.some((value, i) => value !== outerValue[i]))
-                return false;
-        }
-    }
-    return true;
-}
-/**
- * Get the original path value of a record by following its aliasOf
- * @param record
- */
-function getOriginalPath(record) {
-    return record ? (record.aliasOf ? record.aliasOf.path : record.path) : '';
-}
-/**
- * Utility class to get the active class based on defaults.
- * @param propClass
- * @param globalClass
- * @param defaultClass
- */
-const getLinkClass = (propClass, globalClass, defaultClass) => propClass != null
-    ? propClass
-    : globalClass != null
-        ? globalClass
-        : defaultClass;
+	// TODO: we could allow currentRoute as a prop to expose `isActive` and
+	// `isExactActive` behavior should go through an RFC
+	function useLink(props) {
+	    const router = vue.inject(routerKey);
+	    const currentRoute = vue.inject(routeLocationKey);
+	    const route = vue.computed(() => router.resolve(vue.unref(props.to)));
+	    const activeRecordIndex = vue.computed(() => {
+	        const { matched } = route.value;
+	        const { length } = matched;
+	        const routeMatched = matched[length - 1];
+	        const currentMatched = currentRoute.matched;
+	        if (!routeMatched || !currentMatched.length)
+	            return -1;
+	        const index = currentMatched.findIndex(isSameRouteRecord.bind(null, routeMatched));
+	        if (index > -1)
+	            return index;
+	        // possible parent record
+	        const parentRecordPath = getOriginalPath(matched[length - 2]);
+	        return (
+	        // we are dealing with nested routes
+	        length > 1 &&
+	            // if the parent and matched route have the same path, this link is
+	            // referring to the empty child. Or we currently are on a different
+	            // child of the same parent
+	            getOriginalPath(routeMatched) === parentRecordPath &&
+	            // avoid comparing the child with its parent
+	            currentMatched[currentMatched.length - 1].path !== parentRecordPath
+	            ? currentMatched.findIndex(isSameRouteRecord.bind(null, matched[length - 2]))
+	            : index);
+	    });
+	    const isActive = vue.computed(() => activeRecordIndex.value > -1 &&
+	        includesParams(currentRoute.params, route.value.params));
+	    const isExactActive = vue.computed(() => activeRecordIndex.value > -1 &&
+	        activeRecordIndex.value === currentRoute.matched.length - 1 &&
+	        isSameRouteLocationParams(currentRoute.params, route.value.params));
+	    function navigate(e = {}) {
+	        if (guardEvent(e)) {
+	            return router[vue.unref(props.replace) ? 'replace' : 'push'](vue.unref(props.to)
+	            // avoid uncaught errors are they are logged anyway
+	            ).catch(noop);
+	        }
+	        return Promise.resolve();
+	    }
+	    return {
+	        route,
+	        href: vue.computed(() => route.value.href),
+	        isActive,
+	        isExactActive,
+	        navigate,
+	    };
+	}
+	const RouterLinkImpl = /*#__PURE__*/ vue.defineComponent({
+	    name: 'RouterLink',
+	    props: {
+	        to: {
+	            type: [String, Object],
+	            required: true,
+	        },
+	        replace: Boolean,
+	        activeClass: String,
+	        // inactiveClass: String,
+	        exactActiveClass: String,
+	        custom: Boolean,
+	        ariaCurrentValue: {
+	            type: String,
+	            default: 'page',
+	        },
+	    },
+	    useLink,
+	    setup(props, { slots }) {
+	        const link = vue.reactive(useLink(props));
+	        const { options } = vue.inject(routerKey);
+	        const elClass = vue.computed(() => ({
+	            [getLinkClass(props.activeClass, options.linkActiveClass, 'router-link-active')]: link.isActive,
+	            // [getLinkClass(
+	            //   props.inactiveClass,
+	            //   options.linkInactiveClass,
+	            //   'router-link-inactive'
+	            // )]: !link.isExactActive,
+	            [getLinkClass(props.exactActiveClass, options.linkExactActiveClass, 'router-link-exact-active')]: link.isExactActive,
+	        }));
+	        return () => {
+	            const children = slots.default && slots.default(link);
+	            return props.custom
+	                ? children
+	                : vue.h('a', {
+	                    'aria-current': link.isExactActive
+	                        ? props.ariaCurrentValue
+	                        : null,
+	                    href: link.href,
+	                    // this would override user added attrs but Vue will still add
+	                    // the listener so we end up triggering both
+	                    onClick: link.navigate,
+	                    class: elClass.value,
+	                }, children);
+	        };
+	    },
+	});
+	// export the public type for h/tsx inference
+	// also to avoid inline import() in generated d.ts files
+	/**
+	 * Component to render a link that triggers a navigation on click.
+	 */
+	const RouterLink = RouterLinkImpl;
+	function guardEvent(e) {
+	    // don't redirect with control keys
+	    if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey)
+	        return;
+	    // don't redirect when preventDefault called
+	    if (e.defaultPrevented)
+	        return;
+	    // don't redirect on right click
+	    if (e.button !== undefined && e.button !== 0)
+	        return;
+	    // don't redirect if `target="_blank"`
+	    // @ts-expect-error getAttribute does exist
+	    if (e.currentTarget && e.currentTarget.getAttribute) {
+	        // @ts-expect-error getAttribute exists
+	        const target = e.currentTarget.getAttribute('target');
+	        if (/\b_blank\b/i.test(target))
+	            return;
+	    }
+	    // this may be a Weex event which doesn't have this method
+	    if (e.preventDefault)
+	        e.preventDefault();
+	    return true;
+	}
+	function includesParams(outer, inner) {
+	    for (const key in inner) {
+	        const innerValue = inner[key];
+	        const outerValue = outer[key];
+	        if (typeof innerValue === 'string') {
+	            if (innerValue !== outerValue)
+	                return false;
+	        }
+	        else {
+	            if (!Array.isArray(outerValue) ||
+	                outerValue.length !== innerValue.length ||
+	                innerValue.some((value, i) => value !== outerValue[i]))
+	                return false;
+	        }
+	    }
+	    return true;
+	}
+	/**
+	 * Get the original path value of a record by following its aliasOf
+	 * @param record
+	 */
+	function getOriginalPath(record) {
+	    return record ? (record.aliasOf ? record.aliasOf.path : record.path) : '';
+	}
+	/**
+	 * Utility class to get the active class based on defaults.
+	 * @param propClass
+	 * @param globalClass
+	 * @param defaultClass
+	 */
+	const getLinkClass = (propClass, globalClass, defaultClass) => propClass != null
+	    ? propClass
+	    : globalClass != null
+	        ? globalClass
+	        : defaultClass;
 
-const RouterViewImpl = /*#__PURE__*/ vue.defineComponent({
-    name: 'RouterView',
-    // #674 we manually inherit them
-    inheritAttrs: false,
-    props: {
-        name: {
-            type: String,
-            default: 'default',
-        },
-        route: Object,
-    },
-    setup(props, { attrs, slots }) {
-        warnDeprecatedUsage();
-        const injectedRoute = vue.inject(routerViewLocationKey);
-        const routeToDisplay = vue.computed(() => props.route || injectedRoute.value);
-        const depth = vue.inject(viewDepthKey, 0);
-        const matchedRouteRef = vue.computed(() => routeToDisplay.value.matched[depth]);
-        vue.provide(viewDepthKey, depth + 1);
-        vue.provide(matchedRouteKey, matchedRouteRef);
-        vue.provide(routerViewLocationKey, routeToDisplay);
-        const viewRef = vue.ref();
-        // watch at the same time the component instance, the route record we are
-        // rendering, and the name
-        vue.watch(() => [viewRef.value, matchedRouteRef.value, props.name], ([instance, to, name], [oldInstance, from, oldName]) => {
-            // copy reused instances
-            if (to) {
-                // this will update the instance for new instances as well as reused
-                // instances when navigating to a new route
-                to.instances[name] = instance;
-                // the component instance is reused for a different route or name so
-                // we copy any saved update or leave guards. With async setup, the
-                // mounting component will mount before the matchedRoute changes,
-                // making instance === oldInstance, so we check if guards have been
-                // added before. This works because we remove guards when
-                // unmounting/deactivating components
-                if (from && from !== to && instance && instance === oldInstance) {
-                    if (!to.leaveGuards.size) {
-                        to.leaveGuards = from.leaveGuards;
-                    }
-                    if (!to.updateGuards.size) {
-                        to.updateGuards = from.updateGuards;
-                    }
-                }
-            }
-            // trigger beforeRouteEnter next callbacks
-            if (instance &&
-                to &&
-                // if there is no instance but to and from are the same this might be
-                // the first visit
-                (!from || !isSameRouteRecord(to, from) || !oldInstance)) {
-                (to.enterCallbacks[name] || []).forEach(callback => callback(instance));
-            }
-        }, { flush: 'post' });
-        return () => {
-            const route = routeToDisplay.value;
-            const matchedRoute = matchedRouteRef.value;
-            const ViewComponent = matchedRoute && matchedRoute.components[props.name];
-            // we need the value at the time we render because when we unmount, we
-            // navigated to a different location so the value is different
-            const currentName = props.name;
-            if (!ViewComponent) {
-                return normalizeSlot(slots.default, { Component: ViewComponent, route });
-            }
-            // props from route configuration
-            const routePropsOption = matchedRoute.props[props.name];
-            const routeProps = routePropsOption
-                ? routePropsOption === true
-                    ? route.params
-                    : typeof routePropsOption === 'function'
-                        ? routePropsOption(route)
-                        : routePropsOption
-                : null;
-            const onVnodeUnmounted = vnode => {
-                // remove the instance reference to prevent leak
-                if (vnode.component.isUnmounted) {
-                    matchedRoute.instances[currentName] = null;
-                }
-            };
-            const component = vue.h(ViewComponent, assign({}, routeProps, attrs, {
-                onVnodeUnmounted,
-                ref: viewRef,
-            }));
-            return (
-            // pass the vnode to the slot as a prop.
-            // h and <component :is="..."> both accept vnodes
-            normalizeSlot(slots.default, { Component: component, route }) ||
-                component);
-        };
-    },
-});
-function normalizeSlot(slot, data) {
-    if (!slot)
-        return null;
-    const slotContent = slot(data);
-    return slotContent.length === 1 ? slotContent[0] : slotContent;
-}
-// export the public type for h/tsx inference
-// also to avoid inline import() in generated d.ts files
-/**
- * Component to display the current route the user is at.
- */
-const RouterView = RouterViewImpl;
-// warn against deprecated usage with <transition> & <keep-alive>
-// due to functional component being no longer eager in Vue 3
-function warnDeprecatedUsage() {
-    const instance = vue.getCurrentInstance();
-    const parentName = instance.parent && instance.parent.type.name;
-    if (parentName &&
-        (parentName === 'KeepAlive' || parentName.includes('Transition'))) {
-        const comp = parentName === 'KeepAlive' ? 'keep-alive' : 'transition';
-        warn(`<router-view> can no longer be used directly inside <transition> or <keep-alive>.\n` +
-            `Use slot props instead:\n\n` +
-            `<router-view v-slot="{ Component }">\n` +
-            `  <${comp}>\n` +
-            `    <component :is="Component" />\n` +
-            `  </${comp}>\n` +
-            `</router-view>`);
-    }
-}
+	const RouterViewImpl = /*#__PURE__*/ vue.defineComponent({
+	    name: 'RouterView',
+	    // #674 we manually inherit them
+	    inheritAttrs: false,
+	    props: {
+	        name: {
+	            type: String,
+	            default: 'default',
+	        },
+	        route: Object,
+	    },
+	    setup(props, { attrs, slots }) {
+	        warnDeprecatedUsage();
+	        const injectedRoute = vue.inject(routerViewLocationKey);
+	        const routeToDisplay = vue.computed(() => props.route || injectedRoute.value);
+	        const depth = vue.inject(viewDepthKey, 0);
+	        const matchedRouteRef = vue.computed(() => routeToDisplay.value.matched[depth]);
+	        vue.provide(viewDepthKey, depth + 1);
+	        vue.provide(matchedRouteKey, matchedRouteRef);
+	        vue.provide(routerViewLocationKey, routeToDisplay);
+	        const viewRef = vue.ref();
+	        // watch at the same time the component instance, the route record we are
+	        // rendering, and the name
+	        vue.watch(() => [viewRef.value, matchedRouteRef.value, props.name], ([instance, to, name], [oldInstance, from, oldName]) => {
+	            // copy reused instances
+	            if (to) {
+	                // this will update the instance for new instances as well as reused
+	                // instances when navigating to a new route
+	                to.instances[name] = instance;
+	                // the component instance is reused for a different route or name so
+	                // we copy any saved update or leave guards. With async setup, the
+	                // mounting component will mount before the matchedRoute changes,
+	                // making instance === oldInstance, so we check if guards have been
+	                // added before. This works because we remove guards when
+	                // unmounting/deactivating components
+	                if (from && from !== to && instance && instance === oldInstance) {
+	                    if (!to.leaveGuards.size) {
+	                        to.leaveGuards = from.leaveGuards;
+	                    }
+	                    if (!to.updateGuards.size) {
+	                        to.updateGuards = from.updateGuards;
+	                    }
+	                }
+	            }
+	            // trigger beforeRouteEnter next callbacks
+	            if (instance &&
+	                to &&
+	                // if there is no instance but to and from are the same this might be
+	                // the first visit
+	                (!from || !isSameRouteRecord(to, from) || !oldInstance)) {
+	                (to.enterCallbacks[name] || []).forEach(callback => callback(instance));
+	            }
+	        }, { flush: 'post' });
+	        return () => {
+	            const route = routeToDisplay.value;
+	            const matchedRoute = matchedRouteRef.value;
+	            const ViewComponent = matchedRoute && matchedRoute.components[props.name];
+	            // we need the value at the time we render because when we unmount, we
+	            // navigated to a different location so the value is different
+	            const currentName = props.name;
+	            if (!ViewComponent) {
+	                return normalizeSlot(slots.default, { Component: ViewComponent, route });
+	            }
+	            // props from route configuration
+	            const routePropsOption = matchedRoute.props[props.name];
+	            const routeProps = routePropsOption
+	                ? routePropsOption === true
+	                    ? route.params
+	                    : typeof routePropsOption === 'function'
+	                        ? routePropsOption(route)
+	                        : routePropsOption
+	                : null;
+	            const onVnodeUnmounted = vnode => {
+	                // remove the instance reference to prevent leak
+	                if (vnode.component.isUnmounted) {
+	                    matchedRoute.instances[currentName] = null;
+	                }
+	            };
+	            const component = vue.h(ViewComponent, assign({}, routeProps, attrs, {
+	                onVnodeUnmounted,
+	                ref: viewRef,
+	            }));
+	            return (
+	            // pass the vnode to the slot as a prop.
+	            // h and <component :is="..."> both accept vnodes
+	            normalizeSlot(slots.default, { Component: component, route }) ||
+	                component);
+	        };
+	    },
+	});
+	function normalizeSlot(slot, data) {
+	    if (!slot)
+	        return null;
+	    const slotContent = slot(data);
+	    return slotContent.length === 1 ? slotContent[0] : slotContent;
+	}
+	// export the public type for h/tsx inference
+	// also to avoid inline import() in generated d.ts files
+	/**
+	 * Component to display the current route the user is at.
+	 */
+	const RouterView = RouterViewImpl;
+	// warn against deprecated usage with <transition> & <keep-alive>
+	// due to functional component being no longer eager in Vue 3
+	function warnDeprecatedUsage() {
+	    const instance = vue.getCurrentInstance();
+	    const parentName = instance.parent && instance.parent.type.name;
+	    if (parentName &&
+	        (parentName === 'KeepAlive' || parentName.includes('Transition'))) {
+	        const comp = parentName === 'KeepAlive' ? 'keep-alive' : 'transition';
+	        warn(`<router-view> can no longer be used directly inside <transition> or <keep-alive>.\n` +
+	            `Use slot props instead:\n\n` +
+	            `<router-view v-slot="{ Component }">\n` +
+	            `  <${comp}>\n` +
+	            `    <component :is="Component" />\n` +
+	            `  </${comp}>\n` +
+	            `</router-view>`);
+	    }
+	}
 
-/**
- * Creates a Router instance that can be used by a Vue app.
- *
- * @param options - {@link RouterOptions}
- */
-function createRouter(options) {
-    const matcher = createRouterMatcher(options.routes, options);
-    const parseQuery$1 = options.parseQuery || parseQuery;
-    const stringifyQuery$1 = options.stringifyQuery || stringifyQuery;
-    const routerHistory = options.history;
-    if (!routerHistory)
-        throw new Error('Provide the "history" option when calling "createRouter()":' +
-            ' https://next.router.vuejs.org/api/#history.');
-    const beforeGuards = useCallbacks();
-    const beforeResolveGuards = useCallbacks();
-    const afterGuards = useCallbacks();
-    const currentRoute = vue.shallowRef(START_LOCATION_NORMALIZED);
-    let pendingLocation = START_LOCATION_NORMALIZED;
-    const normalizeParams = applyToParams.bind(null, paramValue => '' + paramValue);
-    const encodeParams = applyToParams.bind(null, encodeParam);
-    const decodeParams = 
-    // @ts-expect-error: intentionally avoid the type check
-    applyToParams.bind(null, decode);
-    function addRoute(parentOrRoute, route) {
-        let parent;
-        let record;
-        if (isRouteName(parentOrRoute)) {
-            parent = matcher.getRecordMatcher(parentOrRoute);
-            record = route;
-        }
-        else {
-            record = parentOrRoute;
-        }
-        return matcher.addRoute(record, parent);
-    }
-    function removeRoute(name) {
-        const recordMatcher = matcher.getRecordMatcher(name);
-        if (recordMatcher) {
-            matcher.removeRoute(recordMatcher);
-        }
-        else {
-            warn(`Cannot remove non-existent route "${String(name)}"`);
-        }
-    }
-    function getRoutes() {
-        return matcher.getRoutes().map(routeMatcher => routeMatcher.record);
-    }
-    function hasRoute(name) {
-        return !!matcher.getRecordMatcher(name);
-    }
-    function resolve(rawLocation, currentLocation) {
-        // const objectLocation = routerLocationAsObject(rawLocation)
-        // we create a copy to modify it later
-        currentLocation = assign({}, currentLocation || currentRoute.value);
-        if (typeof rawLocation === 'string') {
-            const locationNormalized = parseURL(parseQuery$1, rawLocation, currentLocation.path);
-            const matchedRoute = matcher.resolve({ path: locationNormalized.path }, currentLocation);
-            const href = routerHistory.createHref(locationNormalized.fullPath);
-            {
-                if (href.startsWith('//'))
-                    warn(`Location "${rawLocation}" resolved to "${href}". A resolved location cannot start with multiple slashes.`);
-                else if (!matchedRoute.matched.length) {
-                    warn(`No match found for location with path "${rawLocation}"`);
-                }
-            }
-            // locationNormalized is always a new object
-            return assign(locationNormalized, matchedRoute, {
-                params: decodeParams(matchedRoute.params),
-                hash: decode(locationNormalized.hash),
-                redirectedFrom: undefined,
-                href,
-            });
-        }
-        let matcherLocation;
-        // path could be relative in object as well
-        if ('path' in rawLocation) {
-            if ('params' in rawLocation &&
-                !('name' in rawLocation) &&
-                // @ts-expect-error: the type is never
-                Object.keys(rawLocation.params).length) {
-                warn(`Path "${
-                // @ts-expect-error: the type is never
-                rawLocation.path}" was passed with params but they will be ignored. Use a named route alongside params instead.`);
-            }
-            matcherLocation = assign({}, rawLocation, {
-                path: parseURL(parseQuery$1, rawLocation.path, currentLocation.path).path,
-            });
-        }
-        else {
-            // remove any nullish param
-            const targetParams = assign({}, rawLocation.params);
-            for (const key in targetParams) {
-                if (targetParams[key] == null) {
-                    delete targetParams[key];
-                }
-            }
-            // pass encoded values to the matcher so it can produce encoded path and fullPath
-            matcherLocation = assign({}, rawLocation, {
-                params: encodeParams(rawLocation.params),
-            });
-            // current location params are decoded, we need to encode them in case the
-            // matcher merges the params
-            currentLocation.params = encodeParams(currentLocation.params);
-        }
-        const matchedRoute = matcher.resolve(matcherLocation, currentLocation);
-        const hash = rawLocation.hash || '';
-        if (hash && !hash.startsWith('#')) {
-            warn(`A \`hash\` should always start with the character "#". Replace "${hash}" with "#${hash}".`);
-        }
-        // decoding them) the matcher might have merged current location params so
-        // we need to run the decoding again
-        matchedRoute.params = normalizeParams(decodeParams(matchedRoute.params));
-        const fullPath = stringifyURL(stringifyQuery$1, assign({}, rawLocation, {
-            hash: encodeHash(hash),
-            path: matchedRoute.path,
-        }));
-        const href = routerHistory.createHref(fullPath);
-        {
-            if (href.startsWith('//')) {
-                warn(`Location "${rawLocation}" resolved to "${href}". A resolved location cannot start with multiple slashes.`);
-            }
-            else if (!matchedRoute.matched.length) {
-                warn(`No match found for location with path "${'path' in rawLocation ? rawLocation.path : rawLocation}"`);
-            }
-        }
-        return assign({
-            fullPath,
-            // keep the hash encoded so fullPath is effectively path + encodedQuery +
-            // hash
-            hash,
-            query: 
-            // if the user is using a custom query lib like qs, we might have
-            // nested objects, so we keep the query as is, meaning it can contain
-            // numbers at `$route.query`, but at the point, the user will have to
-            // use their own type anyway.
-            // https://github.com/vuejs/router/issues/328#issuecomment-649481567
-            stringifyQuery$1 === stringifyQuery
-                ? normalizeQuery(rawLocation.query)
-                : (rawLocation.query || {}),
-        }, matchedRoute, {
-            redirectedFrom: undefined,
-            href,
-        });
-    }
-    function locationAsObject(to) {
-        return typeof to === 'string'
-            ? parseURL(parseQuery$1, to, currentRoute.value.path)
-            : assign({}, to);
-    }
-    function checkCanceledNavigation(to, from) {
-        if (pendingLocation !== to) {
-            return createRouterError(8 /* NAVIGATION_CANCELLED */, {
-                from,
-                to,
-            });
-        }
-    }
-    function push(to) {
-        return pushWithRedirect(to);
-    }
-    function replace(to) {
-        return push(assign(locationAsObject(to), { replace: true }));
-    }
-    function handleRedirectRecord(to) {
-        const lastMatched = to.matched[to.matched.length - 1];
-        if (lastMatched && lastMatched.redirect) {
-            const { redirect } = lastMatched;
-            let newTargetLocation = typeof redirect === 'function' ? redirect(to) : redirect;
-            if (typeof newTargetLocation === 'string') {
-                newTargetLocation =
-                    newTargetLocation.includes('?') || newTargetLocation.includes('#')
-                        ? (newTargetLocation = locationAsObject(newTargetLocation))
-                        : // force empty params
-                            { path: newTargetLocation };
-                // @ts-expect-error: force empty params when a string is passed to let
-                // the router parse them again
-                newTargetLocation.params = {};
-            }
-            if (!('path' in newTargetLocation) &&
-                !('name' in newTargetLocation)) {
-                warn(`Invalid redirect found:\n${JSON.stringify(newTargetLocation, null, 2)}\n when navigating to "${to.fullPath}". A redirect must contain a name or path. This will break in production.`);
-                throw new Error('Invalid redirect');
-            }
-            return assign({
-                query: to.query,
-                hash: to.hash,
-                params: to.params,
-            }, newTargetLocation);
-        }
-    }
-    function pushWithRedirect(to, redirectedFrom) {
-        const targetLocation = (pendingLocation = resolve(to));
-        const from = currentRoute.value;
-        const data = to.state;
-        const force = to.force;
-        // to could be a string where `replace` is a function
-        const replace = to.replace === true;
-        const shouldRedirect = handleRedirectRecord(targetLocation);
-        if (shouldRedirect)
-            return pushWithRedirect(assign(locationAsObject(shouldRedirect), {
-                state: data,
-                force,
-                replace,
-            }), 
-            // keep original redirectedFrom if it exists
-            redirectedFrom || targetLocation);
-        // if it was a redirect we already called `pushWithRedirect` above
-        const toLocation = targetLocation;
-        toLocation.redirectedFrom = redirectedFrom;
-        let failure;
-        if (!force && isSameRouteLocation(stringifyQuery$1, from, targetLocation)) {
-            failure = createRouterError(16 /* NAVIGATION_DUPLICATED */, { to: toLocation, from });
-            // trigger scroll to allow scrolling to the same anchor
-            handleScroll();
-        }
-        return (failure ? Promise.resolve(failure) : navigate(toLocation, from))
-            .catch((error) => isNavigationFailure(error)
-            ? // navigation redirects still mark the router as ready
-                isNavigationFailure(error, 2 /* NAVIGATION_GUARD_REDIRECT */)
-                    ? error
-                    : markAsReady(error) // also returns the error
-            : // reject any unknown error
-                triggerError(error, toLocation, from))
-            .then((failure) => {
-            if (failure) {
-                if (isNavigationFailure(failure, 2 /* NAVIGATION_GUARD_REDIRECT */)) {
-                    if (// we are redirecting to the same location we were already at
-                        isSameRouteLocation(stringifyQuery$1, resolve(failure.to), toLocation) &&
-                        // and we have done it a couple of times
-                        redirectedFrom &&
-                        // @ts-expect-error: added only in dev
-                        (redirectedFrom._count = redirectedFrom._count
-                            ? // @ts-expect-error
-                                redirectedFrom._count + 1
-                            : 1) > 10) {
-                        warn(`Detected an infinite redirection in a navigation guard when going from "${from.fullPath}" to "${toLocation.fullPath}". Aborting to avoid a Stack Overflow. This will break in production if not fixed.`);
-                        return Promise.reject(new Error('Infinite redirect in navigation guard'));
-                    }
-                    return pushWithRedirect(
-                    // keep options
-                    assign(locationAsObject(failure.to), {
-                        state: data,
-                        force,
-                        replace,
-                    }), 
-                    // preserve the original redirectedFrom if any
-                    redirectedFrom || toLocation);
-                }
-            }
-            else {
-                // if we fail we don't finalize the navigation
-                failure = finalizeNavigation(toLocation, from, true, replace, data);
-            }
-            triggerAfterEach(toLocation, from, failure);
-            return failure;
-        });
-    }
-    /**
-     * Helper to reject and skip all navigation guards if a new navigation happened
-     * @param to
-     * @param from
-     */
-    function checkCanceledNavigationAndReject(to, from) {
-        const error = checkCanceledNavigation(to, from);
-        return error ? Promise.reject(error) : Promise.resolve();
-    }
-    // TODO: refactor the whole before guards by internally using router.beforeEach
-    function navigate(to, from) {
-        let guards;
-        const [leavingRecords, updatingRecords, enteringRecords] = extractChangingRecords(to, from);
-        // all components here have been resolved once because we are leaving
-        guards = extractComponentsGuards(leavingRecords.reverse(), 'beforeRouteLeave', to, from);
-        // leavingRecords is already reversed
-        for (const record of leavingRecords) {
-            record.leaveGuards.forEach(guard => {
-                guards.push(guardToPromiseFn(guard, to, from));
-            });
-        }
-        const canceledNavigationCheck = checkCanceledNavigationAndReject.bind(null, to, from);
-        guards.push(canceledNavigationCheck);
-        // run the queue of per route beforeRouteLeave guards
-        return (runGuardQueue(guards)
-            .then(() => {
-            // check global guards beforeEach
-            guards = [];
-            for (const guard of beforeGuards.list()) {
-                guards.push(guardToPromiseFn(guard, to, from));
-            }
-            guards.push(canceledNavigationCheck);
-            return runGuardQueue(guards);
-        })
-            .then(() => {
-            // check in components beforeRouteUpdate
-            guards = extractComponentsGuards(updatingRecords, 'beforeRouteUpdate', to, from);
-            for (const record of updatingRecords) {
-                record.updateGuards.forEach(guard => {
-                    guards.push(guardToPromiseFn(guard, to, from));
-                });
-            }
-            guards.push(canceledNavigationCheck);
-            // run the queue of per route beforeEnter guards
-            return runGuardQueue(guards);
-        })
-            .then(() => {
-            // check the route beforeEnter
-            guards = [];
-            for (const record of to.matched) {
-                // do not trigger beforeEnter on reused views
-                if (record.beforeEnter && !from.matched.includes(record)) {
-                    if (Array.isArray(record.beforeEnter)) {
-                        for (const beforeEnter of record.beforeEnter)
-                            guards.push(guardToPromiseFn(beforeEnter, to, from));
-                    }
-                    else {
-                        guards.push(guardToPromiseFn(record.beforeEnter, to, from));
-                    }
-                }
-            }
-            guards.push(canceledNavigationCheck);
-            // run the queue of per route beforeEnter guards
-            return runGuardQueue(guards);
-        })
-            .then(() => {
-            // NOTE: at this point to.matched is normalized and does not contain any () => Promise<Component>
-            // clear existing enterCallbacks, these are added by extractComponentsGuards
-            to.matched.forEach(record => (record.enterCallbacks = {}));
-            // check in-component beforeRouteEnter
-            guards = extractComponentsGuards(enteringRecords, 'beforeRouteEnter', to, from);
-            guards.push(canceledNavigationCheck);
-            // run the queue of per route beforeEnter guards
-            return runGuardQueue(guards);
-        })
-            .then(() => {
-            // check global guards beforeResolve
-            guards = [];
-            for (const guard of beforeResolveGuards.list()) {
-                guards.push(guardToPromiseFn(guard, to, from));
-            }
-            guards.push(canceledNavigationCheck);
-            return runGuardQueue(guards);
-        })
-            // catch any navigation canceled
-            .catch(err => isNavigationFailure(err, 8 /* NAVIGATION_CANCELLED */)
-            ? err
-            : Promise.reject(err)));
-    }
-    function triggerAfterEach(to, from, failure) {
-        // navigation is confirmed, call afterGuards
-        // TODO: wrap with error handlers
-        for (const guard of afterGuards.list())
-            guard(to, from, failure);
-    }
-    /**
-     * - Cleans up any navigation guards
-     * - Changes the url if necessary
-     * - Calls the scrollBehavior
-     */
-    function finalizeNavigation(toLocation, from, isPush, replace, data) {
-        // a more recent navigation took place
-        const error = checkCanceledNavigation(toLocation, from);
-        if (error)
-            return error;
-        // only consider as push if it's not the first navigation
-        const isFirstNavigation = from === START_LOCATION_NORMALIZED;
-        const state = {} ;
-        // change URL only if the user did a push/replace and if it's not the initial navigation because
-        // it's just reflecting the url
-        if (isPush) {
-            // on the initial navigation, we want to reuse the scroll position from
-            // history state if it exists
-            if (replace || isFirstNavigation)
-                routerHistory.replace(toLocation.fullPath, assign({
-                    scroll: isFirstNavigation && state && state.scroll,
-                }, data));
-            else
-                routerHistory.push(toLocation.fullPath, data);
-        }
-        // accept current navigation
-        currentRoute.value = toLocation;
-        handleScroll();
-        markAsReady();
-    }
-    let removeHistoryListener;
-    // attach listener to history to trigger navigations
-    function setupListeners() {
-        removeHistoryListener = routerHistory.listen((to, _from, info) => {
-            // cannot be a redirect route because it was in history
-            const toLocation = resolve(to);
-            // due to dynamic routing, and to hash history with manual navigation
-            // (manually changing the url or calling history.hash = '#/somewhere'),
-            // there could be a redirect record in history
-            const shouldRedirect = handleRedirectRecord(toLocation);
-            if (shouldRedirect) {
-                pushWithRedirect(assign(shouldRedirect, { replace: true }), toLocation).catch(noop);
-                return;
-            }
-            pendingLocation = toLocation;
-            const from = currentRoute.value;
-            navigate(toLocation, from)
-                .catch((error) => {
-                if (isNavigationFailure(error, 4 /* NAVIGATION_ABORTED */ | 8 /* NAVIGATION_CANCELLED */)) {
-                    return error;
-                }
-                if (isNavigationFailure(error, 2 /* NAVIGATION_GUARD_REDIRECT */)) {
-                    // Here we could call if (info.delta) routerHistory.go(-info.delta,
-                    // false) but this is bug prone as we have no way to wait the
-                    // navigation to be finished before calling pushWithRedirect. Using
-                    // a setTimeout of 16ms seems to work but there is not guarantee for
-                    // it to work on every browser. So Instead we do not restore the
-                    // history entry and trigger a new navigation as requested by the
-                    // navigation guard.
-                    // the error is already handled by router.push we just want to avoid
-                    // logging the error
-                    pushWithRedirect(error.to, toLocation
-                    // avoid an uncaught rejection, let push call triggerError
-                    )
-                        .then(failure => {
-                        // manual change in hash history #916 ending up in the URL not
-                        // changing but it was changed by the manual url change, so we
-                        // need to manually change it ourselves
-                        if (isNavigationFailure(failure, 4 /* NAVIGATION_ABORTED */ |
-                            16 /* NAVIGATION_DUPLICATED */) &&
-                            !info.delta &&
-                            info.type === NavigationType.pop) {
-                            routerHistory.go(-1, false);
-                        }
-                    })
-                        .catch(noop);
-                    // avoid the then branch
-                    return Promise.reject();
-                }
-                // do not restore history on unknown direction
-                if (info.delta)
-                    routerHistory.go(-info.delta, false);
-                // unrecognized error, transfer to the global handler
-                return triggerError(error, toLocation, from);
-            })
-                .then((failure) => {
-                failure =
-                    failure ||
-                        finalizeNavigation(
-                        // after navigation, all matched components are resolved
-                        toLocation, from, false);
-                // revert the navigation
-                if (failure) {
-                    if (info.delta) {
-                        routerHistory.go(-info.delta, false);
-                    }
-                    else if (info.type === NavigationType.pop &&
-                        isNavigationFailure(failure, 4 /* NAVIGATION_ABORTED */ | 16 /* NAVIGATION_DUPLICATED */)) {
-                        // manual change in hash history #916
-                        // it's like a push but lacks the information of the direction
-                        routerHistory.go(-1, false);
-                    }
-                }
-                triggerAfterEach(toLocation, from, failure);
-            })
-                .catch(noop);
-        });
-    }
-    // Initialization and Errors
-    let readyHandlers = useCallbacks();
-    let errorHandlers = useCallbacks();
-    let ready;
-    /**
-     * Trigger errorHandlers added via onError and throws the error as well
-     *
-     * @param error - error to throw
-     * @param to - location we were navigating to when the error happened
-     * @param from - location we were navigating from when the error happened
-     * @returns the error as a rejected promise
-     */
-    function triggerError(error, to, from) {
-        markAsReady(error);
-        const list = errorHandlers.list();
-        if (list.length) {
-            list.forEach(handler => handler(error, to, from));
-        }
-        else {
-            {
-                warn('uncaught error during route navigation:');
-            }
-            console.error(error);
-        }
-        return Promise.reject(error);
-    }
-    function isReady() {
-        if (ready && currentRoute.value !== START_LOCATION_NORMALIZED)
-            return Promise.resolve();
-        return new Promise((resolve, reject) => {
-            readyHandlers.add([resolve, reject]);
-        });
-    }
-    function markAsReady(err) {
-        if (!ready) {
-            // still not ready if an error happened
-            ready = !err;
-            setupListeners();
-            readyHandlers
-                .list()
-                .forEach(([resolve, reject]) => (err ? reject(err) : resolve()));
-            readyHandlers.reset();
-        }
-        return err;
-    }
-    // Scroll behavior
-    function handleScroll(to, from, isPush, isFirstNavigation) {
-        return Promise.resolve();
-    }
-    const go = (delta) => routerHistory.go(delta);
-    const installedApps = new Set();
-    const router = {
-        currentRoute,
-        addRoute,
-        removeRoute,
-        hasRoute,
-        getRoutes,
-        resolve,
-        options,
-        push,
-        replace,
-        go,
-        back: () => go(-1),
-        forward: () => go(1),
-        beforeEach: beforeGuards.add,
-        beforeResolve: beforeResolveGuards.add,
-        afterEach: afterGuards.add,
-        onError: errorHandlers.add,
-        isReady,
-        install(app) {
-            const router = this;
-            app.component('RouterLink', RouterLink);
-            app.component('RouterView', RouterView);
-            app.config.globalProperties.$router = router;
-            Object.defineProperty(app.config.globalProperties, '$route', {
-                enumerable: true,
-                get: () => vue.unref(currentRoute),
-            });
-            const reactiveRoute = {};
-            for (const key in START_LOCATION_NORMALIZED) {
-                // @ts-expect-error: the key matches
-                reactiveRoute[key] = vue.computed(() => currentRoute.value[key]);
-            }
-            app.provide(routerKey, router);
-            app.provide(routeLocationKey, vue.reactive(reactiveRoute));
-            app.provide(routerViewLocationKey, currentRoute);
-            const unmountApp = app.unmount;
-            installedApps.add(app);
-            app.unmount = function () {
-                installedApps.delete(app);
-                // the router is not attached to an app anymore
-                if (installedApps.size < 1) {
-                    // invalidate the current navigation
-                    pendingLocation = START_LOCATION_NORMALIZED;
-                    removeHistoryListener && removeHistoryListener();
-                    currentRoute.value = START_LOCATION_NORMALIZED;
-                    ready = false;
-                }
-                unmountApp();
-            };
-        },
-    };
-    return router;
-}
-function runGuardQueue(guards) {
-    return guards.reduce((promise, guard) => promise.then(() => guard()), Promise.resolve());
-}
-function extractChangingRecords(to, from) {
-    const leavingRecords = [];
-    const updatingRecords = [];
-    const enteringRecords = [];
-    const len = Math.max(from.matched.length, to.matched.length);
-    for (let i = 0; i < len; i++) {
-        const recordFrom = from.matched[i];
-        if (recordFrom) {
-            if (to.matched.find(record => isSameRouteRecord(record, recordFrom)))
-                updatingRecords.push(recordFrom);
-            else
-                leavingRecords.push(recordFrom);
-        }
-        const recordTo = to.matched[i];
-        if (recordTo) {
-            // the type doesn't matter because we are comparing per reference
-            if (!from.matched.find(record => isSameRouteRecord(record, recordTo))) {
-                enteringRecords.push(recordTo);
-            }
-        }
-    }
-    return [leavingRecords, updatingRecords, enteringRecords];
-}
+	/**
+	 * Creates a Router instance that can be used by a Vue app.
+	 *
+	 * @param options - {@link RouterOptions}
+	 */
+	function createRouter(options) {
+	    const matcher = createRouterMatcher(options.routes, options);
+	    const parseQuery$1 = options.parseQuery || parseQuery;
+	    const stringifyQuery$1 = options.stringifyQuery || stringifyQuery;
+	    const routerHistory = options.history;
+	    if (!routerHistory)
+	        throw new Error('Provide the "history" option when calling "createRouter()":' +
+	            ' https://next.router.vuejs.org/api/#history.');
+	    const beforeGuards = useCallbacks();
+	    const beforeResolveGuards = useCallbacks();
+	    const afterGuards = useCallbacks();
+	    const currentRoute = vue.shallowRef(START_LOCATION_NORMALIZED);
+	    let pendingLocation = START_LOCATION_NORMALIZED;
+	    const normalizeParams = applyToParams.bind(null, paramValue => '' + paramValue);
+	    const encodeParams = applyToParams.bind(null, encodeParam);
+	    const decodeParams = 
+	    // @ts-expect-error: intentionally avoid the type check
+	    applyToParams.bind(null, decode);
+	    function addRoute(parentOrRoute, route) {
+	        let parent;
+	        let record;
+	        if (isRouteName(parentOrRoute)) {
+	            parent = matcher.getRecordMatcher(parentOrRoute);
+	            record = route;
+	        }
+	        else {
+	            record = parentOrRoute;
+	        }
+	        return matcher.addRoute(record, parent);
+	    }
+	    function removeRoute(name) {
+	        const recordMatcher = matcher.getRecordMatcher(name);
+	        if (recordMatcher) {
+	            matcher.removeRoute(recordMatcher);
+	        }
+	        else {
+	            warn(`Cannot remove non-existent route "${String(name)}"`);
+	        }
+	    }
+	    function getRoutes() {
+	        return matcher.getRoutes().map(routeMatcher => routeMatcher.record);
+	    }
+	    function hasRoute(name) {
+	        return !!matcher.getRecordMatcher(name);
+	    }
+	    function resolve(rawLocation, currentLocation) {
+	        // const objectLocation = routerLocationAsObject(rawLocation)
+	        // we create a copy to modify it later
+	        currentLocation = assign({}, currentLocation || currentRoute.value);
+	        if (typeof rawLocation === 'string') {
+	            const locationNormalized = parseURL(parseQuery$1, rawLocation, currentLocation.path);
+	            const matchedRoute = matcher.resolve({ path: locationNormalized.path }, currentLocation);
+	            const href = routerHistory.createHref(locationNormalized.fullPath);
+	            {
+	                if (href.startsWith('//'))
+	                    warn(`Location "${rawLocation}" resolved to "${href}". A resolved location cannot start with multiple slashes.`);
+	                else if (!matchedRoute.matched.length) {
+	                    warn(`No match found for location with path "${rawLocation}"`);
+	                }
+	            }
+	            // locationNormalized is always a new object
+	            return assign(locationNormalized, matchedRoute, {
+	                params: decodeParams(matchedRoute.params),
+	                hash: decode(locationNormalized.hash),
+	                redirectedFrom: undefined,
+	                href,
+	            });
+	        }
+	        let matcherLocation;
+	        // path could be relative in object as well
+	        if ('path' in rawLocation) {
+	            if ('params' in rawLocation &&
+	                !('name' in rawLocation) &&
+	                // @ts-expect-error: the type is never
+	                Object.keys(rawLocation.params).length) {
+	                warn(`Path "${
+	                // @ts-expect-error: the type is never
+	                rawLocation.path}" was passed with params but they will be ignored. Use a named route alongside params instead.`);
+	            }
+	            matcherLocation = assign({}, rawLocation, {
+	                path: parseURL(parseQuery$1, rawLocation.path, currentLocation.path).path,
+	            });
+	        }
+	        else {
+	            // remove any nullish param
+	            const targetParams = assign({}, rawLocation.params);
+	            for (const key in targetParams) {
+	                if (targetParams[key] == null) {
+	                    delete targetParams[key];
+	                }
+	            }
+	            // pass encoded values to the matcher so it can produce encoded path and fullPath
+	            matcherLocation = assign({}, rawLocation, {
+	                params: encodeParams(rawLocation.params),
+	            });
+	            // current location params are decoded, we need to encode them in case the
+	            // matcher merges the params
+	            currentLocation.params = encodeParams(currentLocation.params);
+	        }
+	        const matchedRoute = matcher.resolve(matcherLocation, currentLocation);
+	        const hash = rawLocation.hash || '';
+	        if (hash && !hash.startsWith('#')) {
+	            warn(`A \`hash\` should always start with the character "#". Replace "${hash}" with "#${hash}".`);
+	        }
+	        // decoding them) the matcher might have merged current location params so
+	        // we need to run the decoding again
+	        matchedRoute.params = normalizeParams(decodeParams(matchedRoute.params));
+	        const fullPath = stringifyURL(stringifyQuery$1, assign({}, rawLocation, {
+	            hash: encodeHash(hash),
+	            path: matchedRoute.path,
+	        }));
+	        const href = routerHistory.createHref(fullPath);
+	        {
+	            if (href.startsWith('//')) {
+	                warn(`Location "${rawLocation}" resolved to "${href}". A resolved location cannot start with multiple slashes.`);
+	            }
+	            else if (!matchedRoute.matched.length) {
+	                warn(`No match found for location with path "${'path' in rawLocation ? rawLocation.path : rawLocation}"`);
+	            }
+	        }
+	        return assign({
+	            fullPath,
+	            // keep the hash encoded so fullPath is effectively path + encodedQuery +
+	            // hash
+	            hash,
+	            query: 
+	            // if the user is using a custom query lib like qs, we might have
+	            // nested objects, so we keep the query as is, meaning it can contain
+	            // numbers at `$route.query`, but at the point, the user will have to
+	            // use their own type anyway.
+	            // https://github.com/vuejs/router/issues/328#issuecomment-649481567
+	            stringifyQuery$1 === stringifyQuery
+	                ? normalizeQuery(rawLocation.query)
+	                : (rawLocation.query || {}),
+	        }, matchedRoute, {
+	            redirectedFrom: undefined,
+	            href,
+	        });
+	    }
+	    function locationAsObject(to) {
+	        return typeof to === 'string'
+	            ? parseURL(parseQuery$1, to, currentRoute.value.path)
+	            : assign({}, to);
+	    }
+	    function checkCanceledNavigation(to, from) {
+	        if (pendingLocation !== to) {
+	            return createRouterError(8 /* NAVIGATION_CANCELLED */, {
+	                from,
+	                to,
+	            });
+	        }
+	    }
+	    function push(to) {
+	        return pushWithRedirect(to);
+	    }
+	    function replace(to) {
+	        return push(assign(locationAsObject(to), { replace: true }));
+	    }
+	    function handleRedirectRecord(to) {
+	        const lastMatched = to.matched[to.matched.length - 1];
+	        if (lastMatched && lastMatched.redirect) {
+	            const { redirect } = lastMatched;
+	            let newTargetLocation = typeof redirect === 'function' ? redirect(to) : redirect;
+	            if (typeof newTargetLocation === 'string') {
+	                newTargetLocation =
+	                    newTargetLocation.includes('?') || newTargetLocation.includes('#')
+	                        ? (newTargetLocation = locationAsObject(newTargetLocation))
+	                        : // force empty params
+	                            { path: newTargetLocation };
+	                // @ts-expect-error: force empty params when a string is passed to let
+	                // the router parse them again
+	                newTargetLocation.params = {};
+	            }
+	            if (!('path' in newTargetLocation) &&
+	                !('name' in newTargetLocation)) {
+	                warn(`Invalid redirect found:\n${JSON.stringify(newTargetLocation, null, 2)}\n when navigating to "${to.fullPath}". A redirect must contain a name or path. This will break in production.`);
+	                throw new Error('Invalid redirect');
+	            }
+	            return assign({
+	                query: to.query,
+	                hash: to.hash,
+	                params: to.params,
+	            }, newTargetLocation);
+	        }
+	    }
+	    function pushWithRedirect(to, redirectedFrom) {
+	        const targetLocation = (pendingLocation = resolve(to));
+	        const from = currentRoute.value;
+	        const data = to.state;
+	        const force = to.force;
+	        // to could be a string where `replace` is a function
+	        const replace = to.replace === true;
+	        const shouldRedirect = handleRedirectRecord(targetLocation);
+	        if (shouldRedirect)
+	            return pushWithRedirect(assign(locationAsObject(shouldRedirect), {
+	                state: data,
+	                force,
+	                replace,
+	            }), 
+	            // keep original redirectedFrom if it exists
+	            redirectedFrom || targetLocation);
+	        // if it was a redirect we already called `pushWithRedirect` above
+	        const toLocation = targetLocation;
+	        toLocation.redirectedFrom = redirectedFrom;
+	        let failure;
+	        if (!force && isSameRouteLocation(stringifyQuery$1, from, targetLocation)) {
+	            failure = createRouterError(16 /* NAVIGATION_DUPLICATED */, { to: toLocation, from });
+	            // trigger scroll to allow scrolling to the same anchor
+	            handleScroll();
+	        }
+	        return (failure ? Promise.resolve(failure) : navigate(toLocation, from))
+	            .catch((error) => isNavigationFailure(error)
+	            ? // navigation redirects still mark the router as ready
+	                isNavigationFailure(error, 2 /* NAVIGATION_GUARD_REDIRECT */)
+	                    ? error
+	                    : markAsReady(error) // also returns the error
+	            : // reject any unknown error
+	                triggerError(error, toLocation, from))
+	            .then((failure) => {
+	            if (failure) {
+	                if (isNavigationFailure(failure, 2 /* NAVIGATION_GUARD_REDIRECT */)) {
+	                    if (// we are redirecting to the same location we were already at
+	                        isSameRouteLocation(stringifyQuery$1, resolve(failure.to), toLocation) &&
+	                        // and we have done it a couple of times
+	                        redirectedFrom &&
+	                        // @ts-expect-error: added only in dev
+	                        (redirectedFrom._count = redirectedFrom._count
+	                            ? // @ts-expect-error
+	                                redirectedFrom._count + 1
+	                            : 1) > 10) {
+	                        warn(`Detected an infinite redirection in a navigation guard when going from "${from.fullPath}" to "${toLocation.fullPath}". Aborting to avoid a Stack Overflow. This will break in production if not fixed.`);
+	                        return Promise.reject(new Error('Infinite redirect in navigation guard'));
+	                    }
+	                    return pushWithRedirect(
+	                    // keep options
+	                    assign(locationAsObject(failure.to), {
+	                        state: data,
+	                        force,
+	                        replace,
+	                    }), 
+	                    // preserve the original redirectedFrom if any
+	                    redirectedFrom || toLocation);
+	                }
+	            }
+	            else {
+	                // if we fail we don't finalize the navigation
+	                failure = finalizeNavigation(toLocation, from, true, replace, data);
+	            }
+	            triggerAfterEach(toLocation, from, failure);
+	            return failure;
+	        });
+	    }
+	    /**
+	     * Helper to reject and skip all navigation guards if a new navigation happened
+	     * @param to
+	     * @param from
+	     */
+	    function checkCanceledNavigationAndReject(to, from) {
+	        const error = checkCanceledNavigation(to, from);
+	        return error ? Promise.reject(error) : Promise.resolve();
+	    }
+	    // TODO: refactor the whole before guards by internally using router.beforeEach
+	    function navigate(to, from) {
+	        let guards;
+	        const [leavingRecords, updatingRecords, enteringRecords] = extractChangingRecords(to, from);
+	        // all components here have been resolved once because we are leaving
+	        guards = extractComponentsGuards(leavingRecords.reverse(), 'beforeRouteLeave', to, from);
+	        // leavingRecords is already reversed
+	        for (const record of leavingRecords) {
+	            record.leaveGuards.forEach(guard => {
+	                guards.push(guardToPromiseFn(guard, to, from));
+	            });
+	        }
+	        const canceledNavigationCheck = checkCanceledNavigationAndReject.bind(null, to, from);
+	        guards.push(canceledNavigationCheck);
+	        // run the queue of per route beforeRouteLeave guards
+	        return (runGuardQueue(guards)
+	            .then(() => {
+	            // check global guards beforeEach
+	            guards = [];
+	            for (const guard of beforeGuards.list()) {
+	                guards.push(guardToPromiseFn(guard, to, from));
+	            }
+	            guards.push(canceledNavigationCheck);
+	            return runGuardQueue(guards);
+	        })
+	            .then(() => {
+	            // check in components beforeRouteUpdate
+	            guards = extractComponentsGuards(updatingRecords, 'beforeRouteUpdate', to, from);
+	            for (const record of updatingRecords) {
+	                record.updateGuards.forEach(guard => {
+	                    guards.push(guardToPromiseFn(guard, to, from));
+	                });
+	            }
+	            guards.push(canceledNavigationCheck);
+	            // run the queue of per route beforeEnter guards
+	            return runGuardQueue(guards);
+	        })
+	            .then(() => {
+	            // check the route beforeEnter
+	            guards = [];
+	            for (const record of to.matched) {
+	                // do not trigger beforeEnter on reused views
+	                if (record.beforeEnter && !from.matched.includes(record)) {
+	                    if (Array.isArray(record.beforeEnter)) {
+	                        for (const beforeEnter of record.beforeEnter)
+	                            guards.push(guardToPromiseFn(beforeEnter, to, from));
+	                    }
+	                    else {
+	                        guards.push(guardToPromiseFn(record.beforeEnter, to, from));
+	                    }
+	                }
+	            }
+	            guards.push(canceledNavigationCheck);
+	            // run the queue of per route beforeEnter guards
+	            return runGuardQueue(guards);
+	        })
+	            .then(() => {
+	            // NOTE: at this point to.matched is normalized and does not contain any () => Promise<Component>
+	            // clear existing enterCallbacks, these are added by extractComponentsGuards
+	            to.matched.forEach(record => (record.enterCallbacks = {}));
+	            // check in-component beforeRouteEnter
+	            guards = extractComponentsGuards(enteringRecords, 'beforeRouteEnter', to, from);
+	            guards.push(canceledNavigationCheck);
+	            // run the queue of per route beforeEnter guards
+	            return runGuardQueue(guards);
+	        })
+	            .then(() => {
+	            // check global guards beforeResolve
+	            guards = [];
+	            for (const guard of beforeResolveGuards.list()) {
+	                guards.push(guardToPromiseFn(guard, to, from));
+	            }
+	            guards.push(canceledNavigationCheck);
+	            return runGuardQueue(guards);
+	        })
+	            // catch any navigation canceled
+	            .catch(err => isNavigationFailure(err, 8 /* NAVIGATION_CANCELLED */)
+	            ? err
+	            : Promise.reject(err)));
+	    }
+	    function triggerAfterEach(to, from, failure) {
+	        // navigation is confirmed, call afterGuards
+	        // TODO: wrap with error handlers
+	        for (const guard of afterGuards.list())
+	            guard(to, from, failure);
+	    }
+	    /**
+	     * - Cleans up any navigation guards
+	     * - Changes the url if necessary
+	     * - Calls the scrollBehavior
+	     */
+	    function finalizeNavigation(toLocation, from, isPush, replace, data) {
+	        // a more recent navigation took place
+	        const error = checkCanceledNavigation(toLocation, from);
+	        if (error)
+	            return error;
+	        // only consider as push if it's not the first navigation
+	        const isFirstNavigation = from === START_LOCATION_NORMALIZED;
+	        const state = {} ;
+	        // change URL only if the user did a push/replace and if it's not the initial navigation because
+	        // it's just reflecting the url
+	        if (isPush) {
+	            // on the initial navigation, we want to reuse the scroll position from
+	            // history state if it exists
+	            if (replace || isFirstNavigation)
+	                routerHistory.replace(toLocation.fullPath, assign({
+	                    scroll: isFirstNavigation && state && state.scroll,
+	                }, data));
+	            else
+	                routerHistory.push(toLocation.fullPath, data);
+	        }
+	        // accept current navigation
+	        currentRoute.value = toLocation;
+	        handleScroll();
+	        markAsReady();
+	    }
+	    let removeHistoryListener;
+	    // attach listener to history to trigger navigations
+	    function setupListeners() {
+	        removeHistoryListener = routerHistory.listen((to, _from, info) => {
+	            // cannot be a redirect route because it was in history
+	            const toLocation = resolve(to);
+	            // due to dynamic routing, and to hash history with manual navigation
+	            // (manually changing the url or calling history.hash = '#/somewhere'),
+	            // there could be a redirect record in history
+	            const shouldRedirect = handleRedirectRecord(toLocation);
+	            if (shouldRedirect) {
+	                pushWithRedirect(assign(shouldRedirect, { replace: true }), toLocation).catch(noop);
+	                return;
+	            }
+	            pendingLocation = toLocation;
+	            const from = currentRoute.value;
+	            navigate(toLocation, from)
+	                .catch((error) => {
+	                if (isNavigationFailure(error, 4 /* NAVIGATION_ABORTED */ | 8 /* NAVIGATION_CANCELLED */)) {
+	                    return error;
+	                }
+	                if (isNavigationFailure(error, 2 /* NAVIGATION_GUARD_REDIRECT */)) {
+	                    // Here we could call if (info.delta) routerHistory.go(-info.delta,
+	                    // false) but this is bug prone as we have no way to wait the
+	                    // navigation to be finished before calling pushWithRedirect. Using
+	                    // a setTimeout of 16ms seems to work but there is not guarantee for
+	                    // it to work on every browser. So Instead we do not restore the
+	                    // history entry and trigger a new navigation as requested by the
+	                    // navigation guard.
+	                    // the error is already handled by router.push we just want to avoid
+	                    // logging the error
+	                    pushWithRedirect(error.to, toLocation
+	                    // avoid an uncaught rejection, let push call triggerError
+	                    )
+	                        .then(failure => {
+	                        // manual change in hash history #916 ending up in the URL not
+	                        // changing but it was changed by the manual url change, so we
+	                        // need to manually change it ourselves
+	                        if (isNavigationFailure(failure, 4 /* NAVIGATION_ABORTED */ |
+	                            16 /* NAVIGATION_DUPLICATED */) &&
+	                            !info.delta &&
+	                            info.type === NavigationType.pop) {
+	                            routerHistory.go(-1, false);
+	                        }
+	                    })
+	                        .catch(noop);
+	                    // avoid the then branch
+	                    return Promise.reject();
+	                }
+	                // do not restore history on unknown direction
+	                if (info.delta)
+	                    routerHistory.go(-info.delta, false);
+	                // unrecognized error, transfer to the global handler
+	                return triggerError(error, toLocation, from);
+	            })
+	                .then((failure) => {
+	                failure =
+	                    failure ||
+	                        finalizeNavigation(
+	                        // after navigation, all matched components are resolved
+	                        toLocation, from, false);
+	                // revert the navigation
+	                if (failure) {
+	                    if (info.delta) {
+	                        routerHistory.go(-info.delta, false);
+	                    }
+	                    else if (info.type === NavigationType.pop &&
+	                        isNavigationFailure(failure, 4 /* NAVIGATION_ABORTED */ | 16 /* NAVIGATION_DUPLICATED */)) {
+	                        // manual change in hash history #916
+	                        // it's like a push but lacks the information of the direction
+	                        routerHistory.go(-1, false);
+	                    }
+	                }
+	                triggerAfterEach(toLocation, from, failure);
+	            })
+	                .catch(noop);
+	        });
+	    }
+	    // Initialization and Errors
+	    let readyHandlers = useCallbacks();
+	    let errorHandlers = useCallbacks();
+	    let ready;
+	    /**
+	     * Trigger errorHandlers added via onError and throws the error as well
+	     *
+	     * @param error - error to throw
+	     * @param to - location we were navigating to when the error happened
+	     * @param from - location we were navigating from when the error happened
+	     * @returns the error as a rejected promise
+	     */
+	    function triggerError(error, to, from) {
+	        markAsReady(error);
+	        const list = errorHandlers.list();
+	        if (list.length) {
+	            list.forEach(handler => handler(error, to, from));
+	        }
+	        else {
+	            {
+	                warn('uncaught error during route navigation:');
+	            }
+	            console.error(error);
+	        }
+	        return Promise.reject(error);
+	    }
+	    function isReady() {
+	        if (ready && currentRoute.value !== START_LOCATION_NORMALIZED)
+	            return Promise.resolve();
+	        return new Promise((resolve, reject) => {
+	            readyHandlers.add([resolve, reject]);
+	        });
+	    }
+	    function markAsReady(err) {
+	        if (!ready) {
+	            // still not ready if an error happened
+	            ready = !err;
+	            setupListeners();
+	            readyHandlers
+	                .list()
+	                .forEach(([resolve, reject]) => (err ? reject(err) : resolve()));
+	            readyHandlers.reset();
+	        }
+	        return err;
+	    }
+	    // Scroll behavior
+	    function handleScroll(to, from, isPush, isFirstNavigation) {
+	        return Promise.resolve();
+	    }
+	    const go = (delta) => routerHistory.go(delta);
+	    const installedApps = new Set();
+	    const router = {
+	        currentRoute,
+	        addRoute,
+	        removeRoute,
+	        hasRoute,
+	        getRoutes,
+	        resolve,
+	        options,
+	        push,
+	        replace,
+	        go,
+	        back: () => go(-1),
+	        forward: () => go(1),
+	        beforeEach: beforeGuards.add,
+	        beforeResolve: beforeResolveGuards.add,
+	        afterEach: afterGuards.add,
+	        onError: errorHandlers.add,
+	        isReady,
+	        install(app) {
+	            const router = this;
+	            app.component('RouterLink', RouterLink);
+	            app.component('RouterView', RouterView);
+	            app.config.globalProperties.$router = router;
+	            Object.defineProperty(app.config.globalProperties, '$route', {
+	                enumerable: true,
+	                get: () => vue.unref(currentRoute),
+	            });
+	            const reactiveRoute = {};
+	            for (const key in START_LOCATION_NORMALIZED) {
+	                // @ts-expect-error: the key matches
+	                reactiveRoute[key] = vue.computed(() => currentRoute.value[key]);
+	            }
+	            app.provide(routerKey, router);
+	            app.provide(routeLocationKey, vue.reactive(reactiveRoute));
+	            app.provide(routerViewLocationKey, currentRoute);
+	            const unmountApp = app.unmount;
+	            installedApps.add(app);
+	            app.unmount = function () {
+	                installedApps.delete(app);
+	                // the router is not attached to an app anymore
+	                if (installedApps.size < 1) {
+	                    // invalidate the current navigation
+	                    pendingLocation = START_LOCATION_NORMALIZED;
+	                    removeHistoryListener && removeHistoryListener();
+	                    currentRoute.value = START_LOCATION_NORMALIZED;
+	                    ready = false;
+	                }
+	                unmountApp();
+	            };
+	        },
+	    };
+	    return router;
+	}
+	function runGuardQueue(guards) {
+	    return guards.reduce((promise, guard) => promise.then(() => guard()), Promise.resolve());
+	}
+	function extractChangingRecords(to, from) {
+	    const leavingRecords = [];
+	    const updatingRecords = [];
+	    const enteringRecords = [];
+	    const len = Math.max(from.matched.length, to.matched.length);
+	    for (let i = 0; i < len; i++) {
+	        const recordFrom = from.matched[i];
+	        if (recordFrom) {
+	            if (to.matched.find(record => isSameRouteRecord(record, recordFrom)))
+	                updatingRecords.push(recordFrom);
+	            else
+	                leavingRecords.push(recordFrom);
+	        }
+	        const recordTo = to.matched[i];
+	        if (recordTo) {
+	            // the type doesn't matter because we are comparing per reference
+	            if (!from.matched.find(record => isSameRouteRecord(record, recordTo))) {
+	                enteringRecords.push(recordTo);
+	            }
+	        }
+	    }
+	    return [leavingRecords, updatingRecords, enteringRecords];
+	}
 
-/**
- * Returns the router instance. Equivalent to using `$router` inside
- * templates.
- */
-function useRouter() {
-    return vue.inject(routerKey);
-}
-/**
- * Returns the current route location. Equivalent to using `$route` inside
- * templates.
- */
-function useRoute() {
-    return vue.inject(routeLocationKey);
-}
+	/**
+	 * Returns the router instance. Equivalent to using `$router` inside
+	 * templates.
+	 */
+	function useRouter() {
+	    return vue.inject(routerKey);
+	}
+	/**
+	 * Returns the current route location. Equivalent to using `$route` inside
+	 * templates.
+	 */
+	function useRoute() {
+	    return vue.inject(routeLocationKey);
+	}
 
-exports.RouterLink = RouterLink;
-exports.RouterView = RouterView;
-exports.START_LOCATION = START_LOCATION_NORMALIZED;
-exports.createMemoryHistory = createMemoryHistory;
-exports.createRouter = createRouter;
-exports.createRouterMatcher = createRouterMatcher;
-exports.createWebHashHistory = createWebHashHistory;
-exports.createWebHistory = createWebHistory;
-exports.isNavigationFailure = isNavigationFailure;
-exports.matchedRouteKey = matchedRouteKey;
-exports.onBeforeRouteLeave = onBeforeRouteLeave;
-exports.onBeforeRouteUpdate = onBeforeRouteUpdate;
-exports.parseQuery = parseQuery;
-exports.routeLocationKey = routeLocationKey;
-exports.routerKey = routerKey;
-exports.routerViewLocationKey = routerViewLocationKey;
-exports.stringifyQuery = stringifyQuery;
-exports.useLink = useLink;
-exports.useRoute = useRoute;
-exports.useRouter = useRouter;
-exports.viewDepthKey = viewDepthKey;
-}(vueRouter_cjs));
+	exports.RouterLink = RouterLink;
+	exports.RouterView = RouterView;
+	exports.START_LOCATION = START_LOCATION_NORMALIZED;
+	exports.createMemoryHistory = createMemoryHistory;
+	exports.createRouter = createRouter;
+	exports.createRouterMatcher = createRouterMatcher;
+	exports.createWebHashHistory = createWebHashHistory;
+	exports.createWebHistory = createWebHistory;
+	exports.isNavigationFailure = isNavigationFailure;
+	exports.matchedRouteKey = matchedRouteKey;
+	exports.onBeforeRouteLeave = onBeforeRouteLeave;
+	exports.onBeforeRouteUpdate = onBeforeRouteUpdate;
+	exports.parseQuery = parseQuery;
+	exports.routeLocationKey = routeLocationKey;
+	exports.routerKey = routerKey;
+	exports.routerViewLocationKey = routerViewLocationKey;
+	exports.stringifyQuery = stringifyQuery;
+	exports.useLink = useLink;
+	exports.useRoute = useRoute;
+	exports.useRouter = useRouter;
+	exports.viewDepthKey = viewDepthKey;
+} (vueRouter_cjs));
 
 var __defProp = Object.defineProperty;
 var __defProps = Object.defineProperties;
@@ -3137,7 +3137,7 @@ const _globalThis$2 = function() {
   }
   throw new Error("unable to locate global object");
 }();
-const fetch = _globalThis$2.fetch || (() => Promise.reject(new Error("[ohmyfetch] globalThis.fetch is not supported!")));
+const fetch = _globalThis$2.fetch || (() => Promise.reject(new Error("[ohmyfetch] global.fetch is not supported!")));
 const Headers$1 = _globalThis$2.Headers;
 const $fetch = createFetch({ fetch, Headers: Headers$1 });
 const appConfig = useRuntimeConfig$1().app;
@@ -3318,8 +3318,8 @@ function createNamespace() {
   };
 }
 const _globalThis$1 = typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {};
-const globalKey$2 = "__unctx__";
-const defaultNamespace$1 = _globalThis$1[globalKey$2] || (_globalThis$1[globalKey$2] = createNamespace());
+const globalKey$1 = "__unctx__";
+const defaultNamespace$1 = _globalThis$1[globalKey$1] || (_globalThis$1[globalKey$1] = createNamespace());
 const getContext = (key) => defaultNamespace$1.get(key);
 const asyncHandlersKey = "__unctx_async_handlers__";
 const asyncHandlers = _globalThis$1[asyncHandlersKey] || (_globalThis$1[asyncHandlersKey] = /* @__PURE__ */ new Set());
@@ -3474,11 +3474,11 @@ function createNuxtApp(options) {
   const runtimeConfig = options.ssrContext.runtimeConfig;
   const compatibilityConfig = new Proxy(runtimeConfig, {
     get(target, prop) {
-      var _a2;
+      var _a;
       if (prop === "public") {
         return target.public;
       }
-      return (_a2 = target[prop]) != null ? _a2 : target.public[prop];
+      return (_a = target[prop]) != null ? _a : target.public[prop];
     },
     set(target, prop, value) {
       {
@@ -3556,7 +3556,7 @@ function defineGetter(obj, key, val) {
 const wrapInRef = (value) => vue_cjs_prod.isRef(value) ? value : vue_cjs_prod.ref(value);
 const getDefault = () => null;
 function useAsyncData(key, handler, options = {}) {
-  var _a2, _b2, _c, _d, _e;
+  var _a, _b, _c, _d, _e;
   if (typeof key !== "string") {
     throw new TypeError("asyncData key must be a string");
   }
@@ -3567,7 +3567,7 @@ function useAsyncData(key, handler, options = {}) {
   if (options.defer) {
     console.warn("[useAsyncData] `defer` has been renamed to `lazy`. Support for `defer` will be removed in RC.");
   }
-  options.lazy = (_b2 = (_a2 = options.lazy) != null ? _a2 : options.defer) != null ? _b2 : false;
+  options.lazy = (_b = (_a = options.lazy) != null ? _a : options.defer) != null ? _b : false;
   options.initialCache = (_c = options.initialCache) != null ? _c : true;
   const nuxt = useNuxtApp();
   const instance = vue_cjs_prod.getCurrentInstance();
@@ -3810,11 +3810,11 @@ class H3Error extends Error {
   }
 }
 function createError(input) {
-  var _a2;
+  var _a;
   if (input instanceof H3Error) {
     return input;
   }
-  const err = new H3Error((_a2 = input.message) != null ? _a2 : input.statusMessage);
+  const err = new H3Error((_a = input.message) != null ? _a : input.statusMessage);
   if (input.statusCode) {
     err.statusCode = input.statusCode;
   }
@@ -3827,8 +3827,8 @@ function createError(input) {
   return err;
 }
 function useRequestEvent(nuxtApp = useNuxtApp()) {
-  var _a2;
-  return (_a2 = nuxtApp.ssrContext) == null ? void 0 : _a2.event;
+  var _a;
+  return (_a = nuxtApp.ssrContext) == null ? void 0 : _a.event;
 }
 const CookieDefaults = {
   path: "/",
@@ -3836,10 +3836,10 @@ const CookieDefaults = {
   encode: (val) => encodeURIComponent(typeof val === "string" ? val : JSON.stringify(val))
 };
 function useCookie(name, _opts) {
-  var _a2, _b2;
+  var _a, _b;
   const opts = __spreadValues(__spreadValues({}, CookieDefaults), _opts);
   const cookies = readRawCookies(opts);
-  const cookie = wrapInRef((_b2 = cookies[name]) != null ? _b2 : (_a2 = opts.default) == null ? void 0 : _a2.call(opts));
+  const cookie = wrapInRef((_b = cookies[name]) != null ? _b : (_a = opts.default) == null ? void 0 : _a.call(opts));
   {
     const nuxtApp = useNuxtApp();
     const writeFinalCookieValue = () => {
@@ -3853,9 +3853,9 @@ function useCookie(name, _opts) {
   return cookie;
 }
 function readRawCookies(opts = {}) {
-  var _a2;
+  var _a;
   {
-    return parse(((_a2 = useRequestEvent()) == null ? void 0 : _a2.req.headers.cookie) || "", opts);
+    return parse(((_a = useRequestEvent()) == null ? void 0 : _a.req.headers.cookie) || "", opts);
   }
 }
 function serializeCookie(name, value, opts = {}) {
@@ -3870,8 +3870,8 @@ function writeServerCookie(event, name, value, opts = {}) {
   }
 }
 const useRouter = () => {
-  var _a2;
-  return (_a2 = useNuxtApp()) == null ? void 0 : _a2.$router;
+  var _a;
+  return (_a = useNuxtApp()) == null ? void 0 : _a.$router;
 };
 const useRoute = () => {
   return useNuxtApp()._route;
@@ -3905,7 +3905,7 @@ const firstNonUndefined = (...args) => args.find((arg) => arg !== void 0);
 const DEFAULT_EXTERNAL_REL_ATTRIBUTE = "noopener noreferrer";
 function defineNuxtLink(options) {
   const componentName2 = options.componentName || "NuxtLink";
-  const checkPropConflicts = (props, main2, sub) => {
+  const checkPropConflicts = (props, main, sub) => {
   };
   return vue_cjs_prod.defineComponent({
     name: componentName2,
@@ -3985,7 +3985,7 @@ function defineNuxtLink(options) {
         return to.value === "" || hasProtocol(to.value, true);
       });
       return () => {
-        var _a2, _b2;
+        var _a, _b;
         if (!isExternal.value) {
           return vue_cjs_prod.h(vue_cjs_prod.resolveComponent("RouterLink"), {
             to: to.value,
@@ -3995,7 +3995,7 @@ function defineNuxtLink(options) {
             ariaCurrentValue: props.ariaCurrentValue
           }, slots.default);
         }
-        const href = typeof to.value === "object" ? (_b2 = (_a2 = router.resolve(to.value)) == null ? void 0 : _a2.href) != null ? _b2 : null : to.value || null;
+        const href = typeof to.value === "object" ? (_b = (_a = router.resolve(to.value)) == null ? void 0 : _a.href) != null ? _b : null : to.value || null;
         const target = props.target || null;
         checkPropConflicts(props, "noRel", "rel");
         const rel = props.noRel ? null : firstNonUndefined(props.rel, options.externalRelAttribute, href ? DEFAULT_EXTERNAL_REL_ATTRIBUTE : "") || null;
@@ -4040,7 +4040,7 @@ const slotFlagsText = {
 const GLOBALS_WHITE_LISTED = "Infinity,undefined,NaN,isFinite,isNaN,parseFloat,parseInt,decodeURI,decodeURIComponent,encodeURI,encodeURIComponent,Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,BigInt";
 const isGloballyWhitelisted = /* @__PURE__ */ makeMap(GLOBALS_WHITE_LISTED);
 const range$1 = 2;
-function generateCodeFrame(source, start2 = 0, end2 = source.length) {
+function generateCodeFrame(source, start = 0, end = source.length) {
   let lines = source.split(/(\r?\n)/);
   const newlineSequences = lines.filter((_2, idx) => idx % 2 === 1);
   lines = lines.filter((_2, idx) => idx % 2 === 0);
@@ -4048,8 +4048,8 @@ function generateCodeFrame(source, start2 = 0, end2 = source.length) {
   const res = [];
   for (let i = 0; i < lines.length; i++) {
     count += lines[i].length + (newlineSequences[i] && newlineSequences[i].length || 0);
-    if (count >= start2) {
-      for (let j = i - range$1; j <= i + range$1 || end2 > count; j++) {
+    if (count >= start) {
+      for (let j = i - range$1; j <= i + range$1 || end > count; j++) {
         if (j < 0 || j >= lines.length)
           continue;
         const line = j + 1;
@@ -4057,12 +4057,12 @@ function generateCodeFrame(source, start2 = 0, end2 = source.length) {
         const lineLength = lines[j].length;
         const newLineSeqLength = newlineSequences[j] && newlineSequences[j].length || 0;
         if (j === i) {
-          const pad = start2 - (count - (lineLength + newLineSeqLength));
-          const length = Math.max(1, end2 > count ? lineLength - pad : end2 - start2);
+          const pad = start - (count - (lineLength + newLineSeqLength));
+          const length = Math.max(1, end > count ? lineLength - pad : end - start);
           res.push(`   |  ` + " ".repeat(pad) + "^".repeat(length));
         } else if (j > i) {
-          if (end2 > count) {
-            const length = Math.max(Math.min(end2 - count, lineLength), 1);
+          if (end > count) {
+            const length = Math.max(Math.min(end - count, lineLength), 1);
             res.push(`   |  ` + "^".repeat(length));
           }
           count += lineLength + newLineSeqLength;
@@ -4587,14 +4587,14 @@ var setAttrs = (el, attrs) => {
   }
 };
 var updateElements = (document2 = window.document, type4, tags) => {
-  var _a2;
+  var _a;
   const head = document2.head;
   let headCountEl = head.querySelector(`meta[name="${HEAD_COUNT_KEY}"]`);
   const headCount = headCountEl ? Number(headCountEl.getAttribute("content")) : 0;
   const oldElements = [];
   if (headCountEl) {
     for (let i = 0, j = headCountEl.previousElementSibling; i < headCount; i++, j = (j == null ? void 0 : j.previousElementSibling) || null) {
-      if (((_a2 = j == null ? void 0 : j.tagName) == null ? void 0 : _a2.toLowerCase()) === type4) {
+      if (((_a = j == null ? void 0 : j.tagName) == null ? void 0 : _a.toLowerCase()) === type4) {
         oldElements.push(j);
       }
     }
@@ -4616,8 +4616,8 @@ var updateElements = (document2 = window.document, type4, tags) => {
     return true;
   });
   oldElements.forEach((t) => {
-    var _a22;
-    return (_a22 = t.parentNode) == null ? void 0 : _a22.removeChild(t);
+    var _a2;
+    return (_a2 = t.parentNode) == null ? void 0 : _a2.removeChild(t);
   });
   newElements.forEach((t) => {
     head.insertBefore(t, headCountEl);
@@ -4815,8 +4815,8 @@ const removeUndefinedProps = (props) => Object.fromEntries(Object.entries(props)
 const setupForUseMeta = (metaFactory, renderChild) => (props, ctx) => {
   useHead(() => metaFactory(__spreadValues(__spreadValues({}, removeUndefinedProps(props)), ctx.attrs), ctx));
   return () => {
-    var _a2, _b2;
-    return renderChild ? (_b2 = (_a2 = ctx.slots).default) == null ? void 0 : _b2.call(_a2) : null;
+    var _a, _b;
+    return renderChild ? (_b = (_a = ctx.slots).default) == null ? void 0 : _b.call(_a) : null;
   };
 };
 const globalProps = {
@@ -4927,8 +4927,8 @@ const Base = vue_cjs_prod.defineComponent({
 const Title = vue_cjs_prod.defineComponent({
   name: "Title",
   setup: setupForUseMeta((_2, { slots }) => {
-    var _a2, _b2;
-    const title = ((_b2 = (_a2 = slots.default()) == null ? void 0 : _a2[0]) == null ? void 0 : _b2.children) || null;
+    var _a, _b;
+    const title = ((_b = (_a = slots.default()) == null ? void 0 : _a[0]) == null ? void 0 : _b.children) || null;
     return {
       title
     };
@@ -4959,9 +4959,9 @@ const Style = vue_cjs_prod.defineComponent({
     }
   }),
   setup: setupForUseMeta((props, { slots }) => {
-    var _a2, _b2, _c;
+    var _a, _b, _c;
     const style = __spreadValues({}, props);
-    const textContent = (_c = (_b2 = (_a2 = slots.default) == null ? void 0 : _a2.call(slots)) == null ? void 0 : _b2[0]) == null ? void 0 : _c.children;
+    const textContent = (_c = (_b = (_a = slots.default) == null ? void 0 : _a.call(slots)) == null ? void 0 : _b[0]) == null ? void 0 : _c.children;
     if (textContent) {
       style.children = textContent;
     }
@@ -4973,8 +4973,8 @@ const Style = vue_cjs_prod.defineComponent({
 const Head = vue_cjs_prod.defineComponent({
   name: "Head",
   setup: (_props, ctx) => () => {
-    var _a2, _b2;
-    return (_b2 = (_a2 = ctx.slots).default) == null ? void 0 : _b2.call(_a2);
+    var _a, _b;
+    return (_b = (_a = ctx.slots).default) == null ? void 0 : _b.call(_a);
   }
 });
 const Html = vue_cjs_prod.defineComponent({
@@ -5006,12 +5006,12 @@ const Components$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.define
 const metaConfig = { "globalMeta": { "charset": "utf-8", "viewport": "width=device-width, initial-scale=1", "meta": [{ "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "name": "keywords", "content": "thinkmoon,\u6307\u5C16\u9B54\u6CD5\u5C4B,\u9189\u6708\u601D\u7684\u535A\u5BA2" }, { "name": "description", "content": "web\u524D\u7AEF\u5F00\u53D1\u5DE5\u7A0B\u5E08\u3001\u9762\u5411\u9AD8\u4FDD\u771F\u7F16\u7A0B\u3001\u603B\u7ED3\u4E0E\u8BB0\u5F55\u662F\u4E24\u4E2A\u6781\u5176\u4F18\u79C0\u7684\u5B66\u4E60\u4E60\u60EF\u3001\u5BF9\u77E5\u8BC6\u548C\u6280\u672F\u4FDD\u6301\u656C\u754F\u4E4B\u5FC3\uFF01" }], "link": [], "style": [], "script": [{ "async": true, "src": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3208634444966567", "crossorigin": "anonymous" }] }, "mixinKey": "created" };
 const metaMixin = {
   [metaConfig.mixinKey]() {
-    var _a2;
+    var _a;
     const instance = vue_cjs_prod.getCurrentInstance();
     if (!instance) {
       return;
     }
-    const options = instance.type || ((_a2 = instance.proxy) == null ? void 0 : _a2.$options);
+    const options = instance.type || ((_a = instance.proxy) == null ? void 0 : _a.$options);
     if (!options || !("head" in options)) {
       return;
     }
@@ -5029,14 +5029,14 @@ const plugin_147caea6 = defineNuxtPlugin((nuxtApp) => {
 });
 const interpolatePath = (route, match) => {
   return match.path.replace(/(:\w+)\([^)]+\)/g, "$1").replace(/(:\w+)[?+*]/g, "$1").replace(/:\w+/g, (r) => {
-    var _a2;
-    return ((_a2 = route.params[r.slice(1)]) == null ? void 0 : _a2.toString()) || "";
+    var _a;
+    return ((_a = route.params[r.slice(1)]) == null ? void 0 : _a.toString()) || "";
   });
 };
 const generateRouteKey = (override, routeProps) => {
-  var _a2;
+  var _a;
   const matchedRoute = routeProps.route.matched.find((m2) => m2.components.default === routeProps.Component.type);
-  const source = (_a2 = override != null ? override : matchedRoute == null ? void 0 : matchedRoute.meta.key) != null ? _a2 : interpolatePath(routeProps.route, matchedRoute);
+  const source = (_a = override != null ? override : matchedRoute == null ? void 0 : matchedRoute.meta.key) != null ? _a : interpolatePath(routeProps.route, matchedRoute);
   return typeof source === "function" ? source(routeProps.route) : source;
 };
 const wrapInKeepAlive = (props, children) => {
@@ -5066,8 +5066,8 @@ const NuxtPage = vue_cjs_prod.defineComponent({
     return () => {
       return vue_cjs_prod.h(vueRouter_cjs.RouterView, {}, {
         default: (routeProps) => {
-          var _a2;
-          return routeProps.Component && _wrapIf(vue_cjs_prod.Transition, (_a2 = routeProps.route.meta.pageTransition) != null ? _a2 : defaultPageTransition, wrapInKeepAlive(routeProps.route.meta.keepalive, isNested ? vue_cjs_prod.h(routeProps.Component, { key: generateRouteKey(props.pageKey, routeProps) }) : vue_cjs_prod.h(vue_cjs_prod.Suspense, {
+          var _a;
+          return routeProps.Component && _wrapIf(vue_cjs_prod.Transition, (_a = routeProps.route.meta.pageTransition) != null ? _a : defaultPageTransition, wrapInKeepAlive(routeProps.route.meta.keepalive, isNested ? vue_cjs_prod.h(routeProps.Component, { key: generateRouteKey(props.pageKey, routeProps) }) : vue_cjs_prod.h(vue_cjs_prod.Suspense, {
             onPending: () => nuxtApp.callHook("page:start", routeProps.Component),
             onResolve: () => nuxtApp.callHook("page:finish", routeProps.Component)
           }, { default: () => vue_cjs_prod.h(routeProps.Component, { key: generateRouteKey(props.pageKey, routeProps) }) }))).default();
@@ -5572,16 +5572,16 @@ function request(options) {
     axios.defaults.baseURL = useRuntimeConfig().baseUrl;
     let auth2 = null;
     axios(options).then((res) => {
-      var _a2, _b2;
-      if (((_a2 = res == null ? void 0 : res.data) == null ? void 0 : _a2.code) === 200) {
-        resolve((_b2 = res.data) == null ? void 0 : _b2.data);
+      var _a, _b;
+      if (((_a = res == null ? void 0 : res.data) == null ? void 0 : _a.code) === 200) {
+        resolve((_b = res.data) == null ? void 0 : _b.data);
       } else {
         reject(res);
       }
     }).catch((err) => {
-      var _a2;
+      var _a;
       console.error(err);
-      if (Number((_a2 = err.response) == null ? void 0 : _a2.status) === 401) {
+      if (Number((_a = err.response) == null ? void 0 : _a.status) === 401) {
         auth2.value = null;
         location.href = "/login";
       }
@@ -7138,8 +7138,8 @@ const router_ee46a392 = defineNuxtPlugin((nuxtApp) => {
   };
   nuxtApp.hook("page:finish", syncCurrentRoute);
   router.afterEach((to, from) => {
-    var _a2, _b2, _c, _d;
-    if (((_b2 = (_a2 = to.matched[0]) == null ? void 0 : _a2.components) == null ? void 0 : _b2.default) === ((_d = (_c = from.matched[0]) == null ? void 0 : _c.components) == null ? void 0 : _d.default)) {
+    var _a, _b, _c, _d;
+    if (((_b = (_a = to.matched[0]) == null ? void 0 : _a.components) == null ? void 0 : _b.default) === ((_d = (_c = from.matched[0]) == null ? void 0 : _c.components) == null ? void 0 : _d.default)) {
       syncCurrentRoute();
     }
   });
@@ -7154,7 +7154,7 @@ const router_ee46a392 = defineNuxtPlugin((nuxtApp) => {
     named: {}
   };
   router.beforeEach(async (to, from) => {
-    var _a2;
+    var _a;
     to.meta = vue_cjs_prod.reactive(to.meta);
     nuxtApp._processingMiddleware = true;
     const middlewareEntries = /* @__PURE__ */ new Set([...globalMiddleware, ...nuxtApp._middleware.global]);
@@ -7172,7 +7172,7 @@ const router_ee46a392 = defineNuxtPlugin((nuxtApp) => {
       }
     }
     for (const entry2 of middlewareEntries) {
-      const middleware = typeof entry2 === "string" ? nuxtApp._middleware.named[entry2] || await ((_a2 = namedMiddleware[entry2]) == null ? void 0 : _a2.call(namedMiddleware).then((r) => r.default || r)) : entry2;
+      const middleware = typeof entry2 === "string" ? nuxtApp._middleware.named[entry2] || await ((_a = namedMiddleware[entry2]) == null ? void 0 : _a.call(namedMiddleware).then((r) => r.default || r)) : entry2;
       const result = await callWithNuxt(nuxtApp, middleware, [to, from]);
       {
         if (result === false || result instanceof Error) {
@@ -7234,49 +7234,8 @@ const PiniaNuxtPlugin = (context, inject2) => {
     }
   }
 };
-const _global$1 = typeof globalThis !== "undefined" ? globalThis : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
-const globalKey$1 = "__vueuse_ssr_handlers__";
-_global$1[globalKey$1] = _global$1[globalKey$1] || {};
-const handlers = _global$1[globalKey$1];
-function setSSRHandler(key, fn2) {
-  handlers[key] = fn2;
-}
-setSSRHandler("getDefaultStorage", () => {
-  const cookieMap = /* @__PURE__ */ new Map();
-  const get2 = (key) => {
-    if (!cookieMap.get(key))
-      cookieMap.set(key, useCookie(key, { maxAge: 2147483646 }));
-    return cookieMap.get(key);
-  };
-  return {
-    getItem: (key) => get2(key).value,
-    setItem: (key, value) => get2(key).value = value,
-    removeItem: (key) => get2(key).value = void 0
-  };
-});
-{
-  setSSRHandler("updateHTMLAttrs", (selector, attr, value) => {
-    if (selector === "html") {
-      useMeta({
-        htmlAttrs: {
-          [attr]: value
-        }
-      });
-    } else if (selector === "body") {
-      useMeta({
-        bodyAttrs: {
-          [attr]: value
-        }
-      });
-    } else {
-      throw new Error(`Unsupported meta selector "${selector}" in SSR`);
-    }
-  });
-}
-const ssrPlugin_65c79876 = () => {
-};
-/*! Element Plus v2.1.10 */
-var freeGlobal = typeof global == "object" && global && globalThis.Object === Object && global;
+/*! Element Plus v2.1.11 */
+var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
 var freeGlobal$1 = freeGlobal;
 var freeSelf = typeof self == "object" && self && self.Object === Object && self;
 var root = freeGlobal$1 || freeSelf || Function("return this")();
@@ -7612,24 +7571,24 @@ function copyObject(source, props, object4, customizer) {
   return object4;
 }
 var nativeMax$1 = Math.max;
-function overRest(func, start2, transform) {
-  start2 = nativeMax$1(start2 === void 0 ? func.length - 1 : start2, 0);
+function overRest(func, start, transform) {
+  start = nativeMax$1(start === void 0 ? func.length - 1 : start, 0);
   return function() {
-    var args = arguments, index2 = -1, length = nativeMax$1(args.length - start2, 0), array4 = Array(length);
+    var args = arguments, index2 = -1, length = nativeMax$1(args.length - start, 0), array4 = Array(length);
     while (++index2 < length) {
-      array4[index2] = args[start2 + index2];
+      array4[index2] = args[start + index2];
     }
     index2 = -1;
-    var otherArgs = Array(start2 + 1);
-    while (++index2 < start2) {
+    var otherArgs = Array(start + 1);
+    while (++index2 < start) {
       otherArgs[index2] = args[index2];
     }
-    otherArgs[start2] = transform(array4);
+    otherArgs[start] = transform(array4);
     return apply(func, this, otherArgs);
   };
 }
-function baseRest(func, start2) {
-  return setToString$1(overRest(func, start2, identity), func + "");
+function baseRest(func, start) {
+  return setToString$1(overRest(func, start, identity), func + "");
 }
 var MAX_SAFE_INTEGER = 9007199254740991;
 function isLength(value) {
@@ -8599,7 +8558,7 @@ var now = function() {
 var now$1 = now;
 var FUNC_ERROR_TEXT$1 = "Expected a function";
 var nativeMax = Math.max, nativeMin = Math.min;
-function debounce$1(func, wait, options) {
+function debounce(func, wait, options) {
   var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
   if (typeof func != "function") {
     throw new TypeError(FUNC_ERROR_TEXT$1);
@@ -8766,7 +8725,7 @@ function throttle(func, wait, options) {
     leading = "leading" in options ? !!options.leading : leading;
     trailing = "trailing" in options ? !!options.trailing : trailing;
   }
-  return debounce$1(func, wait, {
+  return debounce(func, wait, {
     "leading": leading,
     "maxWait": wait,
     "trailing": trailing
@@ -8883,7 +8842,7 @@ const focusNode = (el) => {
   el.focus();
   !isLeaf(el) && el.click();
 };
-const on = (element, event, handler, useCapture = false) => {
+const on$1 = (element, event, handler, useCapture = false) => {
   if (element && event && handler) {
     element == null ? void 0 : element.addEventListener(event, handler, useCapture);
   }
@@ -8900,7 +8859,7 @@ const once = (el, event, fn2) => {
     }
     off(el, event, listener);
   };
-  on(el, event, listener);
+  on$1(el, event, listener);
 };
 const composeEventHandlers = (theirsHandler, oursHandler, { checkForDefaultPrevented = true } = {}) => {
   const handleEvent = (event) => {
@@ -8934,12 +8893,12 @@ var __spreadValues$8 = (a2, b2) => {
 };
 var __spreadProps$5 = (a2, b2) => __defProps$5(a2, __getOwnPropDescs$5(b2));
 function computedEager(fn2, options) {
-  var _a2;
+  var _a;
   const result = vue_cjs_prod.shallowRef();
   vue_cjs_prod.watchEffect(() => {
     result.value = fn2();
   }, __spreadProps$5(__spreadValues$8({}, options), {
-    flush: (_a2 = options == null ? void 0 : options.flush) != null ? _a2 : "sync"
+    flush: (_a = options == null ? void 0 : options.flush) != null ? _a : "sync"
   }));
   return vue_cjs_prod.readonly(result);
 }
@@ -9073,7 +9032,7 @@ function useTimeoutFn(cb, interval, options = {}) {
     isPending.value = false;
     clear();
   }
-  function start2(...args) {
+  function start(...args) {
     clear();
     isPending.value = true;
     timer = setTimeout(() => {
@@ -9088,14 +9047,14 @@ function useTimeoutFn(cb, interval, options = {}) {
   tryOnScopeDispose(stop);
   return {
     isPending,
-    start: start2,
+    start,
     stop
   };
 }
 function unrefElement(elRef) {
-  var _a2;
+  var _a;
   const plain = vue_cjs_prod.unref(elRef);
-  return (_a2 = plain == null ? void 0 : plain.$el) != null ? _a2 : plain;
+  return (_a = plain == null ? void 0 : plain.$el) != null ? _a : plain;
 }
 const defaultWindow = void 0;
 const defaultDocument = void 0;
@@ -9188,7 +9147,7 @@ var __objRest$2 = (source, exclude) => {
   return target;
 };
 function useResizeObserver(target, callback, options = {}) {
-  const _a2 = options, { window: window2 = defaultWindow } = _a2, observerOptions = __objRest$2(_a2, ["window"]);
+  const _a = options, { window: window2 = defaultWindow } = _a, observerOptions = __objRest$2(_a, ["window"]);
   let observer;
   const isSupported = window2 && "ResizeObserver" in window2;
   const cleanup = () => {
@@ -9221,10 +9180,10 @@ function useElementBounding(target, options = {}) {
     windowScroll = true
   } = options;
   const height = vue_cjs_prod.ref(0);
-  const bottom2 = vue_cjs_prod.ref(0);
-  const left2 = vue_cjs_prod.ref(0);
-  const right2 = vue_cjs_prod.ref(0);
-  const top2 = vue_cjs_prod.ref(0);
+  const bottom = vue_cjs_prod.ref(0);
+  const left = vue_cjs_prod.ref(0);
+  const right = vue_cjs_prod.ref(0);
+  const top = vue_cjs_prod.ref(0);
   const width = vue_cjs_prod.ref(0);
   const x2 = vue_cjs_prod.ref(0);
   const y = vue_cjs_prod.ref(0);
@@ -9233,10 +9192,10 @@ function useElementBounding(target, options = {}) {
     if (!el) {
       if (reset) {
         height.value = 0;
-        bottom2.value = 0;
-        left2.value = 0;
-        right2.value = 0;
-        top2.value = 0;
+        bottom.value = 0;
+        left.value = 0;
+        right.value = 0;
+        top.value = 0;
         width.value = 0;
         x2.value = 0;
         y.value = 0;
@@ -9245,10 +9204,10 @@ function useElementBounding(target, options = {}) {
     }
     const rect = el.getBoundingClientRect();
     height.value = rect.height;
-    bottom2.value = rect.bottom;
-    left2.value = rect.left;
-    right2.value = rect.right;
-    top2.value = rect.top;
+    bottom.value = rect.bottom;
+    left.value = rect.left;
+    right.value = rect.right;
+    top.value = rect.top;
     width.value = rect.width;
     x2.value = rect.x;
     y.value = rect.y;
@@ -9261,10 +9220,10 @@ function useElementBounding(target, options = {}) {
     useEventListener("resize", update, { passive: true });
   return {
     height,
-    bottom: bottom2,
-    left: left2,
-    right: right2,
-    top: top2,
+    bottom,
+    left,
+    right,
+    top,
     width,
     x: x2,
     y,
@@ -9331,12 +9290,12 @@ const addResizeListener = function(element, fn2) {
   return;
 };
 const removeResizeListener = function(element, fn2) {
-  var _a2;
+  var _a;
   if (!element || !element.__resizeListeners__)
     return;
   element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn2), 1);
   if (!element.__resizeListeners__.length) {
-    (_a2 = element.__ro__) == null ? void 0 : _a2.disconnect();
+    (_a = element.__ro__) == null ? void 0 : _a.disconnect();
   }
 };
 const NOOP = () => {
@@ -9367,7 +9326,7 @@ const hyphenate = cacheStringFunction((str) => str.replace(hyphenateRE, "-$1").t
 const capitalize = cacheStringFunction((str) => str.charAt(0).toUpperCase() + str.slice(1));
 const isUndefined = (val) => val === void 0;
 const isEmpty = (val) => !val && val !== 0 || isArray(val) && val.length === 0 || isObject$1(val) && !Object.keys(val).length;
-const isElement$2 = (e) => {
+const isElement$1 = (e) => {
   if (typeof Element === "undefined")
     return false;
   return e instanceof Element;
@@ -9388,6 +9347,17 @@ const getProp = (obj, path, defaultValue) => {
     }
   };
 };
+class ElementPlusError extends Error {
+  constructor(m2) {
+    super(m2);
+    this.name = "ElementPlusError";
+  }
+}
+function throwError(scope, m2) {
+  throw new ElementPlusError(`[${scope}] ${m2}`);
+}
+function debugWarn(scope, message2) {
+}
 const classNameToArray = (cls = "") => cls.split(" ").filter((item) => !!item.trim());
 const hasClass = (el, cls) => {
   if (!el || !cls)
@@ -9409,6 +9379,15 @@ const removeClass = (el, cls) => {
 const getStyle = (element, styleName) => {
   return "";
 };
+function addUnit(value, defaultUnit = "px") {
+  if (!value)
+    return "";
+  if (isString(value)) {
+    return value;
+  } else if (isNumber(value)) {
+    return `${value}${defaultUnit}`;
+  }
+}
 const getScrollContainer = (el, isVertical) => {
   return;
 };
@@ -9829,7 +9808,7 @@ const _hoisted_4$e = [
 function _sfc_render$1K(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$1h, _hoisted_4$e);
 }
-var hide$2 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2A, [["render", _sfc_render$1K]]);
+var hide = /* @__PURE__ */ _export_sfc$1(_sfc_main$2A, [["render", _sfc_render$1K]]);
 const _sfc_main$2z = vue_cjs_prod.defineComponent({
   name: "InfoFilled"
 });
@@ -10237,18 +10216,18 @@ const ValidateComponentsMap = {
   success: circleCheck,
   error: circleClose
 };
-const withInstall = (main2, extra) => {
-  main2.install = (app) => {
-    for (const comp of [main2, ...Object.values(extra != null ? extra : {})]) {
+const withInstall = (main, extra) => {
+  main.install = (app) => {
+    for (const comp of [main, ...Object.values(extra != null ? extra : {})]) {
       app.component(comp.name, comp);
     }
   };
   if (extra) {
     for (const [key, comp] of Object.entries(extra)) {
-      main2[key] = comp;
+      main[key] = comp;
     }
   }
-  return main2;
+  return main;
 };
 const withInstallFunction = (fn2, name) => {
   fn2.install = (app) => {
@@ -10272,26 +10251,6 @@ const composeRefs = (...refs) => {
     });
   };
 };
-class ElementPlusError extends Error {
-  constructor(m2) {
-    super(m2);
-    this.name = "ElementPlusError";
-  }
-}
-function throwError(scope, m2) {
-  throw new ElementPlusError(`[${scope}] ${m2}`);
-}
-function debugWarn(scope, message2) {
-}
-function addUnit(value, defaultUnit = "px") {
-  if (!value)
-    return "";
-  if (isString(value)) {
-    return value;
-  } else if (isNumber(value)) {
-    return `${value}${defaultUnit}`;
-  }
-}
 const EVENT_CODE = {
   tab: "Tab",
   enter: "Enter",
@@ -10338,7 +10297,7 @@ const componentSizeMap = {
   default: 32,
   small: 24
 };
-const getComponentSize = (size = "default") => {
+const getComponentSize = (size) => {
   return componentSizeMap[size || "default"];
 };
 const isValidComponentSize = (val) => ["", ...componentSizes].includes(val);
@@ -10416,8 +10375,8 @@ const useAttrs = (params = {}) => {
     return vue_cjs_prod.computed(() => ({}));
   }
   return vue_cjs_prod.computed(() => {
-    var _a2;
-    return fromPairs(Object.entries((_a2 = instance.proxy) == null ? void 0 : _a2.$attrs).filter(([key]) => !allExcludeKeys.includes(key) && !(excludeListeners && LISTENER_PREFIX.test(key))));
+    var _a;
+    return fromPairs(Object.entries((_a = instance.proxy) == null ? void 0 : _a.$attrs).filter(([key]) => !allExcludeKeys.includes(key) && !(excludeListeners && LISTENER_PREFIX.test(key))));
   });
 };
 const breadcrumbKey = Symbol("breadcrumbKey");
@@ -10442,8 +10401,8 @@ const TOOLTIP_V2_OPEN = "tooltip_v2.open";
 const useProp = (name) => {
   const vm = vue_cjs_prod.getCurrentInstance();
   return vue_cjs_prod.computed(() => {
-    var _a2, _b2;
-    return (_b2 = (_a2 = vm.proxy) == null ? void 0 : _a2.$props[name]) != null ? _b2 : void 0;
+    var _a, _b;
+    return (_b = (_a = vm.proxy) == null ? void 0 : _a.$props[name]) != null ? _b : void 0;
   });
 };
 const globalConfig = vue_cjs_prod.ref();
@@ -10451,18 +10410,18 @@ function useGlobalConfig(key, defaultValue = void 0) {
   const config = vue_cjs_prod.getCurrentInstance() ? vue_cjs_prod.inject(configProviderContextKey, globalConfig) : globalConfig;
   if (key) {
     return vue_cjs_prod.computed(() => {
-      var _a2, _b2;
-      return (_b2 = (_a2 = config.value) == null ? void 0 : _a2[key]) != null ? _b2 : defaultValue;
+      var _a, _b;
+      return (_b = (_a = config.value) == null ? void 0 : _a[key]) != null ? _b : defaultValue;
     });
   } else {
     return config;
   }
 }
 const provideGlobalConfig = (config, app, global2 = false) => {
-  var _a2;
+  var _a;
   const inSetup = !!vue_cjs_prod.getCurrentInstance();
   const oldConfig = inSetup ? useGlobalConfig() : void 0;
-  const provideFn = (_a2 = app == null ? void 0 : app.provide) != null ? _a2 : inSetup ? vue_cjs_prod.provide : void 0;
+  const provideFn = (_a = app == null ? void 0 : app.provide) != null ? _a : inSetup ? vue_cjs_prod.provide : void 0;
   if (!provideFn) {
     return;
   }
@@ -10479,11 +10438,11 @@ const provideGlobalConfig = (config, app, global2 = false) => {
   return context;
 };
 const mergeConfig = (a2, b2) => {
-  var _a2;
+  var _a;
   const keys2 = [.../* @__PURE__ */ new Set([...keysOf(a2), ...keysOf(b2)])];
   const obj = {};
   for (const key of keys2) {
-    obj[key] = (_a2 = b2[key]) != null ? _a2 : a2[key];
+    obj[key] = (_a = b2[key]) != null ? _a : a2[key];
   }
   return obj;
 };
@@ -10573,8 +10532,8 @@ const useDraggable = (targetRef, dragRef, draggable2) => {
 const useFocus = (el) => {
   return {
     focus: () => {
-      var _a2, _b2;
-      (_b2 = (_a2 = el.value) == null ? void 0 : _a2.focus) == null ? void 0 : _b2.call(_a2);
+      var _a, _b;
+      (_b = (_a = el.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
     }
   };
 };
@@ -10710,8 +10669,8 @@ var English = {
 };
 const buildTranslator = (locale) => (path, option) => translate(path, option, vue_cjs_prod.unref(locale));
 const translate = (path, option, locale) => get(locale, path, path).replace(/\{(\w+)\}/g, (_2, key) => {
-  var _a2;
-  return `${(_a2 = option == null ? void 0 : option[key]) != null ? _a2 : `{${key}}`}`;
+  var _a;
+  return `${(_a = option == null ? void 0 : option[key]) != null ? _a : `{${key}}`}`;
 });
 const buildLocaleContext = (locale) => {
   const lang = vue_cjs_prod.computed(() => vue_cjs_prod.unref(locale).name);
@@ -10866,11 +10825,11 @@ const usePreventGlobal = (indicator, evt, cb) => {
 const useRestoreActive = (toggle, initialFocus) => {
   let previousActive;
   vue_cjs_prod.watch(() => toggle.value, (val) => {
-    var _a2, _b2;
+    var _a, _b;
     if (val) {
       previousActive = document.activeElement;
       if (vue_cjs_prod.isRef(initialFocus)) {
-        (_b2 = (_a2 = initialFocus.value).focus) == null ? void 0 : _b2.call(_a2);
+        (_b = (_a = initialFocus.value).focus) == null ? void 0 : _b.call(_a);
       }
     } else {
       {
@@ -10953,7 +10912,7 @@ const useEscapeKeydown = (handler) => {
     }
   };
   vue_cjs_prod.onMounted(() => {
-    on(document, "keydown", cachedHandler);
+    on$1(document, "keydown", cachedHandler);
   });
   vue_cjs_prod.onBeforeUnmount(() => {
     off(document, "keydown", cachedHandler);
@@ -11041,7 +11000,7 @@ const useNamespace = (block) => {
   const b2 = (blockSuffix = "") => _bem(vue_cjs_prod.unref(namespace), block, blockSuffix, "", "");
   const e = (element) => element ? _bem(vue_cjs_prod.unref(namespace), block, "", element, "") : "";
   const m2 = (modifier) => modifier ? _bem(vue_cjs_prod.unref(namespace), block, "", "", modifier) : "";
-  const be = (blockSuffix, element) => blockSuffix && element ? _bem(vue_cjs_prod.unref(namespace), block, blockSuffix, element, "") : "";
+  const be2 = (blockSuffix, element) => blockSuffix && element ? _bem(vue_cjs_prod.unref(namespace), block, blockSuffix, element, "") : "";
   const em = (element, modifier) => element && modifier ? _bem(vue_cjs_prod.unref(namespace), block, "", element, modifier) : "";
   const bm = (blockSuffix, modifier) => blockSuffix && modifier ? _bem(vue_cjs_prod.unref(namespace), block, blockSuffix, "", modifier) : "";
   const bem = (blockSuffix, element, modifier) => blockSuffix && element && modifier ? _bem(vue_cjs_prod.unref(namespace), block, blockSuffix, element, modifier) : "";
@@ -11054,7 +11013,7 @@ const useNamespace = (block) => {
     b: b2,
     e,
     m: m2,
-    be,
+    be: be2,
     em,
     bm,
     bem,
@@ -11081,7 +11040,7 @@ function getSide(placement) {
 function getAlignment(placement) {
   return placement.split("-")[1];
 }
-function getMainAxisFromPlacement$1(placement) {
+function getMainAxisFromPlacement(placement) {
   return ["top", "bottom"].includes(getSide(placement)) ? "x" : "y";
 }
 function getLengthFromAxis(axis) {
@@ -11103,12 +11062,12 @@ function getSideObjectFromPadding(padding) {
     left: padding
   };
 }
-const min$3 = Math.min;
-const max$3 = Math.max;
-function within$1(min$12, value, max$12) {
-  return max$3(min$12, min$3(value, max$12));
+const min$2 = Math.min;
+const max$2 = Math.max;
+function within(min$1, value, max$1) {
+  return max$2(min$1, min$2(value, max$1));
 }
-const arrow$2 = (options) => ({
+const arrow = (options) => ({
   name: "arrow",
   options,
   async fn(middlewareArguments) {
@@ -11131,7 +11090,7 @@ const arrow$2 = (options) => ({
       x: x2,
       y
     };
-    const axis = getMainAxisFromPlacement$1(placement);
+    const axis = getMainAxisFromPlacement(placement);
     const length = getLengthFromAxis(axis);
     const arrowDimensions = await platform.getDimensions(element);
     const minProp = axis === "y" ? "top" : "left";
@@ -11144,7 +11103,7 @@ const arrow$2 = (options) => ({
     const min2 = paddingObject[minProp];
     const max2 = clientSize - arrowDimensions[length] - paddingObject[maxProp];
     const center = clientSize / 2 - arrowDimensions[length] / 2 + centerToReference;
-    const offset2 = within$1(min2, center, max2);
+    const offset2 = within(min2, center, max2);
     return {
       data: {
         [axis]: offset2,
@@ -11159,18 +11118,17 @@ function convertValueToCoords(placement, rects, value, rtl) {
   }
   const side = getSide(placement);
   const alignment = getAlignment(placement);
-  const isVertical = getMainAxisFromPlacement$1(placement) === "x";
+  const isVertical = getMainAxisFromPlacement(placement) === "x";
   const mainAxisMulti = ["left", "top"].includes(side) ? -1 : 1;
   const crossAxisMulti = rtl && isVertical ? -1 : 1;
   const rawValue = typeof value === "function" ? value(__spreadProps(__spreadValues({}, rects), {
     placement
   })) : value;
-  const isNumber2 = typeof rawValue === "number";
   let {
     mainAxis,
     crossAxis,
     alignmentAxis
-  } = isNumber2 ? {
+  } = typeof rawValue === "number" ? {
     mainAxis: rawValue,
     crossAxis: 0,
     alignmentAxis: null
@@ -11190,7 +11148,7 @@ function convertValueToCoords(placement, rects, value, rtl) {
     y: crossAxis * crossAxisMulti
   };
 }
-const offset$2 = function(value) {
+const offset = function(value) {
   if (value === void 0) {
     value = 0;
   }
@@ -11261,14 +11219,55 @@ const arrowMiddleware = ({
       const arrowEl = vue_cjs_prod.unref(arrowRef);
       if (!arrowEl)
         return {};
-      return arrow$2({
+      return arrow({
         element: arrowEl,
         padding
       }).fn(args);
     }
   };
 };
-const version$1 = "2.1.10";
+function useCursor(input) {
+  const selectionRef = vue_cjs_prod.ref();
+  function recordCursor() {
+    if (input.value == void 0)
+      return;
+    const { selectionStart, selectionEnd, value } = input.value;
+    if (selectionStart == null || selectionEnd == null)
+      return;
+    const beforeTxt = value.slice(0, Math.max(0, selectionStart));
+    const afterTxt = value.slice(Math.max(0, selectionEnd));
+    selectionRef.value = {
+      selectionStart,
+      selectionEnd,
+      value,
+      beforeTxt,
+      afterTxt
+    };
+  }
+  function setCursor() {
+    if (input.value == void 0 || selectionRef.value == void 0)
+      return;
+    const { value } = input.value;
+    const { beforeTxt, afterTxt, selectionStart } = selectionRef.value;
+    if (beforeTxt == void 0 || afterTxt == void 0 || selectionStart == void 0)
+      return;
+    let startPos = value.length;
+    if (value.endsWith(afterTxt)) {
+      startPos = value.length - afterTxt.length;
+    } else if (value.startsWith(beforeTxt)) {
+      startPos = beforeTxt.length;
+    } else {
+      const beforeLastChar = beforeTxt[selectionStart - 1];
+      const newIndex = value.indexOf(beforeLastChar, selectionStart - 1);
+      if (newIndex !== -1) {
+        startPos = newIndex + 1;
+      }
+    }
+    input.value.setSelectionRange(startPos, startPos);
+  }
+  return [recordCursor, setCursor];
+}
+const version$1 = "2.1.11";
 const INSTALLED_KEY = Symbol("INSTALLED_KEY");
 const makeInstaller = (components2 = []) => {
   const install = (app, options) => {
@@ -11386,9 +11385,9 @@ const _sfc_main$2g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
     vue_cjs_prod.watch(fixed, (val) => emit("change", val));
     vue_cjs_prod.onMounted(() => {
-      var _a2;
+      var _a;
       if (props.target) {
-        target.value = (_a2 = document.querySelector(props.target)) != null ? _a2 : void 0;
+        target.value = (_a = document.querySelector(props.target)) != null ? _a : void 0;
         if (!target.value)
           throwError(COMPONENT_NAME2, `Target is not existed: ${props.target}`);
       } else {
@@ -11603,6 +11602,12 @@ const inputProps = buildProps({
     type: String,
     default: "off"
   },
+  formatter: {
+    type: Function
+  },
+  parser: {
+    type: Function
+  },
   placeholder: {
     type: String
   },
@@ -11663,7 +11668,7 @@ const inputEmits = {
   compositionupdate: (evt) => evt instanceof CompositionEvent,
   compositionend: (evt) => evt instanceof CompositionEvent
 };
-const _hoisted_1$Z = ["type", "disabled", "readonly", "autocomplete", "tabindex", "aria-label", "placeholder"];
+const _hoisted_1$Z = ["type", "disabled", "formatter", "parser", "readonly", "autocomplete", "tabindex", "aria-label", "placeholder"];
 const _hoisted_2$F = ["tabindex", "disabled", "readonly", "autocomplete", "aria-label", "placeholder"];
 const __default__$J = {
   name: "ElInput",
@@ -11696,12 +11701,12 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     const textareaCalcStyle = vue_cjs_prod.shallowRef(props.inputStyle);
     const _ref = vue_cjs_prod.computed(() => input.value || textarea.value);
     const needStatusIcon = vue_cjs_prod.computed(() => {
-      var _a2;
-      return (_a2 = form == null ? void 0 : form.statusIcon) != null ? _a2 : false;
+      var _a;
+      return (_a = form == null ? void 0 : form.statusIcon) != null ? _a : false;
     });
     const validateState = vue_cjs_prod.computed(() => (formItem == null ? void 0 : formItem.validateState) || "");
     const validateIcon = vue_cjs_prod.computed(() => ValidateComponentsMap[validateState.value]);
-    const passwordIcon = vue_cjs_prod.computed(() => passwordVisible.value ? view : hide$2);
+    const passwordIcon = vue_cjs_prod.computed(() => passwordVisible.value ? view : hide);
     const containerStyle = vue_cjs_prod.computed(() => [
       rawAttrs.style,
       props.inputStyle
@@ -11718,6 +11723,7 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     const textLength = vue_cjs_prod.computed(() => Array.from(nativeInputValue.value).length);
     const inputExceed = vue_cjs_prod.computed(() => !!isWordLimitVisible.value && textLength.value > Number(attrs.value.maxlength));
     const suffixVisible = vue_cjs_prod.computed(() => !!slots.suffix || !!props.suffixIcon || showClear.value || props.showPassword || isWordLimitVisible.value || !!validateState.value && needStatusIcon.value);
+    const [recordCursor, setCursor] = useCursor(input);
     const resizeTextarea = () => {
       return;
     };
@@ -11747,7 +11753,12 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       calcIconOffset("suffix");
     };
     const handleInput = async (event) => {
-      const { value } = event.target;
+      recordCursor();
+      let { value } = event.target;
+      if (props.formatter) {
+        value = props.parser ? props.parser(value) : value;
+        value = props.formatter(value);
+      }
       if (isComposing.value)
         return;
       if (value === nativeInputValue.value)
@@ -11756,6 +11767,7 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       emit("input", value);
       await vue_cjs_prod.nextTick();
       setNativeInputValue();
+      setCursor();
     };
     const handleChange = (event) => {
       emit("change", event.target.value);
@@ -11765,9 +11777,9 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       isComposing.value = true;
     };
     const handleCompositionUpdate = (event) => {
-      var _a2;
+      var _a;
       emit("compositionupdate", event);
-      const text = (_a2 = event.target) == null ? void 0 : _a2.value;
+      const text = (_a = event.target) == null ? void 0 : _a.value;
       const lastCharacter = text[text.length - 1] || "";
       isComposing.value = !isKorean(lastCharacter);
     };
@@ -11783,24 +11795,24 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       focus();
     };
     const focus = async () => {
-      var _a2;
+      var _a;
       await vue_cjs_prod.nextTick();
-      (_a2 = _ref.value) == null ? void 0 : _a2.focus();
+      (_a = _ref.value) == null ? void 0 : _a.focus();
     };
     const blur = () => {
-      var _a2;
-      return (_a2 = _ref.value) == null ? void 0 : _a2.blur();
+      var _a;
+      return (_a = _ref.value) == null ? void 0 : _a.blur();
     };
     const handleFocus = (event) => {
       focused.value = true;
       emit("focus", event);
     };
     const handleBlur = (event) => {
-      var _a2;
+      var _a;
       focused.value = false;
       emit("blur", event);
       if (props.validateEvent) {
-        (_a2 = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a2.call(formItem, "blur").catch((err) => debugWarn());
+        (_a = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a.call(formItem, "blur").catch((err) => debugWarn());
       }
     };
     const handleMouseLeave = (evt) => {
@@ -11815,8 +11827,8 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       emit("keydown", evt);
     };
     const select = () => {
-      var _a2;
-      (_a2 = _ref.value) == null ? void 0 : _a2.select();
+      var _a;
+      (_a = _ref.value) == null ? void 0 : _a.select();
     };
     const clear = () => {
       emit(UPDATE_MODEL_EVENT, "");
@@ -11825,10 +11837,10 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       emit("input", "");
     };
     vue_cjs_prod.watch(() => props.modelValue, () => {
-      var _a2;
+      var _a;
       vue_cjs_prod.nextTick(() => resizeTextarea());
       if (props.validateEvent) {
-        (_a2 = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a2.call(formItem, "change").catch((err) => debugWarn());
+        (_a = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a.call(formItem, "change").catch((err) => debugWarn());
       }
     });
     vue_cjs_prod.watch(nativeInputValue, () => setNativeInputValue());
@@ -11838,6 +11850,8 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       updateIconOffset();
     });
     vue_cjs_prod.onMounted(async () => {
+      if (!props.formatter && props.parser)
+        ;
       setNativeInputValue();
       updateIconOffset();
       await vue_cjs_prod.nextTick();
@@ -11918,6 +11932,8 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             }, vue_cjs_prod.unref(attrs), {
               type: _ctx.showPassword ? passwordVisible.value ? "text" : "password" : _ctx.type,
               disabled: vue_cjs_prod.unref(inputDisabled),
+              formatter: _ctx.formatter,
+              parser: _ctx.parser,
               readonly: _ctx.readonly,
               autocomplete: _ctx.autocomplete,
               tabindex: _ctx.tabindex,
@@ -11982,21 +11998,21 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                   vue_cjs_prod.createElementVNode("span", {
                     class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsInput).e("count-inner"))
                   }, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(textLength)) + " / " + vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(attrs).maxlength), 3)
-                ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
-              ], 2),
-              vue_cjs_prod.unref(validateState) && vue_cjs_prod.unref(validateIcon) && vue_cjs_prod.unref(needStatusIcon) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
-                key: 0,
-                class: vue_cjs_prod.normalizeClass([
-                  vue_cjs_prod.unref(nsInput).e("icon"),
-                  vue_cjs_prod.unref(nsInput).e("validateIcon"),
-                  vue_cjs_prod.unref(nsInput).is("loading", vue_cjs_prod.unref(validateState) === "validating")
-                ])
-              }, {
-                default: vue_cjs_prod.withCtx(() => [
-                  (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(vue_cjs_prod.unref(validateIcon))))
-                ]),
-                _: 1
-              }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true)
+                ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true),
+                vue_cjs_prod.unref(validateState) && vue_cjs_prod.unref(validateIcon) && vue_cjs_prod.unref(needStatusIcon) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
+                  key: 4,
+                  class: vue_cjs_prod.normalizeClass([
+                    vue_cjs_prod.unref(nsInput).e("icon"),
+                    vue_cjs_prod.unref(nsInput).e("validateIcon"),
+                    vue_cjs_prod.unref(nsInput).is("loading", vue_cjs_prod.unref(validateState) === "validating")
+                  ])
+                }, {
+                  default: vue_cjs_prod.withCtx(() => [
+                    (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.resolveDynamicComponent(vue_cjs_prod.unref(validateIcon))))
+                  ]),
+                  _: 1
+                }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true)
+              ], 2)
             ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
           ], 2),
           vue_cjs_prod.createCommentVNode(" append slot "),
@@ -12102,11 +12118,11 @@ const _sfc_main$2c = vue_cjs_prod.defineComponent({
     }));
     const offsetRatio = vue_cjs_prod.computed(() => instance.value[bar.value.offset] ** 2 / scrollbar.wrapElement[bar.value.scrollSize] / props.ratio / thumb.value[bar.value.offset]);
     const clickThumbHandler = (e) => {
-      var _a2;
+      var _a;
       e.stopPropagation();
       if (e.ctrlKey || [1, 2].includes(e.button))
         return;
-      (_a2 = window.getSelection()) == null ? void 0 : _a2.removeAllRanges();
+      (_a = window.getSelection()) == null ? void 0 : _a.removeAllRanges();
       startDrag(e);
       const el = e.currentTarget;
       if (!el)
@@ -12350,9 +12366,9 @@ const _sfc_main$2a = vue_cjs_prod.defineComponent({
       return [props.wrapStyle, style2];
     });
     const handleScroll2 = () => {
-      var _a2;
+      var _a;
       if (wrap$.value) {
-        (_a2 = barRef.value) == null ? void 0 : _a2.handleScroll(wrap$.value);
+        (_a = barRef.value) == null ? void 0 : _a.handleScroll(wrap$.value);
         emit("scroll", {
           scrollTop: wrap$.value.scrollTop,
           scrollLeft: wrap$.value.scrollLeft
@@ -12404,10 +12420,10 @@ const _sfc_main$2a = vue_cjs_prod.defineComponent({
     vue_cjs_prod.watch(() => [props.maxHeight, props.height], () => {
       if (!props.native)
         vue_cjs_prod.nextTick(() => {
-          var _a2;
+          var _a;
           update();
           if (wrap$.value) {
-            (_a2 = barRef.value) == null ? void 0 : _a2.handleScroll(wrap$.value);
+            (_a = barRef.value) == null ? void 0 : _a.handleScroll(wrap$.value);
           }
         });
     });
@@ -12548,12 +12564,12 @@ const OnlyChild = vue_cjs_prod.defineComponent({
     slots,
     attrs
   }) {
-    var _a2;
+    var _a;
     const forwardRefInjection = vue_cjs_prod.inject(FORWARD_REF_INJECTION_KEY);
-    const forwardRefDirective = useForwardRefDirective((_a2 = forwardRefInjection == null ? void 0 : forwardRefInjection.setForwardRef) != null ? _a2 : NOOP);
+    const forwardRefDirective = useForwardRefDirective((_a = forwardRefInjection == null ? void 0 : forwardRefInjection.setForwardRef) != null ? _a : NOOP);
     return () => {
-      var _a22;
-      const defaultSlot = (_a22 = slots.default) == null ? void 0 : _a22.call(slots, attrs);
+      var _a2;
+      const defaultSlot = (_a2 = slots.default) == null ? void 0 : _a2.call(slots, attrs);
       if (!defaultSlot)
         return null;
       if (defaultSlot.length > 1) {
@@ -12629,7 +12645,7 @@ const _sfc_main$27 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         immediate: true
       });
       vue_cjs_prod.watch(() => triggerRef2.value, (el, prevEl) => {
-        if (isElement$2(el)) {
+        if (isElement$1(el)) {
           [
             "onMouseenter",
             "onMouseleave",
@@ -12639,11 +12655,11 @@ const _sfc_main$27 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             "onBlur",
             "onContextmenu"
           ].forEach((eventName) => {
-            var _a2;
+            var _a;
             const handler = props[eventName];
             if (handler) {
               el.addEventListener(eventName.slice(2).toLowerCase(), handler);
-              (_a2 = prevEl == null ? void 0 : prevEl.removeEventListener) == null ? void 0 : _a2.call(prevEl, eventName.slice(2).toLowerCase(), handler);
+              (_a = prevEl == null ? void 0 : prevEl.removeEventListener) == null ? void 0 : _a.call(prevEl, eventName.slice(2).toLowerCase(), handler);
             }
           });
         }
@@ -12667,1310 +12683,556 @@ const _sfc_main$27 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
   }
 }));
 var ElPopperTrigger = /* @__PURE__ */ _export_sfc(_sfc_main$27, [["__file", "trigger.vue"]]);
-var top = "top";
-var bottom = "bottom";
-var right = "right";
-var left = "left";
-var auto = "auto";
-var basePlacements = [top, bottom, right, left];
-var start = "start";
-var end = "end";
-var clippingParents = "clippingParents";
-var viewport = "viewport";
-var popper = "popper";
-var reference = "reference";
-var variationPlacements = /* @__PURE__ */ basePlacements.reduce(function(acc, placement) {
-  return acc.concat([placement + "-" + start, placement + "-" + end]);
-}, []);
-var placements = /* @__PURE__ */ [].concat(basePlacements, [auto]).reduce(function(acc, placement) {
-  return acc.concat([placement, placement + "-" + start, placement + "-" + end]);
-}, []);
-var beforeRead = "beforeRead";
-var read = "read";
-var afterRead = "afterRead";
-var beforeMain = "beforeMain";
-var main = "main";
-var afterMain = "afterMain";
-var beforeWrite = "beforeWrite";
-var write = "write";
-var afterWrite = "afterWrite";
-var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, beforeWrite, write, afterWrite];
-function getNodeName(element) {
-  return element ? (element.nodeName || "").toLowerCase() : null;
+var E$1 = "top", R = "bottom", W$1 = "right", P$1 = "left", me = "auto", G = [E$1, R, W$1, P$1], U$1 = "start", J = "end", Xe = "clippingParents", je = "viewport", K = "popper", Ye = "reference", De = G.reduce(function(t, e) {
+  return t.concat([e + "-" + U$1, e + "-" + J]);
+}, []), Ee = [].concat(G, [me]).reduce(function(t, e) {
+  return t.concat([e, e + "-" + U$1, e + "-" + J]);
+}, []), Ge = "beforeRead", Je = "read", Ke = "afterRead", Qe = "beforeMain", Ze = "main", et = "afterMain", tt = "beforeWrite", nt = "write", rt = "afterWrite", ot = [Ge, Je, Ke, Qe, Ze, et, tt, nt, rt];
+function C(t) {
+  return t ? (t.nodeName || "").toLowerCase() : null;
 }
-function getWindow(node) {
-  if (node == null) {
+function H(t) {
+  if (t == null)
     return window;
+  if (t.toString() !== "[object Window]") {
+    var e = t.ownerDocument;
+    return e && e.defaultView || window;
   }
-  if (node.toString() !== "[object Window]") {
-    var ownerDocument = node.ownerDocument;
-    return ownerDocument ? ownerDocument.defaultView || window : window;
-  }
-  return node;
+  return t;
 }
-function isElement(node) {
-  var OwnElement = getWindow(node).Element;
-  return node instanceof OwnElement || node instanceof Element;
+function Q(t) {
+  var e = H(t).Element;
+  return t instanceof e || t instanceof Element;
 }
-function isHTMLElement(node) {
-  var OwnElement = getWindow(node).HTMLElement;
-  return node instanceof OwnElement || node instanceof HTMLElement;
+function B(t) {
+  var e = H(t).HTMLElement;
+  return t instanceof e || t instanceof HTMLElement;
 }
-function isShadowRoot(node) {
-  if (typeof ShadowRoot === "undefined") {
+function Pe(t) {
+  if (typeof ShadowRoot > "u")
     return false;
-  }
-  var OwnElement = getWindow(node).ShadowRoot;
-  return node instanceof OwnElement || node instanceof ShadowRoot;
+  var e = H(t).ShadowRoot;
+  return t instanceof e || t instanceof ShadowRoot;
 }
-function applyStyles(_ref) {
-  var state = _ref.state;
-  Object.keys(state.elements).forEach(function(name) {
-    var style = state.styles[name] || {};
-    var attributes2 = state.attributes[name] || {};
-    var element = state.elements[name];
-    if (!isHTMLElement(element) || !getNodeName(element)) {
-      return;
-    }
-    Object.assign(element.style, style);
-    Object.keys(attributes2).forEach(function(name2) {
-      var value = attributes2[name2];
-      if (value === false) {
-        element.removeAttribute(name2);
-      } else {
-        element.setAttribute(name2, value === true ? "" : value);
-      }
-    });
+function Mt(t) {
+  var e = t.state;
+  Object.keys(e.elements).forEach(function(n) {
+    var r = e.styles[n] || {}, o2 = e.attributes[n] || {}, i = e.elements[n];
+    !B(i) || !C(i) || (Object.assign(i.style, r), Object.keys(o2).forEach(function(a2) {
+      var s = o2[a2];
+      s === false ? i.removeAttribute(a2) : i.setAttribute(a2, s === true ? "" : s);
+    }));
   });
 }
-function effect$2(_ref2) {
-  var state = _ref2.state;
-  var initialStyles = {
-    popper: {
-      position: state.options.strategy,
-      left: "0",
-      top: "0",
-      margin: "0"
-    },
-    arrow: {
-      position: "absolute"
-    },
-    reference: {}
-  };
-  Object.assign(state.elements.popper.style, initialStyles.popper);
-  state.styles = initialStyles;
-  if (state.elements.arrow) {
-    Object.assign(state.elements.arrow.style, initialStyles.arrow);
-  }
-  return function() {
-    Object.keys(state.elements).forEach(function(name) {
-      var element = state.elements[name];
-      var attributes2 = state.attributes[name] || {};
-      var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]);
-      var style = styleProperties.reduce(function(style2, property) {
-        style2[property] = "";
-        return style2;
+function Rt(t) {
+  var e = t.state, n = { popper: { position: e.options.strategy, left: "0", top: "0", margin: "0" }, arrow: { position: "absolute" }, reference: {} };
+  return Object.assign(e.elements.popper.style, n.popper), e.styles = n, e.elements.arrow && Object.assign(e.elements.arrow.style, n.arrow), function() {
+    Object.keys(e.elements).forEach(function(r) {
+      var o2 = e.elements[r], i = e.attributes[r] || {}, a2 = Object.keys(e.styles.hasOwnProperty(r) ? e.styles[r] : n[r]), s = a2.reduce(function(f, c) {
+        return f[c] = "", f;
       }, {});
-      if (!isHTMLElement(element) || !getNodeName(element)) {
-        return;
-      }
-      Object.assign(element.style, style);
-      Object.keys(attributes2).forEach(function(attribute) {
-        element.removeAttribute(attribute);
-      });
+      !B(o2) || !C(o2) || (Object.assign(o2.style, s), Object.keys(i).forEach(function(f) {
+        o2.removeAttribute(f);
+      }));
     });
   };
 }
-var applyStyles$1 = {
-  name: "applyStyles",
-  enabled: true,
-  phase: "write",
-  fn: applyStyles,
-  effect: effect$2,
-  requires: ["computeStyles"]
-};
-function getBasePlacement(placement) {
-  return placement.split("-")[0];
+var Ae = { name: "applyStyles", enabled: true, phase: "write", fn: Mt, effect: Rt, requires: ["computeStyles"] };
+function q(t) {
+  return t.split("-")[0];
 }
-var max$1 = Math.max;
-var min$1 = Math.min;
-var round = Math.round;
-function getBoundingClientRect(element, includeScale) {
-  if (includeScale === void 0) {
-    includeScale = false;
+var X$1 = Math.max, ve = Math.min, Z = Math.round;
+function ee(t, e) {
+  e === void 0 && (e = false);
+  var n = t.getBoundingClientRect(), r = 1, o2 = 1;
+  if (B(t) && e) {
+    var i = t.offsetHeight, a2 = t.offsetWidth;
+    a2 > 0 && (r = Z(n.width) / a2 || 1), i > 0 && (o2 = Z(n.height) / i || 1);
   }
-  var rect = element.getBoundingClientRect();
-  var scaleX = 1;
-  var scaleY = 1;
-  if (isHTMLElement(element) && includeScale) {
-    var offsetHeight = element.offsetHeight;
-    var offsetWidth = element.offsetWidth;
-    if (offsetWidth > 0) {
-      scaleX = round(rect.width) / offsetWidth || 1;
-    }
-    if (offsetHeight > 0) {
-      scaleY = round(rect.height) / offsetHeight || 1;
-    }
-  }
-  return {
-    width: rect.width / scaleX,
-    height: rect.height / scaleY,
-    top: rect.top / scaleY,
-    right: rect.right / scaleX,
-    bottom: rect.bottom / scaleY,
-    left: rect.left / scaleX,
-    x: rect.left / scaleX,
-    y: rect.top / scaleY
-  };
+  return { width: n.width / r, height: n.height / o2, top: n.top / o2, right: n.right / r, bottom: n.bottom / o2, left: n.left / r, x: n.left / r, y: n.top / o2 };
 }
-function getLayoutRect(element) {
-  var clientRect = getBoundingClientRect(element);
-  var width = element.offsetWidth;
-  var height = element.offsetHeight;
-  if (Math.abs(clientRect.width - width) <= 1) {
-    width = clientRect.width;
-  }
-  if (Math.abs(clientRect.height - height) <= 1) {
-    height = clientRect.height;
-  }
-  return {
-    x: element.offsetLeft,
-    y: element.offsetTop,
-    width,
-    height
-  };
+function ke(t) {
+  var e = ee(t), n = t.offsetWidth, r = t.offsetHeight;
+  return Math.abs(e.width - n) <= 1 && (n = e.width), Math.abs(e.height - r) <= 1 && (r = e.height), { x: t.offsetLeft, y: t.offsetTop, width: n, height: r };
 }
-function contains(parent, child) {
-  var rootNode = child.getRootNode && child.getRootNode();
-  if (parent.contains(child)) {
+function it(t, e) {
+  var n = e.getRootNode && e.getRootNode();
+  if (t.contains(e))
     return true;
-  } else if (rootNode && isShadowRoot(rootNode)) {
-    var next = child;
+  if (n && Pe(n)) {
+    var r = e;
     do {
-      if (next && parent.isSameNode(next)) {
+      if (r && t.isSameNode(r))
         return true;
-      }
-      next = next.parentNode || next.host;
-    } while (next);
+      r = r.parentNode || r.host;
+    } while (r);
   }
   return false;
 }
-function getComputedStyle$1(element) {
-  return getWindow(element).getComputedStyle(element);
+function N$1(t) {
+  return H(t).getComputedStyle(t);
 }
-function isTableElement(element) {
-  return ["table", "td", "th"].indexOf(getNodeName(element)) >= 0;
+function Wt(t) {
+  return ["table", "td", "th"].indexOf(C(t)) >= 0;
 }
-function getDocumentElement(element) {
-  return ((isElement(element) ? element.ownerDocument : element.document) || window.document).documentElement;
+function I$1(t) {
+  return ((Q(t) ? t.ownerDocument : t.document) || window.document).documentElement;
 }
-function getParentNode(element) {
-  if (getNodeName(element) === "html") {
-    return element;
-  }
-  return element.assignedSlot || element.parentNode || (isShadowRoot(element) ? element.host : null) || getDocumentElement(element);
+function ge(t) {
+  return C(t) === "html" ? t : t.assignedSlot || t.parentNode || (Pe(t) ? t.host : null) || I$1(t);
 }
-function getTrueOffsetParent(element) {
-  if (!isHTMLElement(element) || getComputedStyle$1(element).position === "fixed") {
-    return null;
-  }
-  return element.offsetParent;
+function at(t) {
+  return !B(t) || N$1(t).position === "fixed" ? null : t.offsetParent;
 }
-function getContainingBlock(element) {
-  var isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") !== -1;
-  var isIE = navigator.userAgent.indexOf("Trident") !== -1;
-  if (isIE && isHTMLElement(element)) {
-    var elementCss = getComputedStyle$1(element);
-    if (elementCss.position === "fixed") {
+function Bt(t) {
+  var e = navigator.userAgent.toLowerCase().indexOf("firefox") !== -1, n = navigator.userAgent.indexOf("Trident") !== -1;
+  if (n && B(t)) {
+    var r = N$1(t);
+    if (r.position === "fixed")
       return null;
-    }
   }
-  var currentNode = getParentNode(element);
-  if (isShadowRoot(currentNode)) {
-    currentNode = currentNode.host;
-  }
-  while (isHTMLElement(currentNode) && ["html", "body"].indexOf(getNodeName(currentNode)) < 0) {
-    var css = getComputedStyle$1(currentNode);
-    if (css.transform !== "none" || css.perspective !== "none" || css.contain === "paint" || ["transform", "perspective"].indexOf(css.willChange) !== -1 || isFirefox && css.willChange === "filter" || isFirefox && css.filter && css.filter !== "none") {
-      return currentNode;
-    } else {
-      currentNode = currentNode.parentNode;
-    }
+  var o2 = ge(t);
+  for (Pe(o2) && (o2 = o2.host); B(o2) && ["html", "body"].indexOf(C(o2)) < 0; ) {
+    var i = N$1(o2);
+    if (i.transform !== "none" || i.perspective !== "none" || i.contain === "paint" || ["transform", "perspective"].indexOf(i.willChange) !== -1 || e && i.willChange === "filter" || e && i.filter && i.filter !== "none")
+      return o2;
+    o2 = o2.parentNode;
   }
   return null;
 }
-function getOffsetParent(element) {
-  var window2 = getWindow(element);
-  var offsetParent = getTrueOffsetParent(element);
-  while (offsetParent && isTableElement(offsetParent) && getComputedStyle$1(offsetParent).position === "static") {
-    offsetParent = getTrueOffsetParent(offsetParent);
-  }
-  if (offsetParent && (getNodeName(offsetParent) === "html" || getNodeName(offsetParent) === "body" && getComputedStyle$1(offsetParent).position === "static")) {
-    return window2;
-  }
-  return offsetParent || getContainingBlock(element) || window2;
+function se(t) {
+  for (var e = H(t), n = at(t); n && Wt(n) && N$1(n).position === "static"; )
+    n = at(n);
+  return n && (C(n) === "html" || C(n) === "body" && N$1(n).position === "static") ? e : n || Bt(t) || e;
 }
-function getMainAxisFromPlacement(placement) {
-  return ["top", "bottom"].indexOf(placement) >= 0 ? "x" : "y";
+function Le(t) {
+  return ["top", "bottom"].indexOf(t) >= 0 ? "x" : "y";
 }
-function within(min2, value, max2) {
-  return max$1(min2, min$1(value, max2));
+function fe(t, e, n) {
+  return X$1(t, ve(e, n));
 }
-function withinMaxClamp(min2, value, max2) {
-  var v2 = within(min2, value, max2);
-  return v2 > max2 ? max2 : v2;
+function St(t, e, n) {
+  var r = fe(t, e, n);
+  return r > n ? n : r;
 }
-function getFreshSideObject() {
-  return {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0
-  };
+function st() {
+  return { top: 0, right: 0, bottom: 0, left: 0 };
 }
-function mergePaddingObject(paddingObject) {
-  return Object.assign({}, getFreshSideObject(), paddingObject);
+function ft(t) {
+  return Object.assign({}, st(), t);
 }
-function expandToHashMap(value, keys2) {
-  return keys2.reduce(function(hashMap, key) {
-    hashMap[key] = value;
-    return hashMap;
+function ct(t, e) {
+  return e.reduce(function(n, r) {
+    return n[r] = t, n;
   }, {});
 }
-var toPaddingObject = function toPaddingObject2(padding, state) {
-  padding = typeof padding === "function" ? padding(Object.assign({}, state.rects, {
-    placement: state.placement
-  })) : padding;
-  return mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
+var Tt = function(t, e) {
+  return t = typeof t == "function" ? t(Object.assign({}, e.rects, { placement: e.placement })) : t, ft(typeof t != "number" ? t : ct(t, G));
 };
-function arrow(_ref) {
-  var _state$modifiersData$;
-  var state = _ref.state, name = _ref.name, options = _ref.options;
-  var arrowElement = state.elements.arrow;
-  var popperOffsets2 = state.modifiersData.popperOffsets;
-  var basePlacement = getBasePlacement(state.placement);
-  var axis = getMainAxisFromPlacement(basePlacement);
-  var isVertical = [left, right].indexOf(basePlacement) >= 0;
-  var len = isVertical ? "height" : "width";
-  if (!arrowElement || !popperOffsets2) {
-    return;
+function Ht(t) {
+  var e, n = t.state, r = t.name, o2 = t.options, i = n.elements.arrow, a2 = n.modifiersData.popperOffsets, s = q(n.placement), f = Le(s), c = [P$1, W$1].indexOf(s) >= 0, u2 = c ? "height" : "width";
+  if (!(!i || !a2)) {
+    var m2 = Tt(o2.padding, n), v2 = ke(i), l2 = f === "y" ? E$1 : P$1, h2 = f === "y" ? R : W$1, p2 = n.rects.reference[u2] + n.rects.reference[f] - a2[f] - n.rects.popper[u2], g = a2[f] - n.rects.reference[f], x2 = se(i), y = x2 ? f === "y" ? x2.clientHeight || 0 : x2.clientWidth || 0 : 0, $ = p2 / 2 - g / 2, d2 = m2[l2], b2 = y - v2[u2] - m2[h2], w2 = y / 2 - v2[u2] / 2 + $, O = fe(d2, w2, b2), j = f;
+    n.modifiersData[r] = (e = {}, e[j] = O, e.centerOffset = O - w2, e);
   }
-  var paddingObject = toPaddingObject(options.padding, state);
-  var arrowRect = getLayoutRect(arrowElement);
-  var minProp = axis === "y" ? top : left;
-  var maxProp = axis === "y" ? bottom : right;
-  var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets2[axis] - state.rects.popper[len];
-  var startDiff = popperOffsets2[axis] - state.rects.reference[axis];
-  var arrowOffsetParent = getOffsetParent(arrowElement);
-  var clientSize = arrowOffsetParent ? axis === "y" ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
-  var centerToReference = endDiff / 2 - startDiff / 2;
-  var min2 = paddingObject[minProp];
-  var max2 = clientSize - arrowRect[len] - paddingObject[maxProp];
-  var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
-  var offset2 = within(min2, center, max2);
-  var axisProp = axis;
-  state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset2, _state$modifiersData$.centerOffset = offset2 - center, _state$modifiersData$);
 }
-function effect$1(_ref2) {
-  var state = _ref2.state, options = _ref2.options;
-  var _options$element = options.element, arrowElement = _options$element === void 0 ? "[data-popper-arrow]" : _options$element;
-  if (arrowElement == null) {
-    return;
-  }
-  if (typeof arrowElement === "string") {
-    arrowElement = state.elements.popper.querySelector(arrowElement);
-    if (!arrowElement) {
-      return;
+function Ct(t) {
+  var e = t.state, n = t.options, r = n.element, o2 = r === void 0 ? "[data-popper-arrow]" : r;
+  o2 != null && (typeof o2 == "string" && (o2 = e.elements.popper.querySelector(o2), !o2) || !it(e.elements.popper, o2) || (e.elements.arrow = o2));
+}
+var pt = { name: "arrow", enabled: true, phase: "main", fn: Ht, effect: Ct, requires: ["popperOffsets"], requiresIfExists: ["preventOverflow"] };
+function te(t) {
+  return t.split("-")[1];
+}
+var qt = { top: "auto", right: "auto", bottom: "auto", left: "auto" };
+function Vt(t) {
+  var e = t.x, n = t.y, r = window, o2 = r.devicePixelRatio || 1;
+  return { x: Z(e * o2) / o2 || 0, y: Z(n * o2) / o2 || 0 };
+}
+function ut(t) {
+  var e, n = t.popper, r = t.popperRect, o2 = t.placement, i = t.variation, a2 = t.offsets, s = t.position, f = t.gpuAcceleration, c = t.adaptive, u2 = t.roundOffsets, m2 = t.isFixed, v2 = a2.x, l2 = v2 === void 0 ? 0 : v2, h2 = a2.y, p2 = h2 === void 0 ? 0 : h2, g = typeof u2 == "function" ? u2({ x: l2, y: p2 }) : { x: l2, y: p2 };
+  l2 = g.x, p2 = g.y;
+  var x2 = a2.hasOwnProperty("x"), y = a2.hasOwnProperty("y"), $ = P$1, d2 = E$1, b2 = window;
+  if (c) {
+    var w2 = se(n), O = "clientHeight", j = "clientWidth";
+    if (w2 === H(n) && (w2 = I$1(n), N$1(w2).position !== "static" && s === "absolute" && (O = "scrollHeight", j = "scrollWidth")), w2 = w2, o2 === E$1 || (o2 === P$1 || o2 === W$1) && i === J) {
+      d2 = R;
+      var A2 = m2 && w2 === b2 && b2.visualViewport ? b2.visualViewport.height : w2[O];
+      p2 -= A2 - r.height, p2 *= f ? 1 : -1;
+    }
+    if (o2 === P$1 || (o2 === E$1 || o2 === R) && i === J) {
+      $ = W$1;
+      var k = m2 && w2 === b2 && b2.visualViewport ? b2.visualViewport.width : w2[j];
+      l2 -= k - r.width, l2 *= f ? 1 : -1;
     }
   }
-  if (!contains(state.elements.popper, arrowElement)) {
-    return;
+  var D2 = Object.assign({ position: s }, c && qt), S2 = u2 === true ? Vt({ x: l2, y: p2 }) : { x: l2, y: p2 };
+  if (l2 = S2.x, p2 = S2.y, f) {
+    var L2;
+    return Object.assign({}, D2, (L2 = {}, L2[d2] = y ? "0" : "", L2[$] = x2 ? "0" : "", L2.transform = (b2.devicePixelRatio || 1) <= 1 ? "translate(" + l2 + "px, " + p2 + "px)" : "translate3d(" + l2 + "px, " + p2 + "px, 0)", L2));
   }
-  state.elements.arrow = arrowElement;
+  return Object.assign({}, D2, (e = {}, e[d2] = y ? p2 + "px" : "", e[$] = x2 ? l2 + "px" : "", e.transform = "", e));
 }
-var arrow$1 = {
-  name: "arrow",
-  enabled: true,
-  phase: "main",
-  fn: arrow,
-  effect: effect$1,
-  requires: ["popperOffsets"],
-  requiresIfExists: ["preventOverflow"]
-};
-function getVariation(placement) {
-  return placement.split("-")[1];
+function Nt(t) {
+  var e = t.state, n = t.options, r = n.gpuAcceleration, o2 = r === void 0 ? true : r, i = n.adaptive, a2 = i === void 0 ? true : i, s = n.roundOffsets, f = s === void 0 ? true : s, c = { placement: q(e.placement), variation: te(e.placement), popper: e.elements.popper, popperRect: e.rects.popper, gpuAcceleration: o2, isFixed: e.options.strategy === "fixed" };
+  e.modifiersData.popperOffsets != null && (e.styles.popper = Object.assign({}, e.styles.popper, ut(Object.assign({}, c, { offsets: e.modifiersData.popperOffsets, position: e.options.strategy, adaptive: a2, roundOffsets: f })))), e.modifiersData.arrow != null && (e.styles.arrow = Object.assign({}, e.styles.arrow, ut(Object.assign({}, c, { offsets: e.modifiersData.arrow, position: "absolute", adaptive: false, roundOffsets: f })))), e.attributes.popper = Object.assign({}, e.attributes.popper, { "data-popper-placement": e.placement });
 }
-var unsetSides = {
-  top: "auto",
-  right: "auto",
-  bottom: "auto",
-  left: "auto"
-};
-function roundOffsetsByDPR(_ref) {
-  var x2 = _ref.x, y = _ref.y;
-  var win = window;
-  var dpr = win.devicePixelRatio || 1;
-  return {
-    x: round(x2 * dpr) / dpr || 0,
-    y: round(y * dpr) / dpr || 0
+var Me = { name: "computeStyles", enabled: true, phase: "beforeWrite", fn: Nt, data: {} }, ye = { passive: true };
+function It(t) {
+  var e = t.state, n = t.instance, r = t.options, o2 = r.scroll, i = o2 === void 0 ? true : o2, a2 = r.resize, s = a2 === void 0 ? true : a2, f = H(e.elements.popper), c = [].concat(e.scrollParents.reference, e.scrollParents.popper);
+  return i && c.forEach(function(u2) {
+    u2.addEventListener("scroll", n.update, ye);
+  }), s && f.addEventListener("resize", n.update, ye), function() {
+    i && c.forEach(function(u2) {
+      u2.removeEventListener("scroll", n.update, ye);
+    }), s && f.removeEventListener("resize", n.update, ye);
   };
 }
-function mapToStyles(_ref2) {
-  var _Object$assign2;
-  var popper2 = _ref2.popper, popperRect = _ref2.popperRect, placement = _ref2.placement, variation = _ref2.variation, offsets = _ref2.offsets, position = _ref2.position, gpuAcceleration = _ref2.gpuAcceleration, adaptive = _ref2.adaptive, roundOffsets = _ref2.roundOffsets, isFixed = _ref2.isFixed;
-  var _offsets$x = offsets.x, x2 = _offsets$x === void 0 ? 0 : _offsets$x, _offsets$y = offsets.y, y = _offsets$y === void 0 ? 0 : _offsets$y;
-  var _ref3 = typeof roundOffsets === "function" ? roundOffsets({
-    x: x2,
-    y
-  }) : {
-    x: x2,
-    y
-  };
-  x2 = _ref3.x;
-  y = _ref3.y;
-  var hasX = offsets.hasOwnProperty("x");
-  var hasY = offsets.hasOwnProperty("y");
-  var sideX = left;
-  var sideY = top;
-  var win = window;
-  if (adaptive) {
-    var offsetParent = getOffsetParent(popper2);
-    var heightProp = "clientHeight";
-    var widthProp = "clientWidth";
-    if (offsetParent === getWindow(popper2)) {
-      offsetParent = getDocumentElement(popper2);
-      if (getComputedStyle$1(offsetParent).position !== "static" && position === "absolute") {
-        heightProp = "scrollHeight";
-        widthProp = "scrollWidth";
-      }
-    }
-    offsetParent = offsetParent;
-    if (placement === top || (placement === left || placement === right) && variation === end) {
-      sideY = bottom;
-      var offsetY = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.height : offsetParent[heightProp];
-      y -= offsetY - popperRect.height;
-      y *= gpuAcceleration ? 1 : -1;
-    }
-    if (placement === left || (placement === top || placement === bottom) && variation === end) {
-      sideX = right;
-      var offsetX = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.width : offsetParent[widthProp];
-      x2 -= offsetX - popperRect.width;
-      x2 *= gpuAcceleration ? 1 : -1;
-    }
-  }
-  var commonStyles = Object.assign({
-    position
-  }, adaptive && unsetSides);
-  var _ref4 = roundOffsets === true ? roundOffsetsByDPR({
-    x: x2,
-    y
-  }) : {
-    x: x2,
-    y
-  };
-  x2 = _ref4.x;
-  y = _ref4.y;
-  if (gpuAcceleration) {
-    var _Object$assign;
-    return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? "0" : "", _Object$assign[sideX] = hasX ? "0" : "", _Object$assign.transform = (win.devicePixelRatio || 1) <= 1 ? "translate(" + x2 + "px, " + y + "px)" : "translate3d(" + x2 + "px, " + y + "px, 0)", _Object$assign));
-  }
-  return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : "", _Object$assign2[sideX] = hasX ? x2 + "px" : "", _Object$assign2.transform = "", _Object$assign2));
-}
-function computeStyles(_ref5) {
-  var state = _ref5.state, options = _ref5.options;
-  var _options$gpuAccelerat = options.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
-  var commonStyles = {
-    placement: getBasePlacement(state.placement),
-    variation: getVariation(state.placement),
-    popper: state.elements.popper,
-    popperRect: state.rects.popper,
-    gpuAcceleration,
-    isFixed: state.options.strategy === "fixed"
-  };
-  if (state.modifiersData.popperOffsets != null) {
-    state.styles.popper = Object.assign({}, state.styles.popper, mapToStyles(Object.assign({}, commonStyles, {
-      offsets: state.modifiersData.popperOffsets,
-      position: state.options.strategy,
-      adaptive,
-      roundOffsets
-    })));
-  }
-  if (state.modifiersData.arrow != null) {
-    state.styles.arrow = Object.assign({}, state.styles.arrow, mapToStyles(Object.assign({}, commonStyles, {
-      offsets: state.modifiersData.arrow,
-      position: "absolute",
-      adaptive: false,
-      roundOffsets
-    })));
-  }
-  state.attributes.popper = Object.assign({}, state.attributes.popper, {
-    "data-popper-placement": state.placement
+var Re = { name: "eventListeners", enabled: true, phase: "write", fn: function() {
+}, effect: It, data: {} }, _t = { left: "right", right: "left", bottom: "top", top: "bottom" };
+function be(t) {
+  return t.replace(/left|right|bottom|top/g, function(e) {
+    return _t[e];
   });
 }
-var computeStyles$1 = {
-  name: "computeStyles",
-  enabled: true,
-  phase: "beforeWrite",
-  fn: computeStyles,
-  data: {}
-};
-var passive = {
-  passive: true
-};
-function effect(_ref) {
-  var state = _ref.state, instance = _ref.instance, options = _ref.options;
-  var _options$scroll = options.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options.resize, resize = _options$resize === void 0 ? true : _options$resize;
-  var window2 = getWindow(state.elements.popper);
-  var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
-  if (scroll) {
-    scrollParents.forEach(function(scrollParent) {
-      scrollParent.addEventListener("scroll", instance.update, passive);
-    });
-  }
-  if (resize) {
-    window2.addEventListener("resize", instance.update, passive);
-  }
-  return function() {
-    if (scroll) {
-      scrollParents.forEach(function(scrollParent) {
-        scrollParent.removeEventListener("scroll", instance.update, passive);
-      });
-    }
-    if (resize) {
-      window2.removeEventListener("resize", instance.update, passive);
-    }
-  };
-}
-var eventListeners = {
-  name: "eventListeners",
-  enabled: true,
-  phase: "write",
-  fn: function fn() {
-  },
-  effect,
-  data: {}
-};
-var hash$1 = {
-  left: "right",
-  right: "left",
-  bottom: "top",
-  top: "bottom"
-};
-function getOppositePlacement(placement) {
-  return placement.replace(/left|right|bottom|top/g, function(matched) {
-    return hash$1[matched];
+var zt = { start: "end", end: "start" };
+function lt(t) {
+  return t.replace(/start|end/g, function(e) {
+    return zt[e];
   });
 }
-var hash = {
-  start: "end",
-  end: "start"
-};
-function getOppositeVariationPlacement(placement) {
-  return placement.replace(/start|end/g, function(matched) {
-    return hash[matched];
-  });
+function We(t) {
+  var e = H(t), n = e.pageXOffset, r = e.pageYOffset;
+  return { scrollLeft: n, scrollTop: r };
 }
-function getWindowScroll(node) {
-  var win = getWindow(node);
-  var scrollLeft = win.pageXOffset;
-  var scrollTop = win.pageYOffset;
-  return {
-    scrollLeft,
-    scrollTop
-  };
+function Be(t) {
+  return ee(I$1(t)).left + We(t).scrollLeft;
 }
-function getWindowScrollBarX(element) {
-  return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
+function Ft(t) {
+  var e = H(t), n = I$1(t), r = e.visualViewport, o2 = n.clientWidth, i = n.clientHeight, a2 = 0, s = 0;
+  return r && (o2 = r.width, i = r.height, /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || (a2 = r.offsetLeft, s = r.offsetTop)), { width: o2, height: i, x: a2 + Be(t), y: s };
 }
-function getViewportRect(element) {
-  var win = getWindow(element);
-  var html = getDocumentElement(element);
-  var visualViewport = win.visualViewport;
-  var width = html.clientWidth;
-  var height = html.clientHeight;
-  var x2 = 0;
-  var y = 0;
-  if (visualViewport) {
-    width = visualViewport.width;
-    height = visualViewport.height;
-    if (!/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-      x2 = visualViewport.offsetLeft;
-      y = visualViewport.offsetTop;
-    }
-  }
-  return {
-    width,
-    height,
-    x: x2 + getWindowScrollBarX(element),
-    y
-  };
+function Ut(t) {
+  var e, n = I$1(t), r = We(t), o2 = (e = t.ownerDocument) == null ? void 0 : e.body, i = X$1(n.scrollWidth, n.clientWidth, o2 ? o2.scrollWidth : 0, o2 ? o2.clientWidth : 0), a2 = X$1(n.scrollHeight, n.clientHeight, o2 ? o2.scrollHeight : 0, o2 ? o2.clientHeight : 0), s = -r.scrollLeft + Be(t), f = -r.scrollTop;
+  return N$1(o2 || n).direction === "rtl" && (s += X$1(n.clientWidth, o2 ? o2.clientWidth : 0) - i), { width: i, height: a2, x: s, y: f };
 }
-function getDocumentRect(element) {
-  var _element$ownerDocumen;
-  var html = getDocumentElement(element);
-  var winScroll = getWindowScroll(element);
-  var body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
-  var width = max$1(html.scrollWidth, html.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
-  var height = max$1(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
-  var x2 = -winScroll.scrollLeft + getWindowScrollBarX(element);
-  var y = -winScroll.scrollTop;
-  if (getComputedStyle$1(body || html).direction === "rtl") {
-    x2 += max$1(html.clientWidth, body ? body.clientWidth : 0) - width;
-  }
-  return {
-    width,
-    height,
-    x: x2,
-    y
-  };
+function Se(t) {
+  var e = N$1(t), n = e.overflow, r = e.overflowX, o2 = e.overflowY;
+  return /auto|scroll|overlay|hidden/.test(n + o2 + r);
 }
-function isScrollParent(element) {
-  var _getComputedStyle = getComputedStyle$1(element), overflow = _getComputedStyle.overflow, overflowX = _getComputedStyle.overflowX, overflowY = _getComputedStyle.overflowY;
-  return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
+function dt(t) {
+  return ["html", "body", "#document"].indexOf(C(t)) >= 0 ? t.ownerDocument.body : B(t) && Se(t) ? t : dt(ge(t));
 }
-function getScrollParent(node) {
-  if (["html", "body", "#document"].indexOf(getNodeName(node)) >= 0) {
-    return node.ownerDocument.body;
-  }
-  if (isHTMLElement(node) && isScrollParent(node)) {
-    return node;
-  }
-  return getScrollParent(getParentNode(node));
+function ce(t, e) {
+  var n;
+  e === void 0 && (e = []);
+  var r = dt(t), o2 = r === ((n = t.ownerDocument) == null ? void 0 : n.body), i = H(r), a2 = o2 ? [i].concat(i.visualViewport || [], Se(r) ? r : []) : r, s = e.concat(a2);
+  return o2 ? s : s.concat(ce(ge(a2)));
 }
-function listScrollParents(element, list) {
-  var _element$ownerDocumen;
-  if (list === void 0) {
-    list = [];
-  }
-  var scrollParent = getScrollParent(element);
-  var isBody = scrollParent === ((_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body);
-  var win = getWindow(scrollParent);
-  var target = isBody ? [win].concat(win.visualViewport || [], isScrollParent(scrollParent) ? scrollParent : []) : scrollParent;
-  var updatedList = list.concat(target);
-  return isBody ? updatedList : updatedList.concat(listScrollParents(getParentNode(target)));
+function Te(t) {
+  return Object.assign({}, t, { left: t.x, top: t.y, right: t.x + t.width, bottom: t.y + t.height });
 }
-function rectToClientRect(rect) {
-  return Object.assign({}, rect, {
-    left: rect.x,
-    top: rect.y,
-    right: rect.x + rect.width,
-    bottom: rect.y + rect.height
-  });
+function Xt(t) {
+  var e = ee(t);
+  return e.top = e.top + t.clientTop, e.left = e.left + t.clientLeft, e.bottom = e.top + t.clientHeight, e.right = e.left + t.clientWidth, e.width = t.clientWidth, e.height = t.clientHeight, e.x = e.left, e.y = e.top, e;
 }
-function getInnerBoundingClientRect(element) {
-  var rect = getBoundingClientRect(element);
-  rect.top = rect.top + element.clientTop;
-  rect.left = rect.left + element.clientLeft;
-  rect.bottom = rect.top + element.clientHeight;
-  rect.right = rect.left + element.clientWidth;
-  rect.width = element.clientWidth;
-  rect.height = element.clientHeight;
-  rect.x = rect.left;
-  rect.y = rect.top;
-  return rect;
+function ht(t, e) {
+  return e === je ? Te(Ft(t)) : Q(e) ? Xt(e) : Te(Ut(I$1(t)));
 }
-function getClientRectFromMixedType(element, clippingParent) {
-  return clippingParent === viewport ? rectToClientRect(getViewportRect(element)) : isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
+function Yt(t) {
+  var e = ce(ge(t)), n = ["absolute", "fixed"].indexOf(N$1(t).position) >= 0, r = n && B(t) ? se(t) : t;
+  return Q(r) ? e.filter(function(o2) {
+    return Q(o2) && it(o2, r) && C(o2) !== "body";
+  }) : [];
 }
-function getClippingParents(element) {
-  var clippingParents2 = listScrollParents(getParentNode(element));
-  var canEscapeClipping = ["absolute", "fixed"].indexOf(getComputedStyle$1(element).position) >= 0;
-  var clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
-  if (!isElement(clipperElement)) {
-    return [];
-  }
-  return clippingParents2.filter(function(clippingParent) {
-    return isElement(clippingParent) && contains(clippingParent, clipperElement) && getNodeName(clippingParent) !== "body";
-  });
+function Gt(t, e, n) {
+  var r = e === "clippingParents" ? Yt(t) : [].concat(e), o2 = [].concat(r, [n]), i = o2[0], a2 = o2.reduce(function(s, f) {
+    var c = ht(t, f);
+    return s.top = X$1(c.top, s.top), s.right = ve(c.right, s.right), s.bottom = ve(c.bottom, s.bottom), s.left = X$1(c.left, s.left), s;
+  }, ht(t, i));
+  return a2.width = a2.right - a2.left, a2.height = a2.bottom - a2.top, a2.x = a2.left, a2.y = a2.top, a2;
 }
-function getClippingRect(element, boundary, rootBoundary) {
-  var mainClippingParents = boundary === "clippingParents" ? getClippingParents(element) : [].concat(boundary);
-  var clippingParents2 = [].concat(mainClippingParents, [rootBoundary]);
-  var firstClippingParent = clippingParents2[0];
-  var clippingRect = clippingParents2.reduce(function(accRect, clippingParent) {
-    var rect = getClientRectFromMixedType(element, clippingParent);
-    accRect.top = max$1(rect.top, accRect.top);
-    accRect.right = min$1(rect.right, accRect.right);
-    accRect.bottom = min$1(rect.bottom, accRect.bottom);
-    accRect.left = max$1(rect.left, accRect.left);
-    return accRect;
-  }, getClientRectFromMixedType(element, firstClippingParent));
-  clippingRect.width = clippingRect.right - clippingRect.left;
-  clippingRect.height = clippingRect.bottom - clippingRect.top;
-  clippingRect.x = clippingRect.left;
-  clippingRect.y = clippingRect.top;
-  return clippingRect;
-}
-function computeOffsets(_ref) {
-  var reference2 = _ref.reference, element = _ref.element, placement = _ref.placement;
-  var basePlacement = placement ? getBasePlacement(placement) : null;
-  var variation = placement ? getVariation(placement) : null;
-  var commonX = reference2.x + reference2.width / 2 - element.width / 2;
-  var commonY = reference2.y + reference2.height / 2 - element.height / 2;
-  var offsets;
-  switch (basePlacement) {
-    case top:
-      offsets = {
-        x: commonX,
-        y: reference2.y - element.height
-      };
+function mt(t) {
+  var e = t.reference, n = t.element, r = t.placement, o2 = r ? q(r) : null, i = r ? te(r) : null, a2 = e.x + e.width / 2 - n.width / 2, s = e.y + e.height / 2 - n.height / 2, f;
+  switch (o2) {
+    case E$1:
+      f = { x: a2, y: e.y - n.height };
       break;
-    case bottom:
-      offsets = {
-        x: commonX,
-        y: reference2.y + reference2.height
-      };
+    case R:
+      f = { x: a2, y: e.y + e.height };
       break;
-    case right:
-      offsets = {
-        x: reference2.x + reference2.width,
-        y: commonY
-      };
+    case W$1:
+      f = { x: e.x + e.width, y: s };
       break;
-    case left:
-      offsets = {
-        x: reference2.x - element.width,
-        y: commonY
-      };
+    case P$1:
+      f = { x: e.x - n.width, y: s };
       break;
     default:
-      offsets = {
-        x: reference2.x,
-        y: reference2.y
-      };
+      f = { x: e.x, y: e.y };
   }
-  var mainAxis = basePlacement ? getMainAxisFromPlacement(basePlacement) : null;
-  if (mainAxis != null) {
-    var len = mainAxis === "y" ? "height" : "width";
-    switch (variation) {
-      case start:
-        offsets[mainAxis] = offsets[mainAxis] - (reference2[len] / 2 - element[len] / 2);
+  var c = o2 ? Le(o2) : null;
+  if (c != null) {
+    var u2 = c === "y" ? "height" : "width";
+    switch (i) {
+      case U$1:
+        f[c] = f[c] - (e[u2] / 2 - n[u2] / 2);
         break;
-      case end:
-        offsets[mainAxis] = offsets[mainAxis] + (reference2[len] / 2 - element[len] / 2);
+      case J:
+        f[c] = f[c] + (e[u2] / 2 - n[u2] / 2);
         break;
     }
   }
-  return offsets;
+  return f;
 }
-function detectOverflow(state, options) {
-  if (options === void 0) {
-    options = {};
-  }
-  var _options = options, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
-  var paddingObject = mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
-  var altContext = elementContext === popper ? reference : popper;
-  var popperRect = state.rects.popper;
-  var element = state.elements[altBoundary ? altContext : elementContext];
-  var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary);
-  var referenceClientRect = getBoundingClientRect(state.elements.reference);
-  var popperOffsets2 = computeOffsets({
-    reference: referenceClientRect,
-    element: popperRect,
-    strategy: "absolute",
-    placement
-  });
-  var popperClientRect = rectToClientRect(Object.assign({}, popperRect, popperOffsets2));
-  var elementClientRect = elementContext === popper ? popperClientRect : referenceClientRect;
-  var overflowOffsets = {
-    top: clippingClientRect.top - elementClientRect.top + paddingObject.top,
-    bottom: elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom,
-    left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
-    right: elementClientRect.right - clippingClientRect.right + paddingObject.right
-  };
-  var offsetData = state.modifiersData.offset;
-  if (elementContext === popper && offsetData) {
-    var offset2 = offsetData[placement];
-    Object.keys(overflowOffsets).forEach(function(key) {
-      var multiply = [right, bottom].indexOf(key) >= 0 ? 1 : -1;
-      var axis = [top, bottom].indexOf(key) >= 0 ? "y" : "x";
-      overflowOffsets[key] += offset2[axis] * multiply;
+function ne(t, e) {
+  e === void 0 && (e = {});
+  var n = e, r = n.placement, o2 = r === void 0 ? t.placement : r, i = n.boundary, a2 = i === void 0 ? Xe : i, s = n.rootBoundary, f = s === void 0 ? je : s, c = n.elementContext, u2 = c === void 0 ? K : c, m2 = n.altBoundary, v2 = m2 === void 0 ? false : m2, l2 = n.padding, h2 = l2 === void 0 ? 0 : l2, p2 = ft(typeof h2 != "number" ? h2 : ct(h2, G)), g = u2 === K ? Ye : K, x2 = t.rects.popper, y = t.elements[v2 ? g : u2], $ = Gt(Q(y) ? y : y.contextElement || I$1(t.elements.popper), a2, f), d2 = ee(t.elements.reference), b2 = mt({ reference: d2, element: x2, strategy: "absolute", placement: o2 }), w2 = Te(Object.assign({}, x2, b2)), O = u2 === K ? w2 : d2, j = { top: $.top - O.top + p2.top, bottom: O.bottom - $.bottom + p2.bottom, left: $.left - O.left + p2.left, right: O.right - $.right + p2.right }, A2 = t.modifiersData.offset;
+  if (u2 === K && A2) {
+    var k = A2[o2];
+    Object.keys(j).forEach(function(D2) {
+      var S2 = [W$1, R].indexOf(D2) >= 0 ? 1 : -1, L2 = [E$1, R].indexOf(D2) >= 0 ? "y" : "x";
+      j[D2] += k[L2] * S2;
     });
   }
-  return overflowOffsets;
+  return j;
 }
-function computeAutoPlacement(state, options) {
-  if (options === void 0) {
-    options = {};
-  }
-  var _options = options, placement = _options.placement, boundary = _options.boundary, rootBoundary = _options.rootBoundary, padding = _options.padding, flipVariations = _options.flipVariations, _options$allowedAutoP = _options.allowedAutoPlacements, allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
-  var variation = getVariation(placement);
-  var placements$1 = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function(placement2) {
-    return getVariation(placement2) === variation;
-  }) : basePlacements;
-  var allowedPlacements = placements$1.filter(function(placement2) {
-    return allowedAutoPlacements.indexOf(placement2) >= 0;
+function Jt(t, e) {
+  e === void 0 && (e = {});
+  var n = e, r = n.placement, o2 = n.boundary, i = n.rootBoundary, a2 = n.padding, s = n.flipVariations, f = n.allowedAutoPlacements, c = f === void 0 ? Ee : f, u2 = te(r), m2 = u2 ? s ? De : De.filter(function(h2) {
+    return te(h2) === u2;
+  }) : G, v2 = m2.filter(function(h2) {
+    return c.indexOf(h2) >= 0;
   });
-  if (allowedPlacements.length === 0) {
-    allowedPlacements = placements$1;
-  }
-  var overflows = allowedPlacements.reduce(function(acc, placement2) {
-    acc[placement2] = detectOverflow(state, {
-      placement: placement2,
-      boundary,
-      rootBoundary,
-      padding
-    })[getBasePlacement(placement2)];
-    return acc;
+  v2.length === 0 && (v2 = m2);
+  var l2 = v2.reduce(function(h2, p2) {
+    return h2[p2] = ne(t, { placement: p2, boundary: o2, rootBoundary: i, padding: a2 })[q(p2)], h2;
   }, {});
-  return Object.keys(overflows).sort(function(a2, b2) {
-    return overflows[a2] - overflows[b2];
+  return Object.keys(l2).sort(function(h2, p2) {
+    return l2[h2] - l2[p2];
   });
 }
-function getExpandedFallbackPlacements(placement) {
-  if (getBasePlacement(placement) === auto) {
+function Kt(t) {
+  if (q(t) === me)
     return [];
-  }
-  var oppositePlacement = getOppositePlacement(placement);
-  return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
+  var e = be(t);
+  return [lt(t), e, lt(e)];
 }
-function flip(_ref) {
-  var state = _ref.state, options = _ref.options, name = _ref.name;
-  if (state.modifiersData[name]._skip) {
-    return;
-  }
-  var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options.fallbackPlacements, padding = options.padding, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, _options$flipVariatio = options.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options.allowedAutoPlacements;
-  var preferredPlacement = state.options.placement;
-  var basePlacement = getBasePlacement(preferredPlacement);
-  var isBasePlacement = basePlacement === preferredPlacement;
-  var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [getOppositePlacement(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
-  var placements2 = [preferredPlacement].concat(fallbackPlacements).reduce(function(acc, placement2) {
-    return acc.concat(getBasePlacement(placement2) === auto ? computeAutoPlacement(state, {
-      placement: placement2,
-      boundary,
-      rootBoundary,
-      padding,
-      flipVariations,
-      allowedAutoPlacements
-    }) : placement2);
-  }, []);
-  var referenceRect = state.rects.reference;
-  var popperRect = state.rects.popper;
-  var checksMap = /* @__PURE__ */ new Map();
-  var makeFallbackChecks = true;
-  var firstFittingPlacement = placements2[0];
-  for (var i = 0; i < placements2.length; i++) {
-    var placement = placements2[i];
-    var _basePlacement = getBasePlacement(placement);
-    var isStartVariation = getVariation(placement) === start;
-    var isVertical = [top, bottom].indexOf(_basePlacement) >= 0;
-    var len = isVertical ? "width" : "height";
-    var overflow = detectOverflow(state, {
-      placement,
-      boundary,
-      rootBoundary,
-      altBoundary,
-      padding
-    });
-    var mainVariationSide = isVertical ? isStartVariation ? right : left : isStartVariation ? bottom : top;
-    if (referenceRect[len] > popperRect[len]) {
-      mainVariationSide = getOppositePlacement(mainVariationSide);
-    }
-    var altVariationSide = getOppositePlacement(mainVariationSide);
-    var checks = [];
-    if (checkMainAxis) {
-      checks.push(overflow[_basePlacement] <= 0);
-    }
-    if (checkAltAxis) {
-      checks.push(overflow[mainVariationSide] <= 0, overflow[altVariationSide] <= 0);
-    }
-    if (checks.every(function(check2) {
-      return check2;
-    })) {
-      firstFittingPlacement = placement;
-      makeFallbackChecks = false;
-      break;
-    }
-    checksMap.set(placement, checks);
-  }
-  if (makeFallbackChecks) {
-    var numberOfChecks = flipVariations ? 3 : 1;
-    var _loop = function _loop2(_i2) {
-      var fittingPlacement = placements2.find(function(placement2) {
-        var checks2 = checksMap.get(placement2);
-        if (checks2) {
-          return checks2.slice(0, _i2).every(function(check2) {
-            return check2;
-          });
-        }
-      });
-      if (fittingPlacement) {
-        firstFittingPlacement = fittingPlacement;
-        return "break";
-      }
-    };
-    for (var _i = numberOfChecks; _i > 0; _i--) {
-      var _ret = _loop(_i);
-      if (_ret === "break")
+function Qt(t) {
+  var e = t.state, n = t.options, r = t.name;
+  if (!e.modifiersData[r]._skip) {
+    for (var o2 = n.mainAxis, i = o2 === void 0 ? true : o2, a2 = n.altAxis, s = a2 === void 0 ? true : a2, f = n.fallbackPlacements, c = n.padding, u2 = n.boundary, m2 = n.rootBoundary, v2 = n.altBoundary, l2 = n.flipVariations, h2 = l2 === void 0 ? true : l2, p2 = n.allowedAutoPlacements, g = e.options.placement, x2 = q(g), y = x2 === g, $ = f || (y || !h2 ? [be(g)] : Kt(g)), d2 = [g].concat($).reduce(function(z, V) {
+      return z.concat(q(V) === me ? Jt(e, { placement: V, boundary: u2, rootBoundary: m2, padding: c, flipVariations: h2, allowedAutoPlacements: p2 }) : V);
+    }, []), b2 = e.rects.reference, w2 = e.rects.popper, O = /* @__PURE__ */ new Map(), j = true, A2 = d2[0], k = 0; k < d2.length; k++) {
+      var D2 = d2[k], S2 = q(D2), L2 = te(D2) === U$1, re = [E$1, R].indexOf(S2) >= 0, oe = re ? "width" : "height", M2 = ne(e, { placement: D2, boundary: u2, rootBoundary: m2, altBoundary: v2, padding: c }), T2 = re ? L2 ? W$1 : P$1 : L2 ? R : E$1;
+      b2[oe] > w2[oe] && (T2 = be(T2));
+      var pe = be(T2), _2 = [];
+      if (i && _2.push(M2[S2] <= 0), s && _2.push(M2[T2] <= 0, M2[pe] <= 0), _2.every(function(z) {
+        return z;
+      })) {
+        A2 = D2, j = false;
         break;
-    }
-  }
-  if (state.placement !== firstFittingPlacement) {
-    state.modifiersData[name]._skip = true;
-    state.placement = firstFittingPlacement;
-    state.reset = true;
-  }
-}
-var flip$1 = {
-  name: "flip",
-  enabled: true,
-  phase: "main",
-  fn: flip,
-  requiresIfExists: ["offset"],
-  data: {
-    _skip: false
-  }
-};
-function getSideOffsets(overflow, rect, preventedOffsets) {
-  if (preventedOffsets === void 0) {
-    preventedOffsets = {
-      x: 0,
-      y: 0
-    };
-  }
-  return {
-    top: overflow.top - rect.height - preventedOffsets.y,
-    right: overflow.right - rect.width + preventedOffsets.x,
-    bottom: overflow.bottom - rect.height + preventedOffsets.y,
-    left: overflow.left - rect.width - preventedOffsets.x
-  };
-}
-function isAnySideFullyClipped(overflow) {
-  return [top, right, bottom, left].some(function(side) {
-    return overflow[side] >= 0;
-  });
-}
-function hide(_ref) {
-  var state = _ref.state, name = _ref.name;
-  var referenceRect = state.rects.reference;
-  var popperRect = state.rects.popper;
-  var preventedOffsets = state.modifiersData.preventOverflow;
-  var referenceOverflow = detectOverflow(state, {
-    elementContext: "reference"
-  });
-  var popperAltOverflow = detectOverflow(state, {
-    altBoundary: true
-  });
-  var referenceClippingOffsets = getSideOffsets(referenceOverflow, referenceRect);
-  var popperEscapeOffsets = getSideOffsets(popperAltOverflow, popperRect, preventedOffsets);
-  var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
-  var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
-  state.modifiersData[name] = {
-    referenceClippingOffsets,
-    popperEscapeOffsets,
-    isReferenceHidden,
-    hasPopperEscaped
-  };
-  state.attributes.popper = Object.assign({}, state.attributes.popper, {
-    "data-popper-reference-hidden": isReferenceHidden,
-    "data-popper-escaped": hasPopperEscaped
-  });
-}
-var hide$1 = {
-  name: "hide",
-  enabled: true,
-  phase: "main",
-  requiresIfExists: ["preventOverflow"],
-  fn: hide
-};
-function distanceAndSkiddingToXY(placement, rects, offset2) {
-  var basePlacement = getBasePlacement(placement);
-  var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
-  var _ref = typeof offset2 === "function" ? offset2(Object.assign({}, rects, {
-    placement
-  })) : offset2, skidding = _ref[0], distance = _ref[1];
-  skidding = skidding || 0;
-  distance = (distance || 0) * invertDistance;
-  return [left, right].indexOf(basePlacement) >= 0 ? {
-    x: distance,
-    y: skidding
-  } : {
-    x: skidding,
-    y: distance
-  };
-}
-function offset(_ref2) {
-  var state = _ref2.state, options = _ref2.options, name = _ref2.name;
-  var _options$offset = options.offset, offset2 = _options$offset === void 0 ? [0, 0] : _options$offset;
-  var data = placements.reduce(function(acc, placement) {
-    acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset2);
-    return acc;
-  }, {});
-  var _data$state$placement = data[state.placement], x2 = _data$state$placement.x, y = _data$state$placement.y;
-  if (state.modifiersData.popperOffsets != null) {
-    state.modifiersData.popperOffsets.x += x2;
-    state.modifiersData.popperOffsets.y += y;
-  }
-  state.modifiersData[name] = data;
-}
-var offset$1 = {
-  name: "offset",
-  enabled: true,
-  phase: "main",
-  requires: ["popperOffsets"],
-  fn: offset
-};
-function popperOffsets(_ref) {
-  var state = _ref.state, name = _ref.name;
-  state.modifiersData[name] = computeOffsets({
-    reference: state.rects.reference,
-    element: state.rects.popper,
-    strategy: "absolute",
-    placement: state.placement
-  });
-}
-var popperOffsets$1 = {
-  name: "popperOffsets",
-  enabled: true,
-  phase: "read",
-  fn: popperOffsets,
-  data: {}
-};
-function getAltAxis(axis) {
-  return axis === "x" ? "y" : "x";
-}
-function preventOverflow(_ref) {
-  var state = _ref.state, options = _ref.options, name = _ref.name;
-  var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, padding = options.padding, _options$tether = options.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
-  var overflow = detectOverflow(state, {
-    boundary,
-    rootBoundary,
-    padding,
-    altBoundary
-  });
-  var basePlacement = getBasePlacement(state.placement);
-  var variation = getVariation(state.placement);
-  var isBasePlacement = !variation;
-  var mainAxis = getMainAxisFromPlacement(basePlacement);
-  var altAxis = getAltAxis(mainAxis);
-  var popperOffsets2 = state.modifiersData.popperOffsets;
-  var referenceRect = state.rects.reference;
-  var popperRect = state.rects.popper;
-  var tetherOffsetValue = typeof tetherOffset === "function" ? tetherOffset(Object.assign({}, state.rects, {
-    placement: state.placement
-  })) : tetherOffset;
-  var normalizedTetherOffsetValue = typeof tetherOffsetValue === "number" ? {
-    mainAxis: tetherOffsetValue,
-    altAxis: tetherOffsetValue
-  } : Object.assign({
-    mainAxis: 0,
-    altAxis: 0
-  }, tetherOffsetValue);
-  var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
-  var data = {
-    x: 0,
-    y: 0
-  };
-  if (!popperOffsets2) {
-    return;
-  }
-  if (checkMainAxis) {
-    var _offsetModifierState$;
-    var mainSide = mainAxis === "y" ? top : left;
-    var altSide = mainAxis === "y" ? bottom : right;
-    var len = mainAxis === "y" ? "height" : "width";
-    var offset2 = popperOffsets2[mainAxis];
-    var min2 = offset2 + overflow[mainSide];
-    var max2 = offset2 - overflow[altSide];
-    var additive = tether ? -popperRect[len] / 2 : 0;
-    var minLen = variation === start ? referenceRect[len] : popperRect[len];
-    var maxLen = variation === start ? -popperRect[len] : -referenceRect[len];
-    var arrowElement = state.elements.arrow;
-    var arrowRect = tether && arrowElement ? getLayoutRect(arrowElement) : {
-      width: 0,
-      height: 0
-    };
-    var arrowPaddingObject = state.modifiersData["arrow#persistent"] ? state.modifiersData["arrow#persistent"].padding : getFreshSideObject();
-    var arrowPaddingMin = arrowPaddingObject[mainSide];
-    var arrowPaddingMax = arrowPaddingObject[altSide];
-    var arrowLen = within(0, referenceRect[len], arrowRect[len]);
-    var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis : minLen - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis;
-    var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis : maxLen + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis;
-    var arrowOffsetParent = state.elements.arrow && getOffsetParent(state.elements.arrow);
-    var clientOffset = arrowOffsetParent ? mainAxis === "y" ? arrowOffsetParent.clientTop || 0 : arrowOffsetParent.clientLeft || 0 : 0;
-    var offsetModifierValue = (_offsetModifierState$ = offsetModifierState == null ? void 0 : offsetModifierState[mainAxis]) != null ? _offsetModifierState$ : 0;
-    var tetherMin = offset2 + minOffset - offsetModifierValue - clientOffset;
-    var tetherMax = offset2 + maxOffset - offsetModifierValue;
-    var preventedOffset = within(tether ? min$1(min2, tetherMin) : min2, offset2, tether ? max$1(max2, tetherMax) : max2);
-    popperOffsets2[mainAxis] = preventedOffset;
-    data[mainAxis] = preventedOffset - offset2;
-  }
-  if (checkAltAxis) {
-    var _offsetModifierState$2;
-    var _mainSide = mainAxis === "x" ? top : left;
-    var _altSide = mainAxis === "x" ? bottom : right;
-    var _offset = popperOffsets2[altAxis];
-    var _len = altAxis === "y" ? "height" : "width";
-    var _min = _offset + overflow[_mainSide];
-    var _max = _offset - overflow[_altSide];
-    var isOriginSide = [top, left].indexOf(basePlacement) !== -1;
-    var _offsetModifierValue = (_offsetModifierState$2 = offsetModifierState == null ? void 0 : offsetModifierState[altAxis]) != null ? _offsetModifierState$2 : 0;
-    var _tetherMin = isOriginSide ? _min : _offset - referenceRect[_len] - popperRect[_len] - _offsetModifierValue + normalizedTetherOffsetValue.altAxis;
-    var _tetherMax = isOriginSide ? _offset + referenceRect[_len] + popperRect[_len] - _offsetModifierValue - normalizedTetherOffsetValue.altAxis : _max;
-    var _preventedOffset = tether && isOriginSide ? withinMaxClamp(_tetherMin, _offset, _tetherMax) : within(tether ? _tetherMin : _min, _offset, tether ? _tetherMax : _max);
-    popperOffsets2[altAxis] = _preventedOffset;
-    data[altAxis] = _preventedOffset - _offset;
-  }
-  state.modifiersData[name] = data;
-}
-var preventOverflow$1 = {
-  name: "preventOverflow",
-  enabled: true,
-  phase: "main",
-  fn: preventOverflow,
-  requiresIfExists: ["offset"]
-};
-function getHTMLElementScroll(element) {
-  return {
-    scrollLeft: element.scrollLeft,
-    scrollTop: element.scrollTop
-  };
-}
-function getNodeScroll(node) {
-  if (node === getWindow(node) || !isHTMLElement(node)) {
-    return getWindowScroll(node);
-  } else {
-    return getHTMLElementScroll(node);
-  }
-}
-function isElementScaled(element) {
-  var rect = element.getBoundingClientRect();
-  var scaleX = round(rect.width) / element.offsetWidth || 1;
-  var scaleY = round(rect.height) / element.offsetHeight || 1;
-  return scaleX !== 1 || scaleY !== 1;
-}
-function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
-  if (isFixed === void 0) {
-    isFixed = false;
-  }
-  var isOffsetParentAnElement = isHTMLElement(offsetParent);
-  var offsetParentIsScaled = isHTMLElement(offsetParent) && isElementScaled(offsetParent);
-  var documentElement = getDocumentElement(offsetParent);
-  var rect = getBoundingClientRect(elementOrVirtualElement, offsetParentIsScaled);
-  var scroll = {
-    scrollLeft: 0,
-    scrollTop: 0
-  };
-  var offsets = {
-    x: 0,
-    y: 0
-  };
-  if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
-    if (getNodeName(offsetParent) !== "body" || isScrollParent(documentElement)) {
-      scroll = getNodeScroll(offsetParent);
-    }
-    if (isHTMLElement(offsetParent)) {
-      offsets = getBoundingClientRect(offsetParent, true);
-      offsets.x += offsetParent.clientLeft;
-      offsets.y += offsetParent.clientTop;
-    } else if (documentElement) {
-      offsets.x = getWindowScrollBarX(documentElement);
-    }
-  }
-  return {
-    x: rect.left + scroll.scrollLeft - offsets.x,
-    y: rect.top + scroll.scrollTop - offsets.y,
-    width: rect.width,
-    height: rect.height
-  };
-}
-function order(modifiers) {
-  var map = /* @__PURE__ */ new Map();
-  var visited = /* @__PURE__ */ new Set();
-  var result = [];
-  modifiers.forEach(function(modifier) {
-    map.set(modifier.name, modifier);
-  });
-  function sort(modifier) {
-    visited.add(modifier.name);
-    var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
-    requires.forEach(function(dep) {
-      if (!visited.has(dep)) {
-        var depModifier = map.get(dep);
-        if (depModifier) {
-          sort(depModifier);
-        }
       }
-    });
-    result.push(modifier);
-  }
-  modifiers.forEach(function(modifier) {
-    if (!visited.has(modifier.name)) {
-      sort(modifier);
+      O.set(D2, _2);
     }
-  });
-  return result;
+    if (j)
+      for (var ue = h2 ? 3 : 1, xe = function(z) {
+        var V = d2.find(function(de) {
+          var ae = O.get(de);
+          if (ae)
+            return ae.slice(0, z).every(function(Y) {
+              return Y;
+            });
+        });
+        if (V)
+          return A2 = V, "break";
+      }, ie = ue; ie > 0; ie--) {
+        var le = xe(ie);
+        if (le === "break")
+          break;
+      }
+    e.placement !== A2 && (e.modifiersData[r]._skip = true, e.placement = A2, e.reset = true);
+  }
 }
-function orderModifiers(modifiers) {
-  var orderedModifiers = order(modifiers);
-  return modifierPhases.reduce(function(acc, phase) {
-    return acc.concat(orderedModifiers.filter(function(modifier) {
-      return modifier.phase === phase;
+var vt = { name: "flip", enabled: true, phase: "main", fn: Qt, requiresIfExists: ["offset"], data: { _skip: false } };
+function gt(t, e, n) {
+  return n === void 0 && (n = { x: 0, y: 0 }), { top: t.top - e.height - n.y, right: t.right - e.width + n.x, bottom: t.bottom - e.height + n.y, left: t.left - e.width - n.x };
+}
+function yt(t) {
+  return [E$1, W$1, R, P$1].some(function(e) {
+    return t[e] >= 0;
+  });
+}
+function Zt(t) {
+  var e = t.state, n = t.name, r = e.rects.reference, o2 = e.rects.popper, i = e.modifiersData.preventOverflow, a2 = ne(e, { elementContext: "reference" }), s = ne(e, { altBoundary: true }), f = gt(a2, r), c = gt(s, o2, i), u2 = yt(f), m2 = yt(c);
+  e.modifiersData[n] = { referenceClippingOffsets: f, popperEscapeOffsets: c, isReferenceHidden: u2, hasPopperEscaped: m2 }, e.attributes.popper = Object.assign({}, e.attributes.popper, { "data-popper-reference-hidden": u2, "data-popper-escaped": m2 });
+}
+var bt = { name: "hide", enabled: true, phase: "main", requiresIfExists: ["preventOverflow"], fn: Zt };
+function en(t, e, n) {
+  var r = q(t), o2 = [P$1, E$1].indexOf(r) >= 0 ? -1 : 1, i = typeof n == "function" ? n(Object.assign({}, e, { placement: t })) : n, a2 = i[0], s = i[1];
+  return a2 = a2 || 0, s = (s || 0) * o2, [P$1, W$1].indexOf(r) >= 0 ? { x: s, y: a2 } : { x: a2, y: s };
+}
+function tn(t) {
+  var e = t.state, n = t.options, r = t.name, o2 = n.offset, i = o2 === void 0 ? [0, 0] : o2, a2 = Ee.reduce(function(u2, m2) {
+    return u2[m2] = en(m2, e.rects, i), u2;
+  }, {}), s = a2[e.placement], f = s.x, c = s.y;
+  e.modifiersData.popperOffsets != null && (e.modifiersData.popperOffsets.x += f, e.modifiersData.popperOffsets.y += c), e.modifiersData[r] = a2;
+}
+var wt = { name: "offset", enabled: true, phase: "main", requires: ["popperOffsets"], fn: tn };
+function nn(t) {
+  var e = t.state, n = t.name;
+  e.modifiersData[n] = mt({ reference: e.rects.reference, element: e.rects.popper, strategy: "absolute", placement: e.placement });
+}
+var He = { name: "popperOffsets", enabled: true, phase: "read", fn: nn, data: {} };
+function rn(t) {
+  return t === "x" ? "y" : "x";
+}
+function on(t) {
+  var e = t.state, n = t.options, r = t.name, o2 = n.mainAxis, i = o2 === void 0 ? true : o2, a2 = n.altAxis, s = a2 === void 0 ? false : a2, f = n.boundary, c = n.rootBoundary, u2 = n.altBoundary, m2 = n.padding, v2 = n.tether, l2 = v2 === void 0 ? true : v2, h2 = n.tetherOffset, p2 = h2 === void 0 ? 0 : h2, g = ne(e, { boundary: f, rootBoundary: c, padding: m2, altBoundary: u2 }), x2 = q(e.placement), y = te(e.placement), $ = !y, d2 = Le(x2), b2 = rn(d2), w2 = e.modifiersData.popperOffsets, O = e.rects.reference, j = e.rects.popper, A2 = typeof p2 == "function" ? p2(Object.assign({}, e.rects, { placement: e.placement })) : p2, k = typeof A2 == "number" ? { mainAxis: A2, altAxis: A2 } : Object.assign({ mainAxis: 0, altAxis: 0 }, A2), D2 = e.modifiersData.offset ? e.modifiersData.offset[e.placement] : null, S2 = { x: 0, y: 0 };
+  if (w2) {
+    if (i) {
+      var L2, re = d2 === "y" ? E$1 : P$1, oe = d2 === "y" ? R : W$1, M2 = d2 === "y" ? "height" : "width", T2 = w2[d2], pe = T2 + g[re], _2 = T2 - g[oe], ue = l2 ? -j[M2] / 2 : 0, xe = y === U$1 ? O[M2] : j[M2], ie = y === U$1 ? -j[M2] : -O[M2], le = e.elements.arrow, z = l2 && le ? ke(le) : { width: 0, height: 0 }, V = e.modifiersData["arrow#persistent"] ? e.modifiersData["arrow#persistent"].padding : st(), de = V[re], ae = V[oe], Y = fe(0, O[M2], z[M2]), jt = $ ? O[M2] / 2 - ue - Y - de - k.mainAxis : xe - Y - de - k.mainAxis, Dt = $ ? -O[M2] / 2 + ue + Y + ae + k.mainAxis : ie + Y + ae + k.mainAxis, Oe = e.elements.arrow && se(e.elements.arrow), Et = Oe ? d2 === "y" ? Oe.clientTop || 0 : Oe.clientLeft || 0 : 0, Ce = (L2 = D2 == null ? void 0 : D2[d2]) != null ? L2 : 0, Pt = T2 + jt - Ce - Et, At = T2 + Dt - Ce, qe = fe(l2 ? ve(pe, Pt) : pe, T2, l2 ? X$1(_2, At) : _2);
+      w2[d2] = qe, S2[d2] = qe - T2;
+    }
+    if (s) {
+      var Ve, kt = d2 === "x" ? E$1 : P$1, Lt = d2 === "x" ? R : W$1, F2 = w2[b2], he = b2 === "y" ? "height" : "width", Ne = F2 + g[kt], Ie = F2 - g[Lt], $e = [E$1, P$1].indexOf(x2) !== -1, _e = (Ve = D2 == null ? void 0 : D2[b2]) != null ? Ve : 0, ze = $e ? Ne : F2 - O[he] - j[he] - _e + k.altAxis, Fe = $e ? F2 + O[he] + j[he] - _e - k.altAxis : Ie, Ue = l2 && $e ? St(ze, F2, Fe) : fe(l2 ? ze : Ne, F2, l2 ? Fe : Ie);
+      w2[b2] = Ue, S2[b2] = Ue - F2;
+    }
+    e.modifiersData[r] = S2;
+  }
+}
+var xt = { name: "preventOverflow", enabled: true, phase: "main", fn: on, requiresIfExists: ["offset"] };
+function an(t) {
+  return { scrollLeft: t.scrollLeft, scrollTop: t.scrollTop };
+}
+function sn(t) {
+  return t === H(t) || !B(t) ? We(t) : an(t);
+}
+function fn(t) {
+  var e = t.getBoundingClientRect(), n = Z(e.width) / t.offsetWidth || 1, r = Z(e.height) / t.offsetHeight || 1;
+  return n !== 1 || r !== 1;
+}
+function cn(t, e, n) {
+  n === void 0 && (n = false);
+  var r = B(e), o2 = B(e) && fn(e), i = I$1(e), a2 = ee(t, o2), s = { scrollLeft: 0, scrollTop: 0 }, f = { x: 0, y: 0 };
+  return (r || !r && !n) && ((C(e) !== "body" || Se(i)) && (s = sn(e)), B(e) ? (f = ee(e, true), f.x += e.clientLeft, f.y += e.clientTop) : i && (f.x = Be(i))), { x: a2.left + s.scrollLeft - f.x, y: a2.top + s.scrollTop - f.y, width: a2.width, height: a2.height };
+}
+function pn(t) {
+  var e = /* @__PURE__ */ new Map(), n = /* @__PURE__ */ new Set(), r = [];
+  t.forEach(function(i) {
+    e.set(i.name, i);
+  });
+  function o2(i) {
+    n.add(i.name);
+    var a2 = [].concat(i.requires || [], i.requiresIfExists || []);
+    a2.forEach(function(s) {
+      if (!n.has(s)) {
+        var f = e.get(s);
+        f && o2(f);
+      }
+    }), r.push(i);
+  }
+  return t.forEach(function(i) {
+    n.has(i.name) || o2(i);
+  }), r;
+}
+function un(t) {
+  var e = pn(t);
+  return ot.reduce(function(n, r) {
+    return n.concat(e.filter(function(o2) {
+      return o2.phase === r;
     }));
   }, []);
 }
-function debounce(fn2) {
-  var pending;
+function ln(t) {
+  var e;
   return function() {
-    if (!pending) {
-      pending = new Promise(function(resolve) {
-        Promise.resolve().then(function() {
-          pending = void 0;
-          resolve(fn2());
-        });
+    return e || (e = new Promise(function(n) {
+      Promise.resolve().then(function() {
+        e = void 0, n(t());
       });
-    }
-    return pending;
+    })), e;
   };
 }
-function mergeByName(modifiers) {
-  var merged = modifiers.reduce(function(merged2, current) {
-    var existing = merged2[current.name];
-    merged2[current.name] = existing ? Object.assign({}, existing, current, {
-      options: Object.assign({}, existing.options, current.options),
-      data: Object.assign({}, existing.data, current.data)
-    }) : current;
-    return merged2;
+function dn(t) {
+  var e = t.reduce(function(n, r) {
+    var o2 = n[r.name];
+    return n[r.name] = o2 ? Object.assign({}, o2, r, { options: Object.assign({}, o2.options, r.options), data: Object.assign({}, o2.data, r.data) }) : r, n;
   }, {});
-  return Object.keys(merged).map(function(key) {
-    return merged[key];
+  return Object.keys(e).map(function(n) {
+    return e[n];
   });
 }
-var DEFAULT_OPTIONS = {
-  placement: "bottom",
-  modifiers: [],
-  strategy: "absolute"
-};
-function areValidElements() {
-  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
-  }
-  return !args.some(function(element) {
-    return !(element && typeof element.getBoundingClientRect === "function");
+var Ot = { placement: "bottom", modifiers: [], strategy: "absolute" };
+function $t() {
+  for (var t = arguments.length, e = new Array(t), n = 0; n < t; n++)
+    e[n] = arguments[n];
+  return !e.some(function(r) {
+    return !(r && typeof r.getBoundingClientRect == "function");
   });
 }
-function popperGenerator(generatorOptions) {
-  if (generatorOptions === void 0) {
-    generatorOptions = {};
-  }
-  var _generatorOptions = generatorOptions, _generatorOptions$def = _generatorOptions.defaultModifiers, defaultModifiers2 = _generatorOptions$def === void 0 ? [] : _generatorOptions$def, _generatorOptions$def2 = _generatorOptions.defaultOptions, defaultOptions = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
-  return function createPopper2(reference2, popper2, options) {
-    if (options === void 0) {
-      options = defaultOptions;
-    }
-    var state = {
-      placement: "bottom",
-      orderedModifiers: [],
-      options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions),
-      modifiersData: {},
-      elements: {
-        reference: reference2,
-        popper: popper2
-      },
-      attributes: {},
-      styles: {}
-    };
-    var effectCleanupFns = [];
-    var isDestroyed = false;
-    var instance = {
-      state,
-      setOptions: function setOptions(setOptionsAction) {
-        var options2 = typeof setOptionsAction === "function" ? setOptionsAction(state.options) : setOptionsAction;
-        cleanupModifierEffects();
-        state.options = Object.assign({}, defaultOptions, state.options, options2);
-        state.scrollParents = {
-          reference: isElement(reference2) ? listScrollParents(reference2) : reference2.contextElement ? listScrollParents(reference2.contextElement) : [],
-          popper: listScrollParents(popper2)
-        };
-        var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers2, state.options.modifiers)));
-        state.orderedModifiers = orderedModifiers.filter(function(m2) {
-          return m2.enabled;
-        });
-        runModifierEffects();
-        return instance.update();
-      },
-      forceUpdate: function forceUpdate() {
-        if (isDestroyed) {
-          return;
-        }
-        var _state$elements = state.elements, reference22 = _state$elements.reference, popper22 = _state$elements.popper;
-        if (!areValidElements(reference22, popper22)) {
-          return;
-        }
-        state.rects = {
-          reference: getCompositeRect(reference22, getOffsetParent(popper22), state.options.strategy === "fixed"),
-          popper: getLayoutRect(popper22)
-        };
-        state.reset = false;
-        state.placement = state.options.placement;
-        state.orderedModifiers.forEach(function(modifier) {
-          return state.modifiersData[modifier.name] = Object.assign({}, modifier.data);
-        });
-        for (var index2 = 0; index2 < state.orderedModifiers.length; index2++) {
-          if (state.reset === true) {
-            state.reset = false;
-            index2 = -1;
-            continue;
-          }
-          var _state$orderedModifie = state.orderedModifiers[index2], fn2 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
-          if (typeof fn2 === "function") {
-            state = fn2({
-              state,
-              options: _options,
-              name,
-              instance
-            }) || state;
-          }
-        }
-      },
-      update: debounce(function() {
-        return new Promise(function(resolve) {
-          instance.forceUpdate();
-          resolve(state);
-        });
-      }),
-      destroy: function destroy() {
-        cleanupModifierEffects();
-        isDestroyed = true;
-      }
-    };
-    if (!areValidElements(reference2, popper2)) {
-      return instance;
-    }
-    instance.setOptions(options).then(function(state2) {
-      if (!isDestroyed && options.onFirstUpdate) {
-        options.onFirstUpdate(state2);
-      }
-    });
-    function runModifierEffects() {
-      state.orderedModifiers.forEach(function(_ref3) {
-        var name = _ref3.name, _ref3$options = _ref3.options, options2 = _ref3$options === void 0 ? {} : _ref3$options, effect2 = _ref3.effect;
-        if (typeof effect2 === "function") {
-          var cleanupFn = effect2({
-            state,
-            name,
-            instance,
-            options: options2
+function we(t) {
+  t === void 0 && (t = {});
+  var e = t, n = e.defaultModifiers, r = n === void 0 ? [] : n, o2 = e.defaultOptions, i = o2 === void 0 ? Ot : o2;
+  return function(a2, s, f) {
+    f === void 0 && (f = i);
+    var c = { placement: "bottom", orderedModifiers: [], options: Object.assign({}, Ot, i), modifiersData: {}, elements: { reference: a2, popper: s }, attributes: {}, styles: {} }, u2 = [], m2 = false, v2 = { state: c, setOptions: function(p2) {
+      var g = typeof p2 == "function" ? p2(c.options) : p2;
+      h2(), c.options = Object.assign({}, i, c.options, g), c.scrollParents = { reference: Q(a2) ? ce(a2) : a2.contextElement ? ce(a2.contextElement) : [], popper: ce(s) };
+      var x2 = un(dn([].concat(r, c.options.modifiers)));
+      return c.orderedModifiers = x2.filter(function(y) {
+        return y.enabled;
+      }), l2(), v2.update();
+    }, forceUpdate: function() {
+      if (!m2) {
+        var p2 = c.elements, g = p2.reference, x2 = p2.popper;
+        if ($t(g, x2)) {
+          c.rects = { reference: cn(g, se(x2), c.options.strategy === "fixed"), popper: ke(x2) }, c.reset = false, c.placement = c.options.placement, c.orderedModifiers.forEach(function(j) {
+            return c.modifiersData[j.name] = Object.assign({}, j.data);
           });
-          var noopFn = function noopFn2() {
+          for (var y = 0; y < c.orderedModifiers.length; y++) {
+            if (c.reset === true) {
+              c.reset = false, y = -1;
+              continue;
+            }
+            var $ = c.orderedModifiers[y], d2 = $.fn, b2 = $.options, w2 = b2 === void 0 ? {} : b2, O = $.name;
+            typeof d2 == "function" && (c = d2({ state: c, options: w2, name: O, instance: v2 }) || c);
+          }
+        }
+      }
+    }, update: ln(function() {
+      return new Promise(function(p2) {
+        v2.forceUpdate(), p2(c);
+      });
+    }), destroy: function() {
+      h2(), m2 = true;
+    } };
+    if (!$t(a2, s))
+      return v2;
+    v2.setOptions(f).then(function(p2) {
+      !m2 && f.onFirstUpdate && f.onFirstUpdate(p2);
+    });
+    function l2() {
+      c.orderedModifiers.forEach(function(p2) {
+        var g = p2.name, x2 = p2.options, y = x2 === void 0 ? {} : x2, $ = p2.effect;
+        if (typeof $ == "function") {
+          var d2 = $({ state: c, name: g, instance: v2, options: y }), b2 = function() {
           };
-          effectCleanupFns.push(cleanupFn || noopFn);
+          u2.push(d2 || b2);
         }
       });
     }
-    function cleanupModifierEffects() {
-      effectCleanupFns.forEach(function(fn2) {
-        return fn2();
-      });
-      effectCleanupFns = [];
+    function h2() {
+      u2.forEach(function(p2) {
+        return p2();
+      }), u2 = [];
     }
-    return instance;
+    return v2;
   };
 }
-var defaultModifiers = [eventListeners, popperOffsets$1, computeStyles$1, applyStyles$1, offset$1, flip$1, preventOverflow$1, arrow$1, hide$1];
-var createPopper = /* @__PURE__ */ popperGenerator({
-  defaultModifiers
-});
+we();
+var mn = [Re, He, Me, Ae];
+we({ defaultModifiers: mn });
+var gn = [Re, He, Me, Ae, wt, vt, xt, pt, bt], yn = we({ defaultModifiers: gn });
 const POSITIONING_STRATEGIES = ["fixed", "absolute"];
 const usePopperCoreConfigProps = buildProps({
   boundariesPadding: {
@@ -13991,7 +13253,7 @@ const usePopperCoreConfigProps = buildProps({
   },
   placement: {
     type: String,
-    values: placements,
+    values: Ee,
     default: "bottom"
   },
   popperOptions: {
@@ -14129,17 +13391,17 @@ const _sfc_main$26 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         arrowEl,
         arrowOffset: vue_cjs_prod.unref(arrowOffset)
       });
-      return createPopper(referenceEl, popperContentEl, options);
+      return yn(referenceEl, popperContentEl, options);
     };
     const updatePopper = (shouldUpdateZIndex = true) => {
-      var _a2;
-      (_a2 = vue_cjs_prod.unref(popperInstanceRef)) == null ? void 0 : _a2.update();
+      var _a;
+      (_a = vue_cjs_prod.unref(popperInstanceRef)) == null ? void 0 : _a.update();
       shouldUpdateZIndex && (contentZIndex.value = props.zIndex || nextZIndex());
     };
     const togglePopperAlive = () => {
-      var _a2, _b2;
+      var _a, _b;
       const monitorable = { name: "eventListeners", enabled: props.visible };
-      (_b2 = (_a2 = vue_cjs_prod.unref(popperInstanceRef)) == null ? void 0 : _a2.setOptions) == null ? void 0 : _b2.call(_a2, (options) => __spreadProps(__spreadValues({}, options), {
+      (_b = (_a = vue_cjs_prod.unref(popperInstanceRef)) == null ? void 0 : _a.setOptions) == null ? void 0 : _b.call(_a, (options) => __spreadProps(__spreadValues({}, options), {
         modifiers: [...options.modifiers || [], monitorable]
       }));
       updatePopper(false);
@@ -14147,10 +13409,10 @@ const _sfc_main$26 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     vue_cjs_prod.onMounted(() => {
       let updateHandle;
       vue_cjs_prod.watch(computedReference, (referenceEl) => {
-        var _a2;
+        var _a;
         updateHandle == null ? void 0 : updateHandle();
         const popperInstance = vue_cjs_prod.unref(popperInstanceRef);
-        (_a2 = popperInstance == null ? void 0 : popperInstance.destroy) == null ? void 0 : _a2.call(popperInstance);
+        (_a = popperInstance == null ? void 0 : popperInstance.destroy) == null ? void 0 : _a.call(popperInstance);
         if (referenceEl) {
           const popperContentEl = vue_cjs_prod.unref(popperContentRef);
           contentRef.value = popperContentEl;
@@ -14173,8 +13435,8 @@ const _sfc_main$26 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         arrowEl: vue_cjs_prod.unref(arrowRef),
         arrowOffset: vue_cjs_prod.unref(arrowOffset)
       }), (option) => {
-        var _a2;
-        return (_a2 = popperInstanceRef.value) == null ? void 0 : _a2.setOptions(option);
+        var _a;
+        return (_a = popperInstanceRef.value) == null ? void 0 : _a.setOptions(option);
       });
     });
     expose({
@@ -14364,8 +13626,8 @@ const _sfc_main$24 = vue_cjs_prod.defineComponent({
       return props.disabled ? false : vue_cjs_prod.unref(open);
     });
     const contentStyle = vue_cjs_prod.computed(() => {
-      var _a2;
-      return (_a2 = props.style) != null ? _a2 : {};
+      var _a;
+      return (_a = props.style) != null ? _a : {};
     });
     const ariaHidden = vue_cjs_prod.computed(() => !vue_cjs_prod.unref(open));
     useEscapeKeydown(onClose);
@@ -14387,8 +13649,8 @@ const _sfc_main$24 = vue_cjs_prod.defineComponent({
       }
     });
     const onBeforeEnter = () => {
-      var _a2, _b2;
-      (_b2 = (_a2 = contentRef.value) == null ? void 0 : _a2.updatePopper) == null ? void 0 : _b2.call(_a2);
+      var _a, _b;
+      (_b = (_a = contentRef.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
       onBeforeShow == null ? void 0 : onBeforeShow();
     };
     const onBeforeLeave = () => {
@@ -14401,8 +13663,8 @@ const _sfc_main$24 = vue_cjs_prod.defineComponent({
     vue_cjs_prod.watch(() => vue_cjs_prod.unref(open), (val) => {
       if (val) {
         stopHandle = onClickOutside(vue_cjs_prod.computed(() => {
-          var _a2;
-          return (_a2 = contentRef.value) == null ? void 0 : _a2.popperContentRef;
+          var _a;
+          return (_a = contentRef.value) == null ? void 0 : _a.popperContentRef;
         }), () => {
           if (vue_cjs_prod.unref(controlled))
             return;
@@ -14611,10 +13873,10 @@ const _sfc_main$22 = vue_cjs_prod.defineComponent({
     const id2 = useId();
     const popperRef = vue_cjs_prod.ref(null);
     const updatePopper = () => {
-      var _a2;
+      var _a;
       const popperComponent = vue_cjs_prod.unref(popperRef);
       if (popperComponent) {
-        (_a2 = popperComponent.popperInstanceRef) == null ? void 0 : _a2.update();
+        (_a = popperComponent.popperInstanceRef) == null ? void 0 : _a.update();
       }
     };
     const open = vue_cjs_prod.ref(false);
@@ -14877,7 +14139,7 @@ const _sfc_main$21 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         }
       }
     };
-    const debouncedGetData = debounce$1(getData, props.debounce);
+    const debouncedGetData = debounce(getData, props.debounce);
     const handleInput = (value) => {
       const valuePresented = Boolean(value);
       emit("input", value);
@@ -14928,8 +14190,8 @@ const _sfc_main$21 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       activated.value = false;
     };
     const focus = () => {
-      var _a2;
-      (_a2 = inputRef.value) == null ? void 0 : _a2.focus();
+      var _a;
+      (_a = inputRef.value) == null ? void 0 : _a.focus();
     };
     const handleSelect = (item) => {
       emit("input", item[props.valueKey]);
@@ -15266,11 +14528,11 @@ const _sfc_main$1$ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
     const handleScrollThrottled = useThrottleFn(handleScroll2, 300);
     vue_cjs_prod.onMounted(() => {
-      var _a2;
+      var _a;
       container.value = document;
       el.value = document.documentElement;
       if (props.target) {
-        el.value = (_a2 = document.querySelector(props.target)) != null ? _a2 : void 0;
+        el.value = (_a = document.querySelector(props.target)) != null ? _a : void 0;
         if (!el.value) {
           throwError(COMPONENT_NAME2, `target is not existed: ${props.target}`);
         }
@@ -15605,7 +14867,7 @@ function rgbToHsl(r, g, b2) {
   }
   return { h: h2, s, l: l2 };
 }
-function hue2rgb(p2, q, t) {
+function hue2rgb(p2, q2, t) {
   if (t < 0) {
     t += 1;
   }
@@ -15613,13 +14875,13 @@ function hue2rgb(p2, q, t) {
     t -= 1;
   }
   if (t < 1 / 6) {
-    return p2 + (q - p2) * (6 * t);
+    return p2 + (q2 - p2) * (6 * t);
   }
   if (t < 1 / 2) {
-    return q;
+    return q2;
   }
   if (t < 2 / 3) {
-    return p2 + (q - p2) * (2 / 3 - t) * 6;
+    return p2 + (q2 - p2) * (2 / 3 - t) * 6;
   }
   return p2;
 }
@@ -15635,11 +14897,11 @@ function hslToRgb(h2, s, l2) {
     b2 = l2;
     r = l2;
   } else {
-    var q = l2 < 0.5 ? l2 * (1 + s) : l2 + s - l2 * s;
-    var p2 = 2 * l2 - q;
-    r = hue2rgb(p2, q, h2 + 1 / 3);
-    g = hue2rgb(p2, q, h2);
-    b2 = hue2rgb(p2, q, h2 - 1 / 3);
+    var q2 = l2 < 0.5 ? l2 * (1 + s) : l2 + s - l2 * s;
+    var p2 = 2 * l2 - q2;
+    r = hue2rgb(p2, q2, h2 + 1 / 3);
+    g = hue2rgb(p2, q2, h2);
+    b2 = hue2rgb(p2, q2, h2 - 1 / 3);
   }
   return { r: r * 255, g: g * 255, b: b2 * 255 };
 }
@@ -15678,12 +14940,12 @@ function hsvToRgb(h2, s, v2) {
   var i = Math.floor(h2);
   var f = h2 - i;
   var p2 = v2 * (1 - s);
-  var q = v2 * (1 - f * s);
+  var q2 = v2 * (1 - f * s);
   var t = v2 * (1 - (1 - f) * s);
   var mod = i % 6;
-  var r = [v2, q, p2, p2, t, v2][mod];
-  var g = [t, v2, v2, q, p2, p2][mod];
-  var b2 = [p2, p2, t, v2, v2, q][mod];
+  var r = [v2, q2, p2, p2, t, v2][mod];
+  var g = [t, v2, v2, q2, p2, p2][mod];
+  var b2 = [p2, p2, t, v2, v2, q2][mod];
   return { r: r * 255, g: g * 255, b: b2 * 255 };
 }
 function rgbToHex(r, g, b2, allow3Char) {
@@ -16023,7 +15285,7 @@ var TinyColor = function() {
     if (opts === void 0) {
       opts = {};
     }
-    var _a2;
+    var _a;
     if (color instanceof TinyColor2) {
       return color;
     }
@@ -16038,7 +15300,7 @@ var TinyColor = function() {
     this.b = rgb.b;
     this.a = rgb.a;
     this.roundA = Math.round(100 * this.a) / 100;
-    this.format = (_a2 = opts.format) !== null && _a2 !== void 0 ? _a2 : rgb.format;
+    this.format = (_a = opts.format) !== null && _a !== void 0 ? _a : rgb.format;
     this.gradientType = opts.gradientType;
     if (this.r < 1) {
       this.r = Math.round(this.r);
@@ -16063,28 +15325,28 @@ var TinyColor = function() {
   };
   TinyColor2.prototype.getLuminance = function() {
     var rgb = this.toRgb();
-    var R;
-    var G;
-    var B;
+    var R2;
+    var G2;
+    var B2;
     var RsRGB = rgb.r / 255;
     var GsRGB = rgb.g / 255;
     var BsRGB = rgb.b / 255;
     if (RsRGB <= 0.03928) {
-      R = RsRGB / 12.92;
+      R2 = RsRGB / 12.92;
     } else {
-      R = Math.pow((RsRGB + 0.055) / 1.055, 2.4);
+      R2 = Math.pow((RsRGB + 0.055) / 1.055, 2.4);
     }
     if (GsRGB <= 0.03928) {
-      G = GsRGB / 12.92;
+      G2 = GsRGB / 12.92;
     } else {
-      G = Math.pow((GsRGB + 0.055) / 1.055, 2.4);
+      G2 = Math.pow((GsRGB + 0.055) / 1.055, 2.4);
     }
     if (BsRGB <= 0.03928) {
-      B = BsRGB / 12.92;
+      B2 = BsRGB / 12.92;
     } else {
-      B = Math.pow((BsRGB + 0.055) / 1.055, 2.4);
+      B2 = Math.pow((BsRGB + 0.055) / 1.055, 2.4);
     }
-    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+    return 0.2126 * R2 + 0.7152 * G2 + 0.0722 * B2;
   };
   TinyColor2.prototype.getAlpha = function() {
     return this.a;
@@ -16179,8 +15441,8 @@ var TinyColor = function() {
       return false;
     }
     var hex2 = "#" + rgbToHex(this.r, this.g, this.b, false);
-    for (var _i = 0, _a2 = Object.entries(names); _i < _a2.length; _i++) {
-      var _b2 = _a2[_i], key = _b2[0], value = _b2[1];
+    for (var _i = 0, _a = Object.entries(names); _i < _a.length; _i++) {
+      var _b = _a[_i], key = _b[0], value = _b[1];
       if (hex2 === value) {
         return key;
       }
@@ -16463,12 +15725,12 @@ const _sfc_main$1X = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     const _ref = vue_cjs_prod.ref();
     const _type = vue_cjs_prod.computed(() => props.type || (buttonGroupContext == null ? void 0 : buttonGroupContext.type) || "");
     const autoInsertSpace = vue_cjs_prod.computed(() => {
-      var _a2, _b2, _c;
-      return (_c = (_b2 = props.autoInsertSpace) != null ? _b2 : (_a2 = globalConfig2.value) == null ? void 0 : _a2.autoInsertSpace) != null ? _c : false;
+      var _a, _b, _c;
+      return (_c = (_b = props.autoInsertSpace) != null ? _b : (_a = globalConfig2.value) == null ? void 0 : _a.autoInsertSpace) != null ? _c : false;
     });
     const shouldAddSpace = vue_cjs_prod.computed(() => {
-      var _a2;
-      const defaultSlot = (_a2 = slots.default) == null ? void 0 : _a2.call(slots);
+      var _a;
+      const defaultSlot = (_a = slots.default) == null ? void 0 : _a.call(slots);
       if (autoInsertSpace.value && (defaultSlot == null ? void 0 : defaultSlot.length) === 1) {
         const slot = defaultSlot[0];
         if ((slot == null ? void 0 : slot.type) === vue_cjs_prod.Text) {
@@ -16728,7 +15990,7 @@ var dayjs_min = { exports: {} };
         if (!this.isValid())
           return n2.invalidDate || $;
         var r2 = t2 || "YYYY-MM-DDTHH:mm:ssZ", i2 = O.z(this), s2 = this.$H, u22 = this.$m, a22 = this.$M, o22 = n2.weekdays, f2 = n2.months, h22 = function(t3, n3, i3, s3) {
-          return t3 && (t3[n3] || t3(e2, r2)) || i3[n3].substr(0, s3);
+          return t3 && (t3[n3] || t3(e2, r2)) || i3[n3].slice(0, s3);
         }, c2 = function(t3) {
           return O.s(s2 % 12 || 12, t3, "0");
         }, d22 = n2.meridiem || function(t3, e3, n3) {
@@ -16763,9 +16025,9 @@ var dayjs_min = { exports: {} };
       }, m22.toString = function() {
         return this.$d.toUTCString();
       }, M22;
-    }(), b2 = _2.prototype;
-    return w2.prototype = b2, [["$ms", r], ["$s", i], ["$m", s], ["$H", u2], ["$W", a2], ["$M", f], ["$y", c], ["$D", d2]].forEach(function(t2) {
-      b2[t2[1]] = function(e2) {
+    }(), T2 = _2.prototype;
+    return w2.prototype = T2, [["$ms", r], ["$s", i], ["$m", s], ["$H", u2], ["$W", a2], ["$M", f], ["$y", c], ["$D", d2]].forEach(function(t2) {
+      T2[t2[1]] = function(e2) {
         return this.$g(e2, t2[0], t2[1]);
       };
     }), w2.extend = function(t2, e2) {
@@ -16786,7 +16048,7 @@ var localeData$1 = { exports: {} };
         return n2 && (n2.indexOf ? n2 : n2.s);
       }, u2 = function(n2, e2, t2, r2, u22) {
         var i2 = n2.name ? n2 : n2.$locale(), a22 = o2(i2[e2]), s2 = o2(i2[t2]), f = a22 || s2.map(function(n3) {
-          return n3.substr(0, r2);
+          return n3.slice(0, r2);
         });
         if (!u22)
           return f;
@@ -16856,121 +16118,121 @@ var localeData$1 = { exports: {} };
 var localeData = localeData$1.exports;
 var customParseFormat$1 = { exports: {} };
 (function(module2, exports2) {
-  !function(t, e) {
-    module2.exports = e();
+  !function(e, t) {
+    module2.exports = t();
   }(commonjsGlobal, function() {
-    var t = { LTS: "h:mm:ss A", LT: "h:mm A", L: "MM/DD/YYYY", LL: "MMMM D, YYYY", LLL: "MMMM D, YYYY h:mm A", LLLL: "dddd, MMMM D, YYYY h:mm A" }, e = /(\[[^[]*\])|([-:/.()\s]+)|(A|a|YYYY|YY?|MM?M?M?|Do|DD?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g, n = /\d\d/, r = /\d\d?/, i = /\d*[^\s\d-_:/()]+/, o2 = {}, s = function(t2) {
-      return (t2 = +t2) + (t2 > 68 ? 1900 : 2e3);
+    var e = { LTS: "h:mm:ss A", LT: "h:mm A", L: "MM/DD/YYYY", LL: "MMMM D, YYYY", LLL: "MMMM D, YYYY h:mm A", LLLL: "dddd, MMMM D, YYYY h:mm A" }, t = /(\[[^[]*\])|([-:/.()\s]+)|(A|a|YYYY|YY?|MM?M?M?|Do|DD?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g, n = /\d\d/, r = /\d\d?/, i = /\d*[^\s\d-_:/()]+/, o2 = {}, s = function(e2) {
+      return (e2 = +e2) + (e2 > 68 ? 1900 : 2e3);
     };
-    var a2 = function(t2) {
-      return function(e2) {
-        this[t2] = +e2;
+    var a2 = function(e2) {
+      return function(t2) {
+        this[e2] = +t2;
       };
-    }, f = [/[+-]\d\d:?(\d\d)?|Z/, function(t2) {
-      (this.zone || (this.zone = {})).offset = function(t3) {
-        if (!t3)
+    }, f = [/[+-]\d\d:?(\d\d)?|Z/, function(e2) {
+      (this.zone || (this.zone = {})).offset = function(e3) {
+        if (!e3)
           return 0;
-        if (t3 === "Z")
+        if (e3 === "Z")
           return 0;
-        var e2 = t3.match(/([+-]|\d\d)/g), n2 = 60 * e2[1] + (+e2[2] || 0);
-        return n2 === 0 ? 0 : e2[0] === "+" ? -n2 : n2;
-      }(t2);
-    }], u2 = function(t2) {
-      var e2 = o2[t2];
-      return e2 && (e2.indexOf ? e2 : e2.s.concat(e2.f));
-    }, h2 = function(t2, e2) {
+        var t2 = e3.match(/([+-]|\d\d)/g), n2 = 60 * t2[1] + (+t2[2] || 0);
+        return n2 === 0 ? 0 : t2[0] === "+" ? -n2 : n2;
+      }(e2);
+    }], h2 = function(e2) {
+      var t2 = o2[e2];
+      return t2 && (t2.indexOf ? t2 : t2.s.concat(t2.f));
+    }, u2 = function(e2, t2) {
       var n2, r2 = o2.meridiem;
       if (r2) {
         for (var i2 = 1; i2 <= 24; i2 += 1)
-          if (t2.indexOf(r2(i2, 0, e2)) > -1) {
+          if (e2.indexOf(r2(i2, 0, t2)) > -1) {
             n2 = i2 > 12;
             break;
           }
       } else
-        n2 = t2 === (e2 ? "pm" : "PM");
+        n2 = e2 === (t2 ? "pm" : "PM");
       return n2;
-    }, d2 = { A: [i, function(t2) {
-      this.afternoon = h2(t2, false);
-    }], a: [i, function(t2) {
-      this.afternoon = h2(t2, true);
-    }], S: [/\d/, function(t2) {
-      this.milliseconds = 100 * +t2;
-    }], SS: [n, function(t2) {
-      this.milliseconds = 10 * +t2;
-    }], SSS: [/\d{3}/, function(t2) {
-      this.milliseconds = +t2;
-    }], s: [r, a2("seconds")], ss: [r, a2("seconds")], m: [r, a2("minutes")], mm: [r, a2("minutes")], H: [r, a2("hours")], h: [r, a2("hours")], HH: [r, a2("hours")], hh: [r, a2("hours")], D: [r, a2("day")], DD: [n, a2("day")], Do: [i, function(t2) {
-      var e2 = o2.ordinal, n2 = t2.match(/\d+/);
-      if (this.day = n2[0], e2)
+    }, d2 = { A: [i, function(e2) {
+      this.afternoon = u2(e2, false);
+    }], a: [i, function(e2) {
+      this.afternoon = u2(e2, true);
+    }], S: [/\d/, function(e2) {
+      this.milliseconds = 100 * +e2;
+    }], SS: [n, function(e2) {
+      this.milliseconds = 10 * +e2;
+    }], SSS: [/\d{3}/, function(e2) {
+      this.milliseconds = +e2;
+    }], s: [r, a2("seconds")], ss: [r, a2("seconds")], m: [r, a2("minutes")], mm: [r, a2("minutes")], H: [r, a2("hours")], h: [r, a2("hours")], HH: [r, a2("hours")], hh: [r, a2("hours")], D: [r, a2("day")], DD: [n, a2("day")], Do: [i, function(e2) {
+      var t2 = o2.ordinal, n2 = e2.match(/\d+/);
+      if (this.day = n2[0], t2)
         for (var r2 = 1; r2 <= 31; r2 += 1)
-          e2(r2).replace(/\[|\]/g, "") === t2 && (this.day = r2);
-    }], M: [r, a2("month")], MM: [n, a2("month")], MMM: [i, function(t2) {
-      var e2 = u2("months"), n2 = (u2("monthsShort") || e2.map(function(t3) {
-        return t3.substr(0, 3);
-      })).indexOf(t2) + 1;
+          t2(r2).replace(/\[|\]/g, "") === e2 && (this.day = r2);
+    }], M: [r, a2("month")], MM: [n, a2("month")], MMM: [i, function(e2) {
+      var t2 = h2("months"), n2 = (h2("monthsShort") || t2.map(function(e3) {
+        return e3.slice(0, 3);
+      })).indexOf(e2) + 1;
       if (n2 < 1)
         throw new Error();
       this.month = n2 % 12 || n2;
-    }], MMMM: [i, function(t2) {
-      var e2 = u2("months").indexOf(t2) + 1;
-      if (e2 < 1)
+    }], MMMM: [i, function(e2) {
+      var t2 = h2("months").indexOf(e2) + 1;
+      if (t2 < 1)
         throw new Error();
-      this.month = e2 % 12 || e2;
-    }], Y: [/[+-]?\d+/, a2("year")], YY: [n, function(t2) {
-      this.year = s(t2);
+      this.month = t2 % 12 || t2;
+    }], Y: [/[+-]?\d+/, a2("year")], YY: [n, function(e2) {
+      this.year = s(e2);
     }], YYYY: [/\d{4}/, a2("year")], Z: f, ZZ: f };
     function c(n2) {
       var r2, i2;
       r2 = n2, i2 = o2 && o2.formats;
-      for (var s2 = (n2 = r2.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, function(e2, n3, r3) {
+      for (var s2 = (n2 = r2.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, function(t2, n3, r3) {
         var o22 = r3 && r3.toUpperCase();
-        return n3 || i2[r3] || t[r3] || i2[o22].replace(/(\[[^\]]+])|(MMMM|MM|DD|dddd)/g, function(t2, e3, n4) {
-          return e3 || n4.slice(1);
+        return n3 || i2[r3] || e[r3] || i2[o22].replace(/(\[[^\]]+])|(MMMM|MM|DD|dddd)/g, function(e2, t3, n4) {
+          return t3 || n4.slice(1);
         });
-      })).match(e), a22 = s2.length, f2 = 0; f2 < a22; f2 += 1) {
-        var u22 = s2[f2], h22 = d2[u22], c2 = h22 && h22[0], l2 = h22 && h22[1];
-        s2[f2] = l2 ? { regex: c2, parser: l2 } : u22.replace(/^\[|\]$/g, "");
+      })).match(t), a22 = s2.length, f2 = 0; f2 < a22; f2 += 1) {
+        var h22 = s2[f2], u22 = d2[h22], c2 = u22 && u22[0], l2 = u22 && u22[1];
+        s2[f2] = l2 ? { regex: c2, parser: l2 } : h22.replace(/^\[|\]$/g, "");
       }
-      return function(t2) {
-        for (var e2 = {}, n3 = 0, r3 = 0; n3 < a22; n3 += 1) {
+      return function(e2) {
+        for (var t2 = {}, n3 = 0, r3 = 0; n3 < a22; n3 += 1) {
           var i3 = s2[n3];
           if (typeof i3 == "string")
             r3 += i3.length;
           else {
-            var o22 = i3.regex, f3 = i3.parser, u3 = t2.substr(r3), h3 = o22.exec(u3)[0];
-            f3.call(e2, h3), t2 = t2.replace(h3, "");
+            var o22 = i3.regex, f3 = i3.parser, h3 = e2.slice(r3), u3 = o22.exec(h3)[0];
+            f3.call(t2, u3), e2 = e2.replace(u3, "");
           }
         }
-        return function(t3) {
-          var e3 = t3.afternoon;
-          if (e3 !== void 0) {
-            var n4 = t3.hours;
-            e3 ? n4 < 12 && (t3.hours += 12) : n4 === 12 && (t3.hours = 0), delete t3.afternoon;
+        return function(e3) {
+          var t3 = e3.afternoon;
+          if (t3 !== void 0) {
+            var n4 = e3.hours;
+            t3 ? n4 < 12 && (e3.hours += 12) : n4 === 12 && (e3.hours = 0), delete e3.afternoon;
           }
-        }(e2), e2;
+        }(t2), t2;
       };
     }
-    return function(t2, e2, n2) {
-      n2.p.customParseFormat = true, t2 && t2.parseTwoDigitYear && (s = t2.parseTwoDigitYear);
-      var r2 = e2.prototype, i2 = r2.parse;
-      r2.parse = function(t3) {
-        var e3 = t3.date, r3 = t3.utc, s2 = t3.args;
+    return function(e2, t2, n2) {
+      n2.p.customParseFormat = true, e2 && e2.parseTwoDigitYear && (s = e2.parseTwoDigitYear);
+      var r2 = t2.prototype, i2 = r2.parse;
+      r2.parse = function(e3) {
+        var t3 = e3.date, r3 = e3.utc, s2 = e3.args;
         this.$u = r3;
         var a22 = s2[1];
         if (typeof a22 == "string") {
-          var f2 = s2[2] === true, u22 = s2[3] === true, h22 = f2 || u22, d22 = s2[2];
-          u22 && (d22 = s2[2]), o2 = this.$locale(), !f2 && d22 && (o2 = n2.Ls[d22]), this.$d = function(t4, e4, n3) {
+          var f2 = s2[2] === true, h22 = s2[3] === true, u22 = f2 || h22, d22 = s2[2];
+          h22 && (d22 = s2[2]), o2 = this.$locale(), !f2 && d22 && (o2 = n2.Ls[d22]), this.$d = function(e4, t4, n3) {
             try {
-              if (["x", "X"].indexOf(e4) > -1)
-                return new Date((e4 === "X" ? 1e3 : 1) * t4);
-              var r4 = c(e4)(t4), i3 = r4.year, o22 = r4.month, s3 = r4.day, a3 = r4.hours, f3 = r4.minutes, u3 = r4.seconds, h3 = r4.milliseconds, d3 = r4.zone, l22 = new Date(), m22 = s3 || (i3 || o22 ? 1 : l22.getDate()), M22 = i3 || l22.getFullYear(), Y = 0;
+              if (["x", "X"].indexOf(t4) > -1)
+                return new Date((t4 === "X" ? 1e3 : 1) * e4);
+              var r4 = c(t4)(e4), i3 = r4.year, o22 = r4.month, s3 = r4.day, a3 = r4.hours, f3 = r4.minutes, h3 = r4.seconds, u3 = r4.milliseconds, d3 = r4.zone, l22 = new Date(), m22 = s3 || (i3 || o22 ? 1 : l22.getDate()), M22 = i3 || l22.getFullYear(), Y = 0;
               i3 && !o22 || (Y = o22 > 0 ? o22 - 1 : l22.getMonth());
-              var p2 = a3 || 0, v2 = f3 || 0, D2 = u3 || 0, g = h3 || 0;
+              var p2 = a3 || 0, v2 = f3 || 0, D2 = h3 || 0, g = u3 || 0;
               return d3 ? new Date(Date.UTC(M22, Y, m22, p2, v2, D2, g + 60 * d3.offset * 1e3)) : n3 ? new Date(Date.UTC(M22, Y, m22, p2, v2, D2, g)) : new Date(M22, Y, m22, p2, v2, D2, g);
-            } catch (t5) {
+            } catch (e5) {
               return new Date("");
             }
-          }(e3, a22, r3), this.init(), d22 && d22 !== true && (this.$L = this.locale(d22).$L), h22 && e3 != this.format(a22) && (this.$d = new Date("")), o2 = {};
+          }(t3, a22, r3), this.init(), d22 && d22 !== true && (this.$L = this.locale(d22).$L), u22 && t3 != this.format(a22) && (this.$d = new Date("")), o2 = {};
         } else if (a22 instanceof Array)
           for (var l2 = a22.length, m2 = 1; m2 <= l2; m2 += 1) {
             s2[1] = a22[m2 - 1];
@@ -16982,7 +16244,7 @@ var customParseFormat$1 = { exports: {} };
             m2 === l2 && (this.$d = new Date(""));
           }
         else
-          i2.call(this, t3);
+          i2.call(this, e3);
       };
     };
   });
@@ -17174,7 +16436,7 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
     const pickerActualVisible = vue_cjs_prod.ref(false);
     const valueOnOpen = vue_cjs_prod.ref(null);
     vue_cjs_prod.watch(pickerVisible, (val) => {
-      var _a2;
+      var _a;
       if (!val) {
         userInput.value = null;
         vue_cjs_prod.nextTick(() => {
@@ -17182,16 +16444,16 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
         });
         ctx.emit("blur");
         blurInput();
-        props.validateEvent && ((_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "blur").catch((err) => debugWarn()));
+        props.validateEvent && ((_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "blur").catch((err) => debugWarn()));
       } else {
         valueOnOpen.value = props.modelValue;
       }
     });
     const emitChange = (val, isClear) => {
-      var _a2;
+      var _a;
       if (isClear || !valueEquals(val, valueOnOpen.value)) {
         ctx.emit("change", val);
-        props.validateEvent && ((_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn()));
+        props.validateEvent && ((_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn()));
       }
     };
     const emitInput = (val) => {
@@ -17218,15 +16480,15 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
     const refEndInput = vue_cjs_prod.computed(() => {
       return refInput == null ? void 0 : refInput.value[1];
     });
-    const setSelectionRange = (start2, end2, pos) => {
+    const setSelectionRange = (start, end, pos) => {
       const _inputs = refInput.value;
       if (!_inputs.length)
         return;
       if (!pos || pos === "min") {
-        _inputs[0].setSelectionRange(start2, end2);
+        _inputs[0].setSelectionRange(start, end);
         _inputs[0].focus();
       } else if (pos === "max") {
-        _inputs[1].setSelectionRange(start2, end2);
+        _inputs[1].setSelectionRange(start, end);
         _inputs[1].focus();
       }
     };
@@ -17267,8 +16529,8 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
       ctx.emit("focus", e);
     };
     const handleBlur = () => {
-      var _a2;
-      (_a2 = refPopper.value) == null ? void 0 : _a2.onClose();
+      var _a;
+      (_a = refPopper.value) == null ? void 0 : _a.onClose();
       blurInput();
     };
     const pickerDisabled = vue_cjs_prod.computed(() => {
@@ -17355,19 +16617,19 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
     });
     const pickerSize = useSize();
     const popperPaneRef = vue_cjs_prod.computed(() => {
-      var _a2, _b2;
-      return (_b2 = (_a2 = refPopper.value) == null ? void 0 : _a2.popperRef) == null ? void 0 : _b2.contentRef;
+      var _a, _b;
+      return (_b = (_a = refPopper.value) == null ? void 0 : _a.popperRef) == null ? void 0 : _b.contentRef;
     });
     const popperEl = vue_cjs_prod.computed(() => {
-      var _a2, _b2;
-      return (_b2 = (_a2 = vue_cjs_prod.unref(refPopper)) == null ? void 0 : _a2.popperRef) == null ? void 0 : _b2.contentRef;
+      var _a, _b;
+      return (_b = (_a = vue_cjs_prod.unref(refPopper)) == null ? void 0 : _a.popperRef) == null ? void 0 : _b.contentRef;
     });
     const actualInputRef = vue_cjs_prod.computed(() => {
-      var _a2;
+      var _a;
       if (vue_cjs_prod.unref(isRangeInput)) {
         return vue_cjs_prod.unref(inputRef);
       }
-      return (_a2 = vue_cjs_prod.unref(inputRef)) == null ? void 0 : _a2.$el;
+      return (_a = vue_cjs_prod.unref(inputRef)) == null ? void 0 : _a.$el;
     });
     onClickOutside(actualInputRef, (e) => {
       const unrefedPopperEl = vue_cjs_prod.unref(popperEl);
@@ -17722,7 +16984,7 @@ function createDocumentHandler(el, binding) {
   let excludes = [];
   if (Array.isArray(binding.arg)) {
     excludes = binding.arg;
-  } else if (isElement$2(binding.arg)) {
+  } else if (isElement$1(binding.arg)) {
     excludes.push(binding.arg);
   }
   return function(mouseup, mousedown) {
@@ -17755,16 +17017,16 @@ const ClickOutside = {
     if (!nodeList.has(el)) {
       nodeList.set(el, []);
     }
-    const handlers2 = nodeList.get(el);
-    const oldHandlerIndex = handlers2.findIndex((item) => item.bindingFn === binding.oldValue);
+    const handlers = nodeList.get(el);
+    const oldHandlerIndex = handlers.findIndex((item) => item.bindingFn === binding.oldValue);
     const newHandler = {
       documentHandler: createDocumentHandler(el, binding),
       bindingFn: binding.value
     };
     if (oldHandlerIndex >= 0) {
-      handlers2.splice(oldHandlerIndex, 1, newHandler);
+      handlers.splice(oldHandlerIndex, 1, newHandler);
     } else {
-      handlers2.push(newHandler);
+      handlers.push(newHandler);
     }
   },
   unmounted(el) {
@@ -17783,7 +17045,7 @@ var RepeatClick = {
       clearInterval(interval);
       interval = null;
     };
-    on(el, "mousedown", (e) => {
+    on$1(el, "mousedown", (e) => {
       if (e.button !== 0)
         return;
       startTime = Date.now();
@@ -17825,7 +17087,7 @@ const TrapFocus = {
     el[FOCUSABLE_CHILDREN] = obtainAllFocusableElements$1(el);
     FOCUS_STACK.push(el);
     if (FOCUS_STACK.length <= 1) {
-      on(document, "keydown", FOCUS_HANDLER);
+      on$1(document, "keydown", FOCUS_HANDLER);
     }
   },
   updated(el) {
@@ -17924,9 +17186,7 @@ const mousewheel = function(element, callback) {
       const normalized = W(event);
       callback && Reflect.apply(callback, this, [event, normalized]);
     };
-    {
-      element.onmousewheel = fn2;
-    }
+    element.addEventListener("wheel", fn2, { passive: true });
   }
 };
 const Mousewheel = {
@@ -17937,8 +17197,8 @@ const Mousewheel = {
 const Resize = {
   beforeMount(el, binding) {
     el._handleResize = () => {
-      var _a2;
-      el && ((_a2 = binding.value) == null ? void 0 : _a2.call(binding, el));
+      var _a;
+      el && ((_a = binding.value) == null ? void 0 : _a.call(binding, el));
     };
     addResizeListener(el, el._handleResize);
   },
@@ -18041,7 +17301,7 @@ const _sfc_main$1U = vue_cjs_prod.defineComponent({
   setup(props, ctx) {
     const ns = useNamespace("time");
     let isScrolling = false;
-    const debouncedResetScroll = debounce$1((type4) => {
+    const debouncedResetScroll = debounce((type4) => {
       isScrolling = false;
       adjustCurrentSpinner(type4);
     }, 200);
@@ -18427,9 +17687,9 @@ const _sfc_main$1T = vue_cjs_prod.defineComponent({
       const result = getRangeAvailableTime(_date).millisecond(0);
       ctx.emit("pick", result, true);
     };
-    const setSelectionRange = (start2, end2) => {
-      ctx.emit("select-range", start2, end2);
-      selectionRange.value = [start2, end2];
+    const setSelectionRange = (start, end) => {
+      ctx.emit("select-range", start, end);
+      selectionRange.value = [start, end];
     };
     const changeSelectionRange = (step) => {
       const list = [0, 3].concat(showSeconds.value ? [6] : []);
@@ -18577,9 +17837,9 @@ function _sfc_render$1h(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8, ["name"]);
 }
 var TimePickPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1T, [["render", _sfc_render$1h], ["__file", "panel-time-pick.vue"]]);
-const makeSelectRange = (start2, end2) => {
+const makeSelectRange = (start, end) => {
   const result = [];
-  for (let i = start2; i <= end2; i++) {
+  for (let i = start; i <= end; i++) {
     result.push(i);
   }
   return result;
@@ -18641,14 +17901,14 @@ const _sfc_main$1S = vue_cjs_prod.defineComponent({
       return minDate.value > maxDate.value;
     });
     const selectionRange = vue_cjs_prod.ref([0, 2]);
-    const setMinSelectionRange = (start2, end2) => {
-      ctx.emit("select-range", start2, end2, "min");
-      selectionRange.value = [start2, end2];
+    const setMinSelectionRange = (start, end) => {
+      ctx.emit("select-range", start, end, "min");
+      selectionRange.value = [start, end];
     };
     const offset2 = vue_cjs_prod.computed(() => showSeconds.value ? 11 : 8);
-    const setMaxSelectionRange = (start2, end2) => {
-      ctx.emit("select-range", start2, end2, "max");
-      selectionRange.value = [start2 + offset2.value, end2 + offset2.value];
+    const setMaxSelectionRange = (start, end) => {
+      ctx.emit("select-range", start, end, "max");
+      selectionRange.value = [start + offset2.value, end + offset2.value];
     };
     const changeSelectionRange = (step) => {
       const list = showSeconds.value ? [0, 3, 6, 11, 14, 17] : [0, 3, 8, 11];
@@ -18918,19 +18178,19 @@ var TimePicker = vue_cjs_prod.defineComponent({
     const panel = props.isRange ? TimeRangePanel : TimePickPanel;
     const refProps = __spreadProps(__spreadValues({}, props), {
       focus: () => {
-        var _a2;
-        (_a2 = commonPicker.value) == null ? void 0 : _a2.handleFocus();
+        var _a;
+        (_a = commonPicker.value) == null ? void 0 : _a.handleFocus();
       },
       blur: () => {
-        var _a2;
-        (_a2 = commonPicker.value) == null ? void 0 : _a2.handleBlur();
+        var _a;
+        (_a = commonPicker.value) == null ? void 0 : _a.handleBlur();
       }
     });
     vue_cjs_prod.provide("ElPopperOptions", props.popperOptions);
     ctx.expose(refProps);
     return () => {
-      var _a2;
-      const format2 = (_a2 = props.format) != null ? _a2 : DEFAULT_FORMATS_TIME;
+      var _a;
+      const format2 = (_a = props.format) != null ? _a : DEFAULT_FORMATS_TIME;
       return vue_cjs_prod.h(CommonPicker, __spreadProps(__spreadValues({}, props), {
         format: format2,
         type: type4,
@@ -18963,8 +18223,8 @@ const getMonthDays = (date4) => {
   return rangeArr(days).map((_2, index2) => index2 + 1);
 };
 const toNestedArr = (days) => rangeArr(days.length / 7).map((index2) => {
-  const start2 = index2 * 7;
-  return days.slice(start2, start2 + 7);
+  const start = index2 * 7;
+  return days.slice(start, start + 7);
 });
 const dateTableProps = buildProps({
   selectedDay: {
@@ -19004,9 +18264,9 @@ const _sfc_main$1R = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     const rows = vue_cjs_prod.computed(() => {
       let days = [];
       if (isInRange.value) {
-        const [start2, end2] = props.range;
-        const currentMonthRange = rangeArr(end2.date() - start2.date() + 1).map((index2) => ({
-          text: start2.date() + index2,
+        const [start, end] = props.range;
+        const currentMonthRange = rangeArr(end.date() - start.date() + 1).map((index2) => ({
+          text: start.date() + index2,
           type: "current"
         }));
         let remaining = currentMonthRange.length % 7;
@@ -19017,7 +18277,7 @@ const _sfc_main$1R = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         }));
         days = currentMonthRange.concat(nextMonthRange);
       } else {
-        const firstDay = props.date.startOf("month").day() || 7;
+        const firstDay = props.date.startOf("month").day();
         const prevMonthDays = getPrevMonthLastDays(props.date, firstDay - firstDayOfWeek).map((day) => ({
           text: day,
           type: "prev"
@@ -19027,7 +18287,8 @@ const _sfc_main$1R = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
           type: "current"
         }));
         days = [...prevMonthDays, ...currentMonthDays];
-        const nextMonthDays = rangeArr(42 - days.length).map((_2, index2) => ({
+        const remaining = 7 - (days.length % 7 || 7);
+        const nextMonthDays = rangeArr(remaining).map((_2, index2) => ({
           text: index2 + 1,
           type: "next"
         }));
@@ -19036,11 +18297,11 @@ const _sfc_main$1R = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       return toNestedArr(days);
     });
     const weekDays = vue_cjs_prod.computed(() => {
-      const start2 = firstDayOfWeek;
-      if (start2 === 0) {
+      const start = firstDayOfWeek;
+      if (start === 0) {
         return WEEK_DAYS.map((_2) => t(`el.datepicker.weeks.${_2}`));
       } else {
-        return WEEK_DAYS.slice(start2).concat(WEEK_DAYS.slice(0, start2)).map((_2) => t(`el.datepicker.weeks.${_2}`));
+        return WEEK_DAYS.slice(start).concat(WEEK_DAYS.slice(0, start)).map((_2) => t(`el.datepicker.weeks.${_2}`));
       }
     });
     const getFormattedDate = (day, type4) => {
@@ -19211,7 +18472,7 @@ const _sfc_main$1Q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
           [firstDay, firstMonthLastDay],
           [lastMonthStartDay.startOf("week"), lastDay]
         ];
-      } else if (firstMonth + 2 === lastMonth) {
+      } else if (firstMonth + 2 === lastMonth || (firstMonth + 1) % 11 === lastMonth) {
         const firstMonthLastDay = firstDay.endOf("month");
         const secondMonthFirstDay = firstDay.add(1, "month").startOf("month");
         const secondMonthStartDay = firstMonthLastDay.isSame(secondMonthFirstDay, "week") ? secondMonthFirstDay.add(1, "week") : secondMonthFirstDay;
@@ -19562,7 +18823,7 @@ const _sfc_main$1O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       }
     }
     function itemInStage(item, index2) {
-      var _a2, _b2, _c, _d;
+      var _a, _b, _c, _d;
       const _items = vue_cjs_prod.unref(items);
       const itemCount = _items.length;
       if (itemCount === 0 || !item.states.inStage)
@@ -19572,7 +18833,7 @@ const _sfc_main$1O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       const lastItemIndex = itemCount - 1;
       const isLastItemActive = _items[lastItemIndex].states.active;
       const isFirstItemActive = _items[0].states.active;
-      const isNextItemActive = (_b2 = (_a2 = _items[nextItemIndex]) == null ? void 0 : _a2.states) == null ? void 0 : _b2.active;
+      const isNextItemActive = (_b = (_a = _items[nextItemIndex]) == null ? void 0 : _a.states) == null ? void 0 : _b.active;
       const isPrevItemActive = (_d = (_c = _items[prevItemIndex]) == null ? void 0 : _c.states) == null ? void 0 : _d.active;
       if (index2 === lastItemIndex && isFirstItemActive || isNextItemActive) {
         return "left";
@@ -19812,8 +19073,8 @@ const _sfc_main$1N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       return index2;
     }
     function calcCardTranslate(index2, activeIndex) {
-      var _a2;
-      const parentWidth = ((_a2 = carouselContext.root.value) == null ? void 0 : _a2.offsetWidth) || 0;
+      var _a;
+      const parentWidth = ((_a = carouselContext.root.value) == null ? void 0 : _a.offsetWidth) || 0;
       if (inStage.value) {
         return parentWidth * ((2 - CARD_SCALE) * (index2 - activeIndex) + 1) / 4;
       } else if (index2 < activeIndex) {
@@ -19830,9 +19091,9 @@ const _sfc_main$1N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       return distance * (index2 - activeIndex);
     }
     const translateItem = (index2, activeIndex, oldIndex) => {
-      var _a2;
+      var _a;
       const _isCardType = vue_cjs_prod.unref(isCardType);
-      const carouselItemLength = (_a2 = carouselContext.items.value.length) != null ? _a2 : Number.NaN;
+      const carouselItemLength = (_a = carouselContext.items.value.length) != null ? _a : Number.NaN;
       const isActive = index2 === activeIndex;
       if (!_isCardType && !isUndefined(oldIndex)) {
         animating.value = isActive || index2 === oldIndex;
@@ -19956,14 +19217,14 @@ const useModel = (props) => {
   const isLimitExceeded = vue_cjs_prod.ref(false);
   const model = vue_cjs_prod.computed({
     get() {
-      var _a2, _b2;
-      return isGroup.value ? (_a2 = checkboxGroup.modelValue) == null ? void 0 : _a2.value : (_b2 = props.modelValue) != null ? _b2 : selfModel.value;
+      var _a, _b;
+      return isGroup.value ? (_a = checkboxGroup.modelValue) == null ? void 0 : _a.value : (_b = props.modelValue) != null ? _b : selfModel.value;
     },
     set(val) {
-      var _a2;
+      var _a;
       if (isGroup.value && Array.isArray(val)) {
         isLimitExceeded.value = checkboxGroup.max !== void 0 && val.length > checkboxGroup.max.value;
-        isLimitExceeded.value === false && ((_a2 = checkboxGroup == null ? void 0 : checkboxGroup.changeEvent) == null ? void 0 : _a2.call(checkboxGroup, val));
+        isLimitExceeded.value === false && ((_a = checkboxGroup == null ? void 0 : checkboxGroup.changeEvent) == null ? void 0 : _a.call(checkboxGroup, val));
       } else {
         emit(UPDATE_MODEL_EVENT, val);
         selfModel.value = val;
@@ -19992,8 +19253,8 @@ const useCheckboxStatus = (props, { model }) => {
     }
   });
   const checkboxSize = useSize(vue_cjs_prod.computed(() => {
-    var _a2;
-    return isGroup.value ? (_a2 = checkboxGroup == null ? void 0 : checkboxGroup.checkboxGroupSize) == null ? void 0 : _a2.value : void 0;
+    var _a;
+    return isGroup.value ? (_a = checkboxGroup == null ? void 0 : checkboxGroup.checkboxGroupSize) == null ? void 0 : _a.value : void 0;
   }));
   return {
     isChecked,
@@ -20008,15 +19269,15 @@ const useDisabled = (props, {
 }) => {
   const { elForm, isGroup, checkboxGroup } = useCheckboxGroup();
   const isLimitDisabled = vue_cjs_prod.computed(() => {
-    var _a2, _b2;
-    const max2 = (_a2 = checkboxGroup.max) == null ? void 0 : _a2.value;
-    const min2 = (_b2 = checkboxGroup.min) == null ? void 0 : _b2.value;
+    var _a, _b;
+    const max2 = (_a = checkboxGroup.max) == null ? void 0 : _a.value;
+    const min2 = (_b = checkboxGroup.min) == null ? void 0 : _b.value;
     return !!(max2 || min2) && model.value.length >= max2 && !isChecked.value || model.value.length <= min2 && isChecked.value;
   });
   const isDisabled = vue_cjs_prod.computed(() => {
-    var _a2, _b2;
+    var _a, _b;
     const disabled = props.disabled || elForm.disabled;
-    return (_b2 = isGroup.value ? ((_a2 = checkboxGroup.disabled) == null ? void 0 : _a2.value) || disabled || isLimitDisabled.value : props.disabled || elForm.disabled) != null ? _b2 : false;
+    return (_b = isGroup.value ? ((_a = checkboxGroup.disabled) == null ? void 0 : _a.value) || disabled || isLimitDisabled.value : props.disabled || elForm.disabled) != null ? _b : false;
   });
   return {
     isDisabled,
@@ -20037,16 +19298,16 @@ const useEvent$1 = (props, { isLimitExceeded }) => {
   const { elFormItem } = useCheckboxGroup();
   const { emit } = vue_cjs_prod.getCurrentInstance();
   function handleChange(e) {
-    var _a2, _b2;
+    var _a, _b;
     if (isLimitExceeded.value)
       return;
     const target = e.target;
-    const value = target.checked ? (_a2 = props.trueLabel) != null ? _a2 : true : (_b2 = props.falseLabel) != null ? _b2 : false;
+    const value = target.checked ? (_a = props.trueLabel) != null ? _a : true : (_b = props.falseLabel) != null ? _b : false;
     emit("change", value, e);
   }
   vue_cjs_prod.watch(() => props.modelValue, () => {
-    var _a2;
-    (_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn());
+    var _a;
+    (_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
   });
   return {
     handleChange
@@ -20203,8 +19464,8 @@ const _sfc_main$1L = vue_cjs_prod.defineComponent({
     const { checkboxGroup } = useCheckboxGroup();
     const ns = useNamespace("checkbox");
     const activeStyle = vue_cjs_prod.computed(() => {
-      var _a2, _b2, _c, _d;
-      const fillValue = (_b2 = (_a2 = checkboxGroup == null ? void 0 : checkboxGroup.fill) == null ? void 0 : _a2.value) != null ? _b2 : "";
+      var _a, _b, _c, _d;
+      const fillValue = (_b = (_a = checkboxGroup == null ? void 0 : checkboxGroup.fill) == null ? void 0 : _a.value) != null ? _b : "";
       return {
         backgroundColor: fillValue,
         borderColor: fillValue,
@@ -20342,8 +19603,8 @@ const _sfc_main$1K = vue_cjs_prod.defineComponent({
       changeEvent
     }));
     vue_cjs_prod.watch(() => props.modelValue, () => {
-      var _a2;
-      (_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn());
+      var _a;
+      (_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
     });
     return () => {
       return vue_cjs_prod.h(props.tag, {
@@ -20720,8 +19981,8 @@ const _sfc_main$1G = vue_cjs_prod.defineComponent({
     const multiple = vue_cjs_prod.computed(() => panel.config.multiple);
     const checkStrictly = vue_cjs_prod.computed(() => panel.config.checkStrictly);
     const checkedNodeId = vue_cjs_prod.computed(() => {
-      var _a2;
-      return (_a2 = panel.checkedNodes[0]) == null ? void 0 : _a2.uid;
+      var _a;
+      return (_a = panel.checkedNodes[0]) == null ? void 0 : _a.uid;
     });
     const isDisabled = vue_cjs_prod.computed(() => props.node.isDisabled);
     const isLeaf2 = vue_cjs_prod.computed(() => props.node.isLeaf);
@@ -20729,9 +19990,9 @@ const _sfc_main$1G = vue_cjs_prod.defineComponent({
     const inExpandingPath = vue_cjs_prod.computed(() => isInPath(panel.expandingNode));
     const inCheckedPath = vue_cjs_prod.computed(() => checkStrictly.value && panel.checkedNodes.some(isInPath));
     const isInPath = (node) => {
-      var _a2;
+      var _a;
       const { level, uid: uid2 } = props.node;
-      return ((_a2 = node == null ? void 0 : node.pathNodes[level - 1]) == null ? void 0 : _a2.uid) === uid2;
+      return ((_a = node == null ? void 0 : node.pathNodes[level - 1]) == null ? void 0 : _a.uid) === uid2;
     };
     const doExpand = () => {
       if (inExpandingPath.value)
@@ -20934,14 +20195,14 @@ const _sfc_main$1F = vue_cjs_prod.defineComponent({
       if (activeNode.contains(e.target)) {
         clearHoverTimer();
         const el = instance.vnode.el;
-        const { left: left2 } = el.getBoundingClientRect();
+        const { left } = el.getBoundingClientRect();
         const { offsetWidth, offsetHeight } = el;
-        const startX = e.clientX - left2;
-        const top2 = activeNode.offsetTop;
-        const bottom2 = top2 + activeNode.offsetHeight;
+        const startX = e.clientX - left;
+        const top = activeNode.offsetTop;
+        const bottom = top + activeNode.offsetHeight;
         hoverZone.value.innerHTML = `
-          <path style="pointer-events: auto;" fill="transparent" d="M${startX} ${top2} L${offsetWidth} 0 V${top2} Z" />
-          <path style="pointer-events: auto;" fill="transparent" d="M${startX} ${bottom2} L${offsetWidth} ${offsetHeight} V${bottom2} Z" />
+          <path style="pointer-events: auto;" fill="transparent" d="M${startX} ${top} L${offsetWidth} 0 V${top} Z" />
+          <path style="pointer-events: auto;" fill="transparent" d="M${startX} ${bottom} L${offsetWidth} ${offsetHeight} V${bottom} Z" />
         `;
       } else if (!hoverTimer) {
         hoverTimer = window.setTimeout(clearHoverZone, panel.config.hoverThreshold);
@@ -20989,7 +20250,7 @@ function _sfc_render$19(_ctx, _cache, $props, $setup, $data, $options) {
     onMouseleave: _ctx.clearHoverZone
   }, {
     default: vue_cjs_prod.withCtx(() => {
-      var _a2;
+      var _a;
       return [
         (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.nodes, (node) => {
           return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_cascader_node, {
@@ -21016,7 +20277,7 @@ function _sfc_render$19(_ctx, _cache, $props, $setup, $data, $options) {
         ], 2)) : _ctx.isEmpty ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
           key: 1,
           class: vue_cjs_prod.normalizeClass(_ctx.ns.e("empty-text"))
-        }, vue_cjs_prod.toDisplayString(_ctx.t("el.cascader.noData")), 3)) : ((_a2 = _ctx.panel) == null ? void 0 : _a2.isHoverMenu) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", {
+        }, vue_cjs_prod.toDisplayString(_ctx.t("el.cascader.noData")), 3)) : ((_a = _ctx.panel) == null ? void 0 : _a.isHoverMenu) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", {
           key: 2,
           ref: "hoverZone",
           class: vue_cjs_prod.normalizeClass(_ctx.ns.e("hover-zone"))
@@ -21315,7 +20576,7 @@ const _sfc_main$1E = vue_cjs_prod.defineComponent({
       cfg.lazyLoad(node, resolve);
     };
     const expandNode = (node, silent) => {
-      var _a2;
+      var _a;
       const { level } = node;
       const newMenus = menus.value.slice(0, level);
       let newExpandingNode;
@@ -21325,7 +20586,7 @@ const _sfc_main$1E = vue_cjs_prod.defineComponent({
         newExpandingNode = node;
         newMenus.push(node.children);
       }
-      if (((_a2 = expandingNode.value) == null ? void 0 : _a2.uid) !== (newExpandingNode == null ? void 0 : newExpandingNode.uid)) {
+      if (((_a = expandingNode.value) == null ? void 0 : _a.uid) !== (newExpandingNode == null ? void 0 : newExpandingNode.uid)) {
         expandingNode.value = node;
         menus.value = newMenus;
         !silent && emit("expand-change", (node == null ? void 0 : node.pathValues) || []);
@@ -21352,22 +20613,22 @@ const _sfc_main$1E = vue_cjs_prod.defineComponent({
       return store == null ? void 0 : store.getFlattedNodes(leafOnly);
     };
     const getCheckedNodes = (leafOnly) => {
-      var _a2;
-      return (_a2 = getFlattedNodes(leafOnly)) == null ? void 0 : _a2.filter((node) => node.checked !== false);
+      var _a;
+      return (_a = getFlattedNodes(leafOnly)) == null ? void 0 : _a.filter((node) => node.checked !== false);
     };
     const clearCheckedNodes = () => {
       checkedNodes.value.forEach((node) => node.doCheck(false));
       calculateCheckedValue();
     };
     const calculateCheckedValue = () => {
-      var _a2;
+      var _a;
       const { checkStrictly, multiple } = config.value;
       const oldNodes = checkedNodes.value;
       const newNodes = getCheckedNodes(!checkStrictly);
       const nodes = sortByOriginalOrder(oldNodes, newNodes);
       const values = nodes.map((node) => node.valueByOption);
       checkedNodes.value = nodes;
-      checkedValue.value = multiple ? values : (_a2 = values[0]) != null ? _a2 : null;
+      checkedValue.value = multiple ? values : (_a = values[0]) != null ? _a : null;
     };
     const syncCheckedValue = (loaded = false, forced = false) => {
       const { modelValue } = props;
@@ -21550,15 +20811,15 @@ const _sfc_main$1D = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     const tagSize = useSize();
     const ns = useNamespace("tag");
     const classes = vue_cjs_prod.computed(() => {
-      const { type: type4, hit, effect: effect2, closable, round: round2 } = props;
+      const { type: type4, hit, effect, closable, round } = props;
       return [
         ns.b(),
         ns.is("closable", closable),
         ns.m(type4),
         ns.m(tagSize.value),
-        ns.m(effect2),
+        ns.m(effect),
         ns.is("hit", hit),
-        ns.is("round", round2)
+        ns.is("round", round)
       ];
     });
     const handleClose = (event) => {
@@ -21749,8 +21010,8 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
     const readonly2 = vue_cjs_prod.computed(() => !props.filterable || multiple.value);
     const searchKeyword = vue_cjs_prod.computed(() => multiple.value ? searchInputValue.value : inputValue.value);
     const checkedNodes = vue_cjs_prod.computed(() => {
-      var _a2;
-      return ((_a2 = panel.value) == null ? void 0 : _a2.checkedNodes) || [];
+      var _a;
+      return ((_a = panel.value) == null ? void 0 : _a.checkedNodes) || [];
     });
     const clearBtnVisible = vue_cjs_prod.computed(() => {
       if (!props.clearable || isDisabled.value || filtering.value || !inputHover.value)
@@ -21767,24 +21028,24 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
         return props.modelValue;
       },
       set(val) {
-        var _a2;
+        var _a;
         emit(UPDATE_MODEL_EVENT, val);
         emit(CHANGE_EVENT, val);
-        (_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn());
+        (_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
       }
     });
     const popperPaneRef = vue_cjs_prod.computed(() => {
-      var _a2, _b2;
-      return (_b2 = (_a2 = tooltipRef.value) == null ? void 0 : _a2.popperRef) == null ? void 0 : _b2.contentRef;
+      var _a, _b;
+      return (_b = (_a = tooltipRef.value) == null ? void 0 : _a.popperRef) == null ? void 0 : _b.contentRef;
     });
     const togglePopperVisible = (visible) => {
-      var _a2, _b2, _c;
+      var _a, _b, _c;
       if (isDisabled.value)
         return;
       visible = visible != null ? visible : !popperVisible.value;
       if (visible !== popperVisible.value) {
         popperVisible.value = visible;
-        (_b2 = (_a2 = input.value) == null ? void 0 : _a2.input) == null ? void 0 : _b2.setAttribute("aria-expanded", `${visible}`);
+        (_b = (_a = input.value) == null ? void 0 : _a.input) == null ? void 0 : _b.setAttribute("aria-expanded", `${visible}`);
         if (visible) {
           updatePopperPosition();
           vue_cjs_prod.nextTick((_c = panel.value) == null ? void 0 : _c.scrollToExpandingNode);
@@ -21798,8 +21059,8 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
     };
     const updatePopperPosition = () => {
       vue_cjs_prod.nextTick(() => {
-        var _a2;
-        (_a2 = tooltipRef.value) == null ? void 0 : _a2.updatePopper();
+        var _a;
+        (_a = tooltipRef.value) == null ? void 0 : _a.updatePopper();
       });
     };
     const hideSuggestionPanel = () => {
@@ -21817,10 +21078,10 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
       };
     };
     const deleteTag = (tag) => {
-      var _a2;
+      var _a;
       const node = tag.node;
       node.doCheck(false);
-      (_a2 = panel.value) == null ? void 0 : _a2.calculateCheckedValue();
+      (_a = panel.value) == null ? void 0 : _a.calculateCheckedValue();
       emit("remove-tag", node.valueByOption);
     };
     const calculatePresentTags = () => {
@@ -21851,9 +21112,9 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
       presentTags.value = tags;
     };
     const calculateSuggestions = () => {
-      var _a2, _b2;
+      var _a, _b;
       const { filterMethod, showAllLevels, separator } = props;
-      const res = (_b2 = (_a2 = panel.value) == null ? void 0 : _a2.getFlattedNodes(!props.props.checkStrictly)) == null ? void 0 : _b2.filter((node) => {
+      const res = (_b = (_a = panel.value) == null ? void 0 : _a.getFlattedNodes(!props.props.checkStrictly)) == null ? void 0 : _b.filter((node) => {
         if (node.isDisabled)
           return false;
         node.calcText(showAllLevels, separator);
@@ -21872,12 +21133,12 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
       updatePopperPosition();
     };
     const focusFirstNode = () => {
-      var _a2;
+      var _a;
       let firstNode;
       if (filtering.value && suggestionPanel.value) {
         firstNode = suggestionPanel.value.$el.querySelector(`.${nsCascader.e("suggestion-item")}`);
       } else {
-        firstNode = (_a2 = panel.value) == null ? void 0 : _a2.$el.querySelector(`.${nsCascader.b("node")}[tabindex="-1"]`);
+        firstNode = (_a = panel.value) == null ? void 0 : _a.$el.querySelector(`.${nsCascader.b("node")}[tabindex="-1"]`);
       }
       if (firstNode) {
         firstNode.focus();
@@ -21885,23 +21146,23 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
       }
     };
     const updateStyle = () => {
-      var _a2, _b2;
-      (_a2 = input.value) == null ? void 0 : _a2.input;
+      var _a, _b;
+      (_a = input.value) == null ? void 0 : _a.input;
       tagWrapper.value;
-      (_b2 = suggestionPanel.value) == null ? void 0 : _b2.$el;
+      (_b = suggestionPanel.value) == null ? void 0 : _b.$el;
       return;
     };
     const getCheckedNodes = (leafOnly) => {
-      var _a2;
-      return (_a2 = panel.value) == null ? void 0 : _a2.getCheckedNodes(leafOnly);
+      var _a;
+      return (_a = panel.value) == null ? void 0 : _a.getCheckedNodes(leafOnly);
     };
     const handleExpandChange = (value) => {
       updatePopperPosition();
       emit("expand-change", value);
     };
     const handleComposition = (event) => {
-      var _a2;
-      const text = (_a2 = event.target) == null ? void 0 : _a2.value;
+      var _a;
+      const text = (_a = event.target) == null ? void 0 : _a.value;
       if (event.type === "compositionend") {
         isOnComposition.value = false;
         vue_cjs_prod.nextTick(() => handleInput(text));
@@ -21929,17 +21190,17 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
       }
     };
     const handleClear = () => {
-      var _a2;
-      (_a2 = panel.value) == null ? void 0 : _a2.clearCheckedNodes();
+      var _a;
+      (_a = panel.value) == null ? void 0 : _a.clearCheckedNodes();
       togglePopperVisible(false);
     };
     const handleSuggestionClick = (node) => {
-      var _a2, _b2;
+      var _a, _b;
       const { checked } = node;
       if (multiple.value) {
-        (_a2 = panel.value) == null ? void 0 : _a2.handleCheckChange(node, !checked, false);
+        (_a = panel.value) == null ? void 0 : _a.handleCheckChange(node, !checked, false);
       } else {
-        !checked && ((_b2 = panel.value) == null ? void 0 : _b2.handleCheckChange(node, true, false));
+        !checked && ((_b = panel.value) == null ? void 0 : _b.handleCheckChange(node, true, false));
         togglePopperVisible(false);
       }
     };
@@ -21974,7 +21235,7 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
         lastTag.hitState = true;
       }
     };
-    const handleFilter = debounce$1(() => {
+    const handleFilter = debounce(() => {
       const { value } = searchKeyword;
       if (!value)
         return;
@@ -22001,13 +21262,13 @@ const _sfc_main$1C = vue_cjs_prod.defineComponent({
     });
     vue_cjs_prod.watch(presentText, (val) => inputValue.value = val, { immediate: true });
     vue_cjs_prod.onMounted(() => {
-      var _a2;
-      const inputEl = (_a2 = input.value) == null ? void 0 : _a2.$el;
+      var _a;
+      const inputEl = (_a = input.value) == null ? void 0 : _a.$el;
       (inputEl == null ? void 0 : inputEl.offsetHeight) || INPUT_HEIGHT_MAP[realSize.value] || DEFAULT_INPUT_HEIGHT;
     });
     vue_cjs_prod.onBeforeUnmount(() => {
-      var _a2;
-      removeResizeListener((_a2 = input.value) == null ? void 0 : _a2.$el, updateStyle);
+      var _a;
+      removeResizeListener((_a = input.value) == null ? void 0 : _a.$el, updateStyle);
     });
     return {
       popperOptions,
@@ -22749,15 +22010,15 @@ const _sfc_main$1x = vue_cjs_prod.defineComponent({
       const rect = el.getBoundingClientRect();
       const { clientX, clientY } = getClientXY(event);
       if (!props.vertical) {
-        let left2 = clientX - rect.left;
-        left2 = Math.max(thumb.value.offsetWidth / 2, left2);
-        left2 = Math.min(left2, rect.width - thumb.value.offsetWidth / 2);
-        props.color.set("alpha", Math.round((left2 - thumb.value.offsetWidth / 2) / (rect.width - thumb.value.offsetWidth) * 100));
+        let left = clientX - rect.left;
+        left = Math.max(thumb.value.offsetWidth / 2, left);
+        left = Math.min(left, rect.width - thumb.value.offsetWidth / 2);
+        props.color.set("alpha", Math.round((left - thumb.value.offsetWidth / 2) / (rect.width - thumb.value.offsetWidth) * 100));
       } else {
-        let top2 = clientY - rect.top;
-        top2 = Math.max(thumb.value.offsetHeight / 2, top2);
-        top2 = Math.min(top2, rect.height - thumb.value.offsetHeight / 2);
-        props.color.set("alpha", Math.round((top2 - thumb.value.offsetHeight / 2) / (rect.height - thumb.value.offsetHeight) * 100));
+        let top = clientY - rect.top;
+        top = Math.max(thumb.value.offsetHeight / 2, top);
+        top = Math.min(top, rect.height - thumb.value.offsetHeight / 2);
+        props.color.set("alpha", Math.round((top - thumb.value.offsetHeight / 2) / (rect.height - thumb.value.offsetHeight) * 100));
       }
     }
     function update() {
@@ -22837,15 +22098,15 @@ const _sfc_main$1w = vue_cjs_prod.defineComponent({
       const { clientX, clientY } = getClientXY(event);
       let hue;
       if (!props.vertical) {
-        let left2 = clientX - rect.left;
-        left2 = Math.min(left2, rect.width - thumb.value.offsetWidth / 2);
-        left2 = Math.max(thumb.value.offsetWidth / 2, left2);
-        hue = Math.round((left2 - thumb.value.offsetWidth / 2) / (rect.width - thumb.value.offsetWidth) * 360);
+        let left = clientX - rect.left;
+        left = Math.min(left, rect.width - thumb.value.offsetWidth / 2);
+        left = Math.max(thumb.value.offsetWidth / 2, left);
+        hue = Math.round((left - thumb.value.offsetWidth / 2) / (rect.width - thumb.value.offsetWidth) * 360);
       } else {
-        let top2 = clientY - rect.top;
-        top2 = Math.min(top2, rect.height - thumb.value.offsetHeight / 2);
-        top2 = Math.max(thumb.value.offsetHeight / 2, top2);
-        hue = Math.round((top2 - thumb.value.offsetHeight / 2) / (rect.height - thumb.value.offsetHeight) * 360);
+        let top = clientY - rect.top;
+        top = Math.min(top, rect.height - thumb.value.offsetHeight / 2);
+        top = Math.max(thumb.value.offsetHeight / 2, top);
+        hue = Math.round((top - thumb.value.offsetHeight / 2) / (rect.height - thumb.value.offsetHeight) * 360);
       }
       props.color.set("hue", hue);
     }
@@ -23010,12 +22271,12 @@ const hsv2rgb = function(h2, s, v2) {
   const i = Math.floor(h2);
   const f = h2 - i;
   const p2 = v2 * (1 - s);
-  const q = v2 * (1 - f * s);
+  const q2 = v2 * (1 - f * s);
   const t = v2 * (1 - (1 - f) * s);
   const mod = i % 6;
-  const r = [v2, q, p2, p2, t, v2][mod];
-  const g = [t, v2, v2, q, p2, p2][mod];
-  const b2 = [p2, p2, t, v2, v2, q][mod];
+  const r = [v2, q2, p2, p2, t, v2][mod];
+  const g = [t, v2, v2, q2, p2, p2][mod];
+  const b2 = [p2, p2, t, v2, v2, q2][mod];
   return {
     r: Math.round(r * 255),
     g: Math.round(g * 255),
@@ -23273,17 +22534,17 @@ const _sfc_main$1u = vue_cjs_prod.defineComponent({
       const el = instance.vnode.el;
       const rect = el.getBoundingClientRect();
       const { clientX, clientY } = getClientXY(event);
-      let left2 = clientX - rect.left;
-      let top2 = clientY - rect.top;
-      left2 = Math.max(0, left2);
-      left2 = Math.min(left2, rect.width);
-      top2 = Math.max(0, top2);
-      top2 = Math.min(top2, rect.height);
-      cursorLeft.value = left2;
-      cursorTop.value = top2;
+      let left = clientX - rect.left;
+      let top = clientY - rect.top;
+      left = Math.max(0, left);
+      left = Math.min(left, rect.width);
+      top = Math.max(0, top);
+      top = Math.min(top, rect.height);
+      cursorLeft.value = left;
+      cursorTop.value = top;
       props.color.set({
-        saturation: left2 / rect.width * 100,
-        value: 100 - top2 / rect.height * 100
+        saturation: left / rect.width * 100,
+        value: 100 - top / rect.height * 100
       });
     }
     vue_cjs_prod.watch(() => colorValue.value, () => {
@@ -23366,7 +22627,8 @@ const _sfc_main$1t = vue_cjs_prod.defineComponent({
     const hue = vue_cjs_prod.ref(null);
     const svPanel = vue_cjs_prod.ref(null);
     const alpha = vue_cjs_prod.ref(null);
-    const popper2 = vue_cjs_prod.ref(null);
+    const popper = vue_cjs_prod.ref(null);
+    let shouldActiveChange = true;
     const color = vue_cjs_prod.reactive(new Color({
       enableAlpha: props.showAlpha,
       format: props.colorFormat,
@@ -23392,12 +22654,14 @@ const _sfc_main$1t = vue_cjs_prod.defineComponent({
       if (!newVal) {
         showPanelColor.value = false;
       } else if (newVal && newVal !== color.value) {
+        shouldActiveChange = false;
         color.fromString(newVal);
       }
     });
     vue_cjs_prod.watch(() => currentColor.value, (val) => {
       customInput.value = val;
-      emit("active-change", val);
+      shouldActiveChange && emit("active-change", val);
+      shouldActiveChange = true;
     });
     vue_cjs_prod.watch(() => color.value, () => {
       if (!props.modelValue && !showPanelColor.value) {
@@ -23414,7 +22678,7 @@ const _sfc_main$1t = vue_cjs_prod.defineComponent({
     function setShowPicker(value) {
       showPicker.value = value;
     }
-    const debounceSetShowPicker = debounce$1(setShowPicker, 100);
+    const debounceSetShowPicker = debounce(setShowPicker, 100);
     function hide2() {
       debounceSetShowPicker(false);
       resetColor();
@@ -23437,11 +22701,11 @@ const _sfc_main$1t = vue_cjs_prod.defineComponent({
       color.fromString(customInput.value);
     }
     function confirmValue() {
-      var _a2;
+      var _a;
       const value = color.value;
       emit(UPDATE_MODEL_EVENT, value);
       emit("change", value);
-      (_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn());
+      (_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
       debounceSetShowPicker(false);
       vue_cjs_prod.nextTick(() => {
         const newColor = new Color({
@@ -23455,12 +22719,12 @@ const _sfc_main$1t = vue_cjs_prod.defineComponent({
       });
     }
     function clear() {
-      var _a2;
+      var _a;
       debounceSetShowPicker(false);
       emit(UPDATE_MODEL_EVENT, null);
       emit("change", null);
       if (props.modelValue !== null) {
-        (_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn());
+        (_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
       }
       resetColor();
     }
@@ -23471,9 +22735,9 @@ const _sfc_main$1t = vue_cjs_prod.defineComponent({
     });
     vue_cjs_prod.watch(() => showPicker.value, () => {
       vue_cjs_prod.nextTick(() => {
-        var _a2, _b2, _c;
-        (_a2 = hue.value) == null ? void 0 : _a2.update();
-        (_b2 = svPanel.value) == null ? void 0 : _b2.update();
+        var _a, _b, _c;
+        (_a = hue.value) == null ? void 0 : _a.update();
+        (_b = svPanel.value) == null ? void 0 : _b.update();
         (_c = alpha.value) == null ? void 0 : _c.update();
       });
     });
@@ -23498,7 +22762,7 @@ const _sfc_main$1t = vue_cjs_prod.defineComponent({
       hue,
       svPanel,
       alpha,
-      popper: popper2
+      popper
     };
   }
 });
@@ -24072,7 +23336,7 @@ const _sfc_main$1n = vue_cjs_prod.defineComponent({
       return WEEKS_CONSTANT.concat(WEEKS_CONSTANT).slice(firstDayOfWeek, firstDayOfWeek + 7);
     });
     const rows = vue_cjs_prod.computed(() => {
-      var _a2;
+      var _a;
       const startOfMonth = props.date.startOf("month");
       const startOfMonthDay = startOfMonth.day() || 7;
       const dateCountOfMonth = startOfMonth.daysInMonth();
@@ -24112,7 +23376,7 @@ const _sfc_main$1n = vue_cjs_prod.defineComponent({
           cell.type = "normal";
           const calEndDate = props.rangeState.endDate || props.maxDate || props.rangeState.selecting && props.minDate;
           cell.inRange = props.minDate && calTime.isSameOrAfter(props.minDate, "day") && calEndDate && calTime.isSameOrBefore(calEndDate, "day") || props.minDate && calTime.isSameOrBefore(props.minDate, "day") && calEndDate && calTime.isSameOrAfter(calEndDate, "day");
-          if ((_a2 = props.minDate) == null ? void 0 : _a2.isSameOrAfter(calEndDate)) {
+          if ((_a = props.minDate) == null ? void 0 : _a.isSameOrAfter(calEndDate)) {
             cell.start = calEndDate && calTime.isSame(calEndDate, "day");
             cell.end = props.minDate && calTime.isSame(props.minDate, "day");
           } else {
@@ -24148,13 +23412,13 @@ const _sfc_main$1n = vue_cjs_prod.defineComponent({
           row[props.showWeekNumber ? j + 1 : j] = cell;
         }
         if (props.selectionMode === "week") {
-          const start2 = props.showWeekNumber ? 1 : 0;
-          const end2 = props.showWeekNumber ? 7 : 6;
-          const isActive = isWeekActive(row[start2 + 1]);
-          row[start2].inRange = isActive;
-          row[start2].start = isActive;
-          row[end2].inRange = isActive;
-          row[end2].end = isActive;
+          const start = props.showWeekNumber ? 1 : 0;
+          const end = props.showWeekNumber ? 7 : 6;
+          const isActive = isWeekActive(row[start + 1]);
+          row[start].inRange = isActive;
+          row[start].start = isActive;
+          row[end].inRange = isActive;
+          row[end].end = isActive;
         }
       }
       return rows_;
@@ -24380,7 +23644,7 @@ const _sfc_main$1m = vue_cjs_prod.defineComponent({
     const lastRow = vue_cjs_prod.ref(null);
     const lastColumn = vue_cjs_prod.ref(null);
     const rows = vue_cjs_prod.computed(() => {
-      var _a2;
+      var _a;
       const rows2 = tableRows.value;
       const now2 = dayjs().locale(lang.value).startOf("month");
       for (let i = 0; i < 3; i++) {
@@ -24402,7 +23666,7 @@ const _sfc_main$1m = vue_cjs_prod.defineComponent({
           const calTime = props.date.startOf("year").month(index2);
           const calEndDate = props.rangeState.endDate || props.maxDate || props.rangeState.selecting && props.minDate;
           cell.inRange = props.minDate && calTime.isSameOrAfter(props.minDate, "month") && calEndDate && calTime.isSameOrBefore(calEndDate, "month") || props.minDate && calTime.isSameOrBefore(props.minDate, "month") && calEndDate && calTime.isSameOrAfter(calEndDate, "month");
-          if ((_a2 = props.minDate) == null ? void 0 : _a2.isSameOrAfter(calEndDate)) {
+          if ((_a = props.minDate) == null ? void 0 : _a.isSameOrAfter(calEndDate)) {
             cell.start = calEndDate && calTime.isSame(calEndDate, "month");
             cell.end = props.minDate && calTime.isSame(props.minDate, "month");
           } else {
@@ -24699,7 +23963,7 @@ const _sfc_main$1k = vue_cjs_prod.defineComponent({
   setup(props, ctx) {
     const { t, lang } = useLocale();
     const pickerBase = vue_cjs_prod.inject("EP_PICKER_BASE");
-    const popper2 = vue_cjs_prod.inject(TOOLTIP_INJECTION_KEY);
+    const popper = vue_cjs_prod.inject(TOOLTIP_INJECTION_KEY);
     const {
       shortcuts,
       disabledDate,
@@ -24818,7 +24082,7 @@ const _sfc_main$1k = vue_cjs_prod.defineComponent({
       currentView.value = "date";
     }, { immediate: true });
     vue_cjs_prod.watch(() => currentView.value, () => {
-      popper2 == null ? void 0 : popper2.updatePopper();
+      popper == null ? void 0 : popper.updatePopper();
     });
     const hasShortcuts = vue_cjs_prod.computed(() => !!shortcuts.length);
     const handleMonthPick = (month2) => {
@@ -25609,21 +24873,21 @@ const _sfc_main$1j = vue_cjs_prod.defineComponent({
       return Array.isArray(value) ? value.map((_2) => dayjs(_2, format2).locale(lang.value)) : dayjs(value, format2).locale(lang.value);
     };
     const getDefaultValue = () => {
-      let start2;
+      let start;
       if (Array.isArray(defaultValue.value)) {
-        const left2 = dayjs(defaultValue.value[0]);
-        let right2 = dayjs(defaultValue.value[1]);
+        const left = dayjs(defaultValue.value[0]);
+        let right = dayjs(defaultValue.value[1]);
         if (!props.unlinkPanels) {
-          right2 = left2.add(1, "month");
+          right = left.add(1, "month");
         }
-        return [left2, right2];
+        return [left, right];
       } else if (defaultValue.value) {
-        start2 = dayjs(defaultValue.value);
+        start = dayjs(defaultValue.value);
       } else {
-        start2 = dayjs();
+        start = dayjs();
       }
-      start2 = start2.locale(lang.value);
-      return [start2, start2.add(1, "month")];
+      start = start.locale(lang.value);
+      return [start, start.add(1, "month")];
     };
     ctx.emit("set-picker-option", ["isValidValue", isValidValue2]);
     ctx.emit("set-picker-option", ["parseUserInput", parseUserInput]);
@@ -26136,21 +25400,21 @@ const _sfc_main$1i = vue_cjs_prod.defineComponent({
       return value.map((_2) => _2.format(format2));
     };
     const getDefaultValue = () => {
-      let start2;
+      let start;
       if (Array.isArray(defaultValue.value)) {
-        const left2 = dayjs(defaultValue.value[0]);
-        let right2 = dayjs(defaultValue.value[1]);
+        const left = dayjs(defaultValue.value[0]);
+        let right = dayjs(defaultValue.value[1]);
         if (!props.unlinkPanels) {
-          right2 = left2.add(1, "year");
+          right = left.add(1, "year");
         }
-        return [left2, right2];
+        return [left, right];
       } else if (defaultValue.value) {
-        start2 = dayjs(defaultValue.value);
+        start = dayjs(defaultValue.value);
       } else {
-        start2 = dayjs();
+        start = dayjs();
       }
-      start2 = start2.locale(lang.value);
-      return [start2, start2.add(1, "year")];
+      start = start.locale(lang.value);
+      return [start, start.add(1, "year")];
     };
     ctx.emit("set-picker-option", ["formatToString", formatToString]);
     const pickerBase = vue_cjs_prod.inject("EP_PICKER_BASE");
@@ -26368,14 +25632,14 @@ var DatePicker = vue_cjs_prod.defineComponent({
     const commonPicker = vue_cjs_prod.ref(null);
     const refProps = __spreadProps(__spreadValues({}, props), {
       focus: (focusStartInput = true) => {
-        var _a2;
-        (_a2 = commonPicker.value) == null ? void 0 : _a2.focus(focusStartInput);
+        var _a;
+        (_a = commonPicker.value) == null ? void 0 : _a.focus(focusStartInput);
       }
     });
     ctx.expose(refProps);
     return () => {
-      var _a2;
-      const format2 = (_a2 = props.format) != null ? _a2 : DEFAULT_FORMATS_DATEPICKER[props.type] || DEFAULT_FORMATS_DATE;
+      var _a;
+      const format2 = (_a = props.format) != null ? _a : DEFAULT_FORMATS_DATEPICKER[props.type] || DEFAULT_FORMATS_DATE;
       return vue_cjs_prod.h(CommonPicker, __spreadProps(__spreadValues({}, props), {
         format: format2,
         type: props.type,
@@ -26414,11 +25678,11 @@ var DescriptionsCell = vue_cjs_prod.defineComponent({
     };
   },
   render() {
-    var _a2, _b2, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f;
     const item = getNormalizedProps(this.cell);
     const { border, direction: direction2 } = this.descriptions;
     const isVertical = direction2 === "vertical";
-    const label = ((_c = (_b2 = (_a2 = this.cell) == null ? void 0 : _a2.children) == null ? void 0 : _b2.label) == null ? void 0 : _c.call(_b2)) || item.label;
+    const label = ((_c = (_b = (_a = this.cell) == null ? void 0 : _a.children) == null ? void 0 : _b.label) == null ? void 0 : _c.call(_b)) || item.label;
     const content = (_f = (_e = (_d = this.cell) == null ? void 0 : _d.children) == null ? void 0 : _e.default) == null ? void 0 : _f.call(_e);
     const span = item.span;
     const align = item.align ? `is-${item.align}` : "";
@@ -26605,18 +25869,18 @@ const _sfc_main$1g = vue_cjs_prod.defineComponent({
       return node;
     };
     const getRows = () => {
-      var _a2;
-      const children = flattedChildren((_a2 = slots.default) == null ? void 0 : _a2.call(slots)).filter((node) => {
-        var _a22;
-        return ((_a22 = node == null ? void 0 : node.type) == null ? void 0 : _a22.name) === "ElDescriptionsItem";
+      var _a;
+      const children = flattedChildren((_a = slots.default) == null ? void 0 : _a.call(slots)).filter((node) => {
+        var _a2;
+        return ((_a2 = node == null ? void 0 : node.type) == null ? void 0 : _a2.name) === "ElDescriptionsItem";
       });
       const rows = [];
       let temp = [];
       let count = props.column;
       let totalSpan = 0;
       children.forEach((node, index2) => {
-        var _a22;
-        const span = ((_a22 = node.props) == null ? void 0 : _a22.span) || 1;
+        var _a2;
+        const span = ((_a2 = node.props) == null ? void 0 : _a2.span) || 1;
         if (index2 < children.length - 1) {
           totalSpan += span > count ? count : span;
         }
@@ -27444,9 +26708,9 @@ const createFocusableStack = () => {
     stack.unshift(layer);
   };
   const remove2 = (layer) => {
-    var _a2, _b2;
+    var _a, _b;
     stack = removeFromStack(stack, layer);
-    (_b2 = (_a2 = stack[0]) == null ? void 0 : _a2.resume) == null ? void 0 : _b2.call(_a2);
+    (_b = (_a = stack[0]) == null ? void 0 : _a.resume) == null ? void 0 : _b.call(_a);
   };
   return {
     push,
@@ -27759,8 +27023,8 @@ const _sfc_main$18 = vue_cjs_prod.defineComponent({
   props: rovingFocusGroupProps,
   emits: [CURRENT_TAB_ID_CHANGE_EVT, "entryFocus"],
   setup(props, { emit }) {
-    var _a2;
-    const currentTabbedId = vue_cjs_prod.ref((_a2 = props.currentTabId || props.defaultCurrentTabId) != null ? _a2 : null);
+    var _a;
+    const currentTabbedId = vue_cjs_prod.ref((_a = props.currentTabId || props.defaultCurrentTabId) != null ? _a : null);
     const isBackingOut = vue_cjs_prod.ref(false);
     const isClickFocus = vue_cjs_prod.ref(false);
     const rovingFocusGroupRef = vue_cjs_prod.ref(null);
@@ -27780,14 +27044,14 @@ const _sfc_main$18 = vue_cjs_prod.defineComponent({
       isBackingOut.value = true;
     };
     const onMousedown = composeEventHandlers((e) => {
-      var _a22;
-      (_a22 = props.onMousedown) == null ? void 0 : _a22.call(props, e);
+      var _a2;
+      (_a2 = props.onMousedown) == null ? void 0 : _a2.call(props, e);
     }, () => {
       isClickFocus.value = true;
     });
     const onFocus = composeEventHandlers((e) => {
-      var _a22;
-      (_a22 = props.onFocus) == null ? void 0 : _a22.call(props, e);
+      var _a2;
+      (_a2 = props.onFocus) == null ? void 0 : _a2.call(props, e);
     }, (e) => {
       const isKeyboardFocus = !vue_cjs_prod.unref(isClickFocus);
       const { target, currentTarget } = e;
@@ -27806,8 +27070,8 @@ const _sfc_main$18 = vue_cjs_prod.defineComponent({
       isClickFocus.value = false;
     });
     const onBlur = composeEventHandlers((e) => {
-      var _a22;
-      (_a22 = props.onBlur) == null ? void 0 : _a22.call(props, e);
+      var _a2;
+      (_a2 = props.onBlur) == null ? void 0 : _a2.call(props, e);
     }, () => {
       isBackingOut.value = false;
     });
@@ -27835,7 +27099,7 @@ const _sfc_main$18 = vue_cjs_prod.defineComponent({
     });
     vue_cjs_prod.onMounted(() => {
       const rovingFocusGroupEl = vue_cjs_prod.unref(rovingFocusGroupRef);
-      on(rovingFocusGroupEl, ENTRY_FOCUS_EVT, handleEntryFocus);
+      on$1(rovingFocusGroupEl, ENTRY_FOCUS_EVT, handleEntryFocus);
     });
     vue_cjs_prod.onBeforeUnmount(() => {
       const rovingFocusGroupEl = vue_cjs_prod.unref(rovingFocusGroupRef);
@@ -28088,12 +27352,12 @@ const _sfc_main$15 = vue_cjs_prod.defineComponent({
       handleClose();
     }
     function handleClose() {
-      var _a2;
-      (_a2 = popperRef.value) == null ? void 0 : _a2.onClose();
+      var _a;
+      (_a = popperRef.value) == null ? void 0 : _a.onClose();
     }
     function handleOpen() {
-      var _a2;
-      (_a2 = popperRef.value) == null ? void 0 : _a2.onOpen();
+      var _a;
+      (_a = popperRef.value) == null ? void 0 : _a.onOpen();
     }
     const dropdownSize = useSize();
     function commandHandler(...args) {
@@ -28130,9 +27394,9 @@ const _sfc_main$15 = vue_cjs_prod.defineComponent({
       hideOnClick: vue_cjs_prod.toRef(props, "hideOnClick")
     });
     const onMountOnFocus = (e) => {
-      var _a2, _b2;
+      var _a, _b;
       e.preventDefault();
-      (_b2 = (_a2 = contentRef.value) == null ? void 0 : _a2.focus) == null ? void 0 : _b2.call(_a2, {
+      (_b = (_a = contentRef.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a, {
         preventScroll: true
       });
     };
@@ -28159,7 +27423,7 @@ const _sfc_main$15 = vue_cjs_prod.defineComponent({
   }
 });
 function _sfc_render$I(_ctx, _cache, $props, $setup, $data, $options) {
-  var _a2;
+  var _a;
   const _component_el_dropdown_collection = vue_cjs_prod.resolveComponent("el-dropdown-collection");
   const _component_el_roving_focus_group = vue_cjs_prod.resolveComponent("el-roving-focus-group");
   const _component_el_focus_trap = vue_cjs_prod.resolveComponent("el-focus-trap");
@@ -28182,7 +27446,7 @@ function _sfc_render$I(_ctx, _cache, $props, $setup, $data, $options) {
       "manual-mode": true,
       placement: _ctx.placement,
       "popper-class": [_ctx.ns.e("popper"), _ctx.popperClass],
-      "reference-element": (_a2 = _ctx.referenceElementRef) == null ? void 0 : _a2.$el,
+      "reference-element": (_a = _ctx.referenceElementRef) == null ? void 0 : _a.$el,
       trigger: _ctx.trigger,
       "show-after": _ctx.trigger === "hover" ? _ctx.showTimeout : 0,
       "stop-popper-mouse-event": false,
@@ -28378,21 +27642,21 @@ const _sfc_main$13 = vue_cjs_prod.defineComponent({
     const _instance = vue_cjs_prod.getCurrentInstance();
     const itemRef = vue_cjs_prod.ref(null);
     const textContent = vue_cjs_prod.computed(() => {
-      var _a2, _b2;
-      return (_b2 = (_a2 = vue_cjs_prod.unref(itemRef)) == null ? void 0 : _a2.textContent) != null ? _b2 : "";
+      var _a, _b;
+      return (_b = (_a = vue_cjs_prod.unref(itemRef)) == null ? void 0 : _a.textContent) != null ? _b : "";
     });
     const { onItemEnter, onItemLeave } = vue_cjs_prod.inject(DROPDOWN_INJECTION_KEY, void 0);
     const handlePointerMove = composeEventHandlers((e) => {
       emit("pointermove", e);
       return e.defaultPrevented;
     }, whenMouse((e) => {
-      var _a2;
+      var _a;
       if (props.disabled) {
         onItemLeave(e);
       } else {
         onItemEnter(e);
         if (!e.defaultPrevented) {
-          (_a2 = e.currentTarget) == null ? void 0 : _a2.focus();
+          (_a = e.currentTarget) == null ? void 0 : _a.focus();
         }
       }
     }));
@@ -28406,13 +27670,13 @@ const _sfc_main$13 = vue_cjs_prod.defineComponent({
       emit("click", e);
       return e.defaultPrevented;
     }, (e) => {
-      var _a2, _b2, _c;
+      var _a, _b, _c;
       if (props.disabled) {
         e.stopImmediatePropagation();
         return;
       }
-      if ((_a2 = elDropdown == null ? void 0 : elDropdown.hideOnClick) == null ? void 0 : _a2.value) {
-        (_b2 = elDropdown.handleClick) == null ? void 0 : _b2.call(elDropdown);
+      if ((_a = elDropdown == null ? void 0 : elDropdown.hideOnClick) == null ? void 0 : _a.value) {
+        (_b = elDropdown.handleClick) == null ? void 0 : _b.call(elDropdown);
       }
       (_c = elDropdown.commandHandler) == null ? void 0 : _c.call(elDropdown, props.command, _instance, e);
     });
@@ -28429,13 +27693,13 @@ const _sfc_main$13 = vue_cjs_prod.defineComponent({
   }
 });
 function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
-  var _a2;
+  var _a;
   const _component_el_dropdown_item_impl = vue_cjs_prod.resolveComponent("el-dropdown-item-impl");
   const _component_el_roving_focus_item = vue_cjs_prod.resolveComponent("el-roving-focus-item");
   const _component_el_dropdown_collection_item = vue_cjs_prod.resolveComponent("el-dropdown-collection-item");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_dropdown_collection_item, {
     disabled: _ctx.disabled,
-    "text-value": (_a2 = _ctx.textValue) != null ? _a2 : _ctx.textContent
+    "text-value": (_a = _ctx.textValue) != null ? _a : _ctx.textContent
   }, {
     default: vue_cjs_prod.withCtx(() => [
       vue_cjs_prod.createVNode(_component_el_roving_focus_item, {
@@ -28484,8 +27748,8 @@ const _sfc_main$12 = vue_cjs_prod.defineComponent({
     });
     const dropdownListWrapperRef = composeRefs(contentRef, dropdownCollectionRef, focusTrapRef, rovingFocusGroupRef, rovingFocusGroupCollectionRef);
     const composedKeydown = composeEventHandlers((e) => {
-      var _a2;
-      (_a2 = props.onKeydown) == null ? void 0 : _a2.call(props, e);
+      var _a;
+      (_a = props.onKeydown) == null ? void 0 : _a.call(props, e);
     }, (e) => {
       const { currentTarget, code, target } = e;
       currentTarget.contains(target);
@@ -28943,10 +28207,10 @@ const _sfc_main$$ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       }
     };
     const scrollToField = (prop) => {
-      var _a2;
+      var _a;
       const field = filterFields(fields, prop)[0];
       if (field) {
-        (_a2 = field.$el) == null ? void 0 : _a2.scrollIntoView();
+        (_a = field.$el) == null ? void 0 : _a.scrollIntoView();
       }
     };
     vue_cjs_prod.watch(() => props.rules, () => {
@@ -30039,8 +29303,8 @@ var FormLabelWrap = vue_cjs_prod.defineComponent({
     const el = vue_cjs_prod.ref();
     const computedWidth = vue_cjs_prod.ref(0);
     const getLabelWidth = () => {
-      var _a2;
-      if ((_a2 = el.value) == null ? void 0 : _a2.firstElementChild) {
+      var _a;
+      if ((_a = el.value) == null ? void 0 : _a.firstElementChild) {
         const width = window.getComputedStyle(el.value.firstElementChild).width;
         return Math.ceil(Number.parseFloat(width));
       } else {
@@ -30072,11 +29336,11 @@ var FormLabelWrap = vue_cjs_prod.defineComponent({
       }
     });
     useResizeObserver(vue_cjs_prod.computed(() => {
-      var _a2, _b2;
-      return (_b2 = (_a2 = el.value) == null ? void 0 : _a2.firstElementChild) != null ? _b2 : null;
+      var _a, _b;
+      return (_b = (_a = el.value) == null ? void 0 : _a.firstElementChild) != null ? _b : null;
     }), updateLabelWidthFn);
     return () => {
-      var _a2, _b2;
+      var _a, _b;
       if (!slots)
         return null;
       const {
@@ -30096,11 +29360,11 @@ var FormLabelWrap = vue_cjs_prod.defineComponent({
           "ref": el,
           "class": [ns.be("item", "label-wrap")],
           "style": style
-        }, [(_a2 = slots.default) == null ? void 0 : _a2.call(slots)]);
+        }, [(_a = slots.default) == null ? void 0 : _a.call(slots)]);
       } else {
         return vue_cjs_prod.createVNode(vue_cjs_prod.Fragment, {
           "ref": el
-        }, [(_b2 = slots.default) == null ? void 0 : _b2.call(slots)]);
+        }, [(_b = slots.default) == null ? void 0 : _b.call(slots)]);
       }
     };
   }
@@ -30200,28 +29464,28 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
         } else {
           return rule.trigger === trigger;
         }
-      }).map((_a2) => {
-        var _b2 = _a2, rule = __objRest(_b2, ["trigger"]);
+      }).map((_a) => {
+        var _b = _a, rule = __objRest(_b, ["trigger"]);
         return rule;
       });
     };
     const isRequired = vue_cjs_prod.computed(() => _rules.value.some((rule) => rule.required === true));
     const shouldShowError = vue_cjs_prod.computed(() => {
-      var _a2;
-      return validateStateDebounced.value === "error" && props.showMessage && ((_a2 = formContext == null ? void 0 : formContext.showMessage) != null ? _a2 : true);
+      var _a;
+      return validateStateDebounced.value === "error" && props.showMessage && ((_a = formContext == null ? void 0 : formContext.showMessage) != null ? _a : true);
     });
     const currentLabel = vue_cjs_prod.computed(() => `${props.label || ""}${(formContext == null ? void 0 : formContext.labelSuffix) || ""}`);
     const setValidationState = (state) => {
       validateState.value = state;
     };
     const onValidationFailed = (error) => {
-      var _a2, _b2;
+      var _a, _b;
       const { errors, fields } = error;
       if (!errors || !fields) {
         console.error(error);
       }
       setValidationState("error");
-      validateMessage.value = errors ? (_b2 = (_a2 = errors == null ? void 0 : errors[0]) == null ? void 0 : _a2.message) != null ? _b2 : `${props.prop} is required` : "";
+      validateMessage.value = errors ? (_b = (_a = errors == null ? void 0 : errors[0]) == null ? void 0 : _a.message) != null ? _b : `${props.prop} is required` : "";
       formContext == null ? void 0 : formContext.emit("validate", props.prop, false, validateMessage.value);
     };
     const onValidationSucceeded = () => {
@@ -30314,7 +29578,7 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       resetField
     });
     return (_ctx, _cache) => {
-      var _a2;
+      var _a;
       return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
         ref_key: "formItemRef",
         ref: formItemRef,
@@ -30322,7 +29586,7 @@ const _sfc_main$_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       }, [
         vue_cjs_prod.createVNode(vue_cjs_prod.unref(FormLabelWrap), {
           "is-auto-width": vue_cjs_prod.unref(labelStyle).width === "auto",
-          "update-all": ((_a2 = vue_cjs_prod.unref(formContext)) == null ? void 0 : _a2.labelWidth) === "auto"
+          "update-all": ((_a = vue_cjs_prod.unref(formContext)) == null ? void 0 : _a.labelWidth) === "auto"
         }, {
           default: vue_cjs_prod.withCtx(() => [
             _ctx.label || _ctx.$slots.label ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("label", {
@@ -30391,6 +29655,10 @@ const imageViewerProps = buildProps({
   teleported: {
     type: Boolean,
     default: false
+  },
+  closeOnPressEscape: {
+    type: Boolean,
+    default: true
   }
 });
 const imageViewerEmits = {
@@ -30484,7 +29752,7 @@ const _sfc_main$Z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       const keydownHandler = throttle((e) => {
         switch (e.code) {
           case EVENT_CODE.esc:
-            hide2();
+            props.closeOnPressEscape && hide2();
             break;
           case EVENT_CODE.space:
             toggleMode();
@@ -30624,9 +29892,9 @@ const _sfc_main$Z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       emit("switch", val);
     });
     vue_cjs_prod.onMounted(() => {
-      var _a2, _b2;
+      var _a, _b;
       registerEventListener();
-      (_b2 = (_a2 = wrapper.value) == null ? void 0 : _a2.focus) == null ? void 0 : _b2.call(_a2);
+      (_b = (_a = wrapper.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
     });
     return (_ctx, _cache) => {
       return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.Teleport, {
@@ -30821,6 +30089,10 @@ const imageProps = buildProps({
   infinite: {
     type: Boolean,
     default: true
+  },
+  closeOnPressEscape: {
+    type: Boolean,
+    default: true
   }
 });
 const imageEmits = {
@@ -30951,6 +30223,7 @@ const _sfc_main$Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
             "url-list": _ctx.previewSrcList,
             "hide-on-click-modal": _ctx.hideOnClickModal,
             teleported: vue_cjs_prod.unref(teleported),
+            "close-on-press-escape": _ctx.closeOnPressEscape,
             onClose: closeViewer,
             onSwitch: switchViewer
           }, {
@@ -30960,7 +30233,7 @@ const _sfc_main$Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
               ])) : vue_cjs_prod.createCommentVNode("v-if", true)
             ]),
             _: 3
-          }, 8, ["z-index", "initial-index", "infinite", "url-list", "hide-on-click-modal", "teleported"])) : vue_cjs_prod.createCommentVNode("v-if", true)
+          }, 8, ["z-index", "initial-index", "infinite", "url-list", "hide-on-click-modal", "teleported", "close-on-press-escape"])) : vue_cjs_prod.createCommentVNode("v-if", true)
         ], 2112)) : vue_cjs_prod.createCommentVNode("v-if", true)
       ], 6);
     };
@@ -31131,7 +30404,7 @@ const _sfc_main$X = vue_cjs_prod.defineComponent({
       return newVal;
     };
     const setCurrentValue = (value) => {
-      var _a2;
+      var _a;
       const oldVal = data.currentValue;
       let newVal = verifyValue(value);
       if (oldVal === newVal)
@@ -31143,7 +30416,7 @@ const _sfc_main$X = vue_cjs_prod.defineComponent({
       emit("update:modelValue", newVal);
       emit("input", newVal);
       emit("change", newVal, oldVal);
-      (_a2 = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a2.call(formItem, "change").catch((err) => debugWarn());
+      (_a = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a.call(formItem, "change").catch((err) => debugWarn());
       data.currentValue = newVal;
     };
     const handleInput = (value) => {
@@ -31157,20 +30430,20 @@ const _sfc_main$X = vue_cjs_prod.defineComponent({
       data.userInput = null;
     };
     const focus = () => {
-      var _a2, _b2;
-      (_b2 = (_a2 = input.value) == null ? void 0 : _a2.focus) == null ? void 0 : _b2.call(_a2);
+      var _a, _b;
+      (_b = (_a = input.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
     };
     const blur = () => {
-      var _a2, _b2;
-      (_b2 = (_a2 = input.value) == null ? void 0 : _a2.blur) == null ? void 0 : _b2.call(_a2);
+      var _a, _b;
+      (_b = (_a = input.value) == null ? void 0 : _a.blur) == null ? void 0 : _b.call(_a);
     };
     const handleFocus = (event) => {
       emit("focus", event);
     };
     const handleBlur = (event) => {
-      var _a2;
+      var _a;
       emit("blur", event);
-      (_a2 = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a2.call(formItem, "blur").catch((err) => debugWarn());
+      (_a = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a.call(formItem, "blur").catch((err) => debugWarn());
     };
     vue_cjs_prod.watch(() => props.modelValue, (value) => {
       const newVal = verifyValue(value, true);
@@ -31178,8 +30451,8 @@ const _sfc_main$X = vue_cjs_prod.defineComponent({
       data.userInput = null;
     }, { immediate: true });
     vue_cjs_prod.onMounted(() => {
-      var _a2;
-      const innerInput = (_a2 = input.value) == null ? void 0 : _a2.input;
+      var _a;
+      const innerInput = (_a = input.value) == null ? void 0 : _a.input;
       innerInput.setAttribute("role", "spinbutton");
       innerInput.setAttribute("aria-valuemax", String(props.max));
       innerInput.setAttribute("aria-valuemin", String(props.min));
@@ -31194,8 +30467,8 @@ const _sfc_main$X = vue_cjs_prod.defineComponent({
       }
     });
     vue_cjs_prod.onUpdated(() => {
-      var _a2;
-      const innerInput = (_a2 = input.value) == null ? void 0 : _a2.input;
+      var _a;
+      const innerInput = (_a = input.value) == null ? void 0 : _a.input;
       innerInput == null ? void 0 : innerInput.setAttribute("aria-valuenow", data.currentValue);
     });
     return {
@@ -31715,8 +30988,8 @@ var SubMenu = vue_cjs_prod.defineComponent({
       };
     });
     const doDestroy = () => {
-      var _a2, _b2, _c;
-      return (_c = (_b2 = (_a2 = vPopper.value) == null ? void 0 : _a2.popperRef) == null ? void 0 : _b2.popperInstanceRef) == null ? void 0 : _c.destroy();
+      var _a, _b, _c;
+      return (_c = (_b = (_a = vPopper.value) == null ? void 0 : _a.popperRef) == null ? void 0 : _b.popperInstanceRef) == null ? void 0 : _c.destroy();
     };
     const handleCollapseToggle = (value) => {
       if (!value) {
@@ -31733,7 +31006,7 @@ var SubMenu = vue_cjs_prod.defineComponent({
       });
     };
     const handleMouseenter = (event, showTimeout = props.showTimeout) => {
-      var _a2;
+      var _a;
       if (event.type === "focus" && !event.relatedTarget) {
         return;
       }
@@ -31746,11 +31019,11 @@ var SubMenu = vue_cjs_prod.defineComponent({
         rootMenu.openMenu(props.index, indexPath.value);
       }, showTimeout));
       if (appendToBody.value) {
-        (_a2 = parentMenu.value.vnode.el) == null ? void 0 : _a2.dispatchEvent(new MouseEvent("mouseenter"));
+        (_a = parentMenu.value.vnode.el) == null ? void 0 : _a.dispatchEvent(new MouseEvent("mouseenter"));
       }
     };
     const handleMouseleave = (deepDispatch = false) => {
-      var _a2, _b2;
+      var _a, _b;
       if (rootMenu.props.menuTrigger === "click" && rootMenu.props.mode === "horizontal" || !rootMenu.props.collapse && rootMenu.props.mode === "vertical") {
         return;
       }
@@ -31758,8 +31031,8 @@ var SubMenu = vue_cjs_prod.defineComponent({
       subMenu.mouseInChild.value = false;
       ({ stop: timeout } = useTimeoutFn(() => !mouseInChild.value && rootMenu.closeMenu(props.index, indexPath.value), props.hideTimeout));
       if (appendToBody.value && deepDispatch) {
-        if (((_a2 = instance.parent) == null ? void 0 : _a2.type.name) === "ElSubMenu") {
-          (_b2 = subMenu.handleMouseleave) == null ? void 0 : _b2.call(subMenu, true);
+        if (((_a = instance.parent) == null ? void 0 : _a.type.name) === "ElSubMenu") {
+          (_b = subMenu.handleMouseleave) == null ? void 0 : _b.call(subMenu, true);
         }
       }
     };
@@ -31790,9 +31063,9 @@ var SubMenu = vue_cjs_prod.defineComponent({
       rootMenu.removeSubMenu(item);
     });
     return () => {
-      var _a2;
+      var _a;
       const titleTag = [
-        (_a2 = slots.title) == null ? void 0 : _a2.call(slots),
+        (_a = slots.title) == null ? void 0 : _a.call(slots),
         vue_cjs_prod.h(ElIcon, {
           class: nsSubMenu.e("icon-arrow")
         }, { default: () => vue_cjs_prod.h(subMenuTitleIcon.value) })
@@ -31814,7 +31087,7 @@ var SubMenu = vue_cjs_prod.defineComponent({
         gpuAcceleration: false
       }, {
         content: () => {
-          var _a22;
+          var _a2;
           return vue_cjs_prod.h("div", {
             class: [nsMenu.m(mode.value), props.popperClass],
             onMouseenter: (evt) => handleMouseenter(evt, 100),
@@ -31828,7 +31101,7 @@ var SubMenu = vue_cjs_prod.defineComponent({
                 nsMenu.m(`popup-${currentPlacement.value}`)
               ],
               style: ulStyle.value
-            }, [(_a22 = slots.default) == null ? void 0 : _a22.call(slots)])
+            }, [(_a2 = slots.default) == null ? void 0 : _a2.call(slots)])
           ]);
         },
         default: () => vue_cjs_prod.h("div", {
@@ -31853,12 +31126,12 @@ var SubMenu = vue_cjs_prod.defineComponent({
         }, titleTag),
         vue_cjs_prod.h(_CollapseTransition, {}, {
           default: () => {
-            var _a22;
+            var _a2;
             return vue_cjs_prod.withDirectives(vue_cjs_prod.h("ul", {
               role: "menu",
               class: [nsMenu.b(), nsMenu.m("inline")],
               style: ulStyle.value
-            }, [(_a22 = slots.default) == null ? void 0 : _a22.call(slots)]), [[vue_cjs_prod.vShow, opened.value]]);
+            }, [(_a2 = slots.default) == null ? void 0 : _a2.call(slots)]), [[vue_cjs_prod.vShow, opened.value]]);
           }
         })
       ]);
@@ -32083,8 +31356,8 @@ var Menu = vue_cjs_prod.defineComponent({
     };
     const useVNodeResize = (vnode) => props.mode === "horizontal" ? vue_cjs_prod.withDirectives(vnode, [[Resize, handleResize]]) : vnode;
     return () => {
-      var _a2, _b2, _c, _d;
-      let slot = (_b2 = (_a2 = slots.default) == null ? void 0 : _a2.call(slots)) != null ? _b2 : [];
+      var _a, _b, _c, _d;
+      let slot = (_b = (_a = slots.default) == null ? void 0 : _a.call(slots)) != null ? _b : [];
       const vShowMore = [];
       if (props.mode === "horizontal" && menu.value) {
         const items2 = Array.from((_d = (_c = menu.value) == null ? void 0 : _c.childNodes) != null ? _d : []).filter((item) => item.nodeName !== "#text" || item.nodeValue);
@@ -32478,7 +31751,7 @@ function useOption$1(props, states) {
     if (!select.props.multiple) {
       return isEqual2(props.value, select.props.modelValue);
     } else {
-      return contains2(select.props.modelValue, props.value);
+      return contains(select.props.modelValue, props.value);
     }
   });
   const limitReached = vue_cjs_prod.computed(() => {
@@ -32499,7 +31772,7 @@ function useOption$1(props, states) {
     return props.disabled || states.groupDisabled || limitReached.value;
   });
   const instance = vue_cjs_prod.getCurrentInstance();
-  const contains2 = (arr = [], target) => {
+  const contains = (arr = [], target) => {
     if (!isObject2.value) {
       return arr && arr.includes(target);
     } else {
@@ -32649,8 +31922,8 @@ const _sfc_main$O = vue_cjs_prod.defineComponent({
     const isFitInputWidth = vue_cjs_prod.computed(() => select.props.fitInputWidth);
     const minWidth = vue_cjs_prod.ref("");
     function updateMinWidth() {
-      var _a2;
-      minWidth.value = `${(_a2 = select.selectWrapper) == null ? void 0 : _a2.getBoundingClientRect().width}px`;
+      var _a;
+      minWidth.value = `${(_a = select.selectWrapper) == null ? void 0 : _a.getBoundingClientRect().width}px`;
     }
     vue_cjs_prod.onMounted(() => {
       updateMinWidth();
@@ -32709,7 +31982,7 @@ function useSelectStates(props) {
 const useSelect$3 = (props, states, ctx) => {
   const { t } = useLocale();
   const ns = useNamespace("select");
-  const reference2 = vue_cjs_prod.ref(null);
+  const reference = vue_cjs_prod.ref(null);
   const input = vue_cjs_prod.ref(null);
   const tooltipRef = vue_cjs_prod.ref(null);
   const tags = vue_cjs_prod.ref(null);
@@ -32729,7 +32002,7 @@ const useSelect$3 = (props, states, ctx) => {
   });
   const iconComponent = vue_cjs_prod.computed(() => props.remote && props.filterable ? "" : props.suffixIcon);
   const iconReverse = vue_cjs_prod.computed(() => ns.is("reverse", iconComponent.value && states.visible));
-  const debounce2 = vue_cjs_prod.computed(() => props.remote ? 300 : 0);
+  const debounce$1 = vue_cjs_prod.computed(() => props.remote ? 300 : 0);
   const emptyText = vue_cjs_prod.computed(() => {
     if (props.loading) {
       return props.loadingText || t("el.select.loading");
@@ -32774,7 +32047,7 @@ const useSelect$3 = (props, states, ctx) => {
     states.cachedPlaceHolder = states.currentPlaceholder = val;
   });
   vue_cjs_prod.watch(() => props.modelValue, (val, oldVal) => {
-    var _a2;
+    var _a;
     if (props.multiple) {
       resetInputHeight();
       if (val && val.length > 0 || input.value && states.query !== "") {
@@ -32792,14 +32065,14 @@ const useSelect$3 = (props, states, ctx) => {
       states.inputLength = 20;
     }
     if (!isEqual$1(val, oldVal)) {
-      (_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn());
+      (_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
     }
   }, {
     flush: "post",
     deep: true
   });
   vue_cjs_prod.watch(() => states.visible, (val) => {
-    var _a2, _b2, _c;
+    var _a, _b, _c;
     if (!val) {
       input.value && input.value.blur();
       states.query = "";
@@ -32828,7 +32101,7 @@ const useSelect$3 = (props, states, ctx) => {
         }
       }
     } else {
-      (_b2 = (_a2 = tooltipRef.value) == null ? void 0 : _a2.updatePopper) == null ? void 0 : _b2.call(_a2);
+      (_b = (_a = tooltipRef.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
       if (props.filterable) {
         states.filteredOptionsCount = states.optionsCount;
         states.query = props.remote ? "" : states.selectedLabel;
@@ -32867,16 +32140,16 @@ const useSelect$3 = (props, states, ctx) => {
     if (props.collapseTags && !props.filterable)
       return;
     vue_cjs_prod.nextTick(() => {
-      var _a2, _b2;
-      if (!reference2.value)
+      var _a, _b;
+      if (!reference.value)
         return;
-      const input2 = reference2.value.$el.querySelector("input");
+      const input2 = reference.value.$el.querySelector("input");
       const _tags = tags.value;
       const sizeInMap = states.initialInputHeight || getComponentSize(selectSize.value || elForm.size);
       input2.style.height = states.selected.length === 0 ? `${sizeInMap}px` : `${Math.max(_tags ? _tags.clientHeight + (_tags.clientHeight > sizeInMap ? 6 : 0) : 0, sizeInMap)}px`;
       states.tagInMultiLine = Number.parseFloat(input2.style.height) >= sizeInMap;
       if (states.visible && emptyText.value !== false) {
-        (_b2 = (_a2 = tooltipRef.value) == null ? void 0 : _a2.updatePopper) == null ? void 0 : _b2.call(_a2);
+        (_b = (_a = tooltipRef.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
       }
     });
   };
@@ -32889,9 +32162,9 @@ const useSelect$3 = (props, states, ctx) => {
     }
     states.previousQuery = val;
     vue_cjs_prod.nextTick(() => {
-      var _a2, _b2;
+      var _a, _b;
       if (states.visible)
-        (_b2 = (_a2 = tooltipRef.value) == null ? void 0 : _a2.updatePopper) == null ? void 0 : _b2.call(_a2);
+        (_b = (_a = tooltipRef.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
     });
     states.hoverIndex = -1;
     if (props.multiple && props.filterable) {
@@ -32930,10 +32203,10 @@ const useSelect$3 = (props, states, ctx) => {
     states.hoverIndex = getValueIndex(optionsArray.value, userCreatedOption || firstOriginOption);
   };
   const setSelected = () => {
-    var _a2;
+    var _a;
     if (!props.multiple) {
       const option = getOption(props.modelValue);
-      if ((_a2 = option.props) == null ? void 0 : _a2.created) {
+      if ((_a = option.props) == null ? void 0 : _a.created) {
         states.createdLabel = option.props.value;
         states.createdSelected = true;
       } else {
@@ -33008,15 +32281,15 @@ const useSelect$3 = (props, states, ctx) => {
     }, 300);
   };
   const handleResize = () => {
-    var _a2, _b2;
+    var _a, _b;
     resetInputWidth();
-    (_b2 = (_a2 = tooltipRef.value) == null ? void 0 : _a2.updatePopper) == null ? void 0 : _b2.call(_a2);
+    (_b = (_a = tooltipRef.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
     if (props.multiple && !props.filterable)
       resetInputHeight();
   };
   const resetInputWidth = () => {
-    var _a2;
-    states.inputWidth = (_a2 = reference2.value) == null ? void 0 : _a2.$el.getBoundingClientRect().width;
+    var _a;
+    states.inputWidth = (_a = reference.value) == null ? void 0 : _a.$el.getBoundingClientRect().width;
   };
   const onInputChange = () => {
     if (props.filterable && states.query !== states.selectedLabel) {
@@ -33024,12 +32297,12 @@ const useSelect$3 = (props, states, ctx) => {
       handleQueryChange(states.query);
     }
   };
-  const debouncedOnInputChange = debounce$1(() => {
+  const debouncedOnInputChange = debounce(() => {
     onInputChange();
-  }, debounce2.value);
-  const debouncedQueryChange = debounce$1((e) => {
+  }, debounce$1.value);
+  const debouncedQueryChange = debounce((e) => {
     handleQueryChange(e.target.value);
-  }, debounce2.value);
+  }, debounce$1.value);
   const emitChange = (val) => {
     if (!isEqual$1(props.modelValue, val)) {
       ctx.emit(CHANGE_EVENT, val);
@@ -33072,7 +32345,7 @@ const useSelect$3 = (props, states, ctx) => {
     ctx.emit("clear");
   };
   const handleOptionSelect = (option, byClick) => {
-    var _a2;
+    var _a;
     if (props.multiple) {
       const value = (props.modelValue || []).slice();
       const optionIndex = getValueIndex(value, option.value);
@@ -33089,7 +32362,7 @@ const useSelect$3 = (props, states, ctx) => {
         states.inputLength = 20;
       }
       if (props.filterable)
-        (_a2 = input.value) == null ? void 0 : _a2.focus();
+        (_a = input.value) == null ? void 0 : _a.focus();
     } else {
       ctx.emit(UPDATE_MODEL_EVENT, option.value);
       emitChange(option.value);
@@ -33119,13 +32392,13 @@ const useSelect$3 = (props, states, ctx) => {
   };
   const setSoftFocus = () => {
     states.softFocus = true;
-    const _input = input.value || reference2.value;
+    const _input = input.value || reference.value;
     if (_input) {
       _input == null ? void 0 : _input.focus();
     }
   };
   const scrollToOption = (option) => {
-    var _a2, _b2, _c, _d, _e;
+    var _a, _b, _c, _d, _e;
     const targetOption = Array.isArray(option) ? option[0] : option;
     let target = null;
     if (targetOption == null ? void 0 : targetOption.value) {
@@ -33135,7 +32408,7 @@ const useSelect$3 = (props, states, ctx) => {
       }
     }
     if (tooltipRef.value && target) {
-      (_d = (_c = (_b2 = (_a2 = tooltipRef.value) == null ? void 0 : _a2.popperRef) == null ? void 0 : _b2.contentRef) == null ? void 0 : _c.querySelector) == null ? void 0 : _d.call(_c, `.${ns.be("dropdown", "wrap")}`);
+      (_d = (_c = (_b = (_a = tooltipRef.value) == null ? void 0 : _a.popperRef) == null ? void 0 : _b.contentRef) == null ? void 0 : _c.querySelector) == null ? void 0 : _d.call(_c, `.${ns.be("dropdown", "wrap")}`);
     }
     (_e = scrollbar.value) == null ? void 0 : _e.handleScroll();
   };
@@ -33198,9 +32471,9 @@ const useSelect$3 = (props, states, ctx) => {
     }
   };
   const blur = () => {
-    var _a2;
+    var _a;
     states.visible = false;
-    (_a2 = reference2.value) == null ? void 0 : _a2.blur();
+    (_a = reference.value) == null ? void 0 : _a.blur();
   };
   const handleBlur = (event) => {
     vue_cjs_prod.nextTick(() => {
@@ -33219,7 +32492,7 @@ const useSelect$3 = (props, states, ctx) => {
     states.visible = false;
   };
   const toggleMenu = () => {
-    var _a2;
+    var _a;
     if (props.automaticDropdown)
       return;
     if (!selectDisabled.value) {
@@ -33229,7 +32502,7 @@ const useSelect$3 = (props, states, ctx) => {
         states.visible = !states.visible;
       }
       if (states.visible) {
-        (_a2 = input.value || reference2.value) == null ? void 0 : _a2.focus();
+        (_a = input.value || reference.value) == null ? void 0 : _a.focus();
       }
     }
   };
@@ -33314,7 +32587,7 @@ const useSelect$3 = (props, states, ctx) => {
     dropMenuVisible,
     queryChange,
     groupQueryChange,
-    reference: reference2,
+    reference,
     input,
     tooltipRef,
     tags,
@@ -33468,7 +32741,7 @@ const _sfc_main$N = vue_cjs_prod.defineComponent({
       getValueKey,
       navigateOptions,
       dropMenuVisible,
-      reference: reference2,
+      reference,
       input,
       tooltipRef,
       tags,
@@ -33477,7 +32750,7 @@ const _sfc_main$N = vue_cjs_prod.defineComponent({
       queryChange,
       groupQueryChange
     } = useSelect$3(props, states, ctx);
-    const { focus } = useFocus(reference2);
+    const { focus } = useFocus(reference);
     const {
       inputWidth,
       selected,
@@ -33537,27 +32810,21 @@ const _sfc_main$N = vue_cjs_prod.defineComponent({
         currentPlaceholder.value = "";
       }
       addResizeListener(selectWrapper.value);
-      if (reference2.value && reference2.value.$el) {
-        const input2 = reference2.value.input;
+      if (reference.value && reference.value.$el) {
+        const input2 = reference.value.input;
         states.initialInputHeight = input2.getBoundingClientRect().height || getComponentSize(selectSize.value);
       }
       if (props.remote && props.multiple) {
         resetInputHeight();
       }
       vue_cjs_prod.nextTick(() => {
-        if (!reference2.value)
+        const refEl = reference.value && reference.value.$el;
+        if (!refEl)
           return;
-        if (reference2.value.$el) {
-          inputWidth.value = reference2.value.$el.getBoundingClientRect().width;
-        }
+        inputWidth.value = refEl.getBoundingClientRect().width;
         if (ctx.slots.prefix) {
-          const inputChildNodes = reference2.value.$el.childNodes;
-          const input2 = Array.from(inputChildNodes).find((item) => item.tagName === "INPUT");
-          const prefix = reference2.value.$el.querySelector(`.${nsInput.e("prefix")}`);
+          const prefix = refEl.querySelector(`.${nsInput.e("prefix")}`);
           prefixWidth.value = Math.max(prefix.getBoundingClientRect().width + 5, 30);
-          if (states.prefixWidth) {
-            input2.style.paddingLeft = `${Math.max(states.prefixWidth, 30)}px`;
-          }
         }
       });
       setSelected();
@@ -33572,8 +32839,8 @@ const _sfc_main$N = vue_cjs_prod.defineComponent({
       ctx.emit(UPDATE_MODEL_EVENT, "");
     }
     const popperPaneRef = vue_cjs_prod.computed(() => {
-      var _a2, _b2;
-      return (_b2 = (_a2 = tooltipRef.value) == null ? void 0 : _a2.popperRef) == null ? void 0 : _b2.contentRef;
+      var _a, _b;
+      return (_b = (_a = tooltipRef.value) == null ? void 0 : _a.popperRef) == null ? void 0 : _b.contentRef;
     });
     const { compatTeleported } = useDeprecateAppendToBody(COMPONENT_NAME$6, "popperAppendToBody");
     return {
@@ -33628,7 +32895,7 @@ const _sfc_main$N = vue_cjs_prod.defineComponent({
       navigateOptions,
       dropMenuVisible,
       focus,
-      reference: reference2,
+      reference,
       input,
       tooltipRef,
       popperPaneRef,
@@ -33972,10 +33239,10 @@ const _sfc_main$M = vue_cjs_prod.defineComponent({
       const children2 = [];
       if (Array.isArray(node.children)) {
         node.children.forEach((child) => {
-          var _a2;
+          var _a;
           if (child.type && child.type.name === "ElOption" && child.component && child.component.proxy) {
             children2.push(child.component.proxy);
-          } else if ((_a2 = child.children) == null ? void 0 : _a2.length) {
+          } else if ((_a = child.children) == null ? void 0 : _a.length) {
             children2.push(...flattedChildren(child));
           }
         });
@@ -34063,10 +33330,10 @@ const _sfc_main$L = vue_cjs_prod.defineComponent({
     });
     const innerPagesizes = vue_cjs_prod.computed(() => props.pageSizes);
     function handleChange(val) {
-      var _a2;
+      var _a;
       if (val !== innerPageSize.value) {
         innerPageSize.value = val;
-        (_a2 = pagination.handleSizeChange) == null ? void 0 : _a2.call(pagination, Number(val));
+        (_a = pagination.handleSizeChange) == null ? void 0 : _a.call(pagination, Number(val));
       }
     }
     return {
@@ -34116,8 +33383,8 @@ const _sfc_main$K = vue_cjs_prod.defineComponent({
     const { pageCount, disabled, currentPage, changeEvent } = usePagination();
     const userInput = vue_cjs_prod.ref();
     const innerValue = vue_cjs_prod.computed(() => {
-      var _a2;
-      return (_a2 = userInput.value) != null ? _a2 : currentPage == null ? void 0 : currentPage.value;
+      var _a;
+      return (_a = userInput.value) != null ? _a : currentPage == null ? void 0 : currentPage.value;
     });
     function handleInput(val) {
       userInput.value = +val;
@@ -34567,7 +33834,7 @@ var Pagination = vue_cjs_prod.defineComponent({
       handleSizeChange
     });
     return () => {
-      var _a2, _b2;
+      var _a, _b;
       if (!assertValidUsage.value) {
         debugWarn(componentName, t("el.pagination.deprecationWarning"));
         return null;
@@ -34608,7 +33875,7 @@ var Pagination = vue_cjs_prod.defineComponent({
           disabled: props.disabled,
           size: props.small ? "small" : "default"
         }),
-        slot: (_b2 = (_a2 = slots == null ? void 0 : slots.default) == null ? void 0 : _a2.call(slots)) != null ? _b2 : null,
+        slot: (_b = (_a = slots == null ? void 0 : slots.default) == null ? void 0 : _a.call(slots)) != null ? _b : null,
         total: vue_cjs_prod.h(Total, { total: isAbsent(props.total) ? 0 : props.total })
       };
       const components2 = props.layout.split(",").map((item) => item.trim());
@@ -34706,20 +33973,20 @@ const _sfc_main$H = vue_cjs_prod.defineComponent({
     const ns = useNamespace("popconfirm");
     const tooltipRef = vue_cjs_prod.ref();
     const hidePopper = () => {
-      var _a2, _b2;
-      (_b2 = (_a2 = vue_cjs_prod.unref(tooltipRef)) == null ? void 0 : _a2.onClose) == null ? void 0 : _b2.call(_a2);
+      var _a, _b;
+      (_b = (_a = vue_cjs_prod.unref(tooltipRef)) == null ? void 0 : _a.onClose) == null ? void 0 : _b.call(_a);
     };
     const handleCallback = () => {
       hidePopper();
     };
     const confirm = (e) => {
-      var _a2;
-      (_a2 = props.onConfirm) == null ? void 0 : _a2.call(props, e);
+      var _a;
+      (_a = props.onConfirm) == null ? void 0 : _a.call(props, e);
       handleCallback();
     };
     const cancel = (e) => {
-      var _a2;
-      (_a2 = props.onCancel) == null ? void 0 : _a2.call(props, e);
+      var _a;
+      (_a = props.onCancel) == null ? void 0 : _a.call(props, e);
       handleCallback();
     };
     const finalConfirmButtonText = vue_cjs_prod.computed(() => props.confirmButtonText || t("el.popconfirm.confirmButtonText"));
@@ -34869,8 +34136,8 @@ const _sfc_main$G = vue_cjs_prod.defineComponent({
     const ns = useNamespace("popover");
     const tooltipRef = vue_cjs_prod.ref(null);
     const popperRef = vue_cjs_prod.computed(() => {
-      var _a2;
-      return (_a2 = vue_cjs_prod.unref(tooltipRef)) == null ? void 0 : _a2.popperRef;
+      var _a;
+      return (_a = vue_cjs_prod.unref(tooltipRef)) == null ? void 0 : _a.popperRef;
     });
     const width = vue_cjs_prod.computed(() => {
       if (isString(props.width)) {
@@ -34894,8 +34161,8 @@ const _sfc_main$G = vue_cjs_prod.defineComponent({
     });
     const { compatTeleported } = useDeprecateAppendToBody(COMPONENT_NAME$4, "appendToBody");
     const hide2 = () => {
-      var _a2;
-      (_a2 = tooltipRef.value) == null ? void 0 : _a2.hide();
+      var _a;
+      (_a = tooltipRef.value) == null ? void 0 : _a.hide();
     };
     const beforeEnter = () => {
       emit("before-enter");
@@ -35144,7 +34411,7 @@ const _sfc_main$F = vue_cjs_prod.defineComponent({
     });
     const content = vue_cjs_prod.computed(() => props.format(props.percentage));
     const getCurrentColor = (percentage) => {
-      var _a2;
+      var _a;
       const { color } = props;
       if (typeof color === "function") {
         return color(percentage);
@@ -35166,7 +34433,7 @@ const _sfc_main$F = vue_cjs_prod.defineComponent({
           if (color2.percentage > percentage)
             return color2.color;
         }
-        return (_a2 = colors[colors.length - 1]) == null ? void 0 : _a2.color;
+        return (_a = colors[colors.length - 1]) == null ? void 0 : _a.color;
       }
     };
     const slotData = vue_cjs_prod.computed(() => {
@@ -35737,8 +35004,8 @@ const Row = vue_cjs_prod.defineComponent({
       "style": style.value
     }, {
       default: () => {
-        var _a2;
-        return [(_a2 = slots.default) == null ? void 0 : _a2.call(slots)];
+        var _a;
+        return [(_a = slots.default) == null ? void 0 : _a.call(slots)];
       }
     });
   }
@@ -35937,7 +35204,7 @@ const scrollbarSize = {
   type: Number,
   default: 6
 };
-const startGap = { type: Number, default: 2 };
+const startGap = { type: Number, default: 0 };
 const endGap = { type: Number, default: 2 };
 const virtualizedGridProps = buildProps(__spreadValues({
   columnCache: cache,
@@ -35946,6 +35213,10 @@ const virtualizedGridProps = buildProps(__spreadValues({
   estimatedRowHeight: estimatedItemSize,
   initScrollLeft: initScrollOffset,
   initScrollTop: initScrollOffset,
+  itemKey: {
+    type: definePropType(Function),
+    default: ({ columnIndex, rowIndex }) => `${rowIndex}:${columnIndex}`
+  },
   rowCache: cache,
   rowHeight: itemSize,
   totalColumn: total,
@@ -36252,8 +35523,8 @@ const createList = ({
         atEndEdge: vue_cjs_prod.computed(() => states.value.scrollOffset >= estimatedTotalSize.value),
         layout: vue_cjs_prod.computed(() => props.layout)
       }, (offset2) => {
-        var _a2, _b2;
-        (_b2 = (_a2 = scrollbarRef.value).onMouseUp) == null ? void 0 : _b2.call(_a2);
+        var _a, _b;
+        (_b = (_a = scrollbarRef.value).onMouseUp) == null ? void 0 : _b.call(_a);
         scrollTo(Math.min(states.value.scrollOffset + offset2, estimatedTotalSize.value - clientSize.value));
       });
       const emitEvents = () => {
@@ -36433,7 +35704,7 @@ const createList = ({
       return api;
     },
     render(ctx) {
-      var _a2;
+      var _a;
       const {
         $slots,
         className,
@@ -36454,13 +35725,13 @@ const createList = ({
         windowStyle,
         ns
       } = ctx;
-      const [start2, end2] = itemsToRender;
+      const [start, end] = itemsToRender;
       const Container2 = vue_cjs_prod.resolveDynamicComponent(containerElement);
       const Inner = vue_cjs_prod.resolveDynamicComponent(innerElement);
       const children = [];
       if (total2 > 0) {
-        for (let i = start2; i <= end2; i++) {
-          children.push((_a2 = $slots.default) == null ? void 0 : _a2.call($slots, {
+        for (let i = start; i <= end; i++) {
+          children.push((_a = $slots.default) == null ? void 0 : _a.call($slots, {
             data,
             key: i,
             index: i,
@@ -36690,11 +35961,11 @@ const DynamicSizeList = createList$1({
       lastVisitedIndex: -1
     };
     cache2.clearCacheAfterIndex = (index2, forceUpdate = true) => {
-      var _a2, _b2;
+      var _a, _b;
       cache2.lastVisitedIndex = Math.min(cache2.lastVisitedIndex, index2 - 1);
-      (_a2 = instance.exposed) == null ? void 0 : _a2.getItemStyleCache(-1);
+      (_a = instance.exposed) == null ? void 0 : _a.getItemStyleCache(-1);
       if (forceUpdate) {
-        (_b2 = instance.proxy) == null ? void 0 : _b2.$forceUpdate();
+        (_b = instance.proxy) == null ? void 0 : _b.$forceUpdate();
       }
     };
     return cache2;
@@ -36819,7 +36090,7 @@ const createGrid = ({
       const estimatedTotalHeight = vue_cjs_prod.computed(() => getEstimatedTotalHeight2(props, vue_cjs_prod.unref(cache2)));
       const estimatedTotalWidth = vue_cjs_prod.computed(() => getEstimatedTotalWidth2(props, vue_cjs_prod.unref(cache2)));
       const windowStyle = vue_cjs_prod.computed(() => {
-        var _a2;
+        var _a;
         return [
           {
             position: "relative",
@@ -36832,7 +36103,7 @@ const createGrid = ({
             height: isNumber(props.height) ? `${props.height}px` : props.height,
             width: isNumber(props.width) ? `${props.width}px` : props.width
           },
-          (_a2 = props.style) != null ? _a2 : {}
+          (_a = props.style) != null ? _a : {}
         ];
       });
       const innerStyle = vue_cjs_prod.computed(() => {
@@ -36936,8 +36207,8 @@ const createGrid = ({
         atYStartEdge: vue_cjs_prod.computed(() => states.value.scrollTop <= 0),
         atYEndEdge: vue_cjs_prod.computed(() => states.value.scrollTop >= estimatedTotalHeight.value)
       }, (x2, y) => {
-        var _a2, _b2, _c, _d;
-        (_b2 = (_a2 = hScrollbar.value) == null ? void 0 : _a2.onMouseUp) == null ? void 0 : _b2.call(_a2);
+        var _a, _b, _c, _d;
+        (_b = (_a = hScrollbar.value) == null ? void 0 : _a.onMouseUp) == null ? void 0 : _b.call(_a);
         (_d = (_c = hScrollbar.value) == null ? void 0 : _c.onMouseUp) == null ? void 0 : _d.call(_c);
         const width = vue_cjs_prod.unref(parsedWidth);
         const height = vue_cjs_prod.unref(parsedHeight);
@@ -36987,16 +36258,16 @@ const createGrid = ({
         if (hasOwn(itemStyleCache, key)) {
           return itemStyleCache[key];
         } else {
-          const [, left2] = getColumnPosition(props, columnIndex, vue_cjs_prod.unref(cache2));
+          const [, left] = getColumnPosition(props, columnIndex, vue_cjs_prod.unref(cache2));
           const _cache = vue_cjs_prod.unref(cache2);
           const rtl = isRTL(direction2);
-          const [height, top2] = getRowPosition(props, rowIndex, _cache);
+          const [height, top] = getRowPosition(props, rowIndex, _cache);
           const [width] = getColumnPosition(props, columnIndex, _cache);
           itemStyleCache[key] = {
             position: "absolute",
-            left: rtl ? void 0 : `${left2}px`,
-            right: rtl ? `${left2}px` : void 0,
-            top: `${top2}px`,
+            left: rtl ? void 0 : `${left}px`,
+            right: rtl ? `${left}px` : void 0,
+            top: `${top}px`,
             height: `${height}px`,
             width: `${width}px`
           };
@@ -37039,13 +36310,17 @@ const createGrid = ({
           windowElement.scrollTop = Math.max(0, scrollTop);
         }
       };
+      const { resetAfterColumnIndex, resetAfterRowIndex, resetAfter } = instance.proxy;
       expose({
         windowRef,
         innerRef,
         getItemStyleCache,
         scrollTo,
         scrollToItem,
-        states
+        states,
+        resetAfterColumnIndex,
+        resetAfterRowIndex,
+        resetAfter
       });
       const renderScrollbars = () => {
         const {
@@ -37094,18 +36369,18 @@ const createGrid = ({
         };
       };
       const renderItems = () => {
-        var _a2;
+        var _a;
         const [columnStart, columnEnd] = vue_cjs_prod.unref(columnsToRender);
         const [rowStart, rowEnd] = vue_cjs_prod.unref(rowsToRender);
-        const { data, totalColumn, totalRow, useIsScrolling } = props;
+        const { data, totalColumn, totalRow, useIsScrolling, itemKey } = props;
         const children = [];
         if (totalRow > 0 && totalColumn > 0) {
           for (let row = rowStart; row <= rowEnd; row++) {
             for (let column = columnStart; column <= columnEnd; column++) {
-              children.push((_a2 = slots.default) == null ? void 0 : _a2.call(slots, {
+              children.push((_a = slots.default) == null ? void 0 : _a.call(slots, {
                 columnIndex: column,
                 data,
-                key: column,
+                key: itemKey({ columnIndex: column, data, rowIndex: row }),
                 isScrolling: useIsScrolling ? vue_cjs_prod.unref(states).isScrolling : void 0,
                 style: getItemStyle(row, column),
                 rowIndex: row
@@ -37245,14 +36520,14 @@ createGrid$1({
   },
   getColumnStartIndexForOffset: ({ columnWidth, totalColumn }, scrollLeft) => Math.max(0, Math.min(totalColumn - 1, Math.floor(scrollLeft / columnWidth))),
   getColumnStopIndexForStartIndex: ({ columnWidth, totalColumn, width }, startIndex, scrollLeft) => {
-    const left2 = startIndex * columnWidth;
-    const visibleColumnsCount = Math.ceil((width + scrollLeft - left2) / columnWidth);
+    const left = startIndex * columnWidth;
+    const visibleColumnsCount = Math.ceil((width + scrollLeft - left) / columnWidth);
     return Math.max(0, Math.min(totalColumn - 1, startIndex + visibleColumnsCount - 1));
   },
   getRowStartIndexForOffset: ({ rowHeight, totalRow }, scrollTop) => Math.max(0, Math.min(totalRow - 1, Math.floor(scrollTop / rowHeight))),
   getRowStopIndexForStartIndex: ({ rowHeight, totalRow, height }, startIndex, scrollTop) => {
-    const top2 = startIndex * rowHeight;
-    const numVisibleRows = Math.ceil((height + scrollTop - top2) / rowHeight);
+    const top = startIndex * rowHeight;
+    const numVisibleRows = Math.ceil((height + scrollTop - top) / rowHeight);
     return Math.max(0, Math.min(totalRow - 1, startIndex + numVisibleRows - 1));
   },
   initCache: () => void 0,
@@ -37438,6 +36713,7 @@ createGrid$1({
   },
   injectToInstance: (instance, cache2) => {
     const resetAfter = ({ columnIndex, rowIndex }, forceUpdate) => {
+      var _a, _b;
       forceUpdate = isUndefined(forceUpdate) ? true : forceUpdate;
       if (isNumber(columnIndex)) {
         cache2.value.lastVisitedColumnIndex = Math.min(cache2.value.lastVisitedColumnIndex, columnIndex - 1);
@@ -37445,8 +36721,9 @@ createGrid$1({
       if (isNumber(rowIndex)) {
         cache2.value.lastVisitedRowIndex = Math.min(cache2.value.lastVisitedRowIndex, rowIndex - 1);
       }
+      (_a = instance.exposed) == null ? void 0 : _a.getItemStyleCache.value(-1, null, null);
       if (forceUpdate)
-        instance.update();
+        (_b = instance.proxy) == null ? void 0 : _b.$forceUpdate();
     };
     const resetAfterColumnIndex = (columnIndex, forceUpdate) => {
       resetAfter({
@@ -37478,7 +36755,7 @@ createGrid$1({
     };
     return cache2;
   },
-  clearCache: true,
+  clearCache: false,
   validateProps: ({ columnWidth, rowHeight }) => {
   }
 });
@@ -37695,7 +36972,7 @@ const _sfc_main$A = vue_cjs_prod.defineComponent({
         itemSize: (idx) => cachedHeights.value[idx]
       };
     });
-    const contains2 = (arr = [], target) => {
+    const contains = (arr = [], target) => {
       const {
         props: { valueKey }
       } = select;
@@ -37717,7 +36994,7 @@ const _sfc_main$A = vue_cjs_prod.defineComponent({
     const isItemSelected = (modelValue, target) => {
       const { valueKey } = select.props;
       if (select.props.multiple) {
-        return contains2(modelValue, get(target, valueKey));
+        return contains(modelValue, get(target, valueKey));
       }
       return isEqual2(modelValue, get(target, valueKey));
     };
@@ -37752,7 +37029,7 @@ const _sfc_main$A = vue_cjs_prod.defineComponent({
     };
   },
   render(_ctx, _cache) {
-    var _a2;
+    var _a;
     const {
       $slots,
       data,
@@ -37780,7 +37057,7 @@ const _sfc_main$A = vue_cjs_prod.defineComponent({
         style: {
           width: `${width}px`
         }
-      }, (_a2 = $slots.empty) == null ? void 0 : _a2.call($slots));
+      }, (_a = $slots.empty) == null ? void 0 : _a.call($slots));
     }
     const ListItem = vue_cjs_prod.withCtx((scoped) => {
       const { index: index2, data: data2 } = scoped;
@@ -37885,7 +37162,7 @@ function useAllowCreate(props, states) {
     if (!enableAllowCreateMode.value || !option || !option.created || option.created && props.reserveKeyword && states.inputValue === option.label) {
       return;
     }
-    const idx = states.createdOptions.findIndex((it) => it.value === option.value);
+    const idx = states.createdOptions.findIndex((it2) => it2.value === option.value);
     if (~idx) {
       states.createdOptions.splice(idx, 1);
       createOptionCount.value--;
@@ -37993,7 +37270,7 @@ const useSelect$1 = (props, emit) => {
   const controlRef = vue_cjs_prod.ref(null);
   const inputRef = vue_cjs_prod.ref(null);
   const menuRef = vue_cjs_prod.ref(null);
-  const popper2 = vue_cjs_prod.ref(null);
+  const popper = vue_cjs_prod.ref(null);
   const selectRef = vue_cjs_prod.ref(null);
   const selectionRef = vue_cjs_prod.ref(null);
   const calculatorRef = vue_cjs_prod.ref(null);
@@ -38015,7 +37292,7 @@ const useSelect$1 = (props, emit) => {
   const iconReverse = vue_cjs_prod.computed(() => iconComponent.value && nsSelectV2.is("reverse", expanded.value));
   const validateState = vue_cjs_prod.computed(() => (elFormItem == null ? void 0 : elFormItem.validateState) || "");
   const validateIcon = vue_cjs_prod.computed(() => ValidateComponentsMap[validateState.value]);
-  const debounce2 = vue_cjs_prod.computed(() => props.remote ? 300 : 0);
+  const debounce$1 = vue_cjs_prod.computed(() => props.remote ? 300 : 0);
   const emptyText = vue_cjs_prod.computed(() => {
     const options = filteredOptions.value;
     if (props.loading) {
@@ -38068,8 +37345,8 @@ const useSelect$1 = (props, emit) => {
     return states.selectWidth - paddingRight - paddingLeft - TAG_BASE_WIDTH[size];
   });
   const calculatePopperSize = () => {
-    var _a2, _b2, _c;
-    popperSize.value = ((_c = (_b2 = (_a2 = selectRef.value) == null ? void 0 : _a2.getBoundingClientRect) == null ? void 0 : _b2.call(_a2)) == null ? void 0 : _c.width) || 200;
+    var _a, _b, _c;
+    popperSize.value = ((_c = (_b = (_a = selectRef.value) == null ? void 0 : _a.getBoundingClientRect) == null ? void 0 : _b.call(_a)) == null ? void 0 : _c.width) || 200;
   };
   const inputWrapperStyle = vue_cjs_prod.computed(() => {
     return {
@@ -38087,8 +37364,8 @@ const useSelect$1 = (props, emit) => {
     return props.multiple ? _placeholder : states.selectedLabel || _placeholder;
   });
   const popperRef = vue_cjs_prod.computed(() => {
-    var _a2, _b2;
-    return (_b2 = (_a2 = popper2.value) == null ? void 0 : _a2.popperRef) == null ? void 0 : _b2.contentRef;
+    var _a, _b;
+    return (_b = (_a = popper.value) == null ? void 0 : _a.popperRef) == null ? void 0 : _b.contentRef;
   });
   const indexRef = vue_cjs_prod.computed(() => {
     if (props.multiple) {
@@ -38118,9 +37395,9 @@ const useSelect$1 = (props, emit) => {
     handleCompositionEnd
   } = useInput((e) => onInput(e));
   const focusAndUpdatePopup = () => {
-    var _a2, _b2, _c;
-    (_b2 = (_a2 = inputRef.value).focus) == null ? void 0 : _b2.call(_a2);
-    (_c = popper2.value) == null ? void 0 : _c.updatePopper();
+    var _a, _b, _c;
+    (_b = (_a = inputRef.value).focus) == null ? void 0 : _b.call(_a);
+    (_c = popper.value) == null ? void 0 : _c.updatePopper();
   };
   const toggleMenu = () => {
     if (props.automaticDropdown)
@@ -38129,9 +37406,9 @@ const useSelect$1 = (props, emit) => {
       if (states.isComposing)
         states.softFocus = true;
       return vue_cjs_prod.nextTick(() => {
-        var _a2, _b2;
+        var _a, _b;
         expanded.value = !expanded.value;
-        (_b2 = (_a2 = inputRef.value) == null ? void 0 : _a2.focus) == null ? void 0 : _b2.call(_a2);
+        (_b = (_a = inputRef.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
       });
     }
   };
@@ -38144,7 +37421,7 @@ const useSelect$1 = (props, emit) => {
       createNewOption(states.inputValue);
     });
   };
-  const debouncedOnInputChange = debounce$1(onInputChange, debounce2.value);
+  const debouncedOnInputChange = debounce(onInputChange, debounce$1.value);
   const handleQueryChange = (val) => {
     if (states.previousQuery === val) {
       return;
@@ -38192,21 +37469,21 @@ const useSelect$1 = (props, emit) => {
       return;
     }
     return vue_cjs_prod.nextTick(() => {
-      var _a2, _b2;
+      var _a, _b;
       if (!inputRef.value)
         return;
       const selection = selectionRef.value;
       selectRef.value.height = selection.offsetHeight;
       if (expanded.value && emptyText.value !== false) {
-        (_b2 = (_a2 = popper2.value) == null ? void 0 : _a2.updatePopper) == null ? void 0 : _b2.call(_a2);
+        (_b = (_a = popper.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
       }
     });
   };
   const handleResize = () => {
-    var _a2, _b2;
+    var _a, _b;
     resetInputWidth();
     calculatePopperSize();
-    (_b2 = (_a2 = popper2.value) == null ? void 0 : _a2.updatePopper) == null ? void 0 : _b2.call(_a2);
+    (_b = (_a = popper.value) == null ? void 0 : _a.updatePopper) == null ? void 0 : _b.call(_a);
     if (props.multiple) {
       return resetInputHeight();
     }
@@ -38218,7 +37495,7 @@ const useSelect$1 = (props, emit) => {
     }
   };
   const onSelect = (option, idx, byClick = true) => {
-    var _a2, _b2;
+    var _a, _b;
     if (props.multiple) {
       let selectedOptions = props.modelValue.slice();
       const index2 = getValueIndex(selectedOptions, getValueKey(option));
@@ -38242,7 +37519,7 @@ const useSelect$1 = (props, emit) => {
         states.inputLength = 20;
       }
       if (props.filterable && !props.reserveKeyword) {
-        (_b2 = (_a2 = inputRef.value).focus) == null ? void 0 : _b2.call(_a2);
+        (_b = (_a = inputRef.value).focus) == null ? void 0 : _b.call(_a);
         onUpdateInputValue("");
       }
       if (props.filterable) {
@@ -38294,8 +37571,8 @@ const useSelect$1 = (props, emit) => {
   const handleBlur = () => {
     states.softFocus = false;
     return vue_cjs_prod.nextTick(() => {
-      var _a2, _b2;
-      (_b2 = (_a2 = inputRef.value) == null ? void 0 : _a2.blur) == null ? void 0 : _b2.call(_a2);
+      var _a, _b;
+      (_b = (_a = inputRef.value) == null ? void 0 : _a.blur) == null ? void 0 : _b.call(_a);
       if (calculatorRef.value) {
         states.calculatedWidth = calculatorRef.value.getBoundingClientRect().width;
       }
@@ -38393,10 +37670,10 @@ const useSelect$1 = (props, emit) => {
     states.hoveringIndex = -1;
   };
   const setSoftFocus = () => {
-    var _a2;
+    var _a;
     const _input = inputRef.value;
     if (_input) {
-      (_a2 = _input.focus) == null ? void 0 : _a2.call(_input);
+      (_a = _input.focus) == null ? void 0 : _a.call(_input);
     }
   };
   const onInput = (event) => {
@@ -38471,22 +37748,22 @@ const useSelect$1 = (props, emit) => {
     calculatePopperSize();
   };
   vue_cjs_prod.watch(expanded, (val) => {
-    var _a2, _b2;
+    var _a, _b;
     emit("visible-change", val);
     if (val) {
-      (_b2 = (_a2 = popper2.value).update) == null ? void 0 : _b2.call(_a2);
+      (_b = (_a = popper.value).update) == null ? void 0 : _b.call(_a);
     } else {
       states.displayInputValue = "";
       createNewOption("");
     }
   });
   vue_cjs_prod.watch(() => props.modelValue, (val, oldVal) => {
-    var _a2;
+    var _a;
     if (!val || val.toString() !== states.previousValue) {
       initStates();
     }
     if (!isEqual$1(val, oldVal)) {
-      (_a2 = elFormItem == null ? void 0 : elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn());
+      (_a = elFormItem == null ? void 0 : elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
     }
   }, {
     deep: true
@@ -38515,7 +37792,7 @@ const useSelect$1 = (props, emit) => {
     expanded,
     emptyText,
     popupHeight,
-    debounce: debounce2,
+    debounce: debounce$1,
     filteredOptions,
     iconComponent,
     iconReverse,
@@ -38535,7 +37812,7 @@ const useSelect$1 = (props, emit) => {
     controlRef,
     inputRef,
     menuRef,
-    popper: popper2,
+    popper,
     selectRef,
     selectionRef,
     popperRef,
@@ -38640,7 +37917,7 @@ function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
       onHide: _cache[23] || (_cache[23] = ($event) => _ctx.states.inputValue = _ctx.states.displayInputValue)
     }, {
       default: vue_cjs_prod.withCtx(() => {
-        var _a2;
+        var _a;
         return [
           vue_cjs_prod.createElementVNode("div", {
             ref: "selectionRef",
@@ -38664,21 +37941,21 @@ function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
                 class: vue_cjs_prod.normalizeClass(_ctx.nsSelectV2.e("selected-item"))
               }, [
                 vue_cjs_prod.createVNode(_component_el_tag, {
-                  closable: !_ctx.selectDisabled && !((_a2 = _ctx.states.cachedOptions[0]) == null ? void 0 : _a2.disable),
+                  closable: !_ctx.selectDisabled && !((_a = _ctx.states.cachedOptions[0]) == null ? void 0 : _a.disable),
                   size: _ctx.collapseTagSize,
                   type: "info",
                   "disable-transitions": "",
                   onClose: _cache[0] || (_cache[0] = ($event) => _ctx.deleteTag($event, _ctx.states.cachedOptions[0]))
                 }, {
                   default: vue_cjs_prod.withCtx(() => {
-                    var _a22;
+                    var _a2;
                     return [
                       vue_cjs_prod.createElementVNode("span", {
                         class: vue_cjs_prod.normalizeClass(_ctx.nsSelectV2.e("tags-text")),
                         style: vue_cjs_prod.normalizeStyle({
                           maxWidth: `${_ctx.tagMaxWidth}px`
                         })
-                      }, vue_cjs_prod.toDisplayString((_a22 = _ctx.states.cachedOptions[0]) == null ? void 0 : _a22.label), 7)
+                      }, vue_cjs_prod.toDisplayString((_a2 = _ctx.states.cachedOptions[0]) == null ? void 0 : _a2.label), 7)
                     ];
                   }),
                   _: 1
@@ -39064,10 +38341,10 @@ const useTooltip = (props, formatTooltip, showTooltip) => {
   const formatValue = vue_cjs_prod.computed(() => {
     return enableFormat.value && formatTooltip.value(props.modelValue) || props.modelValue;
   });
-  const displayTooltip = debounce$1(() => {
+  const displayTooltip = debounce(() => {
     showTooltip.value && (tooltipVisible.value = true);
   }, 50);
-  const hideTooltip = debounce$1(() => {
+  const hideTooltip = debounce(() => {
     showTooltip.value && (tooltipVisible.value = false);
   }, 50);
   return {
@@ -39114,11 +38391,11 @@ const useSliderButton = (props, initData, emit) => {
       return;
     event.preventDefault();
     onDragStart(event);
-    on(window, "mousemove", onDragging);
-    on(window, "touchmove", onDragging);
-    on(window, "mouseup", onDragEnd);
-    on(window, "touchend", onDragEnd);
-    on(window, "contextmenu", onDragEnd);
+    on$1(window, "mousemove", onDragging);
+    on$1(window, "touchmove", onDragging);
+    on$1(window, "mouseup", onDragEnd);
+    on$1(window, "touchend", onDragEnd);
+    on$1(window, "contextmenu", onDragEnd);
   };
   const onLeftKeyDown = () => {
     if (disabled.value)
@@ -39363,10 +38640,10 @@ const _sfc_main$v = vue_cjs_prod.defineComponent({
     };
   },
   render() {
-    var _a2;
+    var _a;
     return vue_cjs_prod.h("div", {
       class: this.ns.e("marks-text"),
-      style: (_a2 = this.mark) == null ? void 0 : _a2.style
+      style: (_a = this.mark) == null ? void 0 : _a.style
     }, this.label);
   }
 });
@@ -39694,7 +38971,7 @@ const useWatch = (props, initData, minValue, maxValue, emit, elFormItem) => {
     }
   };
   const setValues = () => {
-    var _a2, _b2;
+    var _a, _b;
     if (props.min > props.max) {
       throwError("Slider", "min should not be greater than max.");
       return;
@@ -39713,7 +38990,7 @@ const useWatch = (props, initData, minValue, maxValue, emit, elFormItem) => {
         initData.firstValue = val[0];
         initData.secondValue = val[1];
         if (valueChanged()) {
-          (_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn());
+          (_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
           initData.oldValue = val.slice();
         }
       }
@@ -39725,7 +39002,7 @@ const useWatch = (props, initData, minValue, maxValue, emit, elFormItem) => {
       } else {
         initData.firstValue = val;
         if (valueChanged()) {
-          (_b2 = elFormItem.validate) == null ? void 0 : _b2.call(elFormItem, "change").catch((err) => debugWarn());
+          (_b = elFormItem.validate) == null ? void 0 : _b.call(elFormItem, "change").catch((err) => debugWarn());
           initData.oldValue = val;
         }
       }
@@ -39774,7 +39051,7 @@ const useLifecycle = (props, initData, resetSize) => {
     }
     sliderWrapper.value.setAttribute("aria-valuetext", valuetext);
     sliderWrapper.value.setAttribute("aria-label", props.label ? props.label : `slider between ${props.min} and ${props.max}`);
-    on(window, "resize", resetSize);
+    on$1(window, "resize", resetSize);
     await vue_cjs_prod.nextTick();
     resetSize();
   });
@@ -40021,10 +39298,10 @@ var Space = vue_cjs_prod.defineComponent({
   setup(props, { slots }) {
     const { classes, containerStyle, itemStyle } = useSpace(props);
     return () => {
-      var _a2;
+      var _a;
       const { spacer, prefixCls, direction: direction2 } = props;
       const children = vue_cjs_prod.renderSlot(slots, "default", { key: 0 }, () => []);
-      if (((_a2 = children.children) != null ? _a2 : []).length === 0)
+      if (((_a = children.children) != null ? _a : []).length === 0)
         return null;
       if (isArray(children.children)) {
         let extractedChildren = [];
@@ -40206,8 +39483,8 @@ const _sfc_main$r = vue_cjs_prod.defineComponent({
       return parent.steps.value.length;
     });
     const isLast = vue_cjs_prod.computed(() => {
-      var _a2;
-      return ((_a2 = parent.steps.value[stepsCount.value - 1]) == null ? void 0 : _a2.uid) === currentInstance.uid;
+      var _a;
+      return ((_a = parent.steps.value[stepsCount.value - 1]) == null ? void 0 : _a.uid) === currentInstance.uid;
     });
     const space = vue_cjs_prod.computed(() => {
       return isSimple.value ? "" : parent.props.space;
@@ -40480,13 +39757,13 @@ const _sfc_main$q = vue_cjs_prod.defineComponent({
       emit(INPUT_EVENT, props.inactiveValue);
     }
     vue_cjs_prod.watch(checked, () => {
-      var _a2;
+      var _a;
       input.value.checked = checked.value;
       if (props.activeColor || props.inactiveColor) {
         setBackgroundColor();
       }
       if (props.validateEvent) {
-        (_a2 = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a2.call(formItem, "change").catch((err) => debugWarn());
+        (_a = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a.call(formItem, "change").catch((err) => debugWarn());
       }
     });
     const handleChange = () => {
@@ -40536,8 +39813,8 @@ const _sfc_main$q = vue_cjs_prod.defineComponent({
       coreEl.children[0].style.color = newColor;
     };
     const focus = () => {
-      var _a2, _b2;
-      (_b2 = (_a2 = input.value) == null ? void 0 : _a2.focus) == null ? void 0 : _b2.call(_a2);
+      var _a, _b;
+      (_b = (_a = input.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
     };
     vue_cjs_prod.onMounted(() => {
       if (props.activeColor || props.inactiveColor || props.borderColor) {
@@ -40792,11 +40069,11 @@ const orderBy = function(array4, sortKey, reverse, sortMethod, sortBy) {
       key: getKey ? getKey(value, index2) : null
     };
   }).sort((a2, b2) => {
-    let order2 = compare(a2, b2);
-    if (!order2) {
-      order2 = a2.index - b2.index;
+    let order = compare(a2, b2);
+    if (!order) {
+      order = a2.index - b2.index;
     }
-    return order2 * +reverse;
+    return order * +reverse;
   }).map((item) => item.value);
 };
 const getColumnById = function(table, columnId) {
@@ -40997,7 +40274,7 @@ function createTablePopper(trigger, popperContent, popperOptions2, tooltipEffect
   const content = renderContent();
   const arrow2 = renderArrow();
   content.appendChild(arrow2);
-  popperInstance = createPopper(trigger, content, __spreadValues({
+  popperInstance = yn(trigger, content, __spreadValues({
     modifiers: [
       {
         name: "offset",
@@ -41014,23 +40291,23 @@ function createTablePopper(trigger, popperContent, popperOptions2, tooltipEffect
       }
     ]
   }, popperOptions2));
-  on(trigger, "mouseenter", showPopper);
-  on(trigger, "mouseleave", removePopper);
+  on$1(trigger, "mouseenter", showPopper);
+  on$1(trigger, "mouseleave", removePopper);
   return popperInstance;
 }
 const isFixedColumn = (index2, fixed, store, realColumns) => {
-  let start2 = 0;
+  let start = 0;
   let after = index2;
   if (realColumns) {
     if (realColumns[index2].colSpan > 1) {
       return {};
     }
     for (let i = 0; i < index2; i++) {
-      start2 += realColumns[i].colSpan;
+      start += realColumns[i].colSpan;
     }
-    after = start2 + realColumns[index2].colSpan - 1;
+    after = start + realColumns[index2].colSpan - 1;
   } else {
-    start2 = index2;
+    start = index2;
   }
   let fixedLayout;
   const columns = store.states.columns;
@@ -41041,32 +40318,32 @@ const isFixedColumn = (index2, fixed, store, realColumns) => {
       }
       break;
     case "right":
-      if (start2 >= columns.value.length - store.states.rightFixedLeafColumnsLength.value) {
+      if (start >= columns.value.length - store.states.rightFixedLeafColumnsLength.value) {
         fixedLayout = "right";
       }
       break;
     default:
       if (after < store.states.fixedLeafColumnsLength.value) {
         fixedLayout = "left";
-      } else if (start2 >= columns.value.length - store.states.rightFixedLeafColumnsLength.value) {
+      } else if (start >= columns.value.length - store.states.rightFixedLeafColumnsLength.value) {
         fixedLayout = "right";
       }
   }
   return fixedLayout ? {
     direction: fixedLayout,
-    start: start2,
+    start,
     after
   } : {};
 };
 const getFixedColumnsClass = (namespace, index2, fixed, store, realColumns) => {
   const classes = [];
-  const { direction: direction2, start: start2 } = isFixedColumn(index2, fixed, store, realColumns);
+  const { direction: direction2, start } = isFixedColumn(index2, fixed, store, realColumns);
   if (direction2) {
     const isLeft = direction2 === "left";
     classes.push(`${namespace}-fixed-column--${direction2}`);
-    if (isLeft && start2 === store.states.fixedLeafColumnsLength.value - 1) {
+    if (isLeft && start === store.states.fixedLeafColumnsLength.value - 1) {
       classes.push("is-last-column");
-    } else if (!isLeft && start2 === store.states.columns.value.length - store.states.rightFixedLeafColumnsLength.value) {
+    } else if (!isLeft && start === store.states.columns.value.length - store.states.rightFixedLeafColumnsLength.value) {
       classes.push("is-first-column");
     }
   }
@@ -41076,7 +40353,7 @@ function getOffset(offset2, column) {
   return offset2 + (column.realWidth === null || Number.isNaN(column.realWidth) ? Number(column.width) : column.realWidth);
 }
 const getFixedColumnOffset = (index2, fixed, store, realColumns) => {
-  const { direction: direction2, start: start2 = 0 } = isFixedColumn(index2, fixed, store, realColumns);
+  const { direction: direction2, start = 0 } = isFixedColumn(index2, fixed, store, realColumns);
   if (!direction2) {
     return;
   }
@@ -41086,7 +40363,7 @@ const getFixedColumnOffset = (index2, fixed, store, realColumns) => {
   if (isLeft) {
     styles.left = columns.slice(0, index2).reduce(getOffset, 0);
   } else {
-    styles.right = columns.slice(start2 + 1).reverse().reduce(getOffset, 0);
+    styles.right = columns.slice(start + 1).reverse().reduce(getOffset, 0);
   }
   return styles;
 };
@@ -41278,7 +40555,7 @@ function useTree$2(watcherData) {
     }, childrenColumnName.value, lazyColumnIdentifier.value);
     return res;
   };
-  const updateTreeData = (ifChangeExpandRowKeys = false, ifExpandAll = ((_a2) => (_a2 = instance.store) == null ? void 0 : _a2.states.defaultExpandAll.value)()) => {
+  const updateTreeData = (ifChangeExpandRowKeys = false, ifExpandAll = ((_a) => (_a = instance.store) == null ? void 0 : _a.states.defaultExpandAll.value)()) => {
     var _a2;
     const nested = normalizedData.value;
     const normalizedLazyNode_ = normalizedLazyNode.value;
@@ -41432,9 +40709,9 @@ const doFlattenColumns = (columns) => {
   return result;
 };
 function useWatcher$1() {
-  var _a2;
+  var _a;
   const instance = vue_cjs_prod.getCurrentInstance();
-  const { size: tableSize } = vue_cjs_prod.toRefs((_a2 = instance.proxy) == null ? void 0 : _a2.$props);
+  const { size: tableSize } = vue_cjs_prod.toRefs((_a = instance.proxy) == null ? void 0 : _a.$props);
   const rowKey = vue_cjs_prod.ref(null);
   const data = vue_cjs_prod.ref([]);
   const _data = vue_cjs_prod.ref([]);
@@ -41541,12 +40818,12 @@ function useWatcher$1() {
     }
   };
   const _toggleAllSelection = () => {
-    var _a22, _b2;
+    var _a2, _b;
     const value = selectOnIndeterminate.value ? !isAllSelected.value : !(isAllSelected.value || selection.value.length);
     isAllSelected.value = value;
     let selectionChanged = false;
     let childrenCount = 0;
-    const rowKey2 = (_b2 = (_a22 = instance == null ? void 0 : instance.store) == null ? void 0 : _a22.states) == null ? void 0 : _b2.rowKey.value;
+    const rowKey2 = (_b = (_a2 = instance == null ? void 0 : instance.store) == null ? void 0 : _a2.states) == null ? void 0 : _b.rowKey.value;
     data.value.forEach((row, index2) => {
       const rowIndex = index2 + childrenCount;
       if (selectable.value) {
@@ -41576,8 +40853,8 @@ function useWatcher$1() {
     });
   };
   const updateAllSelected = () => {
-    var _a22, _b2, _c;
-    if (((_a22 = data.value) == null ? void 0 : _a22.length) === 0) {
+    var _a2, _b, _c;
+    if (((_a2 = data.value) == null ? void 0 : _a2.length) === 0) {
       isAllSelected.value = false;
       return;
     }
@@ -41596,7 +40873,7 @@ function useWatcher$1() {
     let selectedCount = 0;
     let childrenCount = 0;
     for (let i = 0, j = (data.value || []).length; i < j; i++) {
-      const keyProp = (_c = (_b2 = instance == null ? void 0 : instance.store) == null ? void 0 : _b2.states) == null ? void 0 : _c.rowKey.value;
+      const keyProp = (_c = (_b = instance == null ? void 0 : instance.store) == null ? void 0 : _b.states) == null ? void 0 : _c.rowKey.value;
       const rowIndex = i + childrenCount;
       const item = data.value[i];
       const isRowSelectable = selectable.value && selectable.value.call(null, item, rowIndex);
@@ -41615,12 +40892,12 @@ function useWatcher$1() {
     isAllSelected.value = isAllSelected_;
   };
   const getChildrenCount = (rowKey2) => {
-    var _a22;
+    var _a2;
     if (!instance || !instance.store)
       return 0;
     const { treeData } = instance.store.states;
     let count = 0;
-    const children = (_a22 = treeData.value[rowKey2]) == null ? void 0 : _a22.children;
+    const children = (_a2 = treeData.value[rowKey2]) == null ? void 0 : _a2.children;
     if (children) {
       count += children.length;
       children.forEach((childKey) => {
@@ -41640,13 +40917,13 @@ function useWatcher$1() {
     });
     return filters_;
   };
-  const updateSort = (column, prop, order2) => {
+  const updateSort = (column, prop, order) => {
     if (sortingColumn.value && sortingColumn.value !== column) {
       sortingColumn.value.order = null;
     }
     sortingColumn.value = column;
     sortProp.value = prop;
-    sortOrder.value = order2;
+    sortOrder.value = order;
   };
   const execFilter = () => {
     let sourceData = vue_cjs_prod.unref(_data);
@@ -41832,10 +41109,10 @@ function useWatcher$1() {
 }
 function replaceColumn(array4, column) {
   return array4.map((item) => {
-    var _a2;
+    var _a;
     if (item.id === column.id) {
       return column;
-    } else if ((_a2 = item.children) == null ? void 0 : _a2.length) {
+    } else if ((_a = item.children) == null ? void 0 : _a.length) {
       item.children = replaceColumn(item.children, column);
     }
     return item;
@@ -41843,9 +41120,9 @@ function replaceColumn(array4, column) {
 }
 function sortColumn(array4) {
   array4.forEach((item) => {
-    var _a2, _b2;
-    item.no = (_a2 = item.getColumnIndex) == null ? void 0 : _a2.call(item);
-    if ((_b2 = item.children) == null ? void 0 : _b2.length) {
+    var _a, _b;
+    item.no = (_a = item.getColumnIndex) == null ? void 0 : _a.call(item);
+    if ((_b = item.children) == null ? void 0 : _b.length) {
       sortColumn(item.children);
     }
   });
@@ -41924,19 +41201,19 @@ function useStore() {
       }
     },
     sort(states, options) {
-      const { prop, order: order2, init } = options;
+      const { prop, order, init } = options;
       if (prop) {
         const column = vue_cjs_prod.unref(states.columns).find((column2) => column2.property === prop);
         if (column) {
-          column.order = order2;
-          instance.store.updateSort(column, prop, order2);
+          column.order = order;
+          instance.store.updateSort(column, prop, order);
           instance.store.commit("changeSortCondition", { init });
         }
       }
     },
     changeSortCondition(states, options) {
-      const { sortingColumn: column, sortProp: prop, sortOrder: order2 } = states;
-      if (vue_cjs_prod.unref(order2) === null) {
+      const { sortingColumn: column, sortProp: prop, sortOrder: order } = states;
+      if (vue_cjs_prod.unref(order) === null) {
         states.sortingColumn.value = null;
         states.sortProp.value = null;
       }
@@ -41946,7 +41223,7 @@ function useStore() {
         instance.emit("sort-change", {
           column: vue_cjs_prod.unref(column),
           prop: vue_cjs_prod.unref(prop),
-          order: vue_cjs_prod.unref(order2)
+          order: vue_cjs_prod.unref(order)
         });
       }
       instance.store.updateTableScrollY();
@@ -42014,7 +41291,7 @@ function createStore(table, props) {
     throw new Error("Table is required.");
   }
   const store = useStore();
-  store.toggleAllSelection = debounce$1(store._toggleAllSelection, 10);
+  store.toggleAllSelection = debounce(store._toggleAllSelection, 10);
   Object.keys(InitialStateMap).forEach((key) => {
     handleValue(getArrKeysValue(props, key), key, store);
   });
@@ -42125,7 +41402,7 @@ class TableLayout {
     return flattenColumns;
   }
   updateElsHeight() {
-    var _a2, _b2;
+    var _a, _b;
     if (!this.table.$ready)
       return vue_cjs_prod.nextTick(() => this.updateElsHeight());
     const {
@@ -42151,7 +41428,7 @@ class TableLayout {
     if (this.showHeader && !noneHeader && headerWrapperOffsetHeight > 0 && (this.table.store.states.columns.value || []).length > 0 && headerHeight < 2) {
       return vue_cjs_prod.nextTick(() => this.updateElsHeight());
     }
-    const tableHeight = this.tableHeight.value = (_b2 = (_a2 = this.table) == null ? void 0 : _a2.vnode.el) == null ? void 0 : _b2.clientHeight;
+    const tableHeight = this.tableHeight.value = (_b = (_a = this.table) == null ? void 0 : _a.vnode.el) == null ? void 0 : _b.clientHeight;
     const footerHeight = this.footerHeight.value = footerWrapper ? footerWrapper.offsetHeight : 0;
     if (this.height.value !== null) {
       if (this.bodyHeight.value === null) {
@@ -42192,13 +41469,13 @@ class TableLayout {
   notifyObservers(event) {
     const observers = this.observers;
     observers.forEach((observer) => {
-      var _a2, _b2;
+      var _a, _b;
       switch (event) {
         case "columns":
-          (_a2 = observer.state) == null ? void 0 : _a2.onColumnsChange(this);
+          (_a = observer.state) == null ? void 0 : _a.onColumnsChange(this);
           break;
         case "scrollable":
-          (_b2 = observer.state) == null ? void 0 : _b2.onScrollableChange(this);
+          (_b = observer.state) == null ? void 0 : _b.onScrollableChange(this);
           break;
         default:
           throw new Error(`Table Layout don't have event ${event}.`);
@@ -42250,8 +41527,8 @@ const _sfc_main$p = vue_cjs_prod.defineComponent({
     });
     const filterValue = vue_cjs_prod.computed({
       get: () => {
-        var _a2;
-        return (((_a2 = props.column) == null ? void 0 : _a2.filteredValue) || [])[0];
+        var _a;
+        return (((_a = props.column) == null ? void 0 : _a.filteredValue) || [])[0];
       },
       set: (value) => {
         if (filteredValue.value) {
@@ -42328,8 +41605,8 @@ const _sfc_main$p = vue_cjs_prod.defineComponent({
       immediate: true
     });
     const popperPaneRef = vue_cjs_prod.computed(() => {
-      var _a2, _b2;
-      return (_b2 = (_a2 = tooltip.value) == null ? void 0 : _a2.popperRef) == null ? void 0 : _b2.contentRef;
+      var _a, _b;
+      return (_b = (_a = tooltip.value) == null ? void 0 : _a.popperRef) == null ? void 0 : _b.contentRef;
     });
     return {
       tooltipVisible,
@@ -42492,8 +41769,8 @@ function useLayoutObserver(root2) {
     return layout2;
   });
   const onColumnsChange = (layout2) => {
-    var _a2;
-    const cols = ((_a2 = root2.vnode.el) == null ? void 0 : _a2.querySelectorAll("colgroup > col")) || [];
+    var _a;
+    const cols = ((_a = root2.vnode.el) == null ? void 0 : _a.querySelectorAll("colgroup > col")) || [];
     if (!cols.length)
       return;
     const flattenColumns = layout2.getFlattenColumns();
@@ -42511,13 +41788,13 @@ function useLayoutObserver(root2) {
     }
   };
   const onScrollableChange = (layout2) => {
-    var _a2, _b2;
-    const cols = ((_a2 = root2.vnode.el) == null ? void 0 : _a2.querySelectorAll("colgroup > col[name=gutter]")) || [];
+    var _a, _b;
+    const cols = ((_a = root2.vnode.el) == null ? void 0 : _a.querySelectorAll("colgroup > col[name=gutter]")) || [];
     for (let i = 0, j = cols.length; i < j; i++) {
       const col = cols[i];
       col.setAttribute("width", layout2.scrollY.value ? layout2.gutterWidth : "0");
     }
-    const ths = ((_b2 = root2.vnode.el) == null ? void 0 : _b2.querySelectorAll("th.gutter")) || [];
+    const ths = ((_b = root2.vnode.el) == null ? void 0 : _b.querySelectorAll("th.gutter")) || [];
     for (let i = 0, j = ths.length; i < j; i++) {
       const th = ths[i];
       th.style.width = layout2.scrollY.value ? `${layout2.gutterWidth}px` : "0";
@@ -42585,15 +41862,15 @@ function useEvent(props, emit) {
   const handleMouseOut = () => {
     return;
   };
-  const toggleOrder = ({ order: order2, sortOrders }) => {
-    if (order2 === "")
+  const toggleOrder = ({ order, sortOrders }) => {
+    if (order === "")
       return sortOrders[0];
-    const index2 = sortOrders.indexOf(order2 || null);
+    const index2 = sortOrders.indexOf(order || null);
     return sortOrders[index2 > sortOrders.length - 2 ? 0 : index2 + 1];
   };
   const handleSortClick = (event, column, givenOrder) => {
     event.stopPropagation();
-    const order2 = column.order === givenOrder ? null : givenOrder || toggleOrder(column);
+    const order = column.order === givenOrder ? null : givenOrder || toggleOrder(column);
     let target = event.target;
     while (target && target.tagName !== "TH") {
       target = target.parentNode;
@@ -42617,10 +41894,10 @@ function useEvent(props, emit) {
       states.sortingColumn.value = column;
       sortProp = column.property;
     }
-    if (!order2) {
+    if (!order) {
       sortOrder = column.order = null;
     } else {
-      sortOrder = column.order = order2;
+      sortOrder = column.order = order;
     }
     states.sortProp.value = sortProp;
     states.sortOrder.value = sortOrder;
@@ -42657,8 +41934,8 @@ function useStyle$2(props) {
     return classes.join(" ");
   };
   const getHeaderCellStyle = (rowIndex, columnIndex, row, column) => {
-    var _a2;
-    let headerCellStyles = (_a2 = parent == null ? void 0 : parent.props.headerCellStyle) != null ? _a2 : {};
+    var _a;
+    let headerCellStyles = (_a = parent == null ? void 0 : parent.props.headerCellStyle) != null ? _a : {};
     if (typeof headerCellStyles === "function") {
       headerCellStyles = headerCellStyles.call(null, {
         rowIndex,
@@ -42817,8 +42094,8 @@ var TableHeader = vue_cjs_prod.defineComponent({
     vue_cjs_prod.onMounted(async () => {
       await vue_cjs_prod.nextTick();
       await vue_cjs_prod.nextTick();
-      const { prop, order: order2 } = props.defaultSort;
-      parent == null ? void 0 : parent.store.commit("sort", { prop, order: order2, init: true });
+      const { prop, order } = props.defaultSort;
+      parent == null ? void 0 : parent.store.commit("sort", { prop, order, init: true });
     });
     const {
       handleHeaderClick,
@@ -42947,11 +42224,11 @@ function useEvents(props) {
   const tooltipContent = vue_cjs_prod.ref("");
   const tooltipTrigger = vue_cjs_prod.ref(vue_cjs_prod.h("div"));
   const handleEvent = (event, row, name) => {
-    var _a2;
+    var _a;
     const table = parent;
     const cell = getCell(event);
     let column;
-    const namespace = (_a2 = table == null ? void 0 : table.vnode.el) == null ? void 0 : _a2.dataset.prefix;
+    const namespace = (_a = table == null ? void 0 : table.vnode.el) == null ? void 0 : _a.dataset.prefix;
     if (cell) {
       column = getColumnByCell({
         columns: props.store.states.columns.value
@@ -42972,17 +42249,17 @@ function useEvents(props) {
   const handleContextMenu = (event, row) => {
     handleEvent(event, row, "contextmenu");
   };
-  const handleMouseEnter = debounce$1((index2) => {
+  const handleMouseEnter = debounce((index2) => {
     props.store.commit("setHoverRow", index2);
   }, 30);
-  const handleMouseLeave = debounce$1(() => {
+  const handleMouseLeave = debounce(() => {
     props.store.commit("setHoverRow", null);
   }, 30);
   const handleCellMouseEnter = (event, row) => {
-    var _a2;
+    var _a;
     const table = parent;
     const cell = getCell(event);
-    const namespace = (_a2 = table == null ? void 0 : table.vnode.el) == null ? void 0 : _a2.dataset.prefix;
+    const namespace = (_a = table == null ? void 0 : table.vnode.el) == null ? void 0 : _a.dataset.prefix;
     if (cell) {
       const column = getColumnByCell({
         columns: props.store.states.columns.value
@@ -43366,8 +42643,8 @@ var TableBody = vue_cjs_prod.defineComponent({
         raf = (fn2) => window.setTimeout(fn2, 16);
       }
       raf(() => {
-        var _a2;
-        const rows = (_a2 = instance == null ? void 0 : instance.vnode.el) == null ? void 0 : _a2.querySelectorAll(`.${ns.e("row")}`);
+        var _a;
+        const rows = (_a = instance == null ? void 0 : instance.vnode.el) == null ? void 0 : _a.querySelectorAll(`.${ns.e("row")}`);
         const oldRow = rows[oldVal];
         const newRow = rows[newVal];
         if (oldRow) {
@@ -43379,12 +42656,12 @@ var TableBody = vue_cjs_prod.defineComponent({
       });
     });
     vue_cjs_prod.onUnmounted(() => {
-      var _a2;
-      (_a2 = removePopper) == null ? void 0 : _a2();
+      var _a;
+      (_a = removePopper) == null ? void 0 : _a();
     });
     vue_cjs_prod.onUpdated(() => {
-      var _a2;
-      (_a2 = removePopper) == null ? void 0 : _a2();
+      var _a;
+      (_a = removePopper) == null ? void 0 : _a();
     });
     return {
       ns,
@@ -43624,8 +42901,8 @@ function useUtils(store) {
   const clearSort = () => {
     store.clearSort();
   };
-  const sort = (prop, order2) => {
-    store.commit("sort", { prop, order: order2 });
+  const sort = (prop, order) => {
+    store.commit("sort", { prop, order });
   };
   return {
     setCurrentRow,
@@ -43739,10 +43016,7 @@ function useStyle(props, layout2, store, table) {
   };
   const hasScrollClass = (className) => {
     const { tableWrapper } = table.refs;
-    if (tableWrapper && tableWrapper.classList.contains(className)) {
-      return true;
-    }
-    return false;
+    return !!(tableWrapper && tableWrapper.classList.contains(className));
   };
   const syncPostion = function() {
     if (!table.refs.scrollBarRef)
@@ -43773,24 +43047,24 @@ function useStyle(props, layout2, store, table) {
     }
   };
   const bindEvents = () => {
-    var _a2;
+    var _a;
     if (!table.refs.scrollBarRef)
       return;
-    (_a2 = table.refs.scrollBarRef.wrap$) == null ? void 0 : _a2.addEventListener("scroll", syncPostion, {
+    (_a = table.refs.scrollBarRef.wrap$) == null ? void 0 : _a.addEventListener("scroll", syncPostion, {
       passive: true
     });
     if (props.fit) {
       addResizeListener(table.vnode.el, resizeListener);
     } else {
-      on(window, "resize", doLayout);
+      on$1(window, "resize", doLayout);
     }
   };
   vue_cjs_prod.onBeforeUnmount(() => {
     unbindEvents();
   });
   const unbindEvents = () => {
-    var _a2;
-    (_a2 = table.refs.scrollBarRef.wrap$) == null ? void 0 : _a2.removeEventListener("scroll", syncPostion, true);
+    var _a;
+    (_a = table.refs.scrollBarRef.wrap$) == null ? void 0 : _a.removeEventListener("scroll", syncPostion, true);
     if (props.fit) {
       removeResizeListener(table.vnode.el, resizeListener);
     } else {
@@ -44050,8 +43324,8 @@ const useScrollbar = () => {
       scrollbar[`setScroll${position}`](offset2);
     }
   };
-  const setScrollTop = (top2) => setScrollPosition("Top", top2);
-  const setScrollLeft = (left2) => setScrollPosition("Left", left2);
+  const setScrollTop = (top) => setScrollPosition("Top", top);
+  const setScrollLeft = (left) => setScrollPosition("Left", left);
   return {
     scrollBarRef,
     scrollTo,
@@ -44142,7 +43416,7 @@ const _sfc_main$o = vue_cjs_prod.defineComponent({
       scrollbarViewStyle
     } = useStyle(props, layout2, store, table);
     const { scrollBarRef, scrollTo, setScrollLeft, setScrollTop } = useScrollbar();
-    const debouncedUpdateLayout = debounce$1(doLayout, 50);
+    const debouncedUpdateLayout = debounce(doLayout, 50);
     const tableId = `el-table_${tableIdSeed++}`;
     table.tableId = tableId;
     table.state = {
@@ -44498,13 +43772,13 @@ function defaultRenderCell({
   column,
   $index
 }) {
-  var _a2;
+  var _a;
   const property = column.property;
   const value = property && getProp(row, property).value;
   if (column && column.formatter) {
     return column.formatter(row, column, value, $index);
   }
-  return ((_a2 = value == null ? void 0 : value.toString) == null ? void 0 : _a2.call(value)) || "";
+  return ((_a = value == null ? void 0 : value.toString) == null ? void 0 : _a.call(value)) || "";
 }
 function treeCellPrefix({
   row,
@@ -44694,8 +43968,8 @@ function useRender(props, slots, owner) {
       check2(children);
     }
     function check2(item) {
-      var _a2;
-      if (((_a2 = item == null ? void 0 : item.type) == null ? void 0 : _a2.name) === "ElTableColumn") {
+      var _a;
+      if (((_a = item == null ? void 0 : item.type) == null ? void 0 : _a.name) === "ElTableColumn") {
         item.vParent = instance;
       }
     }
@@ -44826,7 +44100,7 @@ var defaultProps = {
       return ["ascending", "descending", null];
     },
     validator: (val) => {
-      return val.every((order2) => ["ascending", "descending", null].includes(order2));
+      return val.every((order) => ["ascending", "descending", null].includes(order));
     }
   }
 };
@@ -44913,9 +44187,9 @@ var ElTableColumn$1 = vue_cjs_prod.defineComponent({
       registerComplexWatchers();
     });
     vue_cjs_prod.onMounted(() => {
-      var _a2;
+      var _a;
       const parent2 = columnOrTableParent.value;
-      const children = isSubColumn.value ? parent2.vnode.el.children : (_a2 = parent2.refs.hiddenColumns) == null ? void 0 : _a2.children;
+      const children = isSubColumn.value ? parent2.vnode.el.children : (_a = parent2.refs.hiddenColumns) == null ? void 0 : _a.children;
       const getColumnIndex = () => getColumnElIndex(children || [], instance.vnode.el);
       columnConfig.value.getColumnIndex = getColumnIndex;
       const columnIndex = getColumnIndex();
@@ -44929,9 +44203,9 @@ var ElTableColumn$1 = vue_cjs_prod.defineComponent({
     return;
   },
   render() {
-    var _a2, _b2, _c;
+    var _a, _b, _c;
     try {
-      const renderDefault = (_b2 = (_a2 = this.$slots).default) == null ? void 0 : _b2.call(_a2, {
+      const renderDefault = (_b = (_a = this.$slots).default) == null ? void 0 : _b.call(_a, {
         row: {},
         column: {},
         $index: -1
@@ -44988,8 +44262,8 @@ const _sfc_main$n = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       const sizeName = ["top", "bottom"].includes(rootTabs.props.tabPosition) ? "width" : "height";
       const sizeDir = sizeName === "width" ? "x" : "y";
       props.tabs.every((tab) => {
-        var _a2, _b2, _c, _d;
-        const $el = (_b2 = (_a2 = instance.parent) == null ? void 0 : _a2.refs) == null ? void 0 : _b2[`tab-${tab.paneName}`];
+        var _a, _b, _c, _d;
+        const $el = (_b = (_a = instance.parent) == null ? void 0 : _a.refs) == null ? void 0 : _b[`tab-${tab.paneName}`];
         if (!$el)
           return false;
         if (!tab.active) {
@@ -45164,15 +44438,15 @@ const TabNav = vue_cjs_prod.defineComponent({
       const {
         up,
         down,
-        left: left2,
-        right: right2
+        left,
+        right
       } = EVENT_CODE;
-      if (![up, down, left2, right2].includes(code))
+      if (![up, down, left, right].includes(code))
         return;
       const tabList = Array.from(e.currentTarget.querySelectorAll("[role=tab]"));
       const currentIndex = tabList.indexOf(e.target);
       let nextIndex;
-      if (code === left2 || code === up) {
+      if (code === left || code === up) {
         if (currentIndex === 0) {
           nextIndex = tabList.length - 1;
         } else {
@@ -45228,7 +44502,7 @@ const TabNav = vue_cjs_prod.defineComponent({
         default: () => [vue_cjs_prod.createVNode(arrowRight, null, null)]
       })])] : null;
       const tabs = props.panes.map((pane, index2) => {
-        var _a2, _b2;
+        var _a, _b;
         const tabName = pane.props.name || pane.index || `${index2}`;
         const closable = pane.isClosable || props.editable;
         pane.index = `${index2}`;
@@ -45238,7 +44512,7 @@ const TabNav = vue_cjs_prod.defineComponent({
         }, {
           default: () => [vue_cjs_prod.createVNode(close$2, null, null)]
         }) : null;
-        const tabLabelContent = ((_b2 = (_a2 = pane.instance.slots).label) == null ? void 0 : _b2.call(_a2)) || pane.props.label;
+        const tabLabelContent = ((_b = (_a = pane.instance.slots).label) == null ? void 0 : _b.call(_a)) || pane.props.label;
         const tabindex = pane.active ? 0 : -1;
         return vue_cjs_prod.createVNode("div", {
           "ref": `tab-${tabName}`,
@@ -45349,8 +44623,8 @@ var Tabs = vue_cjs_prod.defineComponent({
       version: "2.5.0",
       ref: "https://element-plus.org/en-US/component/tabs.html#tabs-events"
     }, vue_cjs_prod.computed(() => {
-      var _a2;
-      return isFunction((_a2 = instance.vnode.props) == null ? void 0 : _a2.onInput);
+      var _a;
+      return isFunction((_a = instance.vnode.props) == null ? void 0 : _a.onInput);
     }));
     const ns = useNamespace("tabs");
     const nav$ = vue_cjs_prod.ref();
@@ -45381,15 +44655,15 @@ var Tabs = vue_cjs_prod.defineComponent({
       emit("tab-change", value);
     };
     const setCurrentName = (value) => {
-      var _a2;
+      var _a;
       if (currentName.value === value)
         return;
-      const canLeave = (_a2 = props.beforeLeave) == null ? void 0 : _a2.call(props, value, currentName.value);
+      const canLeave = (_a = props.beforeLeave) == null ? void 0 : _a.call(props, value, currentName.value);
       if (isPromise(canLeave)) {
         canLeave.then(() => {
-          var _a22, _b2;
+          var _a2, _b;
           changeCurrentName(value);
-          (_b2 = (_a22 = nav$.value) == null ? void 0 : _a22.removeFocus) == null ? void 0 : _b2.call(_a22);
+          (_b = (_a2 = nav$.value) == null ? void 0 : _a2.removeFocus) == null ? void 0 : _b.call(_a2);
         }, NOOP);
       } else if (canLeave !== false) {
         changeCurrentName(value);
@@ -45417,11 +44691,11 @@ var Tabs = vue_cjs_prod.defineComponent({
     vue_cjs_prod.watch(() => props.activeName, (modelValue) => setCurrentName(modelValue));
     vue_cjs_prod.watch(() => props.modelValue, (modelValue) => setCurrentName(modelValue));
     vue_cjs_prod.watch(currentName, async () => {
-      var _a2, _b2;
+      var _a, _b;
       updatePaneInstances(true);
       await vue_cjs_prod.nextTick();
-      await ((_a2 = nav$.value) == null ? void 0 : _a2.$nextTick());
-      (_b2 = nav$.value) == null ? void 0 : _b2.scrollToActiveTab();
+      await ((_a = nav$.value) == null ? void 0 : _a.$nextTick());
+      (_b = nav$.value) == null ? void 0 : _b.scrollToActiveTab();
     });
     vue_cjs_prod.provide(tabsRootContextKey, {
       props,
@@ -45661,11 +44935,11 @@ const _sfc_main$l$1 = vue_cjs_prod.defineComponent({
     const nsInput = useNamespace("input");
     const select = vue_cjs_prod.ref(null);
     const value = vue_cjs_prod.computed(() => props.modelValue);
-    const start2 = vue_cjs_prod.computed(() => {
+    const start = vue_cjs_prod.computed(() => {
       const time = parseTime(props.start);
       return formatTime(time);
     });
-    const end2 = vue_cjs_prod.computed(() => {
+    const end = vue_cjs_prod.computed(() => {
       const time = parseTime(props.end);
       return formatTime(time);
     });
@@ -45684,9 +44958,9 @@ const _sfc_main$l$1 = vue_cjs_prod.defineComponent({
     const items = vue_cjs_prod.computed(() => {
       const result = [];
       if (props.start && props.end && props.step) {
-        let current = start2.value;
+        let current = start.value;
         let currentTime;
-        while (compareTime(current, end2.value) <= 0) {
+        while (compareTime(current, end.value) <= 0) {
           currentTime = dayjs(current, "HH:mm").format(props.format);
           result.push({
             value: currentTime,
@@ -45698,12 +44972,12 @@ const _sfc_main$l$1 = vue_cjs_prod.defineComponent({
       return result;
     });
     const blur = () => {
-      var _a2, _b2;
-      (_b2 = (_a2 = select.value) == null ? void 0 : _a2.blur) == null ? void 0 : _b2.call(_a2);
+      var _a, _b;
+      (_b = (_a = select.value) == null ? void 0 : _a.blur) == null ? void 0 : _b.call(_a);
     };
     const focus = () => {
-      var _a2, _b2;
-      (_b2 = (_a2 = select.value) == null ? void 0 : _a2.focus) == null ? void 0 : _b2.call(_a2);
+      var _a, _b;
+      (_b = (_a = select.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
     };
     return {
       nsInput,
@@ -46021,9 +45295,9 @@ const _sfc_main$j$1 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps
     const open = vue_cjs_prod.computed({
       get: () => isPropAbsent(props.open) ? _open.value : props.open,
       set: (open2) => {
-        var _a2;
+        var _a;
         _open.value = open2;
-        (_a2 = props["onUpdate:open"]) == null ? void 0 : _a2.call(props, open2);
+        (_a = props["onUpdate:open"]) == null ? void 0 : _a.call(props, open2);
       }
     });
     const isOpenDelayed = vue_cjs_prod.computed(() => isNumber(props.delayDuration) && props.delayDuration > 0);
@@ -46047,12 +45321,12 @@ const _sfc_main$j$1 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps
       open.value = false;
     };
     const onChange = (open2) => {
-      var _a2;
+      var _a;
       if (open2) {
         document.dispatchEvent(new CustomEvent(TOOLTIP_V2_OPEN));
         onOpen();
       }
-      (_a2 = props.onOpenChange) == null ? void 0 : _a2.call(props, open2);
+      (_a = props.onOpenChange) == null ? void 0 : _a.call(props, open2);
     };
     vue_cjs_prod.watch(open, onChange);
     vue_cjs_prod.onMounted(() => {
@@ -46126,7 +45400,7 @@ const _sfc_main$h$1 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps
       placement,
       strategy,
       middleware: vue_cjs_prod.computed(() => {
-        const middleware = [offset$2(props.offset)];
+        const middleware = [offset(props.offset)];
         if (props.showArrow) {
           middleware.push(arrowMiddleware({
             arrowRef
@@ -46231,8 +45505,8 @@ var ForwardRef = vue_cjs_prod.defineComponent({
       }
     });
     return () => {
-      var _a2;
-      const [firstChild] = ((_a2 = slots.default) == null ? void 0 : _a2.call(slots)) || [];
+      var _a;
+      const [firstChild] = ((_a = slots.default) == null ? void 0 : _a.call(slots)) || [];
       const child = props.onlyChild ? ensureOnlyChild(firstChild.children) : firstChild.children;
       return vue_cjs_prod.createVNode(vue_cjs_prod.Fragment, {
         "ref": setRef
@@ -46801,8 +46075,8 @@ const _sfc_main$d$1 = vue_cjs_prod.defineComponent({
     const rightPanelTitle = vue_cjs_prod.computed(() => props.titles[1] || t("el.transfer.titles.1"));
     const panelFilterPlaceholder = vue_cjs_prod.computed(() => props.filterPlaceholder || t("el.transfer.filterPlaceholder"));
     vue_cjs_prod.watch(() => props.modelValue, () => {
-      var _a2;
-      (_a2 = elFormItem.validate) == null ? void 0 : _a2.call(elFormItem, "change").catch((err) => debugWarn());
+      var _a;
+      (_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
     });
     const optionRender = vue_cjs_prod.computed(() => (option) => {
       if (props.renderContent)
@@ -48143,7 +47417,7 @@ function useKeydown({ el$ }, store) {
   const checkboxItems = vue_cjs_prod.shallowRef([]);
   vue_cjs_prod.onMounted(() => {
     initTabIndex();
-    on(el$.value, "keydown", handleKeydown);
+    on$1(el$.value, "keydown", handleKeydown);
   });
   vue_cjs_prod.onBeforeUnmount(() => {
     off(el$.value, "keydown", handleKeydown);
@@ -48211,7 +47485,7 @@ function useKeydown({ el$ }, store) {
     }
   };
   const initTabIndex = () => {
-    var _a2;
+    var _a;
     treeItems.value = Array.from(el$.value.querySelectorAll(`.${ns.is("focusable")}[role=treeitem]`));
     checkboxItems.value = Array.from(el$.value.querySelectorAll("input[type=checkbox]"));
     const checkedItem = el$.value.querySelectorAll(`.${ns.is("checked")}[role=treeitem]`);
@@ -48219,7 +47493,7 @@ function useKeydown({ el$ }, store) {
       checkedItem[0].setAttribute("tabindex", "0");
       return;
     }
-    (_a2 = treeItems.value[0]) == null ? void 0 : _a2.setAttribute("tabindex", "0");
+    (_a = treeItems.value[0]) == null ? void 0 : _a.setAttribute("tabindex", "0");
   };
 }
 const _sfc_main$a$1 = vue_cjs_prod.defineComponent({
@@ -48486,7 +47760,7 @@ const _sfc_main$a$1 = vue_cjs_prod.defineComponent({
   }
 });
 function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
-  var _a2;
+  var _a;
   const _component_el_tree_node = vue_cjs_prod.resolveComponent("el-tree-node");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     ref: "el$",
@@ -48517,7 +47791,7 @@ function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
     }, [
       vue_cjs_prod.createElementVNode("span", {
         class: vue_cjs_prod.normalizeClass(_ctx.ns.e("empty-text"))
-      }, vue_cjs_prod.toDisplayString((_a2 = _ctx.emptyText) != null ? _a2 : _ctx.t("el.tree.emptyText")), 3)
+      }, vue_cjs_prod.toDisplayString((_a = _ctx.emptyText) != null ? _a : _ctx.t("el.tree.emptyText")), 3)
     ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true),
     vue_cjs_prod.withDirectives(vue_cjs_prod.createElementVNode("div", {
       ref: "dropIndicator$",
@@ -48550,13 +47824,13 @@ const useSelect = (props, { attrs }, {
       if (props.filterMethod)
         props.filterMethod(keyword);
       vue_cjs_prod.nextTick(() => {
-        var _a2;
-        (_a2 = tree.value) == null ? void 0 : _a2.filter(keyword);
+        var _a;
+        (_a = tree.value) == null ? void 0 : _a.filter(keyword);
       });
     },
     onVisibleChange: (visible) => {
-      var _a2;
-      (_a2 = attrs.onVisibleChange) == null ? void 0 : _a2.call(attrs, visible);
+      var _a;
+      (_a = attrs.onVisibleChange) == null ? void 0 : _a.call(attrs, visible);
       if (props.filterable && visible) {
         result.filterMethod();
       }
@@ -48600,10 +47874,10 @@ const useTree$1 = (props, { attrs, slots, emit }, {
     value: key.value
   }, props.props));
   const getNodeValByProp = (prop, data) => {
-    var _a2;
+    var _a;
     const propVal = propsMap.value[prop];
     if (isFunction(propVal)) {
-      return propVal(data, (_a2 = tree.value) == null ? void 0 : _a2.getNode(getNodeValByProp("value", data)));
+      return propVal(data, (_a = tree.value) == null ? void 0 : _a.getNode(getNodeValByProp("value", data)));
     } else {
       return data[propVal];
     }
@@ -48616,8 +47890,8 @@ const useTree$1 = (props, { attrs, slots, emit }, {
     defaultExpandedKeys: vue_cjs_prod.computed(() => {
       const values = toValidArray(props.modelValue);
       const parentKeys = tree.value ? values.map((item) => {
-        var _a2, _b2, _c;
-        return (_c = (_b2 = (_a2 = tree.value) == null ? void 0 : _a2.getNode(item)) == null ? void 0 : _b2.parent) == null ? void 0 : _c.key;
+        var _a, _b, _c;
+        return (_c = (_b = (_a = tree.value) == null ? void 0 : _a.getNode(item)) == null ? void 0 : _b.parent) == null ? void 0 : _c.key;
       }).filter((item) => isValidValue(item)) : values;
       return props.defaultExpandedKeys ? props.defaultExpandedKeys.concat(parentKeys) : parentKeys;
     }),
@@ -48629,19 +47903,19 @@ const useTree$1 = (props, { attrs, slots, emit }, {
       }, props.renderContent ? () => props.renderContent(h2, { node, data, store }) : slots.default ? () => slots.default({ node, data, store }) : void 0);
     },
     filterNodeMethod: (value, data, node) => {
-      var _a2;
+      var _a;
       if (props.filterNodeMethod)
         return props.filterNodeMethod(value, data, node);
       if (!value)
         return true;
-      return (_a2 = getNodeValByProp("label", data)) == null ? void 0 : _a2.includes(value);
+      return (_a = getNodeValByProp("label", data)) == null ? void 0 : _a.includes(value);
     },
     onNodeClick: (data, node, e) => {
-      var _a2, _b2, _c;
-      (_a2 = attrs.onNodeClick) == null ? void 0 : _a2.call(attrs, data, node, e);
+      var _a, _b, _c;
+      (_a = attrs.onNodeClick) == null ? void 0 : _a.call(attrs, data, node, e);
       if (props.checkStrictly || node.isLeaf) {
         if (!getNodeValByProp("disabled", data)) {
-          const option = (_b2 = select.value) == null ? void 0 : _b2.options.get(getNodeValByProp("value", data));
+          const option = (_b = select.value) == null ? void 0 : _b.options.get(getNodeValByProp("value", data));
           (_c = select.value) == null ? void 0 : _c.handleOptionSelect(option, true);
         }
       } else {
@@ -48649,9 +47923,9 @@ const useTree$1 = (props, { attrs, slots, emit }, {
       }
     },
     onCheck: (data, params) => {
-      var _a2, _b2;
-      (_a2 = attrs.onCheck) == null ? void 0 : _a2.call(attrs, data, params);
-      const checkedKeys = !props.checkStrictly ? (_b2 = tree.value) == null ? void 0 : _b2.getCheckedKeys(true) : params.checkedKeys;
+      var _a, _b;
+      (_a = attrs.onCheck) == null ? void 0 : _a.call(attrs, data, params);
+      const checkedKeys = !props.checkStrictly ? (_b = tree.value) == null ? void 0 : _b.getCheckedKeys(true) : params.checkedKeys;
       const value = getNodeValByProp("value", data);
       emit(UPDATE_MODEL_EVENT, props.multiple ? checkedKeys : checkedKeys.includes(value) ? value : void 0);
     }
@@ -49042,7 +48316,7 @@ function useFilter(props, tree) {
     return isFunction(props.filterMethod);
   });
   function doFilter(query) {
-    var _a2;
+    var _a;
     if (!filterable.value) {
       return;
     }
@@ -49050,7 +48324,7 @@ function useFilter(props, tree) {
     const hiddenExpandIconKeys = hiddenExpandIconKeySet.value;
     const hiddenKeys = hiddenNodeKeySet.value;
     const family = [];
-    const nodes = ((_a2 = tree.value) == null ? void 0 : _a2.treeNodes) || [];
+    const nodes = ((_a = tree.value) == null ? void 0 : _a.treeNodes) || [];
     const filter = props.filterMethod;
     hiddenKeys.clear();
     function traverse(nodes2) {
@@ -49128,20 +48402,20 @@ function useTree(props, emit) {
   } = useCheck(props, tree);
   const { doFilter, hiddenNodeKeySet, isForceHiddenExpandIcon } = useFilter(props, tree);
   const valueKey = vue_cjs_prod.computed(() => {
-    var _a2;
-    return ((_a2 = props.props) == null ? void 0 : _a2.value) || TreeOptionsEnum.KEY;
+    var _a;
+    return ((_a = props.props) == null ? void 0 : _a.value) || TreeOptionsEnum.KEY;
   });
   const childrenKey = vue_cjs_prod.computed(() => {
-    var _a2;
-    return ((_a2 = props.props) == null ? void 0 : _a2.children) || TreeOptionsEnum.CHILDREN;
+    var _a;
+    return ((_a = props.props) == null ? void 0 : _a.children) || TreeOptionsEnum.CHILDREN;
   });
   const disabledKey = vue_cjs_prod.computed(() => {
-    var _a2;
-    return ((_a2 = props.props) == null ? void 0 : _a2.disabled) || TreeOptionsEnum.DISABLED;
+    var _a;
+    return ((_a = props.props) == null ? void 0 : _a.disabled) || TreeOptionsEnum.DISABLED;
   });
   const labelKey = vue_cjs_prod.computed(() => {
-    var _a2;
-    return ((_a2 = props.props) == null ? void 0 : _a2.label) || TreeOptionsEnum.LABEL;
+    var _a;
+    return ((_a = props.props) == null ? void 0 : _a.label) || TreeOptionsEnum.LABEL;
   });
   const flattenTree = vue_cjs_prod.computed(() => {
     const expandedKeys = expandedKeySet.value;
@@ -49182,7 +48456,7 @@ function useTree(props, emit) {
     const levelTreeNodeMap = /* @__PURE__ */ new Map();
     let maxLevel = 1;
     function traverse(nodes, level = 1, parent = void 0) {
-      var _a2;
+      var _a;
       const siblings = [];
       for (const rawNode of nodes) {
         const value = getKey(rawNode);
@@ -49204,7 +48478,7 @@ function useTree(props, emit) {
         if (!levelTreeNodeMap.has(level)) {
           levelTreeNodeMap.set(level, []);
         }
-        (_a2 = levelTreeNodeMap.get(level)) == null ? void 0 : _a2.push(node);
+        (_a = levelTreeNodeMap.get(level)) == null ? void 0 : _a.push(node);
       }
       if (level > maxLevel) {
         maxLevel = level;
@@ -49296,10 +48570,10 @@ function useTree(props, emit) {
     return !!current && current === node.key;
   }
   function getCurrentNode() {
-    var _a2, _b2;
+    var _a, _b;
     if (!currentKey.value)
       return void 0;
-    return (_b2 = (_a2 = tree == null ? void 0 : tree.value) == null ? void 0 : _a2.treeNodeMap.get(currentKey.value)) == null ? void 0 : _b2.data;
+    return (_b = (_a = tree == null ? void 0 : tree.value) == null ? void 0 : _a.treeNodeMap.get(currentKey.value)) == null ? void 0 : _b.data;
   }
   function getCurrentKey() {
     return currentKey.value;
@@ -49367,12 +48641,12 @@ const _sfc_main$8$1 = vue_cjs_prod.defineComponent({
     const tree = vue_cjs_prod.inject(ROOT_TREE_INJECTION_KEY);
     const ns = useNamespace("tree");
     const indent = vue_cjs_prod.computed(() => {
-      var _a2;
-      return (_a2 = tree == null ? void 0 : tree.props.indent) != null ? _a2 : 16;
+      var _a;
+      return (_a = tree == null ? void 0 : tree.props.indent) != null ? _a : 16;
     });
     const icon = vue_cjs_prod.computed(() => {
-      var _a2;
-      return (_a2 = tree == null ? void 0 : tree.props.icon) != null ? _a2 : DEFAULT_ICON;
+      var _a;
+      return (_a = tree == null ? void 0 : tree.props.icon) != null ? _a : DEFAULT_ICON;
     });
     const handleClick = (e) => {
       emit("click", props.node, e);
@@ -49384,8 +48658,8 @@ const _sfc_main$8$1 = vue_cjs_prod.defineComponent({
       emit("check", props.node, value);
     };
     const handleContextMenu = (event) => {
-      var _a2, _b2, _c, _d;
-      if ((_c = (_b2 = (_a2 = tree == null ? void 0 : tree.instance) == null ? void 0 : _a2.vnode) == null ? void 0 : _b2.props) == null ? void 0 : _c["onNodeContextmenu"]) {
+      var _a, _b, _c, _d;
+      if ((_c = (_b = (_a = tree == null ? void 0 : tree.instance) == null ? void 0 : _a.vnode) == null ? void 0 : _b.props) == null ? void 0 : _c["onNodeContextmenu"]) {
         event.stopPropagation();
         event.preventDefault();
       }
@@ -49404,7 +48678,7 @@ const _sfc_main$8$1 = vue_cjs_prod.defineComponent({
 });
 const _hoisted_1$6 = ["aria-expanded", "aria-disabled", "aria-checked", "data-key"];
 function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
-  var _a2, _b2, _c;
+  var _a, _b, _c;
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
   const _component_el_checkbox = vue_cjs_prod.resolveComponent("el-checkbox");
   const _component_el_node_content = vue_cjs_prod.resolveComponent("el-node-content");
@@ -49422,7 +48696,7 @@ function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
     "aria-expanded": _ctx.expanded,
     "aria-disabled": _ctx.disabled,
     "aria-checked": _ctx.checked,
-    "data-key": (_a2 = _ctx.node) == null ? void 0 : _a2.key,
+    "data-key": (_a = _ctx.node) == null ? void 0 : _a.key,
     onClick: _cache[1] || (_cache[1] = vue_cjs_prod.withModifiers((...args) => _ctx.handleClick && _ctx.handleClick(...args), ["stop"])),
     onContextmenu: _cache[2] || (_cache[2] = (...args) => _ctx.handleContextMenu && _ctx.handleContextMenu(...args))
   }, [
@@ -49433,7 +48707,7 @@ function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
       _ctx.icon ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_icon, {
         key: 0,
         class: vue_cjs_prod.normalizeClass([
-          _ctx.ns.is("leaf", !!((_b2 = _ctx.node) == null ? void 0 : _b2.isLeaf)),
+          _ctx.ns.is("leaf", !!((_b = _ctx.node) == null ? void 0 : _b.isLeaf)),
           _ctx.ns.is("hidden", _ctx.hiddenExpandIcon),
           {
             expanded: !((_c = _ctx.node) == null ? void 0 : _c.isLeaf) && _ctx.expanded
@@ -49535,7 +48809,7 @@ const _sfc_main$7$1 = vue_cjs_prod.defineComponent({
   }
 });
 function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
-  var _a2;
+  var _a;
   const _component_el_tree_node = vue_cjs_prod.resolveComponent("el-tree-node");
   const _component_fixed_size_list = vue_cjs_prod.resolveComponent("fixed-size-list");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
@@ -49575,7 +48849,7 @@ function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     }, [
       vue_cjs_prod.createElementVNode("span", {
         class: vue_cjs_prod.normalizeClass(_ctx.ns.e("empty-text"))
-      }, vue_cjs_prod.toDisplayString((_a2 = _ctx.emptyText) != null ? _a2 : _ctx.t("el.tree.emptyText")), 3)
+      }, vue_cjs_prod.toDisplayString((_a = _ctx.emptyText) != null ? _a : _ctx.t("el.tree.emptyText")), 3)
     ], 2))
   ], 2);
 }
@@ -49666,7 +48940,7 @@ const genFileId = () => Date.now() + fileId++;
 const uploadBaseProps = buildProps({
   action: {
     type: String,
-    required: true
+    default: "#"
   },
   headers: {
     type: definePropType(Object)
@@ -49848,7 +49122,7 @@ const _sfc_main$6$1 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps
                 }, [
                   vue_cjs_prod.createElementVNode("a", {
                     class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsUpload).be("list", "item-name")),
-                    onClick: ($event) => handleClick(file)
+                    onClick: vue_cjs_prod.withModifiers(($event) => handleClick(file), ["prevent"])
                   }, [
                     vue_cjs_prod.createVNode(vue_cjs_prod.unref(ElIcon), {
                       class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsIcon).m("document"))
@@ -49858,7 +49132,9 @@ const _sfc_main$6$1 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps
                       ]),
                       _: 1
                     }, 8, ["class"]),
-                    vue_cjs_prod.createTextVNode(" " + vue_cjs_prod.toDisplayString(file.name), 1)
+                    vue_cjs_prod.createElementVNode("span", {
+                      class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(nsUpload).be("list", "item-file-name"))
+                    }, vue_cjs_prod.toDisplayString(file.name), 3)
                   ], 10, _hoisted_3$2),
                   file.status === "uploading" ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElProgress), {
                     key: 0,
@@ -50208,7 +49484,9 @@ const _sfc_main$4$1 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps
           multiple: _ctx.multiple,
           accept: _ctx.accept,
           type: "file",
-          onChange: handleChange
+          onChange: handleChange,
+          onClick: _cache[0] || (_cache[0] = vue_cjs_prod.withModifiers(() => {
+          }, ["stop"]))
         }, null, 42, _hoisted_2$3)
       ], 42, _hoisted_1$3);
     };
@@ -50217,8 +49495,8 @@ const _sfc_main$4$1 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps
 var UploadContent = /* @__PURE__ */ _export_sfc(_sfc_main$4$1, [["__file", "upload-content.vue"]]);
 const SCOPE$1 = "ElUpload";
 const revokeObjectURL = (file) => {
-  var _a2;
-  if ((_a2 = file.url) == null ? void 0 : _a2.startsWith("blob:")) {
+  var _a;
+  if ((_a = file.url) == null ? void 0 : _a.startsWith("blob:")) {
     URL.revokeObjectURL(file.url);
   }
 };
@@ -50226,8 +49504,8 @@ const useHandlers = (props, uploadRef) => {
   const uploadFiles = vue_cjs_prod.ref([]);
   const getFile = (rawFile) => uploadFiles.value.find((file) => file.uid === rawFile.uid);
   function abort(file) {
-    var _a2;
-    (_a2 = uploadRef.value) == null ? void 0 : _a2.abort(file);
+    var _a;
+    (_a = uploadRef.value) == null ? void 0 : _a.abort(file);
   }
   function clearFiles(states = ["ready", "uploading", "success", "fail"]) {
     uploadFiles.value = uploadFiles.value.filter((row) => !states.includes(row.status));
@@ -50309,8 +49587,8 @@ const useHandlers = (props, uploadRef) => {
   };
   function submit() {
     uploadFiles.value.filter(({ status }) => status === "ready").forEach(({ raw }) => {
-      var _a2;
-      return raw && ((_a2 = uploadRef.value) == null ? void 0 : _a2.upload(raw));
+      var _a;
+      return raw && ((_a = uploadRef.value) == null ? void 0 : _a.upload(raw));
     });
   }
   vue_cjs_prod.watch(() => props.listType, (val) => {
@@ -50577,10 +49855,10 @@ const attributes = {
 };
 const getScrollOptions = (el, instance) => {
   return Object.entries(attributes).reduce((acm, [name, option]) => {
-    var _a2, _b2;
+    var _a, _b;
     const { type: type4, default: defaultValue } = option;
     const attrVal = el.getAttribute(`infinite-scroll-${name}`);
-    let value = (_b2 = (_a2 = instance[attrVal]) != null ? _a2 : attrVal) != null ? _b2 : defaultValue;
+    let value = (_b = (_a = instance[attrVal]) != null ? _a : attrVal) != null ? _b : defaultValue;
     value = value === "false" ? false : value;
     value = type4(value);
     acm[name] = Number.isNaN(value) ? defaultValue : value;
@@ -50681,7 +49959,7 @@ const Loading = function(options = {}) {
 };
 const INSTANCE_KEY = Symbol("ElLoading");
 const createInstance = (el, binding) => {
-  var _a2, _b2, _c, _d;
+  var _a, _b, _c, _d;
   const vm = binding.instance;
   const getBindingProp = (key) => isObject$1(binding.value) ? binding.value[key] : void 0;
   const resolveExpression = (key) => {
@@ -50692,7 +49970,7 @@ const createInstance = (el, binding) => {
       return data;
   };
   const getProp2 = (name) => resolveExpression(getBindingProp(name) || el.getAttribute(`element-loading-${hyphenate(name)}`));
-  const fullscreen = (_a2 = getBindingProp("fullscreen")) != null ? _a2 : binding.modifiers.fullscreen;
+  const fullscreen = (_a = getBindingProp("fullscreen")) != null ? _a : binding.modifiers.fullscreen;
   const options = {
     text: getProp2("text"),
     svg: getProp2("svg"),
@@ -50701,7 +49979,7 @@ const createInstance = (el, binding) => {
     background: getProp2("background"),
     customClass: getProp2("customClass"),
     fullscreen,
-    target: (_b2 = getBindingProp("target")) != null ? _b2 : fullscreen ? void 0 : el,
+    target: (_b = getBindingProp("target")) != null ? _b : fullscreen ? void 0 : el,
     body: (_c = getBindingProp("body")) != null ? _c : binding.modifiers.body,
     lock: (_d = getBindingProp("lock")) != null ? _d : binding.modifiers.lock
   };
@@ -50736,8 +50014,8 @@ const vLoading = {
     }
   },
   unmounted(el) {
-    var _a2;
-    (_a2 = el[INSTANCE_KEY]) == null ? void 0 : _a2.instance.close();
+    var _a;
+    (_a = el[INSTANCE_KEY]) == null ? void 0 : _a.instance.close();
   }
 };
 const ElLoading = {
@@ -50901,10 +50179,10 @@ messageTypes.forEach((type4) => {
   };
 });
 function closeAll$1() {
-  var _a2;
+  var _a;
   for (let i = instances.length - 1; i >= 0; i--) {
     const instance = instances[i].vm.component;
-    (_a2 = instance == null ? void 0 : instance.proxy) == null ? void 0 : _a2.close();
+    (_a = instance == null ? void 0 : instance.proxy) == null ? void 0 : _a.close();
   }
 }
 message.closeAll = closeAll$1;
@@ -51029,8 +50307,8 @@ vue_cjs_prod.defineComponent({
       if (val) {
         if (props.boxType === "alert" || props.boxType === "confirm") {
           vue_cjs_prod.nextTick().then(() => {
-            var _a2, _b2, _c;
-            (_c = (_b2 = (_a2 = confirmRef.value) == null ? void 0 : _a2.$el) == null ? void 0 : _b2.focus) == null ? void 0 : _c.call(_b2);
+            var _a, _b, _c;
+            (_c = (_b = (_a = confirmRef.value) == null ? void 0 : _a.$el) == null ? void 0 : _b.focus) == null ? void 0 : _c.call(_b);
           });
         }
         state.zIndex = nextZIndex();
@@ -51053,7 +50331,7 @@ vue_cjs_prod.defineComponent({
     vue_cjs_prod.onMounted(async () => {
       await vue_cjs_prod.nextTick();
       if (props.closeOnHashChange) {
-        on(window, "hashchange", doClose);
+        on$1(window, "hashchange", doClose);
       }
     });
     vue_cjs_prod.onBeforeUnmount(() => {
@@ -51083,13 +50361,13 @@ vue_cjs_prod.defineComponent({
       }
     };
     const handleAction = (action) => {
-      var _a2;
+      var _a;
       if (props.boxType === "prompt" && action === "confirm" && !validate()) {
         return;
       }
       state.action = action;
       if (state.beforeClose) {
-        (_a2 = state.beforeClose) == null ? void 0 : _a2.call(state, action, state, doClose);
+        (_a = state.beforeClose) == null ? void 0 : _a.call(state, action, state, doClose);
       } else {
         doClose();
       }
@@ -51442,7 +50720,6 @@ const _plugins = [
   plugin_147caea6,
   router_ee46a392,
   PiniaNuxtPlugin,
-  ssrPlugin_65c79876,
   elementUi_7cb3993a,
   filter_a9e908e0,
   mdEditor_5fc2952f,
@@ -51569,7 +50846,7 @@ const _sfc_main$i = {
     error: Object
   },
   setup(__props) {
-    var _a2;
+    var _a;
     const props = __props;
     const error = props.error;
     (error.stack || "").split("\n").splice(1).map((line) => {
@@ -51581,7 +50858,7 @@ const _sfc_main$i = {
     }).map((i) => `<span class="stack${i.internal ? " internal" : ""}">${i.text}</span>`).join("\n");
     const statusCode = String(error.statusCode || 500);
     const is404 = statusCode === "404";
-    const statusMessage = ((_a2 = error.statusMessage) != null ? _a2 : is404) ? "Page Not Found" : "Internal Server Error";
+    const statusMessage = ((_a = error.statusMessage) != null ? _a : is404) ? "Page Not Found" : "Internal Server Error";
     const description = error.message || error.toString();
     const stack = void 0;
     const ErrorTemplate = is404 ? Error404 : Error500;
@@ -51648,8 +50925,8 @@ const __nuxt_component_0$1 = vue_cjs_prod.defineComponent({
   setup(props, context) {
     const route = useRoute();
     return () => {
-      var _a2, _b2, _c;
-      const layout2 = (_b2 = (_a2 = vue_cjs_prod.isRef(props.name) ? props.name.value : props.name) != null ? _a2 : route.meta.layout) != null ? _b2 : "default";
+      var _a, _b, _c;
+      const layout2 = (_b = (_a = vue_cjs_prod.isRef(props.name) ? props.name.value : props.name) != null ? _a : route.meta.layout) != null ? _b : "default";
       const hasLayout = layout2 && layout2 in layouts;
       return _wrapIf(vue_cjs_prod.Transition, hasLayout && ((_c = route.meta.layoutTransition) != null ? _c : defaultLayoutTransition), _wrapIf(layouts[layout2], hasLayout, context.slots)).default();
     };
@@ -53453,9 +52730,9 @@ const __nuxt_component_1 = vue_cjs_prod.defineComponent({
       mounted.value = true;
     });
     return (props) => {
-      var _a2;
+      var _a;
       if (mounted.value) {
-        return (_a2 = slots.default) == null ? void 0 : _a2.call(slots);
+        return (_a = slots.default) == null ? void 0 : _a.call(slots);
       }
       const slot = slots.fallback || slots.placeholder;
       if (slot) {

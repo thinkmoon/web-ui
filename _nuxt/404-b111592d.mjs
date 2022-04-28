@@ -1,1 +1,0 @@
-import{_ as n,d as o,o as s,c as _}from"./entry-5f331abc.mjs";const a=o({setup(r,{expose:t}){t();const e={};return Object.defineProperty(e,"__isScriptSetup",{enumerable:!1,value:!0}),e}}),c={class:"app-container"};function p(r,t,e,i,u,d){return s(),_("div",c)}var l=n(a,[["render",p]]);export{l as default};
