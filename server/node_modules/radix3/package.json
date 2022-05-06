@@ -1,6 +1,6 @@
 {
   "name": "radix3",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Lightweight and fast router for JavaScript based on Radix Tree",
   "repository": "unjs/radix3",
   "license": "MIT",
@@ -16,16 +16,6 @@
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "unbuild",
-    "lint": "eslint --ext .ts,.mjs .",
-    "playground": "yarn jiti ./playground.ts",
-    "release": "yarn lint && yarn test run && yarn build && standard-version && git push --follow-tags && npm publish",
-    "bench": "node ./benchmark/direct.mjs",
-    "bench:http": "node ./benchmark/http.mjs",
-    "bench:profile": "0x -o -D benchmark/.profile -- node ./benchmark/direct.mjs",
-    "test": "vitest"
-  },
   "devDependencies": {
     "0x": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
@@ -37,7 +27,20 @@
     "listhen": "latest",
     "ohmyfetch": "latest",
     "standard-version": "latest",
+    "typescript": "^4.6.4",
     "unbuild": "latest",
     "vitest": "latest"
+  },
+  "packageManager": "pnpm@7.0.0",
+  "scripts": {
+    "bench": "node ./benchmark/direct.mjs",
+    "bench:http": "node ./benchmark/http.mjs",
+    "bench:profile": "0x -o -D benchmark/.profile -- node ./benchmark/direct.mjs",
+    "build": "unbuild",
+    "dev": "vitest",
+    "lint": "eslint --ext .ts,.mjs .",
+    "playground": "pnpm jiti ./playground.ts",
+    "release": "pnpm test && pnpm build && standard-version && git push --follow-tags && pnpm publish",
+    "test": "pnpm lint && vitest run"
   }
 }

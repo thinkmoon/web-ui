@@ -32,10 +32,12 @@ function lookup(ctx, path) {
   let paramsFound = false;
   let wildcardNode = null;
   let node = ctx.rootNode;
+  let wildCardParam = null;
   for (let i = 0; i < sections.length; i++) {
     const section = sections[i];
     if (node.wildcardChildNode !== null) {
       wildcardNode = node.wildcardChildNode;
+      wildCardParam = sections.slice(i).join("/");
     }
     const nextNode = node.children[section];
     if (nextNode !== void 0) {
@@ -52,6 +54,8 @@ function lookup(ctx, path) {
   }
   if ((node === null || node.data === null) && wildcardNode !== null) {
     node = wildcardNode;
+    params[node.paramName || "_"] = wildCardParam;
+    paramsFound = true;
   }
   if (!node) {
     return null;
@@ -113,6 +117,7 @@ function insert(ctx, path, data) {
         isStaticRoute = false;
       } else if (type === NODE_TYPES.WILDCARD) {
         node.wildcardChildNode = childNode;
+        childNode.paramName = section.substring(3) || "_";
         isStaticRoute = false;
       }
       node = childNode;
@@ -160,7 +165,7 @@ function createRadixNode(options = {}) {
   };
 }
 function getNodeType(str) {
-  if (str === "**") {
+  if (str.startsWith("**")) {
     return NODE_TYPES.WILDCARD;
   }
   if (str[0] === ":" || str === "*") {

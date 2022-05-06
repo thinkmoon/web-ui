@@ -1,5 +1,5 @@
 /*!
-  * pinia v2.0.13
+  * pinia v2.0.14
   * (c) 2022 Eduardo San Martin Morote
   * @license MIT
   */
@@ -965,7 +965,8 @@ function createPinia() {
     });
     // pinia devtools rely on dev only features so they cannot be forced unless
     // the dev build of Vue is used
-    if ((process.env.NODE_ENV !== 'production') && IS_CLIENT) {
+    // We also don't need devtools in test mode
+    if ((process.env.NODE_ENV !== 'production') && IS_CLIENT && !(process.env.NODE_ENV === 'test')) {
         pinia.use(devtoolsPlugin);
     }
     return pinia;
@@ -1160,7 +1161,7 @@ function createOptionsStore(id, options, pinia, hot) {
             return computedGetters;
         }, {}));
     }
-    store = createSetupStore(id, setup, options, pinia, hot);
+    store = createSetupStore(id, setup, options, pinia, hot, true);
     store.$reset = function $reset() {
         const newState = state ? state() : {};
         // we use a patch to group all changes into one single subscription
@@ -1170,11 +1171,11 @@ function createOptionsStore(id, options, pinia, hot) {
     };
     return store;
 }
-function createSetupStore($id, setup, options = {}, pinia, hot) {
+function createSetupStore($id, setup, options = {}, pinia, hot, isOptionsStore) {
     let scope;
-    const buildState = options.state;
     const optionsForPlugin = assign({ actions: {} }, options);
     /* istanbul ignore if */
+    // @ts-expect-error: active is an internal property
     if ((process.env.NODE_ENV !== 'production') && !pinia._e.active) {
         throw new Error('Pinia destroyed');
     }
@@ -1212,7 +1213,7 @@ function createSetupStore($id, setup, options = {}, pinia, hot) {
     const initialState = pinia.state.value[$id];
     // avoid setting the state for option stores are it is set
     // by the setup
-    if (!buildState && !initialState && (!(process.env.NODE_ENV !== 'production') || !hot)) {
+    if (!isOptionsStore && !initialState && (!(process.env.NODE_ENV !== 'production') || !hot)) {
         /* istanbul ignore if */
         if (isVue2) {
             set(pinia.state.value, $id, {});
@@ -1222,6 +1223,9 @@ function createSetupStore($id, setup, options = {}, pinia, hot) {
         }
     }
     const hotState = ref({});
+    // avoid triggering too many listeners
+    // https://github.com/vuejs/pinia/issues/1129
+    let activeListener;
     function $patch(partialStateOrMutator) {
         let subscriptionMutation;
         isListening = isSyncListening = false;
@@ -1247,8 +1251,11 @@ function createSetupStore($id, setup, options = {}, pinia, hot) {
                 events: debuggerEvents,
             };
         }
+        const myListenerId = (activeListener = Symbol());
         nextTick().then(() => {
-            isListening = true;
+            if (activeListener === myListenerId) {
+                isListening = true;
+            }
         });
         isSyncListening = true;
         // because we paused the watcher, we need to manually call the subscriptions
@@ -1379,7 +1386,7 @@ function createSetupStore($id, setup, options = {}, pinia, hot) {
                 // createOptionStore directly sets the state in pinia.state.value so we
                 // can just skip that
             }
-            else if (!buildState) {
+            else if (!isOptionsStore) {
                 // in setup stores we must hydrate the state and sync pinia state tree with the refs the user just created
                 if (initialState && shouldHydrate(prop)) {
                     if (isRef(prop)) {
@@ -1429,7 +1436,7 @@ function createSetupStore($id, setup, options = {}, pinia, hot) {
         else if ((process.env.NODE_ENV !== 'production')) {
             // add getters for devtools
             if (isComputed(prop)) {
-                _hmrPayload.getters[key] = buildState
+                _hmrPayload.getters[key] = isOptionsStore
                     ? // @ts-expect-error
                         options.getters[key]
                     : prop;
@@ -1516,7 +1523,7 @@ function createSetupStore($id, setup, options = {}, pinia, hot) {
             // TODO: does this work in both setup and option store?
             for (const getterName in newStore._hmrPayload.getters) {
                 const getter = newStore._hmrPayload.getters[getterName];
-                const getterValue = buildState
+                const getterValue = isOptionsStore
                     ? // special handling of options api
                         computed(() => {
                             setActivePinia(pinia);
@@ -1595,7 +1602,7 @@ function createSetupStore($id, setup, options = {}, pinia, hot) {
     }
     // only apply hydrate to option stores with an initial state in pinia
     if (initialState &&
-        buildState &&
+        isOptionsStore &&
         options.hydrate) {
         options.hydrate(store.$state, initialState);
     }

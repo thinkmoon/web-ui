@@ -1,12 +1,12 @@
 import destr from 'destr';
-import { n as normalizeBase, a as normalizeKey, b as asyncCall, s as stringify } from './chunks/_utils.mjs';
+import { a as asyncCall, s as stringify } from './chunks/_utils.mjs';
 
 function defineDriver(factory) {
   return factory;
 }
 
 const memory = defineDriver(() => {
-  const data = new Map();
+  const data = /* @__PURE__ */ new Map();
   return {
     hasItem(key) {
       return data.has(key);
@@ -32,6 +32,45 @@ const memory = defineDriver(() => {
   };
 });
 
+const storageKeyProps = [
+  "hasItem",
+  "getItem",
+  "setItem",
+  "removeItem",
+  "getMeta",
+  "setMeta",
+  "removeMeta",
+  "getKeys",
+  "clear",
+  "mount",
+  "unmount"
+];
+function prefixStorage(storage, base) {
+  base = normalizeBaseKey(base);
+  if (!base) {
+    return storage;
+  }
+  const nsStorage = { ...storage };
+  for (const prop of storageKeyProps) {
+    nsStorage[prop] = (key = "", ...args) => storage[prop](base + key, ...args);
+  }
+  nsStorage.getKeys = (key = "", ...args) => storage.getKeys(base + key, ...args).then((keys) => keys.map((key2) => key2.substr(base.length)));
+  return nsStorage;
+}
+function normalizeKey(key) {
+  if (!key) {
+    return "";
+  }
+  return key.replace(/[/\\]/g, ":").replace(/:+/g, ":").replace(/^:|:$/g, "");
+}
+function joinKeys(...keys) {
+  return normalizeKey(keys.join(":"));
+}
+function normalizeBaseKey(base) {
+  base = normalizeKey(base);
+  return base ? base + ":" : "";
+}
+
 function createStorage(opts = {}) {
   const ctx = {
     mounts: { "": opts.driver || memory() },
@@ -43,7 +82,7 @@ function createStorage(opts = {}) {
     for (const base of ctx.mountpoints) {
       if (key.startsWith(base)) {
         return {
-          relativeKey: key.substr(base.length),
+          relativeKey: key.substring(base.length),
           driver: ctx.mounts[base]
         };
       }
@@ -53,9 +92,9 @@ function createStorage(opts = {}) {
       driver: ctx.mounts[""]
     };
   };
-  const getMounts = (base) => {
-    return ctx.mountpoints.filter((mountpoint) => mountpoint.startsWith(base) || base.startsWith(mountpoint)).map((mountpoint) => ({
-      relativeBase: base.length > mountpoint.length ? base.substr(mountpoint.length) : void 0,
+  const getMounts = (base, includeParent) => {
+    return ctx.mountpoints.filter((mountpoint) => mountpoint.startsWith(base) || includeParent && base.startsWith(mountpoint)).map((mountpoint) => ({
+      relativeBase: base.length > mountpoint.length ? base.substring(mountpoint.length) : void 0,
       mountpoint,
       driver: ctx.mounts[mountpoint]
     }));
@@ -120,7 +159,7 @@ function createStorage(opts = {}) {
     async getMeta(key, nativeMetaOnly) {
       key = normalizeKey(key);
       const { relativeKey, driver } = getMount(key);
-      const meta = Object.create(null);
+      const meta = /* @__PURE__ */ Object.create(null);
       if (driver.getMeta) {
         Object.assign(meta, await asyncCall(driver.getMeta, relativeKey));
       }
@@ -145,17 +184,21 @@ function createStorage(opts = {}) {
       return this.removeItem(key + "$");
     },
     async getKeys(base) {
-      base = normalizeBase(base);
-      const keyGroups = await Promise.all(getMounts(base).map(async (mount) => {
+      base = normalizeBaseKey(base);
+      const mounts = getMounts(base, true);
+      let maskedMounts = [];
+      const allKeys = [];
+      for (const mount of mounts) {
         const rawKeys = await asyncCall(mount.driver.getKeys, mount.relativeBase);
-        return rawKeys.map((key) => mount.mountpoint + normalizeKey(key));
-      }));
-      const keys = keyGroups.flat();
-      return base ? keys.filter((key) => key.startsWith(base) && !key.endsWith("$")) : keys.filter((key) => !key.endsWith("$"));
+        const keys = rawKeys.map((key) => mount.mountpoint + normalizeKey(key)).filter((key) => !maskedMounts.find((p) => key.startsWith(p)));
+        allKeys.push(...keys);
+        maskedMounts = [mount.mountpoint].concat(maskedMounts.filter((p) => !p.startsWith(mount.mountpoint)));
+      }
+      return base ? allKeys.filter((key) => key.startsWith(base) && !key.endsWith("$")) : allKeys.filter((key) => !key.endsWith("$"));
     },
     async clear(base) {
-      base = normalizeBase(base);
-      await Promise.all(getMounts(base).map(async (m) => {
+      base = normalizeBaseKey(base);
+      await Promise.all(getMounts(base, false).map(async (m) => {
         if (m.driver.clear) {
           return asyncCall(m.driver.clear);
         }
@@ -173,7 +216,7 @@ function createStorage(opts = {}) {
       ctx.watchListeners.push(callback);
     },
     mount(base, driver) {
-      base = normalizeBase(base);
+      base = normalizeBaseKey(base);
       if (base && ctx.mounts[base]) {
         throw new Error(`already mounted at ${base}`);
       }
@@ -188,7 +231,7 @@ function createStorage(opts = {}) {
       return storage;
     },
     async unmount(base, _dispose = true) {
-      base = normalizeBase(base);
+      base = normalizeBaseKey(base);
       if (!base || !ctx.mounts[base]) {
         return;
       }
@@ -202,7 +245,7 @@ function createStorage(opts = {}) {
   return storage;
 }
 async function snapshot(storage, base) {
-  base = normalizeBase(base);
+  base = normalizeBaseKey(base);
   const keys = await storage.getKeys(base);
   const snapshot2 = {};
   await Promise.all(keys.map(async (key) => {
@@ -211,7 +254,7 @@ async function snapshot(storage, base) {
   return snapshot2;
 }
 async function restoreSnapshot(driver, snapshot2, base = "") {
-  base = normalizeBase(base);
+  base = normalizeBaseKey(base);
   await Promise.all(Object.entries(snapshot2).map((e) => driver.setItem(base + e[0], e[1])));
 }
 function watch(driver, onChange, base) {
@@ -225,30 +268,4 @@ async function dispose(driver) {
   }
 }
 
-const storageKeyProps = [
-  "hasItem",
-  "getItem",
-  "setItem",
-  "removeItem",
-  "getMeta",
-  "setMeta",
-  "removeMeta",
-  "getKeys",
-  "clear",
-  "mount",
-  "unmount"
-];
-function prefixStorage(storage, base) {
-  base = normalizeBase(base);
-  if (!base) {
-    return storage;
-  }
-  const nsStorage = { ...storage };
-  for (const prop of storageKeyProps) {
-    nsStorage[prop] = (key = "", ...args) => storage[prop](base + key, ...args);
-  }
-  nsStorage.getKeys = (key = "", ...args) => storage.getKeys(base + key, ...args).then((keys) => keys.map((key2) => key2.substr(base.length)));
-  return nsStorage;
-}
-
-export { createStorage, defineDriver, prefixStorage, restoreSnapshot, snapshot };
+export { createStorage, defineDriver, joinKeys, normalizeBaseKey, normalizeKey, prefixStorage, restoreSnapshot, snapshot };

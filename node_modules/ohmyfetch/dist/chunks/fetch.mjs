@@ -54,13 +54,13 @@ const textTypes = /* @__PURE__ */ new Set([
   "application/xhtml",
   "application/html"
 ]);
-const jsonTypes = /* @__PURE__ */ new Set(["application/json", "application/ld+json"]);
+const JSON_RE = /^application\/(?:[\w!#$%&*`\-.^~]*\+)?json(;.+)?$/i;
 function detectResponseType(_contentType = "") {
   if (!_contentType) {
     return "json";
   }
   const contentType = _contentType.split(";").shift();
-  if (jsonTypes.has(contentType)) {
+  if (JSON_RE.test(contentType)) {
     return "json";
   }
   if (textTypes.has(contentType) || contentType.startsWith("text/")) {

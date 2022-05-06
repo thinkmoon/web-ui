@@ -31,7 +31,7 @@ import 'unstorage';
 var vueRouter_cjs = {};
 
 /*!
-  * vue-router v4.0.14
+  * vue-router v4.0.15
   * (c) 2022 Eduardo San Martin Morote
   * @license MIT
   */
@@ -921,9 +921,9 @@ var vueRouter_cjs = {};
 	                    const text = Array.isArray(param) ? param.join('/') : param;
 	                    if (!text) {
 	                        if (optional) {
-	                            // if we have more than one optional param like /:a?-static we
-	                            // don't need to care about the optional param
-	                            if (segment.length < 2) {
+	                            // if we have more than one optional param like /:a?-static and there are more segments, we don't need to
+	                            // care about the optional param
+	                            if (segment.length < 2 && segments.length > 1) {
 	                                // remove the last slash as we could be at the end
 	                                if (path.endsWith('/'))
 	                                    path = path.slice(0, -1);
@@ -2154,6 +2154,9 @@ var vueRouter_cjs = {};
 	        },
 	        route: Object,
 	    },
+	    // Better compat for @vue/compat users
+	    // https://github.com/vuejs/router/issues/1315
+	    compatConfig: { MODE: 3 },
 	    setup(props, { attrs, slots }) {
 	        warnDeprecatedUsage();
 	        const injectedRoute = vue.inject(routerViewLocationKey);
@@ -2648,6 +2651,9 @@ var vueRouter_cjs = {};
 	    let removeHistoryListener;
 	    // attach listener to history to trigger navigations
 	    function setupListeners() {
+	        // avoid setting up listeners twice due to an invalid first navigation
+	        if (removeHistoryListener)
+	            return;
 	        removeHistoryListener = routerHistory.listen((to, _from, info) => {
 	            // cannot be a redirect route because it was in history
 	            const toLocation = resolve(to);
@@ -2818,6 +2824,7 @@ var vueRouter_cjs = {};
 	                    // invalidate the current navigation
 	                    pendingLocation = START_LOCATION_NORMALIZED;
 	                    removeHistoryListener && removeHistoryListener();
+	                    removeHistoryListener = null;
 	                    currentRoute.value = START_LOCATION_NORMALIZED;
 	                    ready = false;
 	                }
@@ -3019,13 +3026,13 @@ const textTypes = /* @__PURE__ */ new Set([
   "application/xhtml",
   "application/html"
 ]);
-const jsonTypes = /* @__PURE__ */ new Set(["application/json", "application/ld+json"]);
+const JSON_RE = /^application\/(?:[\w!#$%&*`\-.^~]*\+)?json(;.+)?$/i;
 function detectResponseType(_contentType = "") {
   if (!_contentType) {
     return "json";
   }
   const contentType = _contentType.split(";").shift();
-  if (jsonTypes.has(contentType)) {
+  if (JSON_RE.test(contentType)) {
     return "json";
   }
   if (textTypes.has(contentType) || contentType.startsWith("text/")) {
@@ -3608,7 +3615,7 @@ function useAsyncData(key, handler, options = {}) {
       asyncData.error.value = null;
     }).catch((error) => {
       asyncData.error.value = error;
-      asyncData.data.value = options.default();
+      asyncData.data.value = vue_cjs_prod.unref(options.default());
     }).finally(() => {
       asyncData.pending.value = false;
       nuxt.payload.data[key] = asyncData.data.value;
@@ -5003,15 +5010,14 @@ const Components$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.define
   Html,
   Body
 }, Symbol.toStringTag, { value: "Module" }));
-const metaConfig = { "globalMeta": { "charset": "utf-8", "viewport": "width=device-width, initial-scale=1", "meta": [{ "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "name": "keywords", "content": "thinkmoon,\u6307\u5C16\u9B54\u6CD5\u5C4B,\u9189\u6708\u601D\u7684\u535A\u5BA2" }, { "name": "description", "content": "web\u524D\u7AEF\u5F00\u53D1\u5DE5\u7A0B\u5E08\u3001\u9762\u5411\u9AD8\u4FDD\u771F\u7F16\u7A0B\u3001\u603B\u7ED3\u4E0E\u8BB0\u5F55\u662F\u4E24\u4E2A\u6781\u5176\u4F18\u79C0\u7684\u5B66\u4E60\u4E60\u60EF\u3001\u5BF9\u77E5\u8BC6\u548C\u6280\u672F\u4FDD\u6301\u656C\u754F\u4E4B\u5FC3\uFF01" }], "link": [], "style": [], "script": [{ "async": true, "src": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3208634444966567", "crossorigin": "anonymous" }] }, "mixinKey": "created" };
+const metaConfig = { "globalMeta": { "charset": "utf-8", "viewport": "width=device-width, initial-scale=1", "meta": [{ "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "name": "keywords", "content": "thinkmoon,\u6307\u5C16\u9B54\u6CD5\u5C4B,\u9189\u6708\u601D\u7684\u535A\u5BA2" }, { "name": "description", "content": "web\u524D\u7AEF\u5F00\u53D1\u5DE5\u7A0B\u5E08\u3001\u9762\u5411\u9AD8\u4FDD\u771F\u7F16\u7A0B\u3001\u603B\u7ED3\u4E0E\u8BB0\u5F55\u662F\u4E24\u4E2A\u6781\u5176\u4F18\u79C0\u7684\u5B66\u4E60\u4E60\u60EF\u3001\u5BF9\u77E5\u8BC6\u548C\u6280\u672F\u4FDD\u6301\u656C\u754F\u4E4B\u5FC3\uFF01" }], "link": [], "style": [], "script": [{ "async": true, "src": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3208634444966567", "crossorigin": "anonymous" }] } };
 const metaMixin = {
-  [metaConfig.mixinKey]() {
-    var _a;
+  created() {
     const instance = vue_cjs_prod.getCurrentInstance();
     if (!instance) {
       return;
     }
-    const options = instance.type || ((_a = instance.proxy) == null ? void 0 : _a.$options);
+    const options = instance.type;
     if (!options || !("head" in options)) {
       return;
     }
@@ -5021,7 +5027,7 @@ const metaMixin = {
   }
 };
 const plugin_147caea6 = defineNuxtPlugin((nuxtApp) => {
-  useHead(metaConfig.globalMeta);
+  useHead(vue_cjs_prod.markRaw(metaConfig.globalMeta));
   nuxtApp.vueApp.mixin(metaMixin);
   for (const name in Components$1) {
     nuxtApp.vueApp.component(name, Components$1[name]);
@@ -5067,7 +5073,7 @@ const NuxtPage = vue_cjs_prod.defineComponent({
       return vue_cjs_prod.h(vueRouter_cjs.RouterView, {}, {
         default: (routeProps) => {
           var _a;
-          return routeProps.Component && _wrapIf(vue_cjs_prod.Transition, (_a = routeProps.route.meta.pageTransition) != null ? _a : defaultPageTransition, wrapInKeepAlive(routeProps.route.meta.keepalive, isNested ? vue_cjs_prod.h(routeProps.Component, { key: generateRouteKey(props.pageKey, routeProps) }) : vue_cjs_prod.h(vue_cjs_prod.Suspense, {
+          return routeProps.Component && _wrapIf(vue_cjs_prod.Transition, (_a = routeProps.route.meta.pageTransition) != null ? _a : defaultPageTransition, wrapInKeepAlive(routeProps.route.meta.keepalive, isNested && nuxtApp.isHydrating ? vue_cjs_prod.h(routeProps.Component, { key: generateRouteKey(props.pageKey, routeProps) }) : vue_cjs_prod.h(vue_cjs_prod.Suspense, {
             onPending: () => nuxtApp.callHook("page:start", routeProps.Component),
             onResolve: () => nuxtApp.callHook("page:finish", routeProps.Component)
           }, { default: () => vue_cjs_prod.h(routeProps.Component, { key: generateRouteKey(props.pageKey, routeProps) }) }))).default();
@@ -5642,7 +5648,7 @@ class CategoryApi {
     });
   }
 }
-const __default__$R = vue_cjs_prod.defineComponent({
+const __default__$Q = vue_cjs_prod.defineComponent({
   data() {
     return {
       article: {
@@ -5697,7 +5703,7 @@ const __default__$R = vue_cjs_prod.defineComponent({
     }
   }
 });
-const _sfc_main$36 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$R), {
+const _sfc_main$36 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$Q), {
   __ssrInlineRender: true,
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
@@ -5779,7 +5785,7 @@ const meta$a = {
   keepalive: true
 };
 const meta$9 = void 0;
-const __default__$Q = vue_cjs_prod.defineComponent({
+const __default__$P = vue_cjs_prod.defineComponent({
   data() {
     return {
       tableData: [],
@@ -5829,7 +5835,7 @@ const __default__$Q = vue_cjs_prod.defineComponent({
     }
   }
 });
-const _sfc_main$35 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$Q), {
+const _sfc_main$35 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$P), {
   __ssrInlineRender: true,
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
@@ -6599,7 +6605,7 @@ _sfc_main$2$.setup = (props, ctx) => {
 const meta$4 = {
   layout: false
 };
-const __default__$P = vue_cjs_prod.defineComponent({
+const __default__$O = vue_cjs_prod.defineComponent({
   name: "Search",
   data() {
     return {
@@ -6607,7 +6613,7 @@ const __default__$P = vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_main$2_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$P), {
+const _sfc_main$2_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$O), {
   __ssrInlineRender: true,
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
@@ -6641,25 +6647,18 @@ _sfc_main$2_.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/section/Search.vue");
   return _sfc_setup$r ? _sfc_setup$r(props, ctx) : void 0;
 };
-const __default__$O = vue_cjs_prod.defineComponent({
-  name: "Announcement"
-});
-const _sfc_main$2Z = /* @__PURE__ */ Object.assign(__default__$O, {
+const _sfc_main$2Z = {
   __ssrInlineRender: true,
   setup(__props) {
-    const content = "# \u535A\u5BA2\u6301\u7EED\u642D\u5EFA\u4E2D";
     return (_ctx, _push, _parent, _attrs) => {
-      const _component_v_md_preview = vue_cjs_prod.resolveComponent("v-md-preview");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "section" }, _attrs))}><span class="section-tile">\u7F51\u7AD9\u516C\u544A</span>`);
-      _push(serverRenderer.exports.ssrRenderComponent(_component_v_md_preview, { text: content }, null, _parent));
-      _push(`</div>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "section" }, _attrs))}><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="auto" data-ad-slot="2184618903" data-full-width-responsive="true" style="${serverRenderer.exports.ssrRenderStyle({ "display": "block" })}"></ins></div>`);
     };
   }
-});
+};
 const _sfc_setup$q = _sfc_main$2Z.setup;
 _sfc_main$2Z.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/section/Announcement.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/section/GoogleAd.vue");
   return _sfc_setup$q ? _sfc_setup$q(props, ctx) : void 0;
 };
 const _sfc_main$2Y = /* @__PURE__ */ vue_cjs_prod.defineComponent({
@@ -6693,7 +6692,7 @@ const _sfc_main$2Y = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_PostList = _sfc_main$34;
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "page-content" }, _attrs))} data-v-c55a3070>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "page-content" }, _attrs))} data-v-3256c01b>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -6706,9 +6705,9 @@ const _sfc_main$2Y = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`<div class="post-container" data-v-c55a3070>`);
+      _push(`<div class="post-container" data-v-3256c01b>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_PostList, { "post-list": vue_cjs_prod.unref(postList2) }, null, _parent));
-      _push(`<div class="pagination-div" data-v-c55a3070><div data-v-c55a3070>`);
+      _push(`<div class="pagination-div" data-v-3256c01b><div data-v-3256c01b>`);
       if (Number(vue_cjs_prod.unref(pageIndex)) !== 1) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: `/page/${Number(vue_cjs_prod.unref(pageIndex)) - 1}`,
@@ -6728,7 +6727,7 @@ const _sfc_main$2Y = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       } else {
         _push(`<!---->`);
       }
-      _push(`</div><div data-v-c55a3070>`);
+      _push(`</div><div data-v-3256c01b>`);
       if (Number(vue_cjs_prod.unref(pageIndex)) !== vue_cjs_prod.unref(data).pages) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: `/page/${Number(vue_cjs_prod.unref(pageIndex)) + 1}`,
@@ -6748,7 +6747,7 @@ const _sfc_main$2Y = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       } else {
         _push(`<!---->`);
       }
-      _push(`</div></div></div><div class="page-section" data-v-c55a3070>`);
+      _push(`</div></div></div><div class="page-section" data-v-3256c01b>`);
       _push(serverRenderer.exports.ssrRenderComponent(_sfc_main$2_, null, null, _parent));
       _push(serverRenderer.exports.ssrRenderComponent(_sfc_main$2Z, null, null, _parent));
       _push(`</div></div>`);
@@ -7109,12 +7108,13 @@ const namedMiddleware = {
     return auth$1;
   })
 };
-const router_ee46a392 = defineNuxtPlugin((nuxtApp) => {
+const router_ee46a392 = defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.vueApp.component("NuxtPage", NuxtPage);
   nuxtApp.vueApp.component("NuxtNestedPage", NuxtPage);
   nuxtApp.vueApp.component("NuxtChild", NuxtPage);
   const { baseURL: baseURL2 } = useRuntimeConfig().app;
   const routerHistory = vueRouter_cjs.createMemoryHistory(baseURL2);
+  const initialURL = nuxtApp.ssrContext.url;
   const router = vueRouter_cjs.createRouter(__spreadProps(__spreadValues({}, routerOptions), {
     history: routerHistory,
     routes
@@ -7131,8 +7131,7 @@ const router_ee46a392 = defineNuxtPlugin((nuxtApp) => {
   for (const key in router.currentRoute.value) {
     route[key] = vue_cjs_prod.computed(() => router.currentRoute.value[key]);
   }
-  const path = nuxtApp.ssrContext.url;
-  const _activeRoute = vue_cjs_prod.shallowRef(router.resolve(path));
+  const _activeRoute = vue_cjs_prod.shallowRef(router.resolve(initialURL));
   const syncCurrentRoute = () => {
     _activeRoute.value = router.currentRoute.value;
   };
@@ -7153,6 +7152,24 @@ const router_ee46a392 = defineNuxtPlugin((nuxtApp) => {
     global: [],
     named: {}
   };
+  router.afterEach((to) => {
+    if (to.matched.length === 0) {
+      callWithNuxt(nuxtApp, throwError$1, [createError({
+        statusCode: 404,
+        statusMessage: `Page not found: ${to.fullPath}`
+      })]);
+    } else if (to.matched[0].name === "404" && nuxtApp.ssrContext) {
+      nuxtApp.ssrContext.res.statusCode = 404;
+    }
+  });
+  try {
+    if (true) {
+      await router.push(initialURL);
+    }
+    await router.isReady();
+  } catch (error) {
+    callWithNuxt(nuxtApp, throwError$1, [error]);
+  }
   router.beforeEach(async (to, from) => {
     var _a;
     to.meta = vue_cjs_prod.reactive(to.meta);
@@ -7177,7 +7194,7 @@ const router_ee46a392 = defineNuxtPlugin((nuxtApp) => {
       {
         if (result === false || result instanceof Error) {
           const error = result || createError({
-            statusMessage: `Route navigation aborted: ${nuxtApp.ssrContext.url}`
+            statusMessage: `Route navigation aborted: ${initialURL}`
           });
           return callWithNuxt(nuxtApp, throwError$1, [error]);
         }
@@ -7187,30 +7204,20 @@ const router_ee46a392 = defineNuxtPlugin((nuxtApp) => {
       }
     }
   });
-  router.afterEach(() => {
+  router.afterEach(async (to) => {
     delete nuxtApp._processingMiddleware;
-  });
-  nuxtApp.hook("app:created", async () => {
-    router.afterEach((to) => {
-      if (to.matched.length === 0) {
-        callWithNuxt(nuxtApp, throwError$1, [createError({
-          statusCode: 404,
-          statusMessage: `Page not found: ${to.fullPath}`
-        })]);
-      } else if (to.matched[0].name === "404" && nuxtApp.ssrContext) {
-        nuxtApp.ssrContext.res.statusCode = 404;
-      }
-    });
     {
-      router.push(nuxtApp.ssrContext.url);
-      router.afterEach(async (to) => {
-        if (to.fullPath !== nuxtApp.ssrContext.url) {
-          await navigateTo(to.fullPath);
-        }
-      });
+      if (to.fullPath !== initialURL) {
+        await callWithNuxt(nuxtApp, navigateTo, [to.fullPath]);
+      }
     }
+  });
+  nuxtApp.hooks.hookOnce("app:created", async () => {
     try {
-      await router.isReady();
+      await router.replace({
+        path: initialURL,
+        force: true
+      });
     } catch (error) {
       callWithNuxt(nuxtApp, throwError$1, [error]);
     }
@@ -52251,7 +52258,7 @@ const _sfc_main$6 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_PostList = _sfc_main$34;
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "page-content" }, _attrs))} data-v-c55a3070>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "page-content" }, _attrs))} data-v-3256c01b>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -52264,9 +52271,9 @@ const _sfc_main$6 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`<div class="post-container" data-v-c55a3070>`);
+      _push(`<div class="post-container" data-v-3256c01b>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_PostList, { "post-list": vue_cjs_prod.unref(postList2) }, null, _parent));
-      _push(`<div class="pagination-div" data-v-c55a3070><div data-v-c55a3070>`);
+      _push(`<div class="pagination-div" data-v-3256c01b><div data-v-3256c01b>`);
       if (Number(vue_cjs_prod.unref(pageIndex)) !== 1) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: `/page/${Number(vue_cjs_prod.unref(pageIndex)) - 1}`,
@@ -52286,7 +52293,7 @@ const _sfc_main$6 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       } else {
         _push(`<!---->`);
       }
-      _push(`</div><div data-v-c55a3070>`);
+      _push(`</div><div data-v-3256c01b>`);
       if (Number(vue_cjs_prod.unref(pageIndex)) !== vue_cjs_prod.unref(data).pages) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: `/page/${Number(vue_cjs_prod.unref(pageIndex)) + 1}`,
@@ -52306,7 +52313,7 @@ const _sfc_main$6 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       } else {
         _push(`<!---->`);
       }
-      _push(`</div></div></div><div class="page-section" data-v-c55a3070>`);
+      _push(`</div></div></div><div class="page-section" data-v-3256c01b>`);
       _push(serverRenderer.exports.ssrRenderComponent(_sfc_main$2_, null, null, _parent));
       _push(serverRenderer.exports.ssrRenderComponent(_sfc_main$2Z, null, null, _parent));
       _push(`</div></div>`);
@@ -52319,7 +52326,7 @@ _sfc_main$6.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/page/[pageIndex].vue");
   return _sfc_setup$6 ? _sfc_setup$6(props, ctx) : void 0;
 };
-const _pageIndex_$1 = /* @__PURE__ */ _export_sfc$2(_sfc_main$6, [["__scopeId", "data-v-c55a3070"]]);
+const _pageIndex_$1 = /* @__PURE__ */ _export_sfc$2(_sfc_main$6, [["__scopeId", "data-v-3256c01b"]]);
 const _pageIndex_$2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": _pageIndex_$1
