@@ -7,8 +7,3 @@
 <script setup>
 const content = '# 博客持续搭建中';
 </script>
-<script>
-export default defineComponent({
-  name: 'Announcement',
-});
-</script>
