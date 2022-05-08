@@ -2,7 +2,9 @@ import {defineNuxtConfig} from 'nuxt';
 import runtimeConfig from './runtime.config';
 
 export default defineNuxtConfig({
-  buildAssetsDir: 'nuxt-asset',
+  app: {
+    buildAssetsDir: 'nuxt-asset',
+  },
   publicRuntimeConfig: runtimeConfig,
   meta: {
     meta: [
