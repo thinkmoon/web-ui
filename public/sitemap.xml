@@ -5,8 +5,6 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
-
-
 <url>
   <loc>https://www.thinkmoon.cn/</loc>
   <lastmod>2022-04-23T10:01:48+00:00</lastmod>
@@ -863,51 +861,6 @@
     <priority>0.41</priority>
   </url>
   <url>
-    <loc>https://www.thinkmoon.cn/usr/uploads/2019/03/213852166.reg</loc>
-    <lastmod>2022-04-23T10:01:48+00:00</lastmod>
-    <priority>0.33</priority>
-  </url>
-  <url>
-    <loc>https://www.thinkmoon.cn/20191213/cid=638.html</loc>
-    <lastmod>2022-04-23T10:01:48+00:00</lastmod>
-    <priority>0.33</priority>
-  </url>
-  <url>
-    <loc>https://www.thinkmoon.cn/20190113/cid=70.html</loc>
-    <lastmod>2022-04-23T10:01:48+00:00</lastmod>
-    <priority>0.33</priority>
-  </url>
-  <url>
-    <loc>https://www.thinkmoon.cn/20190121/cid=121.html</loc>
-    <lastmod>2022-04-23T10:01:48+00:00</lastmod>
-    <priority>0.33</priority>
-  </url>
-  <url>
-    <loc>https://www.thinkmoon.cn/20190123/cid=129.html</loc>
-    <lastmod>2022-04-23T10:01:48+00:00</lastmod>
-    <priority>0.33</priority>
-  </url>
-  <url>
-    <loc>https://www.thinkmoon.cn/20190211/cid=141.html</loc>
-    <lastmod>2022-04-23T10:01:48+00:00</lastmod>
-    <priority>0.33</priority>
-  </url>
-  <url>
-    <loc>https://www.thinkmoon.cn/20190212/cid=153.html</loc>
-    <lastmod>2022-04-23T10:01:48+00:00</lastmod>
-    <priority>0.33</priority>
-  </url>
-  <url>
-    <loc>https://www.thinkmoon.cn/usr/uploads/2019/01/2044047466.txt</loc>
-    <lastmod>2022-04-23T10:01:48+00:00</lastmod>
-    <priority>0.33</priority>
-  </url>
-  <url>
-    <loc>https://www.thinkmoon.cn/usr/uploads/2019/01/4058503811.txt</loc>
-    <lastmod>2022-04-23T10:01:48+00:00</lastmod>
-    <priority>0.33</priority>
-  </url>
-  <url>
     <loc>https://www.thinkmoon.cn/post/638</loc>
     <lastmod>2022-04-23T10:01:48+00:00</lastmod>
     <priority>0.33</priority>
@@ -1122,6 +1075,4 @@
     <lastmod>2022-04-23T10:01:48+00:00</lastmod>
     <priority>0.04</priority>
   </url>
-
-
 </urlset>

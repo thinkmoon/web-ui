@@ -1,4 +1,3 @@
 User-agent: *
 Disallow: /admin/
-Disallow: /login
 Sitemap: https://www.thinkmoon.cn/sitemap.xml
