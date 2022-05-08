@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>初探JavaFx | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="thinkmoon,指尖魔法屋,醉月思的博客"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/_nuxt/entry-4033bfcf.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/entry.7e762317.css" as="style"><link rel="modulepreload" href="/_nuxt/default-ab4b1d95.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/default.8dc03fb7.css" as="style"><link rel="modulepreload" href="/_nuxt/Footer-39451558.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/_cid_-40efc3b3.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/asyncData-b0244fb3.mjs" as="script" crossorigin><link rel="prefetch" href="/_nuxt/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/_nuxt/404-0c215052.mjs"><link rel="prefetch" as="script" href="/_nuxt/editor-3321b87d.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-b882dfe7.mjs"><link rel="prefetch" as="script" href="/_nuxt/post-list-93b150a9.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-f89c7533.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-08429fca.mjs"><link rel="prefetch" as="script" href="/_nuxt/PostList-693c3f84.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dbca3f00.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dc59a107.mjs"><link rel="prefetch" as="script" href="/_nuxt/login-d8f7e58b.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-4617af3f.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-38aaa266.mjs"><link rel="prefetch" as="script" href="/_nuxt/TagApi-b908df3a.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-12cec95d.mjs"><link rel="prefetch" as="script" href="/_nuxt/auth-f948a8cb.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-1ee1b85d.mjs"><link rel="stylesheet" href="/_nuxt/entry.7e762317.css"><link rel="stylesheet" href="/_nuxt/default.8dc03fb7.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div><div class="top-menu" data-v-2d323d18><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-2d323d18><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--> 指尖魔法屋 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/category" class="" data-v-2d323d18> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/tag" class="" data-v-2d323d18> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-2d323d18><a class="el-link el-link--default" href="/login" data-v-2d323d18><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2d323d18><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2d323d18><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container"><!--[--><div class="app-container" data-v-14f20b86><!----><div class="article-content" data-v-14f20b86><div class="v-md-editor-preview" style="tab-size:2;" data-v-14f20b86><div class="github-markdown-body"><h1 data-v-md-heading="初探javafx" data-v-md-line="1">初探JavaFx</h1>
+<h2 data-v-md-heading="idea下开发javafx-application" data-v-md-line="3">IDEA下开发JavaFx Application</h2>
+<blockquote data-v-md-line="5">
+<p data-v-md-line="5">New &gt; project &gt; JavaFx Application</p>
+</blockquote>
+<h2 data-v-md-heading="添加scenebuilder" data-v-md-line="7">添加SceneBuilder</h2>
+<blockquote data-v-md-line="9">
+<ol data-v-md-line="9">
+<li>下载SceneBuilder</li>
+<li>file | setting &gt; JavaFx &gt; add path</li>
+</ol>
+</blockquote>
+<h2 data-v-md-heading="设置自定义图标" data-v-md-line="12">设置自定义图标</h2>
+<blockquote data-v-md-line="14">
+<p data-v-md-line="14"><code> primaryStage.getIcons().add(new Image(&quot;file:res/internet.png&quot;));</code></p>
+</blockquote>
+<h2 data-v-md-heading="打包生成exe" data-v-md-line="16">打包生成exe</h2>
+<blockquote data-v-md-line="18">
+<p data-v-md-line="18">File | project structure &gt; Artifacts &gt; JavaFx &gt;(class | title | Navite Bundle)</p>
+</blockquote>
+<p data-v-md-line="20">注意目录文件要能找到</p>
+<h2 data-v-md-heading="事件绑定" data-v-md-line="22">事件绑定</h2>
+<p data-v-md-line="24"><code>fxml</code></p>
+<blockquote data-v-md-line="25">
+<p data-v-md-line="25"><code>onAction add</code></p>
+</blockquote>
+<p data-v-md-line="27"><code>Java</code></p>
+<blockquote data-v-md-line="28">
+<p data-v-md-line="28">添加函数</p>
+</blockquote>
+<h2 data-v-md-heading="fx-id-对象属性修改" data-v-md-line="30">fx:id 对象属性修改</h2>
+<blockquote data-v-md-line="32">
+<ol data-v-md-line="32">
+<li>添加一个fxml成员变量</li>
+<li>调用setText(“”);</li>
+</ol>
+</blockquote>
+<h2 data-v-md-heading="我的代码" data-v-md-line="35">我的代码</h2>
+<p data-v-md-line="37"><code>MainApp.fxml</code></p>
+<div data-v-md-line="38"><div class="v-md-pre-wrapper v-md-pre-wrapper-xml extra-class"><pre class="v-md-hljs-xml"><code><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+
+&lt;?import javafx.geometry.Insets?&gt;
+&lt;?import javafx.scene.control.Button?&gt;
+&lt;?import javafx.scene.control.DialogPane?&gt;
+&lt;?import javafx.scene.control.Label?&gt;
+&lt;?import javafx.scene.control.TextArea?&gt;
+&lt;?import javafx.scene.control.TextField?&gt;
+&lt;?import javafx.scene.layout.FlowPane?&gt;
+&lt;?import javafx.scene.layout.Pane?&gt;
+&lt;?import javafx.scene.text.Font?&gt;
+
+<span class="hljs-tag">&lt;<span class="hljs-name">FlowPane</span> <span class="hljs-attr">maxHeight</span>=<span class="hljs-string">&quot;-Infinity&quot;</span> <span class="hljs-attr">maxWidth</span>=<span class="hljs-string">&quot;-Infinity&quot;</span> <span class="hljs-attr">minHeight</span>=<span class="hljs-string">&quot;-Infinity&quot;</span> <span class="hljs-attr">minWidth</span>=<span class="hljs-string">&quot;-Infinity&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;400.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;800.0&quot;</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://javafx.com/javafx/8.0.121&quot;</span> <span class="hljs-attr">xmlns:fx</span>=<span class="hljs-string">&quot;http://javafx.com/fxml/1&quot;</span> <span class="hljs-attr">fx:controller</span>=<span class="hljs-string">&quot;cn.thinkmoon.CSMA_CD.MainApp&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">children</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Pane</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;400.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;800.0&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">children</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;154.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;206.0&quot;</span> <span class="hljs-attr">mnemonicParsing</span>=<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-attr">onAction</span>=<span class="hljs-string">&quot;#handleSendDataPackage&quot;</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;发送数据包&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">font</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">Font</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;14.0&quot;</span> /&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">font</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;283.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;206.0&quot;</span> <span class="hljs-attr">mnemonicParsing</span>=<span class="hljs-string">&quot;false&quot;</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;重置操作&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">font</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">Font</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;14.0&quot;</span> /&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">font</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextArea</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;500.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;51.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;299.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;277.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Label</span> <span class="hljs-attr">fx:id</span>=<span class="hljs-string">&quot;host1SendNum&quot;</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;43.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;70.0&quot;</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;主机1所需发送的数据包数：&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">font</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">Font</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;17.0&quot;</span> /&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">font</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">Label</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Label</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;43.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;130.0&quot;</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;主机2所需发送的数据包数：&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">font</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">Font</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;17.0&quot;</span> /&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">font</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">Label</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Label</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;52.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;291.0&quot;</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;主机1&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">font</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">Font</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;18.0&quot;</span> /&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">font</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">Label</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Label</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;410.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;291.0&quot;</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;主机2&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">font</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">Font</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;18.0&quot;</span> /&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">font</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">Label</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;279.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;71.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;279.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;130.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Label</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;14.0&quot;</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;模拟以太网发送过程&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">font</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">Font</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;17.0&quot;</span> /&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">font</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">Label</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Label</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;48.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;327.0&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;-fx-border-width: 1; -fx-border-color: #218ada;&quot;</span> <span class="hljs-attr">styleClass</span>=<span class="hljs-string">&quot;tip&quot;</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;信道空闲&quot;</span> <span class="hljs-attr">textFill</span>=<span class="hljs-string">&quot;#218ada&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">padding</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">Insets</span> <span class="hljs-attr">bottom</span>=<span class="hljs-string">&quot;2.0&quot;</span> <span class="hljs-attr">left</span>=<span class="hljs-string">&quot;2.0&quot;</span> <span class="hljs-attr">right</span>=<span class="hljs-string">&quot;2.0&quot;</span> <span class="hljs-attr">top</span>=<span class="hljs-string">&quot;1.0&quot;</span> /&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">padding</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">Label</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Label</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;406.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;327.0&quot;</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;-fx-border-width: 1; -fx-border-color: #218ada;&quot;</span> <span class="hljs-attr">styleClass</span>=<span class="hljs-string">&quot;tip&quot;</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;信道空闲&quot;</span> <span class="hljs-attr">textFill</span>=<span class="hljs-string">&quot;#218ada&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">padding</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">Insets</span> <span class="hljs-attr">bottom</span>=<span class="hljs-string">&quot;2.0&quot;</span> <span class="hljs-attr">left</span>=<span class="hljs-string">&quot;2.0&quot;</span> <span class="hljs-attr">right</span>=<span class="hljs-string">&quot;2.0&quot;</span> <span class="hljs-attr">top</span>=<span class="hljs-string">&quot;1.0&quot;</span> /&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">padding</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">Label</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;114.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;140.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;170.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;199.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;226.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;257.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;283.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;311.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;340.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">TextField</span> <span class="hljs-attr">layoutX</span>=<span class="hljs-string">&quot;369.0&quot;</span> <span class="hljs-attr">layoutY</span>=<span class="hljs-string">&quot;292.0&quot;</span> <span class="hljs-attr">prefHeight</span>=<span class="hljs-string">&quot;23.0&quot;</span> <span class="hljs-attr">prefWidth</span>=<span class="hljs-string">&quot;19.0&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">children</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Pane</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">DialogPane</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">children</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">FlowPane</span>&gt;</span>
+
+</code></pre>
+</div></div><p data-v-md-line="118"><code>MainApp.java</code></p>
+<div data-v-md-line="119"><div class="v-md-pre-wrapper v-md-pre-wrapper-java extra-class"><pre class="v-md-hljs-java"><code><span class="hljs-keyword">package</span> cn.thinkmoon.CSMA_CD;
+
+<span class="hljs-keyword">import</span> javafx.application.Application;
+<span class="hljs-keyword">import</span> javafx.event.ActionEvent;
+<span class="hljs-keyword">import</span> javafx.fxml.FXML;
+<span class="hljs-keyword">import</span> javafx.fxml.FXMLLoader;
+<span class="hljs-keyword">import</span> javafx.scene.Parent;
+<span class="hljs-keyword">import</span> javafx.scene.Scene;
+<span class="hljs-keyword">import</span> javafx.scene.control.Label;
+<span class="hljs-keyword">import</span> javafx.scene.image.Image;
+<span class="hljs-keyword">import</span> javafx.stage.Stage;
+
+<span class="hljs-keyword">import</span> java.io.IOException;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MainApp</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Application</span> </span>{
+    <span class="hljs-keyword">private</span> Stage primaryStage;
+    <span class="hljs-meta">@FXML</span>
+    <span class="hljs-keyword">private</span> Label host1SendNum;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">start</span><span class="hljs-params">(Stage primaryStage)</span> <span class="hljs-keyword">throws</span> Exception</span>{
+        <span class="hljs-keyword">this</span>.primaryStage = primaryStage;
+        initRootLayout();
+    }
+    <span class="hljs-comment">/**
+     * 初始化主界面布局
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initRootLayout</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">try</span> {
+            Parent root = FXMLLoader.load(getClass().getResource(<span class="hljs-string">&quot;view/MainApp.fxml&quot;</span>));
+            primaryStage.setTitle(<span class="hljs-string">&quot;CSMA/CD协议仿真及演示&quot;</span>);
+            primaryStage.setScene(<span class="hljs-keyword">new</span> Scene(root, <span class="hljs-number">800</span>, <span class="hljs-number">400</span>));
+            primaryStage.setResizable(<span class="hljs-keyword">false</span>);
+            primaryStage.getIcons().add(<span class="hljs-keyword">new</span> Image(<span class="hljs-string">&quot;file:res/internet.png&quot;</span>));
+            primaryStage.show();
+        } <span class="hljs-keyword">catch</span> (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>{
+        launch(args);
+    }
+    <span class="hljs-meta">@FXML</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleSendDataPackage</span><span class="hljs-params">(ActionEvent event)</span> </span>{
+
+    }
+}
+
+</code></pre>
+</div></div><blockquote data-v-md-line="169">
+<p data-v-md-line="169">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/520" class="custom-internal-link" target="_blank">指尖魔法屋-初探JavaFx</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div></div></div><!--]--></div><span></span></div><div class="footer" data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.5 · build-20220508-0128</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a){return {data:{pinia:{},article:{cid:520,title:"初探JavaFx",created:1530278280,modified:1572254916,text:"\r\n## IDEA下开发JavaFx Application\r\n\r\n\u003E New \u003E project \u003E JavaFx Application\r\n\r\n## 添加SceneBuilder \r\n\r\n\u003E 1. 下载SceneBuilder\r\n\u003E 2. file | setting \u003E JavaFx \u003E add path\r\n\r\n## 设置自定义图标\r\n\r\n\u003E ` primaryStage.getIcons().add(new Image(\"file:res\u002Finternet.png\"));`\r\n\r\n## 打包生成exe\r\n\r\n\u003E File | project structure \u003E Artifacts \u003E JavaFx \u003E(class | title | Navite Bundle)\r\n\r\n注意目录文件要能找到\r\n\r\n## 事件绑定\r\n\r\n`fxml`\r\n\u003E `onAction add`\r\n\r\n`Java`\r\n\u003E 添加函数\r\n\r\n## fx:id 对象属性修改\r\n\r\n\u003E 1. 添加一个fxml成员变量\r\n\u003E 2. 调用setText(\"\");\r\n\r\n## 我的代码\r\n\r\n`MainApp.fxml`\r\n```xml\r\n\u003C?xml version=\"1.0\" encoding=\"UTF-8\"?\u003E\r\n\r\n\u003C?import javafx.geometry.Insets?\u003E\r\n\u003C?import javafx.scene.control.Button?\u003E\r\n\u003C?import javafx.scene.control.DialogPane?\u003E\r\n\u003C?import javafx.scene.control.Label?\u003E\r\n\u003C?import javafx.scene.control.TextArea?\u003E\r\n\u003C?import javafx.scene.control.TextField?\u003E\r\n\u003C?import javafx.scene.layout.FlowPane?\u003E\r\n\u003C?import javafx.scene.layout.Pane?\u003E\r\n\u003C?import javafx.scene.text.Font?\u003E\r\n\r\n\u003CFlowPane maxHeight=\"-Infinity\" maxWidth=\"-Infinity\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"400.0\" prefWidth=\"800.0\" xmlns=\"http:\u002F\u002Fjavafx.com\u002Fjavafx\u002F8.0.121\" xmlns:fx=\"http:\u002F\u002Fjavafx.com\u002Ffxml\u002F1\" fx:controller=\"cn.thinkmoon.CSMA_CD.MainApp\"\u003E\r\n\u003Cchildren\u003E\r\n    \u003CPane prefHeight=\"400.0\" prefWidth=\"800.0\"\u003E\r\n        \u003Cchildren\u003E\r\n            \u003CButton layoutX=\"154.0\" layoutY=\"206.0\" mnemonicParsing=\"false\" onAction=\"#handleSendDataPackage\" text=\"发送数据包\"\u003E\r\n                \u003Cfont\u003E\r\n                    \u003CFont size=\"14.0\" \u002F\u003E\r\n                \u003C\u002Ffont\u003E\u003C\u002FButton\u003E\r\n            \u003CButton layoutX=\"283.0\" layoutY=\"206.0\" mnemonicParsing=\"false\" text=\"重置操作\"\u003E\r\n                \u003Cfont\u003E\r\n                    \u003CFont size=\"14.0\" \u002F\u003E\r\n                \u003C\u002Ffont\u003E\u003C\u002FButton\u003E\r\n            \u003CTextArea layoutX=\"500.0\" layoutY=\"51.0\" prefHeight=\"299.0\" prefWidth=\"277.0\" \u002F\u003E\r\n            \u003CLabel fx:id=\"host1SendNum\" layoutX=\"43.0\" layoutY=\"70.0\" text=\"主机1所需发送的数据包数：\"\u003E\r\n                \u003Cfont\u003E\r\n                    \u003CFont size=\"17.0\" \u002F\u003E\r\n                \u003C\u002Ffont\u003E\r\n            \u003C\u002FLabel\u003E\r\n            \u003CLabel layoutX=\"43.0\" layoutY=\"130.0\" text=\"主机2所需发送的数据包数：\"\u003E\r\n                \u003Cfont\u003E\r\n                    \u003CFont size=\"17.0\" \u002F\u003E\r\n                \u003C\u002Ffont\u003E\r\n            \u003C\u002FLabel\u003E\r\n            \u003CLabel layoutX=\"52.0\" layoutY=\"291.0\" text=\"主机1\"\u003E\r\n                \u003Cfont\u003E\r\n                    \u003CFont size=\"18.0\" \u002F\u003E\r\n                \u003C\u002Ffont\u003E\r\n            \u003C\u002FLabel\u003E\r\n            \u003CLabel layoutX=\"410.0\" layoutY=\"291.0\" text=\"主机2\"\u003E\r\n                \u003Cfont\u003E\r\n                    \u003CFont size=\"18.0\" \u002F\u003E\r\n                \u003C\u002Ffont\u003E\r\n            \u003C\u002FLabel\u003E\r\n            \u003CTextField layoutX=\"279.0\" layoutY=\"71.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"279.0\" layoutY=\"130.0\" \u002F\u003E\r\n            \u003CLabel layoutX=\"292.0\" layoutY=\"14.0\" text=\"模拟以太网发送过程\"\u003E\r\n                \u003Cfont\u003E\r\n                    \u003CFont size=\"17.0\" \u002F\u003E\r\n                \u003C\u002Ffont\u003E\r\n            \u003C\u002FLabel\u003E\r\n            \u003CLabel layoutX=\"48.0\" layoutY=\"327.0\" style=\"-fx-border-width: 1; -fx-border-color: #218ada;\" styleClass=\"tip\" text=\"信道空闲\" textFill=\"#218ada\"\u003E\r\n                \u003Cpadding\u003E\r\n                    \u003CInsets bottom=\"2.0\" left=\"2.0\" right=\"2.0\" top=\"1.0\" \u002F\u003E\r\n                \u003C\u002Fpadding\u003E\r\n            \u003C\u002FLabel\u003E\r\n            \u003CLabel layoutX=\"406.0\" layoutY=\"327.0\" style=\"-fx-border-width: 1; -fx-border-color: #218ada;\" styleClass=\"tip\" text=\"信道空闲\" textFill=\"#218ada\"\u003E\r\n                \u003Cpadding\u003E\r\n                    \u003CInsets bottom=\"2.0\" left=\"2.0\" right=\"2.0\" top=\"1.0\" \u002F\u003E\r\n                \u003C\u002Fpadding\u003E\r\n            \u003C\u002FLabel\u003E\r\n            \u003CTextField layoutX=\"114.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"140.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"170.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"199.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"226.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"257.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"283.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"311.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"340.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n            \u003CTextField layoutX=\"369.0\" layoutY=\"292.0\" prefHeight=\"23.0\" prefWidth=\"19.0\" \u002F\u003E\r\n        \u003C\u002Fchildren\u003E\r\n    \u003C\u002FPane\u003E\r\n      \u003CDialogPane \u002F\u003E\r\n\u003C\u002Fchildren\u003E\r\n\u003C\u002FFlowPane\u003E\r\n\r\n```\r\n`MainApp.java`\r\n```java\r\npackage cn.thinkmoon.CSMA_CD;\r\n\r\nimport javafx.application.Application;\r\nimport javafx.event.ActionEvent;\r\nimport javafx.fxml.FXML;\r\nimport javafx.fxml.FXMLLoader;\r\nimport javafx.scene.Parent;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.control.Label;\r\nimport javafx.scene.image.Image;\r\nimport javafx.stage.Stage;\r\n\r\nimport java.io.IOException;\r\n\r\npublic class MainApp extends Application {\r\n    private Stage primaryStage;\r\n    @FXML\r\n    private Label host1SendNum;\r\n    @Override\r\n    public void start(Stage primaryStage) throws Exception{\r\n        this.primaryStage = primaryStage;\r\n        initRootLayout();\r\n    }\r\n    \u002F**\r\n     * 初始化主界面布局\r\n     *\u002F\r\n    public void initRootLayout() {\r\n        try {\r\n            Parent root = FXMLLoader.load(getClass().getResource(\"view\u002FMainApp.fxml\"));\r\n            primaryStage.setTitle(\"CSMA\u002FCD协议仿真及演示\");\r\n            primaryStage.setScene(new Scene(root, 800, 400));\r\n            primaryStage.setResizable(false);\r\n            primaryStage.getIcons().add(new Image(\"file:res\u002Finternet.png\"));\r\n            primaryStage.show();\r\n        } catch (IOException e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n    public static void main(String[] args) {\r\n        launch(args);\r\n    }\r\n    @FXML\r\n    private void handleSendDataPackage(ActionEvent event) {\r\n\r\n    }\r\n}\r\n\r\n```\r\n",authorId:a,comments:a,views:385,likes:a,tag:[],category:"学习笔记",category_id:11,fields:{}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.5 · build-20220508-0128",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""}}}}(0))</script><script type="module" src="/_nuxt/entry-4033bfcf.mjs" crossorigin></script><script type="module" src="/_nuxt/default-ab4b1d95.mjs" crossorigin></script><script type="module" src="/_nuxt/_cid_-40efc3b3.mjs" crossorigin></script>
+</body>
+
+</html>

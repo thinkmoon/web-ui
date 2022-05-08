@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>uni-app使用v-model | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="微信小程序,vue,uni-app"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/_nuxt/entry-4033bfcf.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/entry.7e762317.css" as="style"><link rel="modulepreload" href="/_nuxt/default-ab4b1d95.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/default.8dc03fb7.css" as="style"><link rel="modulepreload" href="/_nuxt/Footer-39451558.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/_cid_-40efc3b3.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/asyncData-b0244fb3.mjs" as="script" crossorigin><link rel="prefetch" href="/_nuxt/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/_nuxt/404-0c215052.mjs"><link rel="prefetch" as="script" href="/_nuxt/editor-3321b87d.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-b882dfe7.mjs"><link rel="prefetch" as="script" href="/_nuxt/post-list-93b150a9.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-f89c7533.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-08429fca.mjs"><link rel="prefetch" as="script" href="/_nuxt/PostList-693c3f84.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dbca3f00.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dc59a107.mjs"><link rel="prefetch" as="script" href="/_nuxt/login-d8f7e58b.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-4617af3f.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-38aaa266.mjs"><link rel="prefetch" as="script" href="/_nuxt/TagApi-b908df3a.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-12cec95d.mjs"><link rel="prefetch" as="script" href="/_nuxt/auth-f948a8cb.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-1ee1b85d.mjs"><link rel="stylesheet" href="/_nuxt/entry.7e762317.css"><link rel="stylesheet" href="/_nuxt/default.8dc03fb7.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div><div class="top-menu" data-v-2d323d18><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-2d323d18><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--> 指尖魔法屋 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/category" class="" data-v-2d323d18> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/tag" class="" data-v-2d323d18> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-2d323d18><a class="el-link el-link--default" href="/login" data-v-2d323d18><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2d323d18><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2d323d18><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container"><!--[--><div class="app-container" data-v-14f20b86><!----><div class="article-content" data-v-14f20b86><div class="v-md-editor-preview" style="tab-size:2;" data-v-14f20b86><div class="github-markdown-body"><h1 data-v-md-heading="uni-app使用v-model" data-v-md-line="1">uni-app使用v-model</h1>
+<h2 data-v-md-heading="v-model-介绍" data-v-md-line="2">v-model 介绍</h2>
+<p data-v-md-line="4">首先明确一点，v-model仅仅是语法糖。</p>
+<div data-v-md-line="6"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>&lt;input type=&quot;text&quot; v-model=&quot;something&quot;&gt;
+</code></pre>
+</div></div><p data-v-md-line="10">等价于</p>
+<div data-v-md-line="12"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>  &lt;input
+                type=&quot;text&quot;
+                v-bind:value=&quot;something&quot;
+                v-on:input=&quot;something = $event.target.value&quot;&gt;
+</code></pre>
+</div></div><p data-v-md-line="19">它将一个较复杂的input双向数据绑定简化了他的书写方式。</p>
+<h2 data-v-md-heading="微信小程序绑定input" data-v-md-line="21">微信小程序绑定input</h2>
+<p data-v-md-line="23">最开始我是使用微信推荐的写法</p>
+<div data-v-md-line="24"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>&lt;input bindtap=&quot;input&quot; /&gt;
+</code></pre>
+</div></div><p data-v-md-line="27">然后在js里面解析event，然后再setData</p>
+<h2 data-v-md-heading="uni-app下v-model的写法" data-v-md-line="29">uni-app下v-model的写法</h2>
+<blockquote data-v-md-line="31">
+<p data-v-md-line="31">本文采用<code>uni-app</code>自定义组件模式</p>
+</blockquote>
+<p data-v-md-line="33">wxml</p>
+<div data-v-md-line="34"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>...
+&lt;form @submit=&quot;formSubmit&quot; @reset=&quot;formReset&quot; :model=&quot;formItem&quot; class=&quot;tm-every-center padding bg-white&quot;&gt;
+					&lt;view class=&quot;section flex align-center&quot;&gt;
+						&lt;view class=&quot;section__title&quot;&gt;姓名：&lt;/view&gt;
+						&lt;input name=&quot;name&quot; placeholder=&quot;请填写您的姓名&quot; class=&quot;bg-gray&quot; v-model=&quot;formItem.name&quot; /&gt;
+					&lt;/view&gt;
+					&lt;view class=&quot;section flex align-center&quot;&gt;
+						&lt;view class=&quot;section__title&quot;&gt;手机：&lt;/view&gt;
+						&lt;input name=&quot;name&quot; placeholder=&quot;请填写您的姓名&quot; class=&quot;bg-gray&quot; v-model=&quot;formItem.phone&quot; /&gt;
+					&lt;/view&gt;
+					&lt;view class=&quot;section flex align-center&quot;&gt;
+						&lt;view class=&quot;section__title&quot;&gt;赛点：&lt;/view&gt;
+						&lt;input name=&quot;name&quot; placeholder=&quot;请填写您的姓名&quot; class=&quot;bg-gray&quot; v-model=&quot;formItem.competition&quot; /&gt;
+					&lt;/view&gt;
+					&lt;view class=&quot;btn-area margin-top&quot;&gt;&lt;button formType=&quot;submit&quot; class=&quot;cu-btn&quot;&gt;提交&lt;/button&gt;&lt;/view&gt;
+				&lt;/form&gt;
+				...
+</code></pre>
+</div></div><p data-v-md-line="53">然后在data里面设置</p>
+<div data-v-md-line="54"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>formItem: {
+				name:'',
+				phone:'',
+				competition: ''
+			}
+</code></pre>
+</div></div><p data-v-md-line="61">在submit事件回调里面就可以这样写</p>
+<div data-v-md-line="62"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>submit(){
+	this.$api.post(formItem).then(res =&gt; {
+	})
+}
+</code></pre>
+</div></div><p data-v-md-line="68">完美解决微信小程序input书写过程冗余的情况。</p>
+<blockquote data-v-md-line="69">
+<p data-v-md-line="69">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/313" class="custom-internal-link" target="_blank">指尖魔法屋-uni-app使用v-model</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div></div></div><!--]--></div><span></span></div><div class="footer" data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.5 · build-20220508-0128</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a,b){return {data:{pinia:{},article:{cid:313,title:"uni-app使用v-model",created:b,modified:b,text:"## v-model 介绍\r\n\r\n首先明确一点，v-model仅仅是语法糖。\r\n\r\n```\r\n\u003Cinput type=\"text\" v-model=\"something\"\u003E\r\n```\r\n\r\n等价于\r\n\r\n```\r\n  \u003Cinput\r\n                type=\"text\"\r\n                v-bind:value=\"something\"\r\n                v-on:input=\"something = $event.target.value\"\u003E\r\n```\r\n\r\n它将一个较复杂的input双向数据绑定简化了他的书写方式。\r\n\r\n## 微信小程序绑定input\r\n\r\n最开始我是使用微信推荐的写法\r\n```\r\n\u003Cinput bindtap=\"input\" \u002F\u003E\r\n```\r\n然后在js里面解析event，然后再setData\r\n\r\n## uni-app下v-model的写法\r\n\r\n\u003E 本文采用`uni-app`自定义组件模式\r\n\r\nwxml\r\n```\r\n...\r\n\u003Cform @submit=\"formSubmit\" @reset=\"formReset\" :model=\"formItem\" class=\"tm-every-center padding bg-white\"\u003E\r\n\t\t\t\t\t\u003Cview class=\"section flex align-center\"\u003E\r\n\t\t\t\t\t\t\u003Cview class=\"section__title\"\u003E姓名：\u003C\u002Fview\u003E\r\n\t\t\t\t\t\t\u003Cinput name=\"name\" placeholder=\"请填写您的姓名\" class=\"bg-gray\" v-model=\"formItem.name\" \u002F\u003E\r\n\t\t\t\t\t\u003C\u002Fview\u003E\r\n\t\t\t\t\t\u003Cview class=\"section flex align-center\"\u003E\r\n\t\t\t\t\t\t\u003Cview class=\"section__title\"\u003E手机：\u003C\u002Fview\u003E\r\n\t\t\t\t\t\t\u003Cinput name=\"name\" placeholder=\"请填写您的姓名\" class=\"bg-gray\" v-model=\"formItem.phone\" \u002F\u003E\r\n\t\t\t\t\t\u003C\u002Fview\u003E\r\n\t\t\t\t\t\u003Cview class=\"section flex align-center\"\u003E\r\n\t\t\t\t\t\t\u003Cview class=\"section__title\"\u003E赛点：\u003C\u002Fview\u003E\r\n\t\t\t\t\t\t\u003Cinput name=\"name\" placeholder=\"请填写您的姓名\" class=\"bg-gray\" v-model=\"formItem.competition\" \u002F\u003E\r\n\t\t\t\t\t\u003C\u002Fview\u003E\r\n\t\t\t\t\t\u003Cview class=\"btn-area margin-top\"\u003E\u003Cbutton formType=\"submit\" class=\"cu-btn\"\u003E提交\u003C\u002Fbutton\u003E\u003C\u002Fview\u003E\r\n\t\t\t\t\u003C\u002Fform\u003E\r\n\t\t\t\t...\r\n```\r\n然后在data里面设置\r\n```\r\nformItem: {\r\n\t\t\t\tname:'',\r\n\t\t\t\tphone:'',\r\n\t\t\t\tcompetition: ''\r\n\t\t\t}\r\n```\r\n在submit事件回调里面就可以这样写\r\n```\r\nsubmit(){\r\n\tthis.$api.post(formItem).then(res =\u003E {\r\n\t})\r\n}\r\n```\r\n完美解决微信小程序input书写过程冗余的情况。",authorId:a,comments:a,views:4595,likes:1,tag:[{tid:18,name:"微信小程序",order:a,count:a},{tid:34,name:"vue",order:a,count:a},{tid:35,name:"uni-app",order:a,count:a}],category:"学习笔记",category_id:11,fields:{}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.5 · build-20220508-0128",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""}}}}(0,1558946566))</script><script type="module" src="/_nuxt/entry-4033bfcf.mjs" crossorigin></script><script type="module" src="/_nuxt/default-ab4b1d95.mjs" crossorigin></script><script type="module" src="/_nuxt/_cid_-40efc3b3.mjs" crossorigin></script>
+</body>
+
+</html>

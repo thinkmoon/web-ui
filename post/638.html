@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>Ubuntu深度学习的相关配置 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="thinkmoon,指尖魔法屋,醉月思的博客"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/_nuxt/entry-4033bfcf.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/entry.7e762317.css" as="style"><link rel="modulepreload" href="/_nuxt/default-ab4b1d95.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/default.8dc03fb7.css" as="style"><link rel="modulepreload" href="/_nuxt/Footer-39451558.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/_cid_-40efc3b3.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/asyncData-b0244fb3.mjs" as="script" crossorigin><link rel="prefetch" href="/_nuxt/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/_nuxt/404-0c215052.mjs"><link rel="prefetch" as="script" href="/_nuxt/editor-3321b87d.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-b882dfe7.mjs"><link rel="prefetch" as="script" href="/_nuxt/post-list-93b150a9.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-f89c7533.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-08429fca.mjs"><link rel="prefetch" as="script" href="/_nuxt/PostList-693c3f84.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dbca3f00.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dc59a107.mjs"><link rel="prefetch" as="script" href="/_nuxt/login-d8f7e58b.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-4617af3f.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-38aaa266.mjs"><link rel="prefetch" as="script" href="/_nuxt/TagApi-b908df3a.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-12cec95d.mjs"><link rel="prefetch" as="script" href="/_nuxt/auth-f948a8cb.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-1ee1b85d.mjs"><link rel="stylesheet" href="/_nuxt/entry.7e762317.css"><link rel="stylesheet" href="/_nuxt/default.8dc03fb7.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div><div class="top-menu" data-v-2d323d18><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-2d323d18><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--> 指尖魔法屋 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/category" class="" data-v-2d323d18> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/tag" class="" data-v-2d323d18> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-2d323d18><a class="el-link el-link--default" href="/login" data-v-2d323d18><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2d323d18><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2d323d18><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container"><!--[--><div class="app-container" data-v-14f20b86><!----><div class="article-content" data-v-14f20b86><div class="v-md-editor-preview" style="tab-size:2;" data-v-14f20b86><div class="github-markdown-body"><h1 data-v-md-heading="ubuntu深度学习的相关配置" data-v-md-line="1">Ubuntu深度学习的相关配置</h1>
+<p data-v-md-line="2"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2019-12-19T14:19:05.png" alt="tensorflow"></p>
+<h2 data-v-md-heading="安装nvidia驱动" data-v-md-line="4">安装NVIDIA驱动</h2>
+<ol data-v-md-line="6">
+<li>查看显卡信息</li>
+</ol>
+<div data-v-md-line="7"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code>ubuntu-drivers devices
+</code></pre>
+</div></div><ol start="2" data-v-md-line="11">
+<li>自动安装显卡驱动</li>
+</ol>
+<div data-v-md-line="13"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code>sudo ubuntu-drivers autoinstall
+</code></pre>
+</div></div><ol start="3" data-v-md-line="17">
+<li>确认是否安装成功</li>
+</ol>
+<div data-v-md-line="18"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code>nvidia-smi
+</code></pre>
+</div></div><h2 data-v-md-heading="安装docker" data-v-md-line="22">安装docker</h2>
+<p data-v-md-line="24"><a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">安装文档</a></p>
+<p data-v-md-line="26">使用阿里源安装</p>
+<div data-v-md-line="28"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code><span class="hljs-meta">#</span><span class="bash"> step 1: 安装必要的一些系统工具</span>
+sudo apt-get update
+sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+<span class="hljs-meta">#</span><span class="bash"> step 2: 安装GPG证书</span>
+curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+<span class="hljs-meta">#</span><span class="bash"> Step 3: 写入软件源信息</span>
+sudo add-apt-repository &quot;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;
+<span class="hljs-meta">#</span><span class="bash"> Step 4: 更新并安装Docker-CE</span>
+sudo apt-get -y update
+sudo apt-get -y install docker-ce
+<span class="hljs-meta">
+#</span><span class="bash"> 安装指定版本的Docker-CE:</span>
+<span class="hljs-meta">#</span><span class="bash"> Step 1: 查找Docker-CE的版本:</span>
+<span class="hljs-meta">#</span><span class="bash"> apt-cache madison docker-ce</span>
+<span class="hljs-meta">#</span><span class="bash">   docker-ce | 17.03.1~ce-0~ubuntu-xenial | http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages</span>
+<span class="hljs-meta">#</span><span class="bash">   docker-ce | 17.03.0~ce-0~ubuntu-xenial | http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages</span>
+<span class="hljs-meta">#</span><span class="bash"> Step 2: 安装指定版本的Docker-CE: (VERSION例如上面的17.03.1~ce-0~ubuntu-xenial)</span>
+<span class="hljs-meta">#</span><span class="bash"> sudo apt-get -y install docker-ce=[VERSION]</span>
+</code></pre>
+</div></div><blockquote data-v-md-line="49">
+<p data-v-md-line="49">tips: 由于使用的是19.10版本，暂时没有对应的源，故手动将step 3切换至19.04</p>
+</blockquote>
+<div data-v-md-line="51"><div class="v-md-pre-wrapper v-md-pre-wrapper-bash extra-class"><pre class="v-md-hljs-bash"><code>sudo add-apt-repository <span class="hljs-string">&quot;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu disco stable&quot;</span>
+</code></pre>
+</div></div><h2 data-v-md-heading="安装nvidia-container-toolkit" data-v-md-line="55">安装NVIDIA Container Toolkit</h2>
+<h3 data-v-md-heading="add-the-package-repositories" data-v-md-line="57">Add the package repositories</h3>
+<div data-v-md-line="58"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code>distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+sudo apt-get update &amp;&amp; sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+</code></pre>
+</div></div><h2 data-v-md-heading="测试" data-v-md-line="66">测试</h2>
+<div data-v-md-line="67"><div class="v-md-pre-wrapper v-md-pre-wrapper-bash extra-class"><pre class="v-md-hljs-bash"><code>sudo docker run --gpus all -it --rm tensorflow/tensorflow:latest-gpu-py3    python -c <span class="hljs-string">&quot;import tensorflow as tf; print(tf.reduce_sum(tf.random.normal([1000, 1000])))&quot;</span>
+</code></pre>
+</div></div><h2 data-v-md-heading="装载工作目录至容器" data-v-md-line="71">装载工作目录至容器</h2>
+<div data-v-md-line="72"><div class="v-md-pre-wrapper v-md-pre-wrapper-bash extra-class"><pre class="v-md-hljs-bash"><code>docker run --gpus all -itd --name tf --rm -v <span class="hljs-variable">$PWD</span>:/tmp -w /tmp tensorflow/tensorflow:latest-gpu-py3
+</code></pre>
+</div></div><p data-v-md-line="75">以上命令在后台创建了一个支持GPU的tensorflow:latest-gpu-py3容器，将其命名为tf（方便后面容器操作），并将工作目录切换至主机当前目录。</p>
+<p data-v-md-line="77"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2019-12-20T13:55:02.png" alt="装载工作目录至tensorflow容器"></p>
+<h2 data-v-md-heading="参考资料" data-v-md-line="80">参考资料</h2>
+<p data-v-md-line="82"><a href="https://blog.csdn.net/yy2yy99/article/details/88569589" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">Ubuntu 18.04 安装NVIDIA驱动 实践</a><br>
+<a href="https://www.tensorflow.org/" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">tensorflow官网</a></p>
+<blockquote data-v-md-line="88">
+<p data-v-md-line="88">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/638" class="custom-internal-link" target="_blank">指尖魔法屋-Ubuntu深度学习的相关配置</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div></div></div><!--]--></div><span></span></div><div class="footer" data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.5 · build-20220508-0128</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a){return {data:{pinia:{},article:{cid:638,title:"Ubuntu深度学习的相关配置",created:1576207800,modified:1576850795,text:"![tensorflow][1]\r\n\r\n## 安装NVIDIA驱动 \r\n\r\n1. 查看显卡信息\r\n```shell\r\nubuntu-drivers devices\r\n```\r\n\r\n2. 自动安装显卡驱动\r\n\r\n```shell\r\nsudo ubuntu-drivers autoinstall\r\n```\r\n\r\n3. 确认是否安装成功\r\n```shell\r\nnvidia-smi\r\n```\r\n\r\n## 安装docker\r\n\r\n[安装文档](https:\u002F\u002Fdocs.docker.com\u002Finstall\u002Flinux\u002Fdocker-ce\u002Fubuntu\u002F)\r\n\r\n使用阿里源安装\r\n\r\n```shell\r\n# step 1: 安装必要的一些系统工具\r\nsudo apt-get update\r\nsudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common\r\n# step 2: 安装GPG证书\r\ncurl -fsSL http:\u002F\u002Fmirrors.aliyun.com\u002Fdocker-ce\u002Flinux\u002Fubuntu\u002Fgpg | sudo apt-key add -\r\n# Step 3: 写入软件源信息\r\nsudo add-apt-repository \"deb [arch=amd64] http:\u002F\u002Fmirrors.aliyun.com\u002Fdocker-ce\u002Flinux\u002Fubuntu $(lsb_release -cs) stable\"\r\n# Step 4: 更新并安装Docker-CE\r\nsudo apt-get -y update\r\nsudo apt-get -y install docker-ce\r\n\r\n# 安装指定版本的Docker-CE:\r\n# Step 1: 查找Docker-CE的版本:\r\n# apt-cache madison docker-ce\r\n#   docker-ce | 17.03.1~ce-0~ubuntu-xenial | http:\u002F\u002Fmirrors.aliyun.com\u002Fdocker-ce\u002Flinux\u002Fubuntu xenial\u002Fstable amd64 Packages\r\n#   docker-ce | 17.03.0~ce-0~ubuntu-xenial | http:\u002F\u002Fmirrors.aliyun.com\u002Fdocker-ce\u002Flinux\u002Fubuntu xenial\u002Fstable amd64 Packages\r\n# Step 2: 安装指定版本的Docker-CE: (VERSION例如上面的17.03.1~ce-0~ubuntu-xenial)\r\n# sudo apt-get -y install docker-ce=[VERSION]\r\n```\r\n\r\n\u003E tips: 由于使用的是19.10版本，暂时没有对应的源，故手动将step 3切换至19.04 \r\n\r\n```bash\r\nsudo add-apt-repository \"deb [arch=amd64] http:\u002F\u002Fmirrors.aliyun.com\u002Fdocker-ce\u002Flinux\u002Fubuntu disco stable\"\r\n```\r\n\r\n## 安装NVIDIA Container Toolkit\r\n\r\n### Add the package repositories\r\n```shell\r\ndistribution=$(. \u002Fetc\u002Fos-release;echo $ID$VERSION_ID)\r\ncurl -s -L https:\u002F\u002Fnvidia.github.io\u002Fnvidia-docker\u002Fgpgkey | sudo apt-key add -\r\ncurl -s -L https:\u002F\u002Fnvidia.github.io\u002Fnvidia-docker\u002F$distribution\u002Fnvidia-docker.list | sudo tee \u002Fetc\u002Fapt\u002Fsources.list.d\u002Fnvidia-docker.list\r\nsudo apt-get update && sudo apt-get install -y nvidia-container-toolkit\r\nsudo systemctl restart docker\r\n```\r\n\r\n## 测试\r\n```bash\r\nsudo docker run --gpus all -it --rm tensorflow\u002Ftensorflow:latest-gpu-py3    python -c \"import tensorflow as tf; print(tf.reduce_sum(tf.random.normal([1000, 1000])))\"\r\n```\r\n\r\n## 装载工作目录至容器\r\n```bash\r\ndocker run --gpus all -itd --name tf --rm -v $PWD:\u002Ftmp -w \u002Ftmp tensorflow\u002Ftensorflow:latest-gpu-py3\r\n```\r\n以上命令在后台创建了一个支持GPU的tensorflow:latest-gpu-py3容器，将其命名为tf（方便后面容器操作），并将工作目录切换至主机当前目录。\r\n\r\n![装载工作目录至tensorflow容器][2]\r\n\r\n\r\n## 参考资料\r\n\r\n[Ubuntu 18.04 安装NVIDIA驱动 实践](https:\u002F\u002Fblog.csdn.net\u002Fyy2yy99\u002Farticle\u002Fdetails\u002F88569589)\r\n[tensorflow官网](https:\u002F\u002Fwww.tensorflow.org\u002F)\r\n\r\n\r\n  [1]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2019-12-19T14:19:05.png\r\n  [2]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2019-12-20T13:55:02.png",authorId:0,comments:a,views:820,likes:a,tag:[],category:"学习笔记",category_id:11,fields:{thumb:"https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2019-12-19T14:19:05.png"}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.5 · build-20220508-0128",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""}}}}(3))</script><script type="module" src="/_nuxt/entry-4033bfcf.mjs" crossorigin></script><script type="module" src="/_nuxt/default-ab4b1d95.mjs" crossorigin></script><script type="module" src="/_nuxt/_cid_-40efc3b3.mjs" crossorigin></script>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>使用zsh让windows cmd变得性感又迷人 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="折腾"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/_nuxt/entry-4033bfcf.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/entry.7e762317.css" as="style"><link rel="modulepreload" href="/_nuxt/default-ab4b1d95.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/default.8dc03fb7.css" as="style"><link rel="modulepreload" href="/_nuxt/Footer-39451558.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/_cid_-40efc3b3.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/asyncData-b0244fb3.mjs" as="script" crossorigin><link rel="prefetch" href="/_nuxt/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/_nuxt/404-0c215052.mjs"><link rel="prefetch" as="script" href="/_nuxt/editor-3321b87d.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-b882dfe7.mjs"><link rel="prefetch" as="script" href="/_nuxt/post-list-93b150a9.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-f89c7533.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-08429fca.mjs"><link rel="prefetch" as="script" href="/_nuxt/PostList-693c3f84.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dbca3f00.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dc59a107.mjs"><link rel="prefetch" as="script" href="/_nuxt/login-d8f7e58b.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-4617af3f.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-38aaa266.mjs"><link rel="prefetch" as="script" href="/_nuxt/TagApi-b908df3a.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-12cec95d.mjs"><link rel="prefetch" as="script" href="/_nuxt/auth-f948a8cb.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-1ee1b85d.mjs"><link rel="stylesheet" href="/_nuxt/entry.7e762317.css"><link rel="stylesheet" href="/_nuxt/default.8dc03fb7.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div><div class="top-menu" data-v-2d323d18><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-2d323d18><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--> 指尖魔法屋 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/category" class="" data-v-2d323d18> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/tag" class="" data-v-2d323d18> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-2d323d18><a class="el-link el-link--default" href="/login" data-v-2d323d18><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2d323d18><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2d323d18><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container"><!--[--><div class="app-container" data-v-14f20b86><!----><div class="article-content" data-v-14f20b86><div class="v-md-editor-preview" style="tab-size:2;" data-v-14f20b86><div class="github-markdown-body"><h1 data-v-md-heading="使用zsh让windows-cmd变得性感又迷人" data-v-md-line="1">使用zsh让windows cmd变得性感又迷人</h1>
+<h2 data-v-md-heading="引言" data-v-md-line="2">引言</h2>
+<blockquote data-v-md-line="3">
+<p data-v-md-line="3">首先看一张最终效果图</p>
+</blockquote>
+<p data-v-md-line="5"><img src="https://www.thinkmoon.cn/usr/uploads/2019/03/3090454687.png" alt="终端.PNG"></p>
+<h2 data-v-md-heading="大致思路" data-v-md-line="7">大致思路</h2>
+<blockquote data-v-md-line="8">
+<p data-v-md-line="8">使用win10的linux子系统，安装zsh，默认切换zsh终端。（什么鬼，这和装虚拟机有什么不一样？放心，不一样的，慢慢看）</p>
+</blockquote>
+<h2 data-v-md-heading="为什么要需要它" data-v-md-line="10">为什么要需要它？</h2>
+<ol data-v-md-line="11">
+<li>cmd太丑，cmder略慢，然后就是命令的不统一性。</li>
+<li>一个好看的终端可以让程序员变得开心又愉快。</li>
+</ol>
+<blockquote data-v-md-line="13">
+<p data-v-md-line="13">如下</p>
+</blockquote>
+<p data-v-md-line="15"><img src="https://www.thinkmoon.cn/usr/uploads/2019/03/941670490.png" alt="截图.PNG"></p>
+<h2 data-v-md-heading="准备工作" data-v-md-line="17">准备工作</h2>
+<ol data-v-md-line="18">
+<li>win10内部版本16215.0以上</li>
+<li>打开win10开发人员模式</li>
+<li>勾选控制面板&gt;程序&gt;启用windows功能&gt;linux子系统</li>
+<li>重启</li>
+<li>打开应用商店&gt;搜索linux, 选择你喜欢的linux发行版安装，我选的是ubuntu18.04，如果卸载了应用商店可以自行百度开启方式</li>
+</ol>
+<p data-v-md-line="24">– 至此：linux系统安装成功</p>
+<h2 data-v-md-heading="在linux子系统中需要做的操作" data-v-md-line="25">在linux子系统中需要做的操作</h2>
+<h3 data-v-md-heading="在开始栏运行ubuntu" data-v-md-line="26">在开始栏运行ubuntu</h3>
+<blockquote data-v-md-line="27">
+<p data-v-md-line="27">或者win+R，键入wsl运行。</p>
+</blockquote>
+<h3 data-v-md-heading="安装zsh" data-v-md-line="28">安装zsh</h3>
+<div data-v-md-line="29"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code>sudo apt-get install zsh
+</code></pre>
+</div></div><h2 data-v-md-heading="设置默认shell" data-v-md-line="33">设置默认shell</h2>
+<div data-v-md-line="34"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code>chsh -s /bin/zsh
+</code></pre>
+</div></div><h3 data-v-md-heading="安装oh-my-zsh" data-v-md-line="38">安装oh-my-zsh</h3>
+<div data-v-md-line="39"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code>sh -c &quot;$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)&quot;
+</code></pre>
+</div></div><h3 data-v-md-heading="可选项-修改主题" data-v-md-line="43">(可选项)修改主题</h3>
+<div data-v-md-line="44"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code>nano ~/.zshrc
+</code></pre>
+</div></div><blockquote data-v-md-line="47">
+<p data-v-md-line="47">我的修改如下</p>
+</blockquote>
+<p data-v-md-line="49"><img src="https://www.thinkmoon.cn/usr/uploads/2019/03/1635360079.png" alt="2019-03-12T07:02:46.png"></p>
+<h3 data-v-md-heading="让bash每次打开自动执行zsh" data-v-md-line="51">让bash每次打开自动执行zsh</h3>
+<p data-v-md-line="52">重新打开终端窗口，我们目前的效果是这样的。</p>
+<p data-v-md-line="54"><img src="https://www.thinkmoon.cn/usr/uploads/2019/03/1686441689.png" alt="ssh1.PNG"></p>
+<blockquote data-v-md-line="56">
+<p data-v-md-line="56">然后就会发现，这丫的，这怎么跟我的win10保持文件共享呢？</p>
+</blockquote>
+<h2 data-v-md-heading="让linux子系统默认打开win10用户根目录" data-v-md-line="58">让linux子系统默认打开win10用户根目录</h2>
+<ol data-v-md-line="59">
+<li>首先找到<code>C\\windows\\system32\\wsl.exe</code>，复制到你的win10用户根目录。</li>
+<li>再为根目录的bash.exe创建快捷方式发送到桌面。</li>
+<li>运行</li>
+</ol>
+<blockquote data-v-md-line="63">
+<p data-v-md-line="63">看，好神奇</p>
+</blockquote>
+<p data-v-md-line="65"><img src="https://www.thinkmoon.cn/usr/uploads/2019/03/1721161329.png" alt="2019-03-12T07:14:16.png"></p>
+<blockquote data-v-md-line="67">
+<p data-v-md-line="67">可是，，，难道每次我运行命令都要回到桌面启动？而且就不能像ubuntu那样ctrl + alt + T打开？</p>
+</blockquote>
+<h2 data-v-md-heading="为适应win10的一些配置" data-v-md-line="69">为适应win10的一些配置</h2>
+<ol data-v-md-line="70">
+<li>右键点击桌面快捷方式，选择快捷键，同时按ctrl + alt + T设置快捷键。</li>
+<li>桌面右键&gt;选择查看&gt;取消勾选显示桌面图标</li>
+</ol>
+<blockquote data-v-md-line="72">
+<p data-v-md-line="72">测试ctrl + alt + T，我可能是为数不多的秀win10桌面的程序员:) （好像还是没有linux的好看？）</p>
+</blockquote>
+<p data-v-md-line="74"><img src="https://www.thinkmoon.cn/usr/uploads/2019/03/360849061.png" alt="2019-03-12T07:23:44.png"></p>
+<blockquote data-v-md-line="76">
+<p data-v-md-line="76">在vs code里配置默认终端为wsl.exe。效果展示</p>
+</blockquote>
+<p data-v-md-line="78"><img src="https://www.thinkmoon.cn/usr/uploads/2019/03/813746774.png" alt="2019-03-12T07:27:41.png"></p>
+<h2 data-v-md-heading="结束语" data-v-md-line="80">结束语</h2>
+<p data-v-md-line="81">因为截图会变模糊，实际效果比这好看的多，嗯，又多了一个装逼的东西。</p>
+<blockquote data-v-md-line="90">
+<p data-v-md-line="90">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/229" class="custom-internal-link" target="_blank">指尖魔法屋-使用zsh让windows cmd变得性感又迷人</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div></div></div><!--]--></div><span></span></div><div class="footer" data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.5 · build-20220508-0128</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a,b){return {data:{pinia:{},article:{cid:229,title:"使用zsh让windows cmd变得性感又迷人",created:1552355400,modified:1576741293,text:"## 引言\r\n\u003E 首先看一张最终效果图\r\n\r\n![终端.PNG][1]\r\n\r\n## 大致思路\r\n\u003E 使用win10的linux子系统，安装zsh，默认切换zsh终端。（什么鬼，这和装虚拟机有什么不一样？放心，不一样的，慢慢看）\r\n\r\n## 为什么要需要它？\r\n1. cmd太丑，cmder略慢，然后就是命令的不统一性。\r\n2. 一个好看的终端可以让程序员变得开心又愉快。\r\n\u003E 如下\r\n\r\n![截图.PNG][2]\r\n\r\n## 准备工作\r\n1. win10内部版本16215.0以上\r\n2. 打开win10开发人员模式\r\n3. 勾选控制面板\u003E程序\u003E启用windows功能\u003Elinux子系统\r\n4. 重启\r\n5. 打开应用商店\u003E搜索linux, 选择你喜欢的linux发行版安装，我选的是ubuntu18.04，如果卸载了应用商店可以自行百度开启方式\r\n\r\n-- 至此：linux系统安装成功\r\n## 在linux子系统中需要做的操作\r\n### 在开始栏运行ubuntu\r\n\u003E 或者win+R，键入wsl运行。\r\n### 安装zsh\r\n```shell\r\nsudo apt-get install zsh\r\n```\r\n\r\n## 设置默认shell\r\n```shell\r\nchsh -s \u002Fbin\u002Fzsh\r\n```\r\n\r\n### 安装oh-my-zsh\r\n```shell\r\nsh -c \"$(wget https:\u002F\u002Fraw.githubusercontent.com\u002Frobbyrussell\u002Foh-my-zsh\u002Fmaster\u002Ftools\u002Finstall.sh -O -)\"\r\n```\r\n\r\n### (可选项)修改主题\r\n```shell\r\nnano ~\u002F.zshrc\r\n```\r\n\u003E 我的修改如下\r\n\r\n![2019-03-12T07:02:46.png][3]\r\n\r\n### 让bash每次打开自动执行zsh\r\n重新打开终端窗口，我们目前的效果是这样的。\r\n\r\n![ssh1.PNG][4]\r\n\r\n\u003E 然后就会发现，这丫的，这怎么跟我的win10保持文件共享呢？\r\n\r\n## 让linux子系统默认打开win10用户根目录\r\n1. 首先找到`C\\\\windows\\\\system32\\\\wsl.exe`，复制到你的win10用户根目录。\r\n2. 再为根目录的bash.exe创建快捷方式发送到桌面。\r\n3. 运行\r\n\r\n\u003E 看，好神奇\r\n\r\n![2019-03-12T07:14:16.png][5]\r\n\r\n\u003E 可是，，，难道每次我运行命令都要回到桌面启动？而且就不能像ubuntu那样ctrl + alt + T打开？\r\n\r\n## 为适应win10的一些配置\r\n1. 右键点击桌面快捷方式，选择快捷键，同时按ctrl + alt + T设置快捷键。\r\n2. 桌面右键\u003E选择查看\u003E取消勾选显示桌面图标\r\n\u003E 测试ctrl + alt + T，我可能是为数不多的秀win10桌面的程序员:) （好像还是没有linux的好看？）\r\n\r\n![2019-03-12T07:23:44.png][6]\r\n\r\n\u003E 在vs code里配置默认终端为wsl.exe。效果展示\r\n\r\n![2019-03-12T07:27:41.png][7]\r\n\r\n## 结束语\r\n因为截图会变模糊，实际效果比这好看的多，嗯，又多了一个装逼的东西。\r\n\r\n  [1]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F3090454687.png\r\n  [2]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F941670490.png\r\n  [3]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F1635360079.png\r\n  [4]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F1686441689.png\r\n  [5]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F1721161329.png\r\n  [6]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F360849061.png\r\n  [7]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F813746774.png",authorId:a,comments:b,views:3786,likes:b,tag:[{tid:30,name:"折腾",order:a,count:a}],category:"教程分享",category_id:14,fields:{thumb:"https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F3090454687.png"}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.5 · build-20220508-0128",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""}}}}(0,2))</script><script type="module" src="/_nuxt/entry-4033bfcf.mjs" crossorigin></script><script type="module" src="/_nuxt/default-ab4b1d95.mjs" crossorigin></script><script type="module" src="/_nuxt/_cid_-40efc3b3.mjs" crossorigin></script>
+</body>
+
+</html>

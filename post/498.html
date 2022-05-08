@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>为typecho增加Ctrl+S保存文章功能 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="thinkmoon,指尖魔法屋,醉月思的博客"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/_nuxt/entry-4033bfcf.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/entry.7e762317.css" as="style"><link rel="modulepreload" href="/_nuxt/default-ab4b1d95.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/default.8dc03fb7.css" as="style"><link rel="modulepreload" href="/_nuxt/Footer-39451558.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/_cid_-40efc3b3.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/asyncData-b0244fb3.mjs" as="script" crossorigin><link rel="prefetch" href="/_nuxt/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/_nuxt/404-0c215052.mjs"><link rel="prefetch" as="script" href="/_nuxt/editor-3321b87d.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-b882dfe7.mjs"><link rel="prefetch" as="script" href="/_nuxt/post-list-93b150a9.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-f89c7533.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-08429fca.mjs"><link rel="prefetch" as="script" href="/_nuxt/PostList-693c3f84.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dbca3f00.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dc59a107.mjs"><link rel="prefetch" as="script" href="/_nuxt/login-d8f7e58b.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-4617af3f.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-38aaa266.mjs"><link rel="prefetch" as="script" href="/_nuxt/TagApi-b908df3a.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-12cec95d.mjs"><link rel="prefetch" as="script" href="/_nuxt/auth-f948a8cb.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-1ee1b85d.mjs"><link rel="stylesheet" href="/_nuxt/entry.7e762317.css"><link rel="stylesheet" href="/_nuxt/default.8dc03fb7.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div><div class="top-menu" data-v-2d323d18><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-2d323d18><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--> 指尖魔法屋 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/category" class="" data-v-2d323d18> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/tag" class="" data-v-2d323d18> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-2d323d18><a class="el-link el-link--default" href="/login" data-v-2d323d18><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2d323d18><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2d323d18><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container"><!--[--><div class="app-container" data-v-14f20b86><!----><div class="article-content" data-v-14f20b86><div class="v-md-editor-preview" style="tab-size:2;" data-v-14f20b86><div class="github-markdown-body"><h1 data-v-md-heading="为typecho增加ctrl-s保存文章功能" data-v-md-line="1">为typecho增加Ctrl+S保存文章功能</h1>
+<h2 data-v-md-heading="前言" data-v-md-line="2">前言</h2>
+<p data-v-md-line="4">本文使用jQuery修改typecho让其在文章编辑页内支持<code>CTRL + S</code>保存文章草稿，typecho的版本为1.2 (18.10.23).</p>
+<h2 data-v-md-heading="为什么需要" data-v-md-line="6">为什么需要？</h2>
+<p data-v-md-line="8">由于个人博客使用的typecho，在编辑文章的过程中经常习惯性的点击<code>CTRl + S</code>，然后就会非常不友好的提示了这个。</p>
+<p data-v-md-line="10"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2019-10-28T06:59:58.png" alt="2019-10-28T06:59:58.png"></p>
+<p data-v-md-line="12">这对追求优雅的本宅来说，简直无法容忍。难道我要因此弃用typecho?这也太夸张了。那就来发挥我modify的能力吧，毕竟闲余折腾是我的一大乐趣，而且自己动手，丰衣足食嘛！</p>
+<h2 data-v-md-heading="心路历程" data-v-md-line="14">心路历程</h2>
+<ol data-v-md-line="16">
+<li>
+<p data-v-md-line="16">首先，我知道这个理论上绝对可行，因为我用过很多此类功能。</p>
+</li>
+<li>
+<p data-v-md-line="18">经查阅资料，chrome的适配最好，当然我也没考虑别的浏览器，因为我眼中的浏览器只有两种，chrome和不是chrome。随便一提：不用chrome的程序员不是优雅的程序员。</p>
+</li>
+<li>
+<p data-v-md-line="20">分析实现方法，大致分为两步，监听<code>ctrl+s</code>时间和模拟点击保存草稿按钮</p>
+</li>
+<li>
+<p data-v-md-line="22">选型方面，由于typecho内置jquery，因此采用最快捷的办法</p>
+</li>
+</ol>
+<h2 data-v-md-heading="实现过程" data-v-md-line="24">实现过程</h2>
+<h3 data-v-md-heading="确认页面是否支持jquery" data-v-md-line="26">确认页面是否支持jQuery</h3>
+<p data-v-md-line="28">为了避免重复引入，我们可在console中输入<code>$</code>，根据提示来确认是否已有jQuery</p>
+<p data-v-md-line="30"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2019-10-28T07:14:31.png" alt="确认是否已有jQuery"></p>
+<p data-v-md-line="32">如图，则表示已有jQuery。</p>
+<h3 data-v-md-heading="找到编辑文章的php页面" data-v-md-line="34">找到编辑文章的php页面</h3>
+<p data-v-md-line="36">嗯，就是这个路径<code>typecho/admin/write-post.php</code></p>
+<h3 data-v-md-heading="找个合适位置放script" data-v-md-line="38">找个合适位置放script</h3>
+<p data-v-md-line="40">请在文件末尾插入一个script节点，以防止在jquery定义之前使用或者在<code>if</code>语句中未应用。</p>
+<h3 data-v-md-heading="监听-ctrl-s" data-v-md-line="42">监听<code>ctrl + S</code></h3>
+<p data-v-md-line="44">在script节点中插入以下代码</p>
+<div data-v-md-line="46"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>$(window).keydown(function(event) {
+        if (event.ctrlKey &amp;&amp; event.which == 83) {
+            alert(&quot;Ctrl+S pressed.&quot;);
+            return false;
+        } else {
+            return true;
+        }
+    });
+</code></pre>
+</div></div><p data-v-md-line="57">刷新编辑文章页，提示以下内容则监听成功。</p>
+<p data-v-md-line="59"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2019-10-28T07:29:12.png" alt="好像暗黑背景有点看不清？"></p>
+<h2 data-v-md-heading="模拟点击保存" data-v-md-line="61">模拟点击保存</h2>
+<p data-v-md-line="63">通过源代码分析，我们可以发现，保存文章的按钮id为<code>btn-save</code>。现在我们修改代码里面的内容如下</p>
+<div data-v-md-line="65"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>$(window).keydown(function(event) {
+        if (event.ctrlKey &amp;&amp; event.which == 83) {
+            $(&quot;#btn-save&quot;).click();
+            return false;
+        } else {
+            return true;
+        }
+    });
+</code></pre>
+</div></div><h2 data-v-md-heading="大功告成" data-v-md-line="76">大功告成</h2>
+<p data-v-md-line="78"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2019-10-28T07:33:26.png" alt="2019-10-28T07:33:26.png"></p>
+<h2 data-v-md-heading="结语" data-v-md-line="80">结语</h2>
+<p data-v-md-line="82">本文从技术层面上来说没什么亮点，这是我在尝试一种新的写作方式的练手篇。在原先只记录如何做的基础上，增加了了心路历程这一项，侧重于记录我在实际过程中一个想法到把它实现出来的整个过程，目的在于分享如何思考，从哪里开始，怎么实现的整个思维过程。大家且当抛砖引玉看看吧！</p>
+<h2 data-v-md-heading="参考资料" data-v-md-line="84">参考资料</h2>
+<p data-v-md-line="86"><a href="https://www.cnblogs.com/freeweb/p/4797872.html" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">JavaScript或jQuery模拟点击超链接和按钮</a><br>
+<a href="https://blog.csdn.net/milaner337/article/details/49835555" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">javascript屏蔽Ctrl+s，F1，F3各浏览器兼容写法</a></p>
+<blockquote data-v-md-line="96">
+<p data-v-md-line="96">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/498" class="custom-internal-link" target="_blank">指尖魔法屋-为typecho增加Ctrl+S保存文章功能</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div></div></div><!--]--></div><span></span></div><div class="footer" data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.5 · build-20220508-0128</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__={data:{pinia:{},article:{cid:498,title:"为typecho增加Ctrl+S保存文章功能",created:1572248460,modified:1572248732,text:"## 前言\r\n\r\n本文使用jQuery修改typecho让其在文章编辑页内支持`CTRL + S`保存文章草稿，typecho的版本为1.2 (18.10.23).\r\n\r\n## 为什么需要？\r\n\r\n由于个人博客使用的typecho，在编辑文章的过程中经常习惯性的点击`CTRl + S`，然后就会非常不友好的提示了这个。\r\n\r\n![2019-10-28T06:59:58.png][1]\r\n\r\n这对追求优雅的本宅来说，简直无法容忍。难道我要因此弃用typecho?这也太夸张了。那就来发挥我modify的能力吧，毕竟闲余折腾是我的一大乐趣，而且自己动手，丰衣足食嘛！\r\n\r\n## 心路历程\r\n\r\n1. 首先，我知道这个理论上绝对可行，因为我用过很多此类功能。\r\n\r\n2. 经查阅资料，chrome的适配最好，当然我也没考虑别的浏览器，因为我眼中的浏览器只有两种，chrome和不是chrome。随便一提：不用chrome的程序员不是优雅的程序员。\r\n\r\n3. 分析实现方法，大致分为两步，监听`ctrl+s`时间和模拟点击保存草稿按钮\r\n\r\n4. 选型方面，由于typecho内置jquery，因此采用最快捷的办法\r\n\r\n## 实现过程\r\n\r\n### 确认页面是否支持jQuery\r\n\r\n为了避免重复引入，我们可在console中输入`$`，根据提示来确认是否已有jQuery\r\n\r\n![确认是否已有jQuery][2]\r\n\r\n如图，则表示已有jQuery。\r\n\r\n### 找到编辑文章的php页面\r\n\r\n嗯，就是这个路径`typecho\u002Fadmin\u002Fwrite-post.php`\r\n\r\n### 找个合适位置放script\r\n\r\n请在文件末尾插入一个script节点，以防止在jquery定义之前使用或者在`if`语句中未应用。\r\n\r\n### 监听`ctrl + S`\r\n\r\n在script节点中插入以下代码\r\n\r\n```\r\n$(window).keydown(function(event) {\r\n        if (event.ctrlKey && event.which == 83) {\r\n            alert(\"Ctrl+S pressed.\");\r\n            return false;\r\n        } else {\r\n            return true;\r\n        }\r\n    });\r\n```\r\n\r\n刷新编辑文章页，提示以下内容则监听成功。\r\n\r\n![好像暗黑背景有点看不清？][3]\r\n\r\n## 模拟点击保存\r\n\r\n通过源代码分析，我们可以发现，保存文章的按钮id为`btn-save`。现在我们修改代码里面的内容如下\r\n\r\n```\r\n$(window).keydown(function(event) {\r\n        if (event.ctrlKey && event.which == 83) {\r\n            $(\"#btn-save\").click();\r\n            return false;\r\n        } else {\r\n            return true;\r\n        }\r\n    });\r\n```\r\n\r\n## 大功告成\r\n\r\n![2019-10-28T07:33:26.png][4]\r\n\r\n## 结语\r\n\r\n本文从技术层面上来说没什么亮点，这是我在尝试一种新的写作方式的练手篇。在原先只记录如何做的基础上，增加了了心路历程这一项，侧重于记录我在实际过程中一个想法到把它实现出来的整个过程，目的在于分享如何思考，从哪里开始，怎么实现的整个思维过程。大家且当抛砖引玉看看吧！\r\n\r\n## 参考资料\r\n\r\n[JavaScript或jQuery模拟点击超链接和按钮][5]\r\n[javascript屏蔽Ctrl+s，F1，F3各浏览器兼容写法][6]\r\n\r\n\r\n  [1]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2019-10-28T06:59:58.png\r\n  [2]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2019-10-28T07:14:31.png\r\n  [3]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2019-10-28T07:29:12.png\r\n  [4]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2019-10-28T07:33:26.png\r\n  [5]: https:\u002F\u002Fwww.cnblogs.com\u002Ffreeweb\u002Fp\u002F4797872.html\r\n  [6]: https:\u002F\u002Fblog.csdn.net\u002Fmilaner337\u002Farticle\u002Fdetails\u002F49835555",authorId:0,comments:15,views:1068,likes:3,tag:[],category:"闲余折腾",category_id:13,fields:{}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.5 · build-20220508-0128",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""}}}</script><script type="module" src="/_nuxt/entry-4033bfcf.mjs" crossorigin></script><script type="module" src="/_nuxt/default-ab4b1d95.mjs" crossorigin></script><script type="module" src="/_nuxt/_cid_-40efc3b3.mjs" crossorigin></script>
+</body>
+
+</html>

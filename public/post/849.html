@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>gitlab中vue前端项目CI/CD部署笔记 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="gitlab"><meta name="description" content="持续部署（continuous deployment）是持续交付的下一步，指的是代码通过评审以后，自动部署到生产环境。持续部署的目标是，代码在任何时刻都是可部署的，可以进入生产阶段。"><meta name="head:count" content="5"><link rel="modulepreload" href="/_nuxt/entry-4033bfcf.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/entry.7e762317.css" as="style"><link rel="modulepreload" href="/_nuxt/default-ab4b1d95.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/default.8dc03fb7.css" as="style"><link rel="modulepreload" href="/_nuxt/Footer-39451558.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/_cid_-40efc3b3.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/asyncData-b0244fb3.mjs" as="script" crossorigin><link rel="prefetch" href="/_nuxt/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/_nuxt/404-0c215052.mjs"><link rel="prefetch" as="script" href="/_nuxt/editor-3321b87d.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-b882dfe7.mjs"><link rel="prefetch" as="script" href="/_nuxt/post-list-93b150a9.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-f89c7533.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-08429fca.mjs"><link rel="prefetch" as="script" href="/_nuxt/PostList-693c3f84.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dbca3f00.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dc59a107.mjs"><link rel="prefetch" as="script" href="/_nuxt/login-d8f7e58b.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-4617af3f.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-38aaa266.mjs"><link rel="prefetch" as="script" href="/_nuxt/TagApi-b908df3a.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-12cec95d.mjs"><link rel="prefetch" as="script" href="/_nuxt/auth-f948a8cb.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-1ee1b85d.mjs"><link rel="stylesheet" href="/_nuxt/entry.7e762317.css"><link rel="stylesheet" href="/_nuxt/default.8dc03fb7.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div><div class="top-menu" data-v-2d323d18><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-2d323d18><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--> 指尖魔法屋 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/category" class="" data-v-2d323d18> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/tag" class="" data-v-2d323d18> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-2d323d18><a class="el-link el-link--default" href="/login" data-v-2d323d18><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2d323d18><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2d323d18><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container"><!--[--><div class="app-container" data-v-14f20b86><!----><div class="article-content" data-v-14f20b86><div class="v-md-editor-preview" style="tab-size:2;" data-v-14f20b86><div class="github-markdown-body"><h1 data-v-md-heading="gitlab中vue前端项目ci-cd部署笔记" data-v-md-line="1">gitlab中vue前端项目CI/CD部署笔记</h1>
+<h2 data-v-md-heading="持续集成" data-v-md-line="2">持续集成</h2>
+<p data-v-md-line="4">略</p>
+<h2 data-v-md-heading="gitlab的持续集成" data-v-md-line="6">Gitlab的持续集成</h2>
+<p data-v-md-line="8">我们可以将整个运行机制，看作一个赏金猎人接任务，执行任务，并完成任务的过程。</p>
+<h3 data-v-md-heading="gitlab-ci" data-v-md-line="10">GitLab-CI</h3>
+<p data-v-md-line="12">简单来说，这就是一个任务发布平台。运行在gitlab服务器，监听代码状态变化，并发布对应的任务。</p>
+<h3 data-v-md-heading="gitlab-runner" data-v-md-line="14">GitLab-Runner</h3>
+<p data-v-md-line="16">而每个runner就是一位赏金猎人，是任务的执行者。</p>
+<p data-v-md-line="18"><img src="http://blog.cdn.thinkmoon.cn/blog/typecho/2020-05-22T06:04:52.png" alt="2020-05-22T06:04:52.png"></p>
+<h3 data-v-md-heading="gitlab-ci-yml" data-v-md-line="20">.gitlab-ci.yml</h3>
+<p data-v-md-line="22">任务的发布者，规定什么时候触发任务，任务的具体内容。</p>
+<h2 data-v-md-heading="配置流程" data-v-md-line="24">配置流程</h2>
+<p data-v-md-line="26">经过前面的解释，整个思路就很清晰了。我们需要做的有三件事。</p>
+<ol data-v-md-line="28">
+<li>编写<code>.gitlab-ci.yml</code>文件，设置对应的任务</li>
+<li>部署Runner，激活赏金猎人</li>
+<li>配置ci，邀请赏金猎人加入系统</li>
+</ol>
+<h3 data-v-md-heading="部署runner" data-v-md-line="32">部署Runner</h3>
+<p data-v-md-line="34">这一步需要一个服务器，能run起来赏金猎人。</p>
+<h4 data-v-md-heading="安装" data-v-md-line="36">安装</h4>
+<p data-v-md-line="38">请务必安装最新版，不然会出现很多未知的问题</p>
+<ol data-v-md-line="40">
+<li>下载二进制文件</li>
+</ol>
+<div data-v-md-line="41"><div class="v-md-pre-wrapper v-md-pre-wrapper-bash extra-class"><pre class="v-md-hljs-bash"><code><span class="hljs-comment"># Linux x86-64</span>
+sudo curl -L --output /usr/<span class="hljs-built_in">local</span>/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+
+<span class="hljs-comment"># Linux x86</span>
+sudo curl -L --output /usr/<span class="hljs-built_in">local</span>/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-386
+
+<span class="hljs-comment"># Linux arm</span>
+sudo curl -L --output /usr/<span class="hljs-built_in">local</span>/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-arm
+
+<span class="hljs-comment"># Linux arm64</span>
+sudo curl -L --output /usr/<span class="hljs-built_in">local</span>/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-arm64
+</code></pre>
+</div></div><ol start="2" data-v-md-line="55">
+<li>授予执行权限</li>
+</ol>
+<div data-v-md-line="57"><div class="v-md-pre-wrapper v-md-pre-wrapper-bash extra-class"><pre class="v-md-hljs-bash"><code>sudo chmod +x /usr/<span class="hljs-built_in">local</span>/bin/gitlab-runner
+</code></pre>
+</div></div><ol start="3" data-v-md-line="61">
+<li>Create a GitLab CI user:</li>
+</ol>
+<div data-v-md-line="63"><div class="v-md-pre-wrapper v-md-pre-wrapper-bash extra-class"><pre class="v-md-hljs-bash"><code>sudo useradd --comment <span class="hljs-string">&#x27;GitLab Runner&#x27;</span> --create-home gitlab-runner --shell /bin/bash
+</code></pre>
+</div></div><ol start="4" data-v-md-line="67">
+<li>Install and run as service:</li>
+</ol>
+<div data-v-md-line="69"><div class="v-md-pre-wrapper v-md-pre-wrapper-bash extra-class"><pre class="v-md-hljs-bash"><code>sudo gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
+sudo gitlab-runner start
+</code></pre>
+</div></div><h4 data-v-md-heading="加入任务系统" data-v-md-line="74">加入任务系统</h4>
+<p data-v-md-line="76">注册</p>
+<div data-v-md-line="78"><div class="v-md-pre-wrapper v-md-pre-wrapper-bash extra-class"><pre class="v-md-hljs-bash"><code>sudo gitlab-runner register
+</code></pre>
+</div></div><p data-v-md-line="82">然后就是一些简单的配置，配置完成后就将该Runner注册到任务发布平台了，然后就可以接任务了。详细见参考文献【1】</p>
+<h4 data-v-md-heading="编写-gitlab-ci-yml任务" data-v-md-line="85">编写.gitlab-ci.yml任务</h4>
+<p data-v-md-line="87">本机部署版本<br>
+.gitlab-ci.yml</p>
+<div data-v-md-line="89"><div class="v-md-pre-wrapper v-md-pre-wrapper-yml extra-class"><pre class="v-md-hljs-yml"><code><span class="hljs-attr">stages:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">deploy</span>
+
+<span class="hljs-attr">cache:</span>
+  <span class="hljs-attr">paths:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">node_modules/</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">public/</span>
+
+<span class="hljs-attr">deployJob:</span>
+  <span class="hljs-attr">stage:</span> <span class="hljs-string">deploy</span> 
+  <span class="hljs-attr">script:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">npm</span> <span class="hljs-string">install</span> 
+    <span class="hljs-bullet">-</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">build</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">rm</span> <span class="hljs-string">-rf</span> <span class="hljs-string">/home/data/three_miju_shopper_manager_system_front/*</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">cp</span> <span class="hljs-string">-rf</span> <span class="hljs-string">./dist/*</span> <span class="hljs-string">/home/data/three_miju_shopper_manager_system_front/</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">sh</span> <span class="hljs-string">./bot.sh</span> <span class="hljs-string">${CI_COMMIT_REF_SLUG}</span> <span class="hljs-string">${CI_COMMIT_SHA:0:8}</span> <span class="hljs-string">${CI_COMMIT_MESSAGE}</span>
+  <span class="hljs-attr">tags:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">shared_test_machine_runner</span>
+  <span class="hljs-attr">only:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">dev</span>
+</code></pre>
+</div></div><p data-v-md-line="111">这个版本具有企业微信群机器人推送功能，需要配置<code>./bot.sh</code></p>
+<div data-v-md-line="112"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code><span class="hljs-meta">#</span><span class="bash">!/usr/bin/env bash</span>
+curl &#x27;群机器人地址&#x27; \
+      -H &#x27;Content-Type: application/json&#x27; \
+      -d &#x27;
+      {
+        &quot;msgtype&quot;: &quot;markdown&quot;,
+        &quot;markdown&quot;: {
+          &quot;content&quot;: &quot;商户端代码已更新，分支:&#x27;$1&#x27; 提交:&#x27;$2&#x27;
+          更新：&#x27;$3&#x27;
+          已发布，[点击测试](http://test.shop.gileey.cn)&quot;
+        }
+      }&#x27;
+</code></pre>
+</div></div><p data-v-md-line="126">远程推送版本</p>
+<div data-v-md-line="127"><div class="v-md-pre-wrapper v-md-pre-wrapper-shell extra-class"><pre class="v-md-hljs-shell"><code>stages:
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+    - public/
+
+deployJob:
+  stage: deploy 
+  script:
+    - mkdir -p ~/.ssh
+    - echo &quot;$SSH_PRIVATE_KEY&quot; &gt;&gt; ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e &quot;Host *\n\tStrictHostKeyChecking no\n\n&quot; &gt; ~/.ssh/config
+    - rsync -avzu --progress ./dist/* root@thinkmoon.cn:/www/wwwroot/3ju.psyannabel.cn/
+  tags:
+    - shared_test_machine_runner
+  only:
+    - dev
+</code></pre>
+</div></div><p data-v-md-line="149">该版本在gitlab-runner机器上执行编译等工作，编译完成后使用rsync同步到云服务器，需要配置私钥变量<code>$SSH_PRIVATE_KEY</code></p>
+<p data-v-md-line="151"><img src="http://blog.cdn.thinkmoon.cn/blog/typecho/2020-05-30T14:20:12.png" alt="2020-05-30T14:20:12.png"></p>
+<h2 data-v-md-heading="遇到的问题" data-v-md-line="153">遇到的问题</h2>
+<p data-v-md-line="155">导入自定义组件时一直报错：<code>This dependency was not found:</code></p>
+<p data-v-md-line="157">出现背景：由于以前命名组件是&quot;clickImg&quot;,后改成&quot;ClickImg&quot;,由于linux的区分大小写，所以会一直没找到。</p>
+<p data-v-md-line="159">解决方案：换个名字？？？</p>
+<h2 data-v-md-heading="参考文献" data-v-md-line="161">参考文献</h2>
+<ol data-v-md-line="163">
+<li><a href="https://juejin.im/post/5b03963a51882542821ca56a" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">前端的gitlab的ci初尝试</a></li>
+<li><a href="https://docs.gitlab.com/runner/install/linux-manually.html" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">Install GitLab Runner manually on GNU/Linux</a></li>
+</ol>
+<blockquote data-v-md-line="169">
+<p data-v-md-line="169">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/849" class="custom-internal-link" target="_blank">指尖魔法屋-gitlab中vue前端项目CI/CD部署笔记</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div></div></div><!--]--></div><span></span></div><div class="footer" data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.5 · build-20220508-0128</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a){return {data:{pinia:{},article:{cid:849,title:"gitlab中vue前端项目CI\u002FCD部署笔记",created:1590129840,modified:1592912088,text:"## 持续集成\r\n\r\n略\r\n\r\n## Gitlab的持续集成\r\n\r\n我们可以将整个运行机制，看作一个赏金猎人接任务，执行任务，并完成任务的过程。\r\n\r\n### GitLab-CI\r\n\r\n简单来说，这就是一个任务发布平台。运行在gitlab服务器，监听代码状态变化，并发布对应的任务。\r\n\r\n### GitLab-Runner\r\n\r\n而每个runner就是一位赏金猎人，是任务的执行者。\r\n\r\n![2020-05-22T06:04:52.png][1]\r\n\r\n### .gitlab-ci.yml\r\n\r\n任务的发布者，规定什么时候触发任务，任务的具体内容。\r\n\r\n## 配置流程\r\n\r\n经过前面的解释，整个思路就很清晰了。我们需要做的有三件事。\r\n\r\n1. 编写`.gitlab-ci.yml`文件，设置对应的任务\r\n2. 部署Runner，激活赏金猎人\r\n3. 配置ci，邀请赏金猎人加入系统\r\n\r\n### 部署Runner\r\n\r\n这一步需要一个服务器，能run起来赏金猎人。\r\n\r\n#### 安装\r\n\r\n请务必安装最新版，不然会出现很多未知的问题\r\n\r\n1. 下载二进制文件\r\n```bash\r\n# Linux x86-64\r\nsudo curl -L --output \u002Fusr\u002Flocal\u002Fbin\u002Fgitlab-runner https:\u002F\u002Fgitlab-runner-downloads.s3.amazonaws.com\u002Flatest\u002Fbinaries\u002Fgitlab-runner-linux-amd64\r\n\r\n# Linux x86\r\nsudo curl -L --output \u002Fusr\u002Flocal\u002Fbin\u002Fgitlab-runner https:\u002F\u002Fgitlab-runner-downloads.s3.amazonaws.com\u002Flatest\u002Fbinaries\u002Fgitlab-runner-linux-386\r\n\r\n# Linux arm\r\nsudo curl -L --output \u002Fusr\u002Flocal\u002Fbin\u002Fgitlab-runner https:\u002F\u002Fgitlab-runner-downloads.s3.amazonaws.com\u002Flatest\u002Fbinaries\u002Fgitlab-runner-linux-arm\r\n\r\n# Linux arm64\r\nsudo curl -L --output \u002Fusr\u002Flocal\u002Fbin\u002Fgitlab-runner https:\u002F\u002Fgitlab-runner-downloads.s3.amazonaws.com\u002Flatest\u002Fbinaries\u002Fgitlab-runner-linux-arm64\r\n```\r\n\r\n2. 授予执行权限\r\n\r\n```bash\r\nsudo chmod +x \u002Fusr\u002Flocal\u002Fbin\u002Fgitlab-runner\r\n```\r\n\r\n3. Create a GitLab CI user:\r\n\r\n```bash\r\nsudo useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell \u002Fbin\u002Fbash\r\n```\r\n\r\n4. Install and run as service:\r\n\r\n```bash\r\nsudo gitlab-runner install --user=gitlab-runner --working-directory=\u002Fhome\u002Fgitlab-runner\r\nsudo gitlab-runner start\r\n```\r\n\r\n#### 加入任务系统\r\n\r\n注册\r\n\r\n```bash\r\nsudo gitlab-runner register\r\n```\r\n\r\n然后就是一些简单的配置，配置完成后就将该Runner注册到任务发布平台了，然后就可以接任务了。详细见参考文献【1】\r\n\r\n\r\n#### 编写.gitlab-ci.yml任务\r\n\r\n本机部署版本\r\n.gitlab-ci.yml\r\n```yml\r\nstages:\r\n  - deploy\r\n\r\ncache:\r\n  paths:\r\n    - node_modules\u002F\r\n    - public\u002F\r\n\r\ndeployJob:\r\n  stage: deploy \r\n  script:\r\n    - npm install \r\n    - npm run build\r\n    - rm -rf \u002Fhome\u002Fdata\u002Fthree_miju_shopper_manager_system_front\u002F*\r\n    - cp -rf .\u002Fdist\u002F* \u002Fhome\u002Fdata\u002Fthree_miju_shopper_manager_system_front\u002F\r\n    - sh .\u002Fbot.sh ${CI_COMMIT_REF_SLUG} ${CI_COMMIT_SHA:0:8} ${CI_COMMIT_MESSAGE}\r\n  tags:\r\n    - shared_test_machine_runner\r\n  only:\r\n    - dev\r\n```\r\n这个版本具有企业微信群机器人推送功能，需要配置`.\u002Fbot.sh`\r\n```shell\r\n#!\u002Fusr\u002Fbin\u002Fenv bash\r\ncurl '群机器人地址' \\\r\n      -H 'Content-Type: application\u002Fjson' \\\r\n      -d '\r\n      {\r\n        \"msgtype\": \"markdown\",\r\n        \"markdown\": {\r\n          \"content\": \"商户端代码已更新，分支:'$1' 提交:'$2'\r\n          更新：'$3'\r\n          已发布，[点击测试](http:\u002F\u002Ftest.shop.gileey.cn)\"\r\n        }\r\n      }'\r\n```\r\n远程推送版本\r\n```shell\r\nstages:\r\n  - deploy\r\n\r\ncache:\r\n  paths:\r\n    - node_modules\u002F\r\n    - public\u002F\r\n\r\ndeployJob:\r\n  stage: deploy \r\n  script:\r\n    - mkdir -p ~\u002F.ssh\r\n    - echo \"$SSH_PRIVATE_KEY\" \u003E\u003E ~\u002F.ssh\u002Fid_dsa\r\n    - chmod 600 ~\u002F.ssh\u002Fid_dsa\r\n    - echo -e \"Host *\\n\\tStrictHostKeyChecking no\\n\\n\" \u003E ~\u002F.ssh\u002Fconfig\r\n    - rsync -avzu --progress .\u002Fdist\u002F* root@thinkmoon.cn:\u002Fwww\u002Fwwwroot\u002F3ju.psyannabel.cn\u002F\r\n  tags:\r\n    - shared_test_machine_runner\r\n  only:\r\n    - dev\r\n```\r\n该版本在gitlab-runner机器上执行编译等工作，编译完成后使用rsync同步到云服务器，需要配置私钥变量`$SSH_PRIVATE_KEY`\r\n\r\n![2020-05-30T14:20:12.png][2]\r\n\r\n## 遇到的问题\r\n\r\n导入自定义组件时一直报错：`This dependency was not found:`\r\n\r\n出现背景：由于以前命名组件是\"clickImg\",后改成\"ClickImg\",由于linux的区分大小写，所以会一直没找到。\r\n\r\n解决方案：换个名字？？？\r\n\r\n## 参考文献\r\n\r\n1. [前端的gitlab的ci初尝试](https:\u002F\u002Fjuejin.im\u002Fpost\u002F5b03963a51882542821ca56a)\r\n2. [Install GitLab Runner manually on GNU\u002FLinux](https:\u002F\u002Fdocs.gitlab.com\u002Frunner\u002Finstall\u002Flinux-manually.html)\r\n\r\n\r\n  [1]: http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-05-22T06:04:52.png\r\n  [2]: http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-05-30T14:20:12.png",authorId:a,comments:3,views:1547,likes:2,tag:[{tid:56,name:"gitlab",order:a,count:a}],category:"学习笔记",category_id:11,fields:{desc:"持续部署（continuous deployment）是持续交付的下一步，指的是代码通过评审以后，自动部署到生产环境。持续部署的目标是，代码在任何时刻都是可部署的，可以进入生产阶段。",thumb:"http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-05-22T06:04:52.png"}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.5 · build-20220508-0128",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""}}}}(0))</script><script type="module" src="/_nuxt/entry-4033bfcf.mjs" crossorigin></script><script type="module" src="/_nuxt/default-ab4b1d95.mjs" crossorigin></script><script type="module" src="/_nuxt/_cid_-40efc3b3.mjs" crossorigin></script>
+</body>
+
+</html>

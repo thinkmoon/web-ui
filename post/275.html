@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>win10下使用wsl配置Clion toolchain | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="thinkmoon,指尖魔法屋,醉月思的博客"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/_nuxt/entry-4033bfcf.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/entry.7e762317.css" as="style"><link rel="modulepreload" href="/_nuxt/default-ab4b1d95.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/default.8dc03fb7.css" as="style"><link rel="modulepreload" href="/_nuxt/Footer-39451558.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/_cid_-40efc3b3.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/asyncData-b0244fb3.mjs" as="script" crossorigin><link rel="prefetch" href="/_nuxt/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/_nuxt/404-0c215052.mjs"><link rel="prefetch" as="script" href="/_nuxt/editor-3321b87d.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-b882dfe7.mjs"><link rel="prefetch" as="script" href="/_nuxt/post-list-93b150a9.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-f89c7533.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-08429fca.mjs"><link rel="prefetch" as="script" href="/_nuxt/PostList-693c3f84.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dbca3f00.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dc59a107.mjs"><link rel="prefetch" as="script" href="/_nuxt/login-d8f7e58b.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-4617af3f.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-38aaa266.mjs"><link rel="prefetch" as="script" href="/_nuxt/TagApi-b908df3a.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-12cec95d.mjs"><link rel="prefetch" as="script" href="/_nuxt/auth-f948a8cb.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-1ee1b85d.mjs"><link rel="stylesheet" href="/_nuxt/entry.7e762317.css"><link rel="stylesheet" href="/_nuxt/default.8dc03fb7.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div><div class="top-menu" data-v-2d323d18><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-2d323d18><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--> 指尖魔法屋 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/category" class="" data-v-2d323d18> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/tag" class="" data-v-2d323d18> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-2d323d18><a class="el-link el-link--default" href="/login" data-v-2d323d18><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2d323d18><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2d323d18><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container"><!--[--><div class="app-container" data-v-14f20b86><!----><div class="article-content" data-v-14f20b86><div class="v-md-editor-preview" style="tab-size:2;" data-v-14f20b86><div class="github-markdown-body"><h1 data-v-md-heading="win10下使用wsl配置clion-toolchain" data-v-md-line="1">win10下使用wsl配置Clion toolchain</h1>
+<h2 data-v-md-heading="前言" data-v-md-line="2">前言</h2>
+<p data-v-md-line="3">为什么要使用wsl来配置呢？因为我个人感觉这个比较方便，不用安装一堆包。直接敲命令就好。</p>
+<h2 data-v-md-heading="准备工作" data-v-md-line="5">准备工作</h2>
+<p data-v-md-line="6">安装好Clion后，打开toolchain是这样的。<br>
+<img src="https://www.thinkmoon.cn/usr/uploads/2019/03/3388117114.png" alt="2019-03-28T01:51:00.png"></p>
+<blockquote data-v-md-line="8">
+<p data-v-md-line="8">前提是先装好wsl</p>
+</blockquote>
+<h2 data-v-md-heading="选择wsl-toolchain" data-v-md-line="10">选择wsl toolchain</h2>
+<p data-v-md-line="11">会出现下面这个情况<br>
+<img src="https://www.thinkmoon.cn/usr/uploads/2019/03/3588185930.png" alt="2019-03-28T01:52:22.png"><br>
+这是因为wsl没有配置ssh服务</p>
+<h2 data-v-md-heading="配置wsl的ssh" data-v-md-line="15">配置wsl的ssh</h2>
+<div data-v-md-line="17"><div class="v-md-pre-wrapper v-md-pre-wrapper-bash extra-class"><pre class="v-md-hljs-bash"><code>sudo vi /etc/ssh/sshd_config
+</code></pre>
+</div></div><p data-v-md-line="20">把密码认证的no改为yes</p>
+<div data-v-md-line="21"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>PasswordAuthentication yes
+</code></pre>
+</div></div><h2 data-v-md-heading="restart-ssh" data-v-md-line="24">restart ssh</h2>
+<div data-v-md-line="25"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>sudo service ssh restart 
+</code></pre>
+</div></div><p data-v-md-line="28">如果出现以下提示<br>
+<img src="https://www.thinkmoon.cn/usr/uploads/2019/03/1786204809.png" alt="2019-03-28T02:15:33.png"><br>
+则需要生成key</p>
+<div data-v-md-line="31"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>sudo dpkg-reconfigure openssh-server
+</code></pre>
+</div></div><h2 data-v-md-heading="查看ssh运行状态" data-v-md-line="34">查看ssh运行状态</h2>
+<div data-v-md-line="35"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>service ssh status
+</code></pre>
+</div></div><h2 data-v-md-heading="configure-remote-credentials" data-v-md-line="39">configure remote credentials</h2>
+<p data-v-md-line="40"><img src="https://www.thinkmoon.cn/usr/uploads/2019/03/827550189.png" alt="2019-03-28T02:00:48.png"><br>
+<img src="https://www.thinkmoon.cn/usr/uploads/2019/03/3808045947.png" alt="2019-03-28T02:16:37.png"></p>
+<h2 data-v-md-heading="配置编译环境" data-v-md-line="43">配置编译环境</h2>
+<p data-v-md-line="44">在wsl里面执行</p>
+<div data-v-md-line="45"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>sudo apt-get install build-essential gcc g++ cmake gdb
+</code></pre>
+</div></div><p data-v-md-line="48"><img src="https://www.thinkmoon.cn/usr/uploads/2019/03/4186950507.png" alt="2019-03-28T05:16:09.png"></p>
+<blockquote data-v-md-line="57">
+<p data-v-md-line="57">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/275" class="custom-internal-link" target="_blank">指尖魔法屋-win10下使用wsl配置Clion toolchain</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div></div></div><!--]--></div><span></span></div><div class="footer" data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.5 · build-20220508-0128</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a){return {data:{pinia:{},article:{cid:275,title:"win10下使用wsl配置Clion toolchain",created:1553739480,modified:1553750173,text:"## 前言\r\n为什么要使用wsl来配置呢？因为我个人感觉这个比较方便，不用安装一堆包。直接敲命令就好。\r\n\r\n## 准备工作\r\n安装好Clion后，打开toolchain是这样的。\r\n![2019-03-28T01:51:00.png][1]\r\n\u003E 前提是先装好wsl\r\n\r\n## 选择wsl toolchain\r\n会出现下面这个情况\r\n![2019-03-28T01:52:22.png][2]\r\n这是因为wsl没有配置ssh服务\r\n\r\n## 配置wsl的ssh\r\n\r\n```bash\r\nsudo vi \u002Fetc\u002Fssh\u002Fsshd_config\r\n```\r\n把密码认证的no改为yes\r\n```\r\nPasswordAuthentication yes\r\n```\r\n## restart ssh\r\n```\r\nsudo service ssh restart \r\n```\r\n如果出现以下提示\r\n![2019-03-28T02:15:33.png][3]\r\n则需要生成key\r\n```\r\nsudo dpkg-reconfigure openssh-server\r\n```\r\n## 查看ssh运行状态\r\n```\r\nservice ssh status\r\n```\r\n\r\n## configure remote credentials\r\n![2019-03-28T02:00:48.png][4]\r\n![2019-03-28T02:16:37.png][5]\r\n\r\n## 配置编译环境\r\n在wsl里面执行\r\n```\r\nsudo apt-get install build-essential gcc g++ cmake gdb\r\n```\r\n![2019-03-28T05:16:09.png][6]\r\n\r\n\r\n  [1]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F3388117114.png\r\n  [2]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F3588185930.png\r\n  [3]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F1786204809.png\r\n  [4]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F827550189.png\r\n  [5]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F3808045947.png\r\n  [6]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F4186950507.png",authorId:a,comments:a,views:1672,likes:a,tag:[],category:"学习笔记",category_id:11,fields:{thumb:"https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F03\u002F3388117114.png"}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.5 · build-20220508-0128",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""}}}}(0))</script><script type="module" src="/_nuxt/entry-4033bfcf.mjs" crossorigin></script><script type="module" src="/_nuxt/default-ab4b1d95.mjs" crossorigin></script><script type="module" src="/_nuxt/_cid_-40efc3b3.mjs" crossorigin></script>
+</body>
+
+</html>

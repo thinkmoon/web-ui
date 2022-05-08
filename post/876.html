@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>vue中使用typescript问题解决方案集锦 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="vue,webpack,typescript"><meta name="description" content="typescript是个好东西，可是在vue中使用的时候却经常会遇到很多问题，本文收集了作者遇到的一些问题，已经对应的解决方案，希望能对读者有所帮助"><meta name="head:count" content="5"><link rel="modulepreload" href="/_nuxt/entry-4033bfcf.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/entry.7e762317.css" as="style"><link rel="modulepreload" href="/_nuxt/default-ab4b1d95.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/default.8dc03fb7.css" as="style"><link rel="modulepreload" href="/_nuxt/Footer-39451558.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/_cid_-40efc3b3.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/asyncData-b0244fb3.mjs" as="script" crossorigin><link rel="prefetch" href="/_nuxt/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/_nuxt/404-0c215052.mjs"><link rel="prefetch" as="script" href="/_nuxt/editor-3321b87d.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-b882dfe7.mjs"><link rel="prefetch" as="script" href="/_nuxt/post-list-93b150a9.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-f89c7533.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-08429fca.mjs"><link rel="prefetch" as="script" href="/_nuxt/PostList-693c3f84.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dbca3f00.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dc59a107.mjs"><link rel="prefetch" as="script" href="/_nuxt/login-d8f7e58b.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-4617af3f.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-38aaa266.mjs"><link rel="prefetch" as="script" href="/_nuxt/TagApi-b908df3a.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-12cec95d.mjs"><link rel="prefetch" as="script" href="/_nuxt/auth-f948a8cb.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-1ee1b85d.mjs"><link rel="stylesheet" href="/_nuxt/entry.7e762317.css"><link rel="stylesheet" href="/_nuxt/default.8dc03fb7.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div><div class="top-menu" data-v-2d323d18><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-2d323d18><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--> 指尖魔法屋 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/category" class="" data-v-2d323d18> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/tag" class="" data-v-2d323d18> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-2d323d18><a class="el-link el-link--default" href="/login" data-v-2d323d18><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2d323d18><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2d323d18><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container"><!--[--><div class="app-container" data-v-14f20b86><!----><div class="article-content" data-v-14f20b86><div class="v-md-editor-preview" style="tab-size:2;" data-v-14f20b86><div class="github-markdown-body"><h1 data-v-md-heading="vue中使用typescript问题解决方案集锦" data-v-md-line="1">vue中使用typescript问题解决方案集锦</h1>
+<p data-v-md-line="2"><img src="http://blog.cdn.thinkmoon.cn/blog/typecho/2018-12-25-ts.jpeg" alt="typescript"></p>
+<h2 data-v-md-heading="本文环境" data-v-md-line="4">本文环境</h2>
+<ol data-v-md-line="6">
+<li>@vue/cli 4.3.1</li>
+<li>typescript 3.9.5</li>
+</ol>
+<h2 data-v-md-heading="相关配置文件" data-v-md-line="9">相关配置文件</h2>
+<ol data-v-md-line="11">
+<li>vue.config.js</li>
+<li>tsconfig.json</li>
+<li>shims-vue.d.ts</li>
+</ol>
+<h2 data-v-md-heading="问题汇总" data-v-md-line="15">问题汇总</h2>
+<h3 data-v-md-heading="导入-vue-文件报错" data-v-md-line="17">导入 vue 文件报错</h3>
+<p data-v-md-line="19">错误信息：Cannot find module ‘./App.vue’ or its corresponding type declarations<br>
+解决方案：修改<code>shims-vue.d.ts</code></p>
+<div data-v-md-line="22"><div class="v-md-pre-wrapper v-md-pre-wrapper-typescript extra-class"><pre class="v-md-hljs-typescript"><code><span class="hljs-keyword">declare</span> <span class="hljs-built_in">module</span> <span class="hljs-string">&quot;*.vue&quot;</span> {
+  <span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;
+  <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Vue;
+}
+</code></pre>
+</div></div><h3 data-v-md-heading="vscode-报错-编译不报错" data-v-md-line="29">Vscode 报错，编译不报错</h3>
+<p data-v-md-line="31">解决方案：重启 Vscode</p>
+<h3 data-v-md-heading="挂载原型-api-报错" data-v-md-line="33">挂载原型$api 报错</h3>
+<p data-v-md-line="35">解决方案：在src目录下新增<code>vue-property.d.ts</code></p>
+<div data-v-md-line="37"><div class="v-md-pre-wrapper v-md-pre-wrapper-typescript extra-class"><pre class="v-md-hljs-typescript"><code><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
+<span class="hljs-keyword">declare</span> <span class="hljs-built_in">module</span> <span class="hljs-string">&quot;vue/types/vue&quot;</span> {
+  <span class="hljs-keyword">interface</span> Vue {
+    <span class="hljs-attr">$api</span>: <span class="hljs-built_in">any</span>;
+  }
+}
+</code></pre>
+</div></div><h3 data-v-md-heading="无法使用-components别名-alias-路径" data-v-md-line="46">无法使用@components别名 alias 路径</h3>
+<p data-v-md-line="48">解决方案: 修改<code>tsconfig.json</code></p>
+<div data-v-md-line="50"><div class="v-md-pre-wrapper v-md-pre-wrapper-json extra-class"><pre class="v-md-hljs-json"><code>{
+  <span class="hljs-attr">&quot;compilerOptions&quot;</span>: {
+    <span class="hljs-attr">&quot;target&quot;</span>: <span class="hljs-string">&quot;esnext&quot;</span>,
+    <span class="hljs-attr">&quot;module&quot;</span>: <span class="hljs-string">&quot;esnext&quot;</span>,
+    <span class="hljs-attr">&quot;strict&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;jsx&quot;</span>: <span class="hljs-string">&quot;preserve&quot;</span>,
+    <span class="hljs-attr">&quot;importHelpers&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;moduleResolution&quot;</span>: <span class="hljs-string">&quot;node&quot;</span>,
+    <span class="hljs-attr">&quot;experimentalDecorators&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;esModuleInterop&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;allowSyntheticDefaultImports&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;sourceMap&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;baseUrl&quot;</span>: <span class="hljs-string">&quot;.&quot;</span>,
+    <span class="hljs-attr">&quot;types&quot;</span>: [<span class="hljs-string">&quot;webpack-env&quot;</span>, <span class="hljs-string">&quot;vuex&quot;</span>],
+    <span class="hljs-attr">&quot;paths&quot;</span>: {
+      <span class="hljs-attr">&quot;@/*&quot;</span>: [<span class="hljs-string">&quot;src/*&quot;</span>],
+      <span class="hljs-attr">&quot;@/components&quot;</span>: [<span class="hljs-string">&quot;src/components&quot;</span>] <span class="hljs-comment">// 添加这一行</span>
+    },
+    <span class="hljs-attr">&quot;lib&quot;</span>: [<span class="hljs-string">&quot;esnext&quot;</span>, <span class="hljs-string">&quot;dom&quot;</span>, <span class="hljs-string">&quot;dom.iterable&quot;</span>, <span class="hljs-string">&quot;scripthost&quot;</span>]
+  },
+  <span class="hljs-attr">&quot;include&quot;</span>: [<span class="hljs-string">&quot;src/**/*.ts&quot;</span>, <span class="hljs-string">&quot;src/**/*.tsx&quot;</span>, <span class="hljs-string">&quot;src/**/*.vue&quot;</span>, <span class="hljs-string">&quot;tests/**/*.ts&quot;</span>, <span class="hljs-string">&quot;tests/**/*.tsx&quot;</span>],
+  <span class="hljs-attr">&quot;exclude&quot;</span>: [<span class="hljs-string">&quot;node_modules&quot;</span>]
+}
+</code></pre>
+</div></div><blockquote data-v-md-line="78">
+<p data-v-md-line="78">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/876" class="custom-internal-link" target="_blank">指尖魔法屋-vue中使用typescript问题解决方案集锦</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div></div></div><!--]--></div><span></span></div><div class="footer" data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.5 · build-20220508-0128</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a,b){return {data:{pinia:{},article:{cid:876,title:"vue中使用typescript问题解决方案集锦",created:1592903400,modified:1592921072,text:"![typescript][1]\r\n\r\n## 本文环境\r\n\r\n1. @vue\u002Fcli 4.3.1\r\n2. typescript 3.9.5\r\n\r\n## 相关配置文件\r\n\r\n1. vue.config.js\r\n2. tsconfig.json\r\n3. shims-vue.d.ts\r\n\r\n## 问题汇总\r\n\r\n### 导入 vue 文件报错\r\n\r\n错误信息：Cannot find module '.\u002FApp.vue' or its corresponding type declarations\r\n解决方案：修改`shims-vue.d.ts`\r\n\r\n```typescript\r\ndeclare module \"*.vue\" {\r\n  import Vue from \"vue\";\r\n  export default Vue;\r\n}\r\n```\r\n\r\n### Vscode 报错，编译不报错\r\n\r\n解决方案：重启 Vscode\r\n\r\n### 挂载原型\\$api 报错\r\n\r\n解决方案：在src目录下新增`vue-property.d.ts`\r\n\r\n```typescript\r\nimport Vue from 'vue'\r\ndeclare module \"vue\u002Ftypes\u002Fvue\" {\r\n  interface Vue {\r\n    $api: any;\r\n  }\r\n}\r\n```\r\n\r\n### 无法使用@components别名 alias 路径\r\n\r\n解决方案: 修改`tsconfig.json`\r\n\r\n```json\r\n{\r\n  \"compilerOptions\": {\r\n    \"target\": \"esnext\",\r\n    \"module\": \"esnext\",\r\n    \"strict\": true,\r\n    \"jsx\": \"preserve\",\r\n    \"importHelpers\": true,\r\n    \"moduleResolution\": \"node\",\r\n    \"experimentalDecorators\": true,\r\n    \"esModuleInterop\": true,\r\n    \"allowSyntheticDefaultImports\": true,\r\n    \"sourceMap\": true,\r\n    \"baseUrl\": \".\",\r\n    \"types\": [\"webpack-env\", \"vuex\"],\r\n    \"paths\": {\r\n      \"@\u002F*\": [\"src\u002F*\"],\r\n      \"@\u002Fcomponents\": [\"src\u002Fcomponents\"] \u002F\u002F 添加这一行\r\n    },\r\n    \"lib\": [\"esnext\", \"dom\", \"dom.iterable\", \"scripthost\"]\r\n  },\r\n  \"include\": [\"src\u002F**\u002F*.ts\", \"src\u002F**\u002F*.tsx\", \"src\u002F**\u002F*.vue\", \"tests\u002F**\u002F*.ts\", \"tests\u002F**\u002F*.tsx\"],\r\n  \"exclude\": [\"node_modules\"]\r\n}\r\n```\r\n\r\n\r\n  [1]: http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2018-12-25-ts.jpeg",authorId:a,comments:2,views:3585,likes:b,tag:[{tid:34,name:"vue",order:a,count:a},{tid:57,name:"webpack",order:a,count:a},{tid:60,name:"typescript",order:a,count:a}],category:"学习笔记",category_id:b,fields:{desc:"typescript是个好东西，可是在vue中使用的时候却经常会遇到很多问题，本文收集了作者遇到的一些问题，已经对应的解决方案，希望能对读者有所帮助",thumb:"http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2018-12-25-ts.jpeg"}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.5 · build-20220508-0128",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""}}}}(0,11))</script><script type="module" src="/_nuxt/entry-4033bfcf.mjs" crossorigin></script><script type="module" src="/_nuxt/default-ab4b1d95.mjs" crossorigin></script><script type="module" src="/_nuxt/_cid_-40efc3b3.mjs" crossorigin></script>
+</body>
+
+</html>

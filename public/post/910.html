@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>Vue自定义指令 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="vuejs"><meta name="description" content="Vue中的指令形如v-*，如v-if，v-show，v-model等。同时，除了Vue自带的一些默认指令外，Vue同时运行用户自定义指令，来扩展指令功能。"><meta name="head:count" content="5"><link rel="modulepreload" href="/_nuxt/entry-4033bfcf.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/entry.7e762317.css" as="style"><link rel="modulepreload" href="/_nuxt/default-ab4b1d95.mjs" as="script" crossorigin><link rel="preload" href="/_nuxt/default.8dc03fb7.css" as="style"><link rel="modulepreload" href="/_nuxt/Footer-39451558.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/_cid_-40efc3b3.mjs" as="script" crossorigin><link rel="modulepreload" href="/_nuxt/asyncData-b0244fb3.mjs" as="script" crossorigin><link rel="prefetch" href="/_nuxt/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/_nuxt/404-0c215052.mjs"><link rel="prefetch" as="script" href="/_nuxt/editor-3321b87d.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-b882dfe7.mjs"><link rel="prefetch" as="script" href="/_nuxt/post-list-93b150a9.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-f89c7533.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-08429fca.mjs"><link rel="prefetch" as="script" href="/_nuxt/PostList-693c3f84.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dbca3f00.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-dc59a107.mjs"><link rel="prefetch" as="script" href="/_nuxt/login-d8f7e58b.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-4617af3f.mjs"><link rel="prefetch" as="script" href="/_nuxt/_pageIndex_-38aaa266.mjs"><link rel="prefetch" as="script" href="/_nuxt/TagApi-b908df3a.mjs"><link rel="prefetch" as="script" href="/_nuxt/index-12cec95d.mjs"><link rel="prefetch" as="script" href="/_nuxt/auth-f948a8cb.mjs"><link rel="prefetch" as="script" href="/_nuxt/admin-1ee1b85d.mjs"><link rel="stylesheet" href="/_nuxt/entry.7e762317.css"><link rel="stylesheet" href="/_nuxt/default.8dc03fb7.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div><div class="top-menu" data-v-2d323d18><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-2d323d18><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--> 指尖魔法屋 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/category" class="" data-v-2d323d18> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-2d323d18><!--[--><!--[--><a href="/tag" class="" data-v-2d323d18> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-2d323d18><a class="el-link el-link--default" href="/login" data-v-2d323d18><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2d323d18><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2d323d18><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container"><!--[--><div class="app-container" data-v-14f20b86><!----><div class="article-content" data-v-14f20b86><div class="v-md-editor-preview" style="tab-size:2;" data-v-14f20b86><div class="github-markdown-body"><h1 data-v-md-heading="vue自定义指令" data-v-md-line="1">Vue自定义指令</h1>
+<h2 data-v-md-heading="介绍" data-v-md-line="2">介绍</h2>
+<p data-v-md-line="4">Vue中的指令形如<code>v-*</code>，如v-if，v-show，v-model等。同时，除了Vue自带的一些默认指令外，Vue同时运行用户自定义指令，来扩展指令功能。</p>
+<h2 data-v-md-heading="使用场景" data-v-md-line="6">使用场景</h2>
+<p data-v-md-line="8">究竟什么情况下使用组件？而什么情况下使用指令呢？官方对此，给出了以下建议：</p>
+<blockquote data-v-md-line="10">
+<p data-v-md-line="10">注意，在 Vue2.0 中，代码复用和抽象的主要形式是组件。然而，有的情况下，你仍然需要对普通 DOM 元素进行底层操作，这时候就会用到自定义指令。</p>
+</blockquote>
+<p data-v-md-line="12">也就是说，当你关注问题的抽象层级在DOM元素的时候，你就应该考虑使用自定义指令来完成需求了。</p>
+<h2 data-v-md-heading="作用范围" data-v-md-line="14">作用范围</h2>
+<p data-v-md-line="16">自定义指令有两种作用范围，一种是申明在全局，全局内有效。另一种，则是局部指令。</p>
+<blockquote data-v-md-line="18">
+<p data-v-md-line="18">钩子函数及相关参数见官网文档。</p>
+</blockquote>
+<h2 data-v-md-heading="举个例子" data-v-md-line="20">举个例子</h2>
+<h3 data-v-md-heading="需求" data-v-md-line="22">需求</h3>
+<p data-v-md-line="24">我需要设计一个自定义指令<code>v-bug</code>，该指令可将作用元素的所有内容都替换为<code>烫烫烫烫</code>，指令可以指定有几个烫，以及是否追加<code>锟斤拷</code>。</p>
+<h3 data-v-md-heading="_1-先将内容替换为一个-烫" data-v-md-line="26">1. 先将内容替换为一个<code>烫</code></h3>
+<blockquote data-v-md-line="28">
+<p data-v-md-line="28">main.js</p>
+</blockquote>
+<div data-v-md-line="30"><div class="v-md-pre-wrapper v-md-pre-wrapper-javascript extra-class"><pre class="v-md-hljs-javascript"><code><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
+<span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>
+
+Vue.config.productionTip = <span class="hljs-literal">false</span>
+
+Vue.directive(<span class="hljs-string">&#x27;bug&#x27;</span>, {
+  <span class="hljs-attr">inserted</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{
+    el.innerHTML = <span class="hljs-string">&quot;烫&quot;</span>
+  }
+})
+
+<span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">render</span>: <span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> h(App),
+}).$mount(<span class="hljs-string">&#x27;#app&#x27;</span>)
+</code></pre>
+</div></div><blockquote data-v-md-line="47">
+<p data-v-md-line="47">App.vue</p>
+</blockquote>
+<div data-v-md-line="49"><div class="v-md-pre-wrapper v-md-pre-wrapper-html extra-class"><pre class="v-md-hljs-html"><code><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;app&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">HelloWorld</span> <span class="hljs-attr">v-bug</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+<span class="hljs-keyword">import</span> HelloWorld <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./components/HelloWorld.vue&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;App&#x27;</span>,
+  <span class="hljs-attr">components</span>: {
+    HelloWorld
+  }
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="css">
+<span class="hljs-selector-id">#app</span> {
+  <span class="hljs-attribute">font-family</span>: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-<span class="hljs-attribute">font-smoothing</span>: antialiased;
+  -moz-osx-<span class="hljs-attribute">font-smoothing</span>: grayscale;
+  <span class="hljs-attribute">text-align</span>: center;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#2c3e50</span>;
+  <span class="hljs-attribute">margin-top</span>: <span class="hljs-number">60px</span>;
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
+
+</code></pre>
+</div></div><p data-v-md-line="80">效果展示</p>
+<p data-v-md-line="82"><img src="http://blog.cdn.thinkmoon.cn/blog/typecho/2020-09-20T05:28:47.png" alt="2020-09-20T05:28:47.png"></p>
+<h3 data-v-md-heading="_2-生成指定个数的-烫" data-v-md-line="84">2. 生成指定个数的<code>烫</code></h3>
+<blockquote data-v-md-line="86">
+<p data-v-md-line="86">main.js</p>
+</blockquote>
+<div data-v-md-line="88"><div class="v-md-pre-wrapper v-md-pre-wrapper-javascript extra-class"><pre class="v-md-hljs-javascript"><code>...
+Vue.directive(<span class="hljs-string">&#x27;bug&#x27;</span>, {
+  <span class="hljs-attr">inserted</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, binding</span>) </span>{
+    el.innerHTML = <span class="hljs-built_in">Array</span>(binding.value).fill(<span class="hljs-string">&quot;烫&quot;</span>).join(<span class="hljs-string">&quot;&quot;</span>)
+  }
+})
+...
+</code></pre>
+</div></div><blockquote data-v-md-line="98">
+<p data-v-md-line="98">App.vue</p>
+</blockquote>
+<div data-v-md-line="100"><div class="v-md-pre-wrapper v-md-pre-wrapper-html extra-class"><pre class="v-md-hljs-html"><code><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;app&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">HelloWorld</span> <span class="hljs-attr">v-bug</span>=<span class="hljs-string">&quot;12&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</code></pre>
+</div></div><p data-v-md-line="108"><img src="http://blog.cdn.thinkmoon.cn/blog/typecho/2020-09-20T05:29:25.png" alt="2020-09-20T05:29:25.png"></p>
+<h3 data-v-md-heading="_3-指定是否追加-锟斤拷" data-v-md-line="110">3. 指定是否追加<code>锟斤拷</code></h3>
+<blockquote data-v-md-line="112">
+<p data-v-md-line="112">main.js</p>
+</blockquote>
+<div data-v-md-line="114"><div class="v-md-pre-wrapper v-md-pre-wrapper-javascript extra-class"><pre class="v-md-hljs-javascript"><code>...
+Vue.directive(<span class="hljs-string">&#x27;bug&#x27;</span>, {
+  <span class="hljs-attr">inserted</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, binding</span>) </span>{
+    <span class="hljs-keyword">let</span> html = <span class="hljs-built_in">Array</span>(binding.value).fill(<span class="hljs-string">&quot;烫&quot;</span>).join(<span class="hljs-string">&quot;&quot;</span>)
+    <span class="hljs-keyword">if</span>(binding.modifiers.suffix){
+      html += <span class="hljs-string">&quot;锟斤拷&quot;</span>
+    }
+    el.innerHTML = html
+  }
+})
+...
+</code></pre>
+</div></div><blockquote data-v-md-line="128">
+<p data-v-md-line="128">App.vue</p>
+</blockquote>
+<div data-v-md-line="130"><div class="v-md-pre-wrapper v-md-pre-wrapper-html extra-class"><pre class="v-md-hljs-html"><code><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;app&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">HelloWorld</span> <span class="hljs-attr">v-bug.suffix</span>=<span class="hljs-string">&quot;12&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</code></pre>
+</div></div><p data-v-md-line="138"><img src="http://blog.cdn.thinkmoon.cn/blog/typecho/2020-09-20T05:30:18.png" alt="2020-09-20T05:30:18.png"></p>
+<p data-v-md-line="140">但是此时的代码有个非常严重的问题，从上文代码中可看出，内容的改变只在inserted的时候执行。如果我们将指令后面设置为变量，变量值的改变却不会影响到<code>烫</code>个数（这一点都不Vue），所有我们应再监听一下指令的updated钩子函数。</p>
+<h3 data-v-md-heading="_4-数据驱动-动态改变" data-v-md-line="142">4. 数据驱动（动态改变）</h3>
+<blockquote data-v-md-line="144">
+<p data-v-md-line="144">App.vue</p>
+</blockquote>
+<div data-v-md-line="146"><div class="v-md-pre-wrapper v-md-pre-wrapper-html extra-class"><pre class="v-md-hljs-html"><code><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+<span class="hljs-keyword">import</span> HelloWorld <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./components/HelloWorld.vue&quot;</span>;
+
+<span class="hljs-keyword">let</span> interval = <span class="hljs-literal">null</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;App&quot;</span>,
+    <span class="hljs-attr">components</span>: {
+        HelloWorld
+    },
+    <span class="hljs-function"><span class="hljs-title">data</span>(<span class="hljs-params"></span>)</span> {
+        <span class="hljs-keyword">return</span> {
+            <span class="hljs-attr">num</span>: <span class="hljs-number">12</span>
+        };
+    },
+    <span class="hljs-function"><span class="hljs-title">created</span>(<span class="hljs-params"></span>)</span> {
+        interval = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> {
+            <span class="hljs-built_in">this</span>.num++;
+        }, <span class="hljs-number">1000</span>);
+    },
+    <span class="hljs-function"><span class="hljs-title">beforeDestroy</span>(<span class="hljs-params"></span>)</span>{
+      <span class="hljs-built_in">clearInterval</span>(interval)
+    }
+};
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+</code></pre>
+</div></div><blockquote data-v-md-line="174">
+<p data-v-md-line="174">main.js</p>
+</blockquote>
+<div data-v-md-line="176"><div class="v-md-pre-wrapper v-md-pre-wrapper-javascript extra-class"><pre class="v-md-hljs-javascript"><code>...
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateHtml</span>(<span class="hljs-params">binding</span>)</span>{
+  <span class="hljs-keyword">let</span> html = <span class="hljs-built_in">Array</span>(binding.value).fill(<span class="hljs-string">&quot;烫&quot;</span>).join(<span class="hljs-string">&quot;&quot;</span>)
+  <span class="hljs-keyword">if</span> (binding.modifiers.suffix) {
+    html += <span class="hljs-string">&quot;锟斤拷&quot;</span>
+  }
+  <span class="hljs-keyword">return</span> html
+}
+Vue.directive(<span class="hljs-string">&#x27;bug&#x27;</span>, {
+  <span class="hljs-attr">inserted</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, binding</span>) </span>{
+    el.innerHTML = generateHtml(binding)
+  },
+  <span class="hljs-attr">update</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, binding</span>) </span>{
+    <span class="hljs-keyword">if</span> (binding.oldValue !== binding.value) {
+      el.innerHTML = generateHtml(binding)
+    }
+  },
+})
+...
+</code></pre>
+</div></div><p data-v-md-line="197"><img src="http://blog.cdn.thinkmoon.cn/blog/typecho/2020-09-11T14:22:08.png" alt="2020-09-11T14:22:08.png"><br>
+需求完成！</p>
+<blockquote data-v-md-line="205">
+<p data-v-md-line="205">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/910" class="custom-internal-link" target="_blank">指尖魔法屋-Vue自定义指令</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div></div></div><!--]--></div><span></span></div><div class="footer" data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.5 · build-20220508-0128</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a){return {data:{pinia:{},article:{cid:910,title:"Vue自定义指令",created:1599833040,modified:1600579827,text:"## 介绍\r\n\r\nVue中的指令形如`v-*`，如v-if，v-show，v-model等。同时，除了Vue自带的一些默认指令外，Vue同时运行用户自定义指令，来扩展指令功能。\r\n\r\n## 使用场景\r\n\r\n究竟什么情况下使用组件？而什么情况下使用指令呢？官方对此，给出了以下建议：\r\n\r\n\u003E 注意，在 Vue2.0 中，代码复用和抽象的主要形式是组件。然而，有的情况下，你仍然需要对普通 DOM 元素进行底层操作，这时候就会用到自定义指令。\r\n\r\n也就是说，当你关注问题的抽象层级在DOM元素的时候，你就应该考虑使用自定义指令来完成需求了。\r\n\r\n## 作用范围\r\n\r\n自定义指令有两种作用范围，一种是申明在全局，全局内有效。另一种，则是局部指令。\r\n\r\n\u003E 钩子函数及相关参数见官网文档。\r\n\r\n## 举个例子\r\n\r\n### 需求\r\n\r\n我需要设计一个自定义指令`v-bug`，该指令可将作用元素的所有内容都替换为`烫烫烫烫`，指令可以指定有几个烫，以及是否追加`锟斤拷`。\r\n\r\n### 1. 先将内容替换为一个`烫`\r\n\r\n\u003E main.js\r\n\r\n```javascript\r\nimport Vue from 'vue'\r\nimport App from '.\u002FApp.vue'\r\n\r\nVue.config.productionTip = false\r\n\r\nVue.directive('bug', {\r\n  inserted: function (el) {\r\n    el.innerHTML = \"烫\"\r\n  }\r\n})\r\n\r\nnew Vue({\r\n  render: h =\u003E h(App),\r\n}).$mount('#app')\r\n```\r\n\r\n\u003E App.vue\r\n\r\n```html\r\n\u003Ctemplate\u003E\r\n  \u003Cdiv id=\"app\"\u003E\r\n    \u003CHelloWorld v-bug \u002F\u003E\r\n  \u003C\u002Fdiv\u003E\r\n\u003C\u002Ftemplate\u003E\r\n\r\n\u003Cscript\u003E\r\nimport HelloWorld from '.\u002Fcomponents\u002FHelloWorld.vue'\r\n\r\nexport default {\r\n  name: 'App',\r\n  components: {\r\n    HelloWorld\r\n  }\r\n}\r\n\u003C\u002Fscript\u003E\r\n\r\n\u003Cstyle\u003E\r\n#app {\r\n  font-family: Avenir, Helvetica, Arial, sans-serif;\r\n  -webkit-font-smoothing: antialiased;\r\n  -moz-osx-font-smoothing: grayscale;\r\n  text-align: center;\r\n  color: #2c3e50;\r\n  margin-top: 60px;\r\n}\r\n\u003C\u002Fstyle\u003E\r\n\r\n```\r\n\r\n效果展示\r\n\r\n![2020-09-20T05:28:47.png][1]\r\n\r\n### 2. 生成指定个数的`烫`\r\n\r\n\u003E main.js\r\n\r\n```javascript\r\n...\r\nVue.directive('bug', {\r\n  inserted: function (el, binding) {\r\n    el.innerHTML = Array(binding.value).fill(\"烫\").join(\"\")\r\n  }\r\n})\r\n...\r\n```\r\n\r\n\u003E App.vue\r\n\r\n```html\r\n\u003Ctemplate\u003E\r\n  \u003Cdiv id=\"app\"\u003E\r\n    \u003CHelloWorld v-bug=\"12\" \u002F\u003E\r\n  \u003C\u002Fdiv\u003E\r\n\u003C\u002Ftemplate\u003E\r\n```\r\n\r\n![2020-09-20T05:29:25.png][2]\r\n\r\n### 3. 指定是否追加`锟斤拷`\r\n\r\n\u003E main.js\r\n\r\n```javascript\r\n...\r\nVue.directive('bug', {\r\n  inserted: function (el, binding) {\r\n    let html = Array(binding.value).fill(\"烫\").join(\"\")\r\n    if(binding.modifiers.suffix){\r\n      html += \"锟斤拷\"\r\n    }\r\n    el.innerHTML = html\r\n  }\r\n})\r\n...\r\n```\r\n\r\n\u003E App.vue\r\n\r\n```html\r\n\u003Ctemplate\u003E\r\n  \u003Cdiv id=\"app\"\u003E\r\n    \u003CHelloWorld v-bug.suffix=\"12\" \u002F\u003E\r\n  \u003C\u002Fdiv\u003E\r\n\u003C\u002Ftemplate\u003E\r\n```\r\n\r\n![2020-09-20T05:30:18.png][3]\r\n\r\n但是此时的代码有个非常严重的问题，从上文代码中可看出，内容的改变只在inserted的时候执行。如果我们将指令后面设置为变量，变量值的改变却不会影响到`烫`个数（这一点都不Vue），所有我们应再监听一下指令的updated钩子函数。\r\n\r\n### 4. 数据驱动（动态改变）\r\n\r\n\u003E App.vue\r\n\r\n```html\r\n\u003Cscript\u003E\r\nimport HelloWorld from \".\u002Fcomponents\u002FHelloWorld.vue\";\r\n\r\nlet interval = null\r\nexport default {\r\n    name: \"App\",\r\n    components: {\r\n        HelloWorld\r\n    },\r\n    data() {\r\n        return {\r\n            num: 12\r\n        };\r\n    },\r\n    created() {\r\n        interval = setInterval(() =\u003E {\r\n            this.num++;\r\n        }, 1000);\r\n    },\r\n    beforeDestroy(){\r\n      clearInterval(interval)\r\n    }\r\n};\r\n\u003C\u002Fscript\u003E\r\n\r\n```\r\n\r\n\u003E main.js\r\n\r\n```javascript\r\n...\r\nfunction generateHtml(binding){\r\n  let html = Array(binding.value).fill(\"烫\").join(\"\")\r\n  if (binding.modifiers.suffix) {\r\n    html += \"锟斤拷\"\r\n  }\r\n  return html\r\n}\r\nVue.directive('bug', {\r\n  inserted: function (el, binding) {\r\n    el.innerHTML = generateHtml(binding)\r\n  },\r\n  update: function (el, binding) {\r\n    if (binding.oldValue !== binding.value) {\r\n      el.innerHTML = generateHtml(binding)\r\n    }\r\n  },\r\n})\r\n...\r\n```\r\n![2020-09-11T14:22:08.png][4]\r\n需求完成！\r\n\r\n\r\n  [1]: http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-09-20T05:28:47.png\r\n  [2]: http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-09-20T05:29:25.png\r\n  [3]: http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-09-20T05:30:18.png\r\n  [4]: http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-09-11T14:22:08.png",authorId:a,comments:2,views:752,likes:1,tag:[{tid:61,name:"vuejs",order:a,count:a}],category:"学习笔记",category_id:11,fields:{desc:"Vue中的指令形如v-*，如v-if，v-show，v-model等。同时，除了Vue自带的一些默认指令外，Vue同时运行用户自定义指令，来扩展指令功能。",thumb:"http:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-09-11T14:22:08.png"}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.5 · build-20220508-0128",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002F_nuxt\u002F",cdnURL:""}}}}(0))</script><script type="module" src="/_nuxt/entry-4033bfcf.mjs" crossorigin></script><script type="module" src="/_nuxt/default-ab4b1d95.mjs" crossorigin></script><script type="module" src="/_nuxt/_cid_-40efc3b3.mjs" crossorigin></script>
+</body>
+
+</html>
