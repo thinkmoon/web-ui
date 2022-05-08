@@ -5010,7 +5010,7 @@ const Components$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.define
   Html,
   Body
 }, Symbol.toStringTag, { value: "Module" }));
-const metaConfig = { "globalMeta": { "charset": "utf-8", "viewport": "width=device-width, initial-scale=1", "meta": [{ "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "name": "keywords", "content": "thinkmoon,\u6307\u5C16\u9B54\u6CD5\u5C4B,\u9189\u6708\u601D\u7684\u535A\u5BA2" }, { "name": "description", "content": "web\u524D\u7AEF\u5F00\u53D1\u5DE5\u7A0B\u5E08\u3001\u9762\u5411\u9AD8\u4FDD\u771F\u7F16\u7A0B\u3001\u603B\u7ED3\u4E0E\u8BB0\u5F55\u662F\u4E24\u4E2A\u6781\u5176\u4F18\u79C0\u7684\u5B66\u4E60\u4E60\u60EF\u3001\u5BF9\u77E5\u8BC6\u548C\u6280\u672F\u4FDD\u6301\u656C\u754F\u4E4B\u5FC3\uFF01" }], "link": [], "style": [], "script": [{ "async": true, "src": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3208634444966567", "crossorigin": "anonymous" }] } };
+const metaConfig = { "globalMeta": { "charset": "utf-8", "viewport": "width=device-width, initial-scale=1", "meta": [{ "name": "viewport", "content": "width=device-width, initial-scale=1" }, { "name": "keywords", "content": "thinkmoon,\u6307\u5C16\u9B54\u6CD5\u5C4B,\u9189\u6708\u601D\u7684\u535A\u5BA2" }, { "name": "description", "content": "web\u524D\u7AEF\u5F00\u53D1\u5DE5\u7A0B\u5E08\u3001\u9762\u5411\u9AD8\u4FDD\u771F\u7F16\u7A0B\u3001\u603B\u7ED3\u4E0E\u8BB0\u5F55\u662F\u4E24\u4E2A\u6781\u5176\u4F18\u79C0\u7684\u5B66\u4E60\u4E60\u60EF\u3001\u5BF9\u77E5\u8BC6\u548C\u6280\u672F\u4FDD\u6301\u656C\u754F\u4E4B\u5FC3\uFF01" }], "link": [], "style": [], "script": [{ "async": true, "src": "/ads.js", "crossorigin": "anonymous" }] } };
 const metaMixin = {
   created() {
     const instance = vue_cjs_prod.getCurrentInstance();
@@ -6647,20 +6647,17 @@ _sfc_main$2_.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/section/Search.vue");
   return _sfc_setup$r ? _sfc_setup$r(props, ctx) : void 0;
 };
-const _sfc_main$2Z = {
-  __ssrInlineRender: true,
-  setup(__props) {
-    return (_ctx, _push, _parent, _attrs) => {
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "section" }, _attrs))}><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="auto" data-ad-slot="2184618903" data-full-width-responsive="true" style="${serverRenderer.exports.ssrRenderStyle({ "display": "block" })}"></ins></div>`);
-    };
-  }
-};
+const _sfc_main$2Z = {};
+function _sfc_ssrRender$4(_ctx, _push, _parent, _attrs) {
+  _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "section" }, _attrs))}><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="auto" data-ad-slot="2184618903" data-full-width-responsive="true" style="${serverRenderer.exports.ssrRenderStyle({ "display": "block" })}"></ins></div>`);
+}
 const _sfc_setup$q = _sfc_main$2Z.setup;
 _sfc_main$2Z.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/section/GoogleAd.vue");
   return _sfc_setup$q ? _sfc_setup$q(props, ctx) : void 0;
 };
+const GoogleAd = /* @__PURE__ */ _export_sfc$2(_sfc_main$2Z, [["ssrRender", _sfc_ssrRender$4]]);
 const _sfc_main$2Y = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __ssrInlineRender: true,
   async setup(__props) {
@@ -6749,7 +6746,7 @@ const _sfc_main$2Y = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       }
       _push(`</div></div></div><div class="page-section" data-v-3256c01b>`);
       _push(serverRenderer.exports.ssrRenderComponent(_sfc_main$2_, null, null, _parent));
-      _push(serverRenderer.exports.ssrRenderComponent(_sfc_main$2Z, null, null, _parent));
+      _push(serverRenderer.exports.ssrRenderComponent(GoogleAd, null, null, _parent));
       _push(`</div></div>`);
     };
   }
@@ -52315,7 +52312,7 @@ const _sfc_main$6 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       }
       _push(`</div></div></div><div class="page-section" data-v-3256c01b>`);
       _push(serverRenderer.exports.ssrRenderComponent(_sfc_main$2_, null, null, _parent));
-      _push(serverRenderer.exports.ssrRenderComponent(_sfc_main$2Z, null, null, _parent));
+      _push(serverRenderer.exports.ssrRenderComponent(GoogleAd, null, null, _parent));
       _push(`</div></div>`);
     };
   }
