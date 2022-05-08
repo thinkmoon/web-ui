@@ -12,7 +12,4 @@
   </div>
 </template>
 <script setup>
-if (!process.server) {
-  (adsbygoogle = window.adsbygoogle || []).push({});
-}
 </script>
