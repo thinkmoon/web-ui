@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>使用console的一些骚操作来封装API请求及输出相关日志 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="thinkmoon,指尖魔法屋,醉月思的博客"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/nuxt-asset/entry-c8821fd3.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/entry.d638b35e.css" as="style"><link rel="modulepreload" href="/nuxt-asset/default-569882ed.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/default.7e78eff2.css" as="style"><link rel="modulepreload" href="/nuxt-asset/Footer-e87d5ccd.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/_cid_-b9696a3f.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/asyncData-6889c459.mjs" as="script" crossorigin><link rel="prefetch" href="/nuxt-asset/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/nuxt-asset/404-2686891f.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/editor-20e62237.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-e27e8d66.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/post-list-7c63cad4.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-4c30236b.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-4eb466b5.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/PostList-cf5fe476.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-998fbe42.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-9b6c50d9.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/login-1470aaa1.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-9e857ed8.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-20f453dc.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/TagApi-c617f340.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-2a2ad0c9.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/auth-58e62e5e.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-c894ab5f.mjs"><link rel="stylesheet" href="/nuxt-asset/entry.d638b35e.css"><link rel="stylesheet" href="/nuxt-asset/default.7e78eff2.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div data-v-062e129b><div class="top-menu" data-v-062e129b data-v-cb59d91c><div class="left" data-v-cb59d91c><a class="el-link el-link--default is-underline" href="/" data-v-cb59d91c><!--v-if--><span class="el-link__inner"><!--[-->指尖魔法屋<!--]--></span><!--v-if--></a></div><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-cb59d91c><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-cb59d91c><!--[--><!--[--> 首页 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-cb59d91c><!--[--><!--[--><a href="/category" class="" data-v-cb59d91c> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-cb59d91c><!--[--><!--[--><a href="/tag" class="" data-v-cb59d91c> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-cb59d91c><a class="el-link el-link--default" href="/login" data-v-cb59d91c><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-cb59d91c><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-cb59d91c><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container" data-v-062e129b><div class="layout" data-v-062e129b><div class="main-content" data-v-062e129b><!--[--><div class="" data-v-991fea2a><!----><div class="article-content" data-v-991fea2a><div class="v-md-editor-preview" style="tab-size:2;" data-v-991fea2a><div class="github-markdown-body"><h1 data-v-md-heading="使用console的一些骚操作来封装api请求及输出相关日志" data-v-md-line="1">使用console的一些骚操作来封装API请求及输出相关日志</h1>
+<h2 data-v-md-heading="最终效果如下" data-v-md-line="2">最终效果如下</h2>
+<p data-v-md-line="3"><img src="https://www.thinkmoon.cn/usr/uploads/2019/04/1897065195.png" alt="2019-04-02T02:54:35.png"><br>
+<img src="https://www.thinkmoon.cn/usr/uploads/2019/04/798221859.png" alt="2019-04-02T02:57:55.png"></p>
+<h2 data-v-md-heading="代码如下" data-v-md-line="6">代码如下</h2>
+<div data-v-md-line="7"><div class="v-md-pre-wrapper v-md-pre-wrapper-javascript extra-class"><pre class="v-md-hljs-javascript"><code><span class="hljs-keyword">const</span> baseURL = <span class="hljs-string">&#x27;http://wxlc.wezoz.com/&#x27;</span> <span class="hljs-comment">// your base url</span>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">request</span>(<span class="hljs-params">api, method, header, params</span>) </span>{
+	<span class="hljs-built_in">console</span>.group(api)
+	<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;%c&#x27;</span> + method + <span class="hljs-string">&#x27; REQUEST:&#x27;</span>, <span class="hljs-string">&quot;color:green&quot;</span>)
+	<span class="hljs-built_in">console</span>.log({
+		<span class="hljs-string">&#x27;api&#x27;</span>: api,
+		<span class="hljs-string">&#x27;header&#x27;</span>: header,
+		<span class="hljs-string">&#x27;params&#x27;</span>: params
+	})
+	<span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+		uni.request({
+			<span class="hljs-attr">url</span>: baseURL + api,
+			<span class="hljs-attr">method</span>: method,
+			<span class="hljs-attr">header</span>: header,
+			<span class="hljs-attr">data</span>: params,
+			<span class="hljs-attr">success</span>: <span class="hljs-function">(<span class="hljs-params">result</span>) =&gt;</span> {
+				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;%c&#x27;</span> + method + <span class="hljs-string">&#x27; SUCCESS RETURN DATA:&#x27;</span>, <span class="hljs-string">&quot;color:green&quot;</span>)
+				<span class="hljs-built_in">console</span>.log(result)
+				<span class="hljs-built_in">console</span>.groupEnd(api)
+				resolve(result.data);
+			},
+			<span class="hljs-attr">fail</span>: <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+				reject(e);
+			}
+		})
+	})
+}
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">post</span>(<span class="hljs-params">api, params, success</span>) </span>{
+	<span class="hljs-keyword">const</span> POST_METHOD = <span class="hljs-string">&#x27;POST&#x27;</span>
+	<span class="hljs-keyword">const</span> POST_HEADER = {
+		<span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/x-www-form-urlencoded&#x27;</span>,
+		<span class="hljs-string">&#x27;token&#x27;</span>: wx.getStorageSync(<span class="hljs-string">&#x27;token&#x27;</span>)
+	}
+	<span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> request(api, POST_METHOD, POST_HEADER, params)
+}
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get</span>(<span class="hljs-params">api, params, success</span>) </span>{
+	<span class="hljs-keyword">const</span> GET_METHOD = <span class="hljs-string">&#x27;GET&#x27;</span>
+	<span class="hljs-keyword">const</span> GET_HEADER = {
+		<span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/x-www-form-urlencoded&#x27;</span>,
+		<span class="hljs-string">&#x27;token&#x27;</span>: wx.getStorageSync(<span class="hljs-string">&#x27;token&#x27;</span>)
+	}
+	<span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> request(api, GET_METHOD, GET_HEADER, params)
+}
+<span class="hljs-built_in">module</span>.exports = {
+	<span class="hljs-attr">POST</span>: post,
+	<span class="hljs-attr">GET</span>: get
+}
+
+</code></pre>
+</div></div><h2 data-v-md-heading="所用到的一些consloe骚操作" data-v-md-line="57">所用到的一些consloe骚操作</h2>
+<h3 data-v-md-heading="console内使用css样式" data-v-md-line="59">console内使用CSS样式</h3>
+<p data-v-md-line="60">consloe里面使用%c进行css样式格式化输出实例</p>
+<div data-v-md-line="61"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre class="v-md-hljs-"><code>console.log(&quot;%c Hello World&quot;, &quot;color:green&quot;)
+</code></pre>
+</div></div><p data-v-md-line="64">上述语句会输出绿色的<code>Hello world</code>, 效果如下。</p>
+<p data-v-md-line="66"><img src="https://www.thinkmoon.cn/usr/uploads/2019/04/3326939580.png" alt="2019-04-02T03:25:00.png"></p>
+<p data-v-md-line="68">然后你就可以根据你的css功底进行创造啦</p>
+<h3 data-v-md-heading="console内获取程序运行时间" data-v-md-line="70">console内获取程序运行时间</h3>
+<p data-v-md-line="72">一般大家看到这个题目，第一时间想到的绝对是获取startTime，endTime再求差对不？<br>
+其实console提供一个内嵌的console.time()和console.timeEnd()，代码如下<br>
+<img src="https://www.thinkmoon.cn/usr/uploads/2019/04/116410319.png" alt="2019-04-02T03:30:19.png"></p>
+<h3 data-v-md-heading="console分组输出" data-v-md-line="76">console分组输出</h3>
+<p data-v-md-line="77">有得时候，大家打开控制台看见一堆输出是不是很头疼？如何在茫茫数据中找到自己想要的数据呢？你可以使用ground分组数据，让console变得清晰明了。<br>
+效果如下<br>
+<img src="https://www.thinkmoon.cn/usr/uploads/2019/04/798221859.png" alt="2019-04-02T02:57:55.png"></p>
+<h3 data-v-md-heading="结语" data-v-md-line="81">结语</h3>
+<p data-v-md-line="83">我这里只是写了一些我自己常用到的一些功能，其实console对象还有很多函数。想玩一下的可以自己去尝试以下，发挥自己的想象力就会发现一些很有意思的玩法</p>
+<blockquote data-v-md-line="89">
+<p data-v-md-line="89">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/297" class="custom-internal-link" target="_blank">指尖魔法屋-使用console的一些骚操作来封装API请求及输出相关日志</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="fluid" data-ad-layout="in-article" data-ad-slot="2621880404" style="display:block;text-align:center;width:100%;" data-v-991fea2a></ins></div></div><!--]--></div><div class="page-section" data-v-062e129b><div class="section" data-v-062e129b><div class="el-input el-input-group el-input-group--append input-with-select" style=""><!-- input --><!--[--><!-- prepend slot --><!--v-if--><div class="el-input__wrapper"><!-- prefix slot --><!--v-if--><input class="el-input__inner" type="text" autocomplete="off" tabindex="0" placeholder="站内搜索" style=""><!-- suffix slot --><!--v-if--></div><!-- append slot --><div class="el-input-group__append"><!--[--><button class="el-button" aria-disabled="false" type="button" style=""><i class="el-icon" style=""><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg><!--]--></i><!--v-if--></button><!--]--></div><!--]--></div></div><div class="section" data-v-062e129b><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="auto" data-ad-slot="2184618903" data-full-width-responsive="true" style="display:block;"></ins></div></div></div></div><span data-v-062e129b></span></div><div class="footer" data-v-062e129b data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.6 · build-20220510</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a){return {data:{pinia:{},article:{cid:297,title:"使用console的一些骚操作来封装API请求及输出相关日志",created:1554173880,modified:1554176362,text:"## 最终效果如下\r\n![2019-04-02T02:54:35.png][1]\r\n![2019-04-02T02:57:55.png][2]\r\n\r\n## 代码如下\r\n```javascript\r\nconst baseURL = 'http:\u002F\u002Fwxlc.wezoz.com\u002F' \u002F\u002F your base url\r\nasync function request(api, method, header, params) {\r\n\tconsole.group(api)\r\n\tconsole.log('%c' + method + ' REQUEST:', \"color:green\")\r\n\tconsole.log({\r\n\t\t'api': api,\r\n\t\t'header': header,\r\n\t\t'params': params\r\n\t})\r\n\treturn await new Promise((resolve, reject) =\u003E {\r\n\t\tuni.request({\r\n\t\t\turl: baseURL + api,\r\n\t\t\tmethod: method,\r\n\t\t\theader: header,\r\n\t\t\tdata: params,\r\n\t\t\tsuccess: (result) =\u003E {\r\n\t\t\t\tconsole.log('%c' + method + ' SUCCESS RETURN DATA:', \"color:green\")\r\n\t\t\t\tconsole.log(result)\r\n\t\t\t\tconsole.groupEnd(api)\r\n\t\t\t\tresolve(result.data);\r\n\t\t\t},\r\n\t\t\tfail: (e) =\u003E {\r\n\t\t\t\treject(e);\r\n\t\t\t}\r\n\t\t})\r\n\t})\r\n}\r\nasync function post(api, params, success) {\r\n\tconst POST_METHOD = 'POST'\r\n\tconst POST_HEADER = {\r\n\t\t'content-type': 'application\u002Fx-www-form-urlencoded',\r\n\t\t'token': wx.getStorageSync('token')\r\n\t}\r\n\treturn await request(api, POST_METHOD, POST_HEADER, params)\r\n}\r\nasync function get(api, params, success) {\r\n\tconst GET_METHOD = 'GET'\r\n\tconst GET_HEADER = {\r\n\t\t'content-type': 'application\u002Fx-www-form-urlencoded',\r\n\t\t'token': wx.getStorageSync('token')\r\n\t}\r\n\treturn await request(api, GET_METHOD, GET_HEADER, params)\r\n}\r\nmodule.exports = {\r\n\tPOST: post,\r\n\tGET: get\r\n}\r\n\r\n```\r\n## 所用到的一些consloe骚操作\r\n\r\n### console内使用CSS样式\r\nconsloe里面使用%c进行css样式格式化输出实例\r\n```\r\nconsole.log(\"%c Hello World\", \"color:green\")\r\n```\r\n上述语句会输出绿色的`Hello world`, 效果如下。\r\n\r\n![2019-04-02T03:25:00.png][3]\r\n\r\n然后你就可以根据你的css功底进行创造啦\r\n\r\n### console内获取程序运行时间\r\n\r\n一般大家看到这个题目，第一时间想到的绝对是获取startTime，endTime再求差对不？\r\n其实console提供一个内嵌的console.time()和console.timeEnd()，代码如下\r\n![2019-04-02T03:30:19.png][4]\r\n\r\n### console分组输出\r\n有得时候，大家打开控制台看见一堆输出是不是很头疼？如何在茫茫数据中找到自己想要的数据呢？你可以使用ground分组数据，让console变得清晰明了。\r\n效果如下\r\n![2019-04-02T02:57:55.png][2]\r\n\r\n### 结语\r\n\r\n我这里只是写了一些我自己常用到的一些功能，其实console对象还有很多函数。想玩一下的可以自己去尝试以下，发挥自己的想象力就会发现一些很有意思的玩法\r\n\r\n  [1]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F04\u002F1897065195.png\r\n  [2]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F04\u002F798221859.png\r\n  [3]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F04\u002F3326939580.png\r\n  [4]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F04\u002F116410319.png",authorId:a,comments:a,views:928,likes:6,tag:[],category:"学习笔记",category_id:11,fields:{}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.6 · build-20220510",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002Fnuxt-asset\u002F",cdnURL:""}}}}(0))</script><script type="module" src="/nuxt-asset/entry-c8821fd3.mjs" crossorigin></script><script type="module" src="/nuxt-asset/default-569882ed.mjs" crossorigin></script><script type="module" src="/nuxt-asset/_cid_-b9696a3f.mjs" crossorigin></script>
+</body>
+
+</html>

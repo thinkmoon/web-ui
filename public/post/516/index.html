@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>交通网络分层设计模型之路口状态 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="thinkmoon,指尖魔法屋,醉月思的博客"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/nuxt-asset/entry-c8821fd3.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/entry.d638b35e.css" as="style"><link rel="modulepreload" href="/nuxt-asset/default-569882ed.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/default.7e78eff2.css" as="style"><link rel="modulepreload" href="/nuxt-asset/Footer-e87d5ccd.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/_cid_-b9696a3f.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/asyncData-6889c459.mjs" as="script" crossorigin><link rel="prefetch" href="/nuxt-asset/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/nuxt-asset/404-2686891f.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/editor-20e62237.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-e27e8d66.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/post-list-7c63cad4.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-4c30236b.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-4eb466b5.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/PostList-cf5fe476.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-998fbe42.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-9b6c50d9.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/login-1470aaa1.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-9e857ed8.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-20f453dc.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/TagApi-c617f340.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-2a2ad0c9.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/auth-58e62e5e.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-c894ab5f.mjs"><link rel="stylesheet" href="/nuxt-asset/entry.d638b35e.css"><link rel="stylesheet" href="/nuxt-asset/default.7e78eff2.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div data-v-062e129b><div class="top-menu" data-v-062e129b data-v-cb59d91c><div class="left" data-v-cb59d91c><a class="el-link el-link--default is-underline" href="/" data-v-cb59d91c><!--v-if--><span class="el-link__inner"><!--[-->指尖魔法屋<!--]--></span><!--v-if--></a></div><ul role="menubar" style="--el-menu-text-color:;--el-menu-hover-text-color:;--el-menu-bg-color:;--el-menu-hover-bg-color:;--el-menu-active-color:;" class="el-menu el-menu--horizontal" data-v-cb59d91c><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-cb59d91c><!--[--><!--[--> 首页 <!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-cb59d91c><!--[--><!--[--><a href="/category" class="" data-v-cb59d91c> 分类 </a><!--]--><!--[--><!--]--><!--]--></li><li class="el-menu-item" role="menuitem" tabindex="-1" style="" data-v-cb59d91c><!--[--><!--[--><a href="/tag" class="" data-v-cb59d91c> 标签 </a><!--]--><!--[--><!--]--><!--]--></li></ul><div class="right" data-v-cb59d91c><a class="el-link el-link--default" href="/login" data-v-cb59d91c><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-cb59d91c><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-cb59d91c><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container" data-v-062e129b><div class="layout" data-v-062e129b><div class="main-content" data-v-062e129b><!--[--><div class="" data-v-991fea2a><!----><div class="article-content" data-v-991fea2a><div class="v-md-editor-preview" style="tab-size:2;" data-v-991fea2a><div class="github-markdown-body"><h1 data-v-md-heading="交通网络分层设计模型之路口状态" data-v-md-line="1">交通网络分层设计模型之路口状态</h1>
+<p data-v-md-line="2">所有的路口标号用<code>int road[8]</code>表示，<br>
+用<code>bool status[8][8]</code>表示道路可否通行。</p>
+<h2 data-v-md-heading="t字路口" data-v-md-line="4">T字路口</h2>
+<hr data-v-md-line="5">
+<p data-v-md-line="7"><img src="https://raw.githubusercontent.com/thinkmoon/pic/master/Traffic_README/T%E8%B7%AF%E5%8F%A3.png" alt="T字路口"><br>
+对于T字路口，将道路分为（左，右，下）三个流量出入口，存在的状态有：</p>
+<h3 data-v-md-heading="_0-全红-特殊状态应对突发事故" data-v-md-line="9">0.  全红(特殊状态应对突发事故）</h3>
+<div data-v-md-line="10"><div class="v-md-pre-wrapper v-md-pre-wrapper-C++ extra-class"><pre class="v-md-hljs-C++"><code>     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">8</span>; i++) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">8</span>; j++) {
+            status[i][j] = <span class="hljs-literal">false</span>;
+        }
+    }
+</code></pre>
+</div></div><p data-v-md-line="17">×|0|1|2|3|4|5<br>
+:–: | :–: | :–: | :–: | :–: | :–: |<br>
+0|×|×|×|×|×|×<br>
+1|×|×|×|×|×|×<br>
+2|×|×|×|×|×|×<br>
+3|×|×|×|×|×|×<br>
+4|×|×|×|×|×|×<br>
+5|×|×|×|×|×|×</p>
+<blockquote data-v-md-line="27">
+<p data-v-md-line="27">正常状态下考虑红灯可右转，同向变道不受交通灯控制，即永远可通行</p>
+</blockquote>
+<div data-v-md-line="29"><div class="v-md-pre-wrapper v-md-pre-wrapper-C++ extra-class"><pre class="v-md-hljs-C++"><code>status[<span class="hljs-number">2</span>][<span class="hljs-number">1</span>] = status[<span class="hljs-number">4</span>][<span class="hljs-number">3</span>] = <span class="hljs-literal">true</span>;
+status[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>] = status[<span class="hljs-number">2</span>][<span class="hljs-number">3</span>] = status[<span class="hljs-number">4</span>][<span class="hljs-number">5</span>] = <span class="hljs-literal">true</span>;
+
+</code></pre>
+</div></div><p data-v-md-line="34">×|0|1|2|3|4|5<br>
+:–: | :–: | :–: | :–: | :–: | :–: |<br>
+0||@||||<br>
+1||||||<br>
+2||@||@||<br>
+3||||||<br>
+4||||@||@<br>
+5||||||</p>
+<blockquote data-v-md-line="42">
+<p data-v-md-line="42">同时需要限制逆行，即永远不可通行</p>
+</blockquote>
+<div data-v-md-line="44"><div class="v-md-pre-wrapper v-md-pre-wrapper-C++ extra-class"><pre class="v-md-hljs-C++"><code><span class="hljs-comment">// 出口不能自转和变道</span>
+status[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>] = status[<span class="hljs-number">0</span>][<span class="hljs-number">2</span>]  = status[<span class="hljs-number">0</span>][<span class="hljs-number">4</span>]  = <span class="hljs-literal">false</span>;
+status[<span class="hljs-number">4</span>][<span class="hljs-number">4</span>] = status[<span class="hljs-number">4</span>][<span class="hljs-number">0</span>]  = status[<span class="hljs-number">4</span>][<span class="hljs-number">2</span>]  = <span class="hljs-literal">false</span>;
+status[<span class="hljs-number">2</span>][<span class="hljs-number">2</span>] = status[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>]  = status[<span class="hljs-number">2</span>][<span class="hljs-number">4</span>]  = <span class="hljs-literal">false</span>;
+<span class="hljs-comment">// 入口不能出去</span>
+status[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>] =status[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]  = status[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>] = status[<span class="hljs-number">1</span>][<span class="hljs-number">3</span>]   = status[<span class="hljs-number">1</span>][<span class="hljs-number">4</span>] = status[<span class="hljs-number">1</span>][<span class="hljs-number">5</span>] = <span class="hljs-literal">false</span>;
+status[<span class="hljs-number">3</span>][<span class="hljs-number">0</span>] =status[<span class="hljs-number">3</span>][<span class="hljs-number">1</span>]  = status[<span class="hljs-number">3</span>][<span class="hljs-number">2</span>] = status[<span class="hljs-number">3</span>][<span class="hljs-number">3</span>]   = status[<span class="hljs-number">3</span>][<span class="hljs-number">4</span>] = status[<span class="hljs-number">3</span>][<span class="hljs-number">5</span>] = <span class="hljs-literal">false</span>;
+status[<span class="hljs-number">5</span>][<span class="hljs-number">0</span>] =status[<span class="hljs-number">5</span>][<span class="hljs-number">1</span>]  = status[<span class="hljs-number">5</span>][<span class="hljs-number">2</span>] = status[<span class="hljs-number">5</span>][<span class="hljs-number">3</span>]   = status[<span class="hljs-number">5</span>][<span class="hljs-number">4</span>] = status[<span class="hljs-number">5</span>][<span class="hljs-number">5</span>] = <span class="hljs-literal">false</span>;
+</code></pre>
+</div></div><p data-v-md-line="54">×|0|1|2|3|4|5<br>
+:–: | :–: | :–: | :–: | :–: | :–: |<br>
+0|×|@|×||×|<br>
+1|×|×|×|×|×|×<br>
+2|×|@|×|@|×|<br>
+3|×|×|×|×|×|×<br>
+4|×||×|@|×|@<br>
+5|×|×|×|×|×|×</p>
+<blockquote data-v-md-line="62">
+<p data-v-md-line="62">对以上情况封装，即init()。后续应禁止对上值做任何改变。<br>
+即还有6*6-5-9-18=4个值</p>
+</blockquote>
+<div data-v-md-line="65"><div class="v-md-pre-wrapper v-md-pre-wrapper-C++ extra-class"><pre class="v-md-hljs-C++"><code>status[<span class="hljs-number">0</span>][<span class="hljs-number">5</span>],status[<span class="hljs-number">4</span>][<span class="hljs-number">1</span>],
+status[<span class="hljs-number">2</span>][<span class="hljs-number">5</span>],status[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>],
+</code></pre>
+</div></div><div data-v-md-line="69"><img src="https://thinkmoon.cn/images/1536936610096.png" width="400" height="400" alt="道路方向" align="center" />
+</div><h3 data-v-md-heading="_1-对边可通行-限制0左转-限制2左转" data-v-md-line="71">1. 对边可通行（限制0左转，限制2左转）</h3>
+<div data-v-md-line="72"><div class="v-md-pre-wrapper v-md-pre-wrapper-C++ extra-class"><pre class="v-md-hljs-C++"><code>status[<span class="hljs-number">0</span>][<span class="hljs-number">5</span>]=status[<span class="hljs-number">4</span>][<span class="hljs-number">1</span>]=<span class="hljs-literal">true</span>;
+status[<span class="hljs-number">2</span>][<span class="hljs-number">5</span>]=status[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>]=<span class="hljs-literal">false</span>;
+</code></pre>
+</div></div><h3 data-v-md-heading="_2-疏通右侧" data-v-md-line="76">2. 疏通右侧</h3>
+<div data-v-md-line="77"><div class="v-md-pre-wrapper v-md-pre-wrapper-C++ extra-class"><pre class="v-md-hljs-C++"><code>status[<span class="hljs-number">0</span>][<span class="hljs-number">5</span>]=status[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>]=<span class="hljs-literal">true</span>;
+status[<span class="hljs-number">4</span>][<span class="hljs-number">1</span>]=status[<span class="hljs-number">2</span>][<span class="hljs-number">5</span>]=<span class="hljs-literal">false</span>;
+</code></pre>
+</div></div><h3 data-v-md-heading="_3-导向左侧" data-v-md-line="81">3. 导向左侧</h3>
+<div data-v-md-line="82"><div class="v-md-pre-wrapper v-md-pre-wrapper-C++ extra-class"><pre class="v-md-hljs-C++"><code>status[<span class="hljs-number">0</span>][<span class="hljs-number">5</span>]=status[<span class="hljs-number">2</span>][<span class="hljs-number">5</span>]=<span class="hljs-literal">true</span>;
+status[<span class="hljs-number">4</span>][<span class="hljs-number">1</span>]=status[<span class="hljs-number">0</span>][<span class="hljs-number">3</span>]=<span class="hljs-literal">false</span>;
+</code></pre>
+</div></div><h2 data-v-md-heading="字路口" data-v-md-line="87">+字路口</h2>
+<hr data-v-md-line="88">
+<p data-v-md-line="89"><img src="https://raw.githubusercontent.com/thinkmoon/pic/master/Traffic_README/+%E8%B7%AF%E5%8F%A3.png" alt="+字路口"><br>
+对于+字路口，将道路分为（左，右，上，下）四个流量出入口，存在的状态有：</p>
+<h3 data-v-md-heading="_0-全红-同上" data-v-md-line="91">0.  全红(同上）</h3>
+<p data-v-md-line="92">×|0|1|2|3|4|5|6|7<br>
+:–: | :–: | :–: | :–: | :–: | :–: | :–: | :–: |<br>
+0|×|×|×|×|×|×|×|×<br>
+1|×|×|×|×|×|×|×|×<br>
+2|×|×|×|×|×|×|×|×<br>
+3|×|×|×|×|×|×|×|×<br>
+4|×|×|×|×|×|×|×|×<br>
+5|×|×|×|×|×|×|×|×<br>
+6|×|×|×|×|×|×|×|×<br>
+7|×|×|×|×|×|×|×|×</p>
+<blockquote data-v-md-line="108">
+<p data-v-md-line="108">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/516" class="custom-internal-link" target="_blank">指尖魔法屋-交通网络分层设计模型之路口状态</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="fluid" data-ad-layout="in-article" data-ad-slot="2621880404" style="display:block;text-align:center;width:100%;" data-v-991fea2a></ins></div></div><!--]--></div><div class="page-section" data-v-062e129b><div class="section" data-v-062e129b><div class="el-input el-input-group el-input-group--append input-with-select" style=""><!-- input --><!--[--><!-- prepend slot --><!--v-if--><div class="el-input__wrapper"><!-- prefix slot --><!--v-if--><input class="el-input__inner" type="text" autocomplete="off" tabindex="0" placeholder="站内搜索" style=""><!-- suffix slot --><!--v-if--></div><!-- append slot --><div class="el-input-group__append"><!--[--><button class="el-button" aria-disabled="false" type="button" style=""><i class="el-icon" style=""><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg><!--]--></i><!--v-if--></button><!--]--></div><!--]--></div></div><div class="section" data-v-062e129b><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="auto" data-ad-slot="2184618903" data-full-width-responsive="true" style="display:block;"></ins></div></div></div></div><span data-v-062e129b></span></div><div class="footer" data-v-062e129b data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.6 · build-20220510</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a){return {data:{pinia:{},article:{cid:516,title:"交通网络分层设计模型之路口状态",created:1536847140,modified:1574154606,text:"所有的路口标号用`int road[8]`表示，\r\n用`bool status[8][8]`表示道路可否通行。\r\n## T字路口\r\n---\r\n\r\n![T字路口](https:\u002F\u002Fraw.githubusercontent.com\u002Fthinkmoon\u002Fpic\u002Fmaster\u002FTraffic_README\u002FT%E8%B7%AF%E5%8F%A3.png)\r\n对于T字路口，将道路分为（左，右，下）三个流量出入口，存在的状态有：\r\n### 0.  全红(特殊状态应对突发事故）\r\n```C++\r\n     for (int i = 0; i \u003C 8; i++) {\r\n        for (int j = 0; j \u003C 8; j++) {\r\n            status[i][j] = false;\r\n        }\r\n    }\r\n```\r\n×|0|1|2|3|4|5\r\n:--: | :--: | :--: | :--: | :--: | :--: |\r\n0|×|×|×|×|×|×\r\n1|×|×|×|×|×|×\r\n2|×|×|×|×|×|×\r\n3|×|×|×|×|×|×\r\n4|×|×|×|×|×|×\r\n5|×|×|×|×|×|×\r\n\r\n\r\n\u003E 正常状态下考虑红灯可右转，同向变道不受交通灯控制，即永远可通行\r\n\r\n```C++\r\nstatus[2][1] = status[4][3] = true;\r\nstatus[0][1] = status[2][3] = status[4][5] = true;\r\n\r\n```\r\n×|0|1|2|3|4|5\r\n:--: | :--: | :--: | :--: | :--: | :--: |\r\n0||@||||\r\n1||||||\r\n2||@||@||\r\n3||||||\r\n4||||@||@\r\n5||||||\r\n\u003E 同时需要限制逆行，即永远不可通行\r\n\r\n```C++\r\n\u002F\u002F 出口不能自转和变道\r\nstatus[0][0] = status[0][2]  = status[0][4]  = false;\r\nstatus[4][4] = status[4][0]  = status[4][2]  = false;\r\nstatus[2][2] = status[2][0]  = status[2][4]  = false;\r\n\u002F\u002F 入口不能出去\r\nstatus[1][0] =status[1][1]  = status[1][2] = status[1][3]   = status[1][4] = status[1][5] = false;\r\nstatus[3][0] =status[3][1]  = status[3][2] = status[3][3]   = status[3][4] = status[3][5] = false;\r\nstatus[5][0] =status[5][1]  = status[5][2] = status[5][3]   = status[5][4] = status[5][5] = false;\r\n```\r\n×|0|1|2|3|4|5\r\n:--: | :--: | :--: | :--: | :--: | :--: |\r\n0|×|@|×||×|\r\n1|×|×|×|×|×|×\r\n2|×|@|×|@|×|\r\n3|×|×|×|×|×|×\r\n4|×||×|@|×|@\r\n5|×|×|×|×|×|×\r\n\u003E 对以上情况封装，即init()。后续应禁止对上值做任何改变。\r\n即还有6*6-5-9-18=4个值\r\n\r\n```C++\r\nstatus[0][5],status[4][1],\r\nstatus[2][5],status[0][3],\r\n```\r\n\u003Cimg src=\"https:\u002F\u002Fthinkmoon.cn\u002Fimages\u002F1536936610096.png\" width = \"400\" height = \"400\" alt=\"道路方向\" align=center \u002F\u003E\r\n\r\n### 1. 对边可通行（限制0左转，限制2左转）\r\n```C++\r\nstatus[0][5]=status[4][1]=true;\r\nstatus[2][5]=status[0][3]=false;\r\n```\r\n### 2. 疏通右侧\r\n```C++\r\nstatus[0][5]=status[0][3]=true;\r\nstatus[4][1]=status[2][5]=false;\r\n```\r\n### 3. 导向左侧\r\n```C++\r\nstatus[0][5]=status[2][5]=true;\r\nstatus[4][1]=status[0][3]=false;\r\n```\r\n\r\n## +字路口\r\n---\r\n![+字路口](https:\u002F\u002Fraw.githubusercontent.com\u002Fthinkmoon\u002Fpic\u002Fmaster\u002FTraffic_README\u002F+%E8%B7%AF%E5%8F%A3.png)\r\n对于+字路口，将道路分为（左，右，上，下）四个流量出入口，存在的状态有：\r\n### 0.  全红(同上）\r\n×|0|1|2|3|4|5|6|7\r\n:--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |\r\n0|×|×|×|×|×|×|×|×\r\n1|×|×|×|×|×|×|×|×\r\n2|×|×|×|×|×|×|×|×\r\n3|×|×|×|×|×|×|×|×\r\n4|×|×|×|×|×|×|×|×\r\n5|×|×|×|×|×|×|×|×\r\n6|×|×|×|×|×|×|×|×\r\n7|×|×|×|×|×|×|×|×\r\n\r\n\r\n\r\n\r\n\r\n",authorId:a,comments:a,views:387,likes:a,tag:[],category:"学习笔记",category_id:11,fields:{}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.6 · build-20220510",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002Fnuxt-asset\u002F",cdnURL:""}}}}(0))</script><script type="module" src="/nuxt-asset/entry-c8821fd3.mjs" crossorigin></script><script type="module" src="/nuxt-asset/default-569882ed.mjs" crossorigin></script><script type="module" src="/nuxt-asset/_cid_-b9696a3f.mjs" crossorigin></script>
+</body>
+
+</html>
