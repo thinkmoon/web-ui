@@ -1,8 +1,9 @@
 {
   "private": true,
-  "version": "0.1.5",
+  "version": "0.1.6",
   "scripts": {
-    "dev": "yarn upgrade-interactive && nuxt dev",
+    "upgrade": "yarn upgrade-interactive",
+    "dev": "nuxt dev",
     "build": "nuxt build",
     "start": "nuxt preview",
     "generate": "nuxt generate"
@@ -27,6 +28,6 @@
     "eslint-plugin-vue": "^8.7.1",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "nuxt": "^3.0.0-rc.2"
+    "nuxt": "npm:nuxt3@latest"
   }
 }

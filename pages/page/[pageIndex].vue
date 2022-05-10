@@ -24,10 +24,6 @@
         </div>
       </div>
     </div>
-    <div class="page-section">
-      <Search />
-      <GoogleAd />
-    </div>
   </div>
 </template>
 
@@ -35,8 +31,6 @@
 import axios from 'axios';
 import PostApi from '~/api/PostApi';
 import {useRoute} from 'vue-router';
-import Search from '~~/components/section/Search.vue';
-import GoogleAd from '~/components/section/GoogleAd.vue';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -70,21 +64,6 @@ if (process.server) {
 </script>
 
 <style lang="less" scoped>
-.page-content {
-  margin: auto;
-  padding-bottom: 20px;
-  width: 70%;
-  display: flex;
-
-  .post-container {
-    flex: 1;
-  }
-
-  .page-section {
-    width: 300px;
-    padding: 20px;
-  }
-}
 
 @media (max-width: 1024px) {
   .page-content {

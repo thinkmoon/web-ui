@@ -1,12 +1,15 @@
 <template>
   <div class="top-menu">
+    <div class="left">
+      <el-link href="/">指尖魔法屋</el-link>
+    </div>
     <el-menu
       :default-active="defaultActive"
       mode="horizontal"
       @select="select"
     >
-      <el-menu-item index="/">
-        指尖魔法屋
+      <el-menu-item index="/page/1">
+        首页
       </el-menu-item>
       <el-menu-item index="/category">
         <NuxtLink to="/category">
@@ -46,8 +49,9 @@ function select(url) {
 </script>
 <style lang="less" scoped>
 a {
-  text-decoration:none
+  text-decoration: none
 }
+
 .top-menu {
   width: 100vw;
   z-index: 3;
@@ -59,8 +63,17 @@ a {
   padding: 0 24px;
   box-sizing: border-box;
   border-bottom: 1px solid #dcdfe6;
+
+  .left, .right {
+    flex: 1.5;
+  }
+
+  .right {
+    text-align: right;
+  }
+
   .el-menu {
-    flex: 1;
+    flex: 7;
     border: none;
   }
 }

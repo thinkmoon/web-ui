@@ -107,7 +107,7 @@ const props = defineProps({
   postList: Array,
 });
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .blog-posts {
   text-align: left;
 }
@@ -153,7 +153,7 @@ const props = defineProps({
     display: flex;
     align-items: center;
 
-    & :deep(.el-icon) {
+    :deep(.el-icon) {
       margin-right: 4px;
     }
   }

@@ -1,8 +1,15 @@
 <template>
-  <div class="app-container">
+  <div class="">
     <Title>{{ data.title }} | {{ config.TITLE }}</Title>
     <div class="article-content">
       <v-md-preview :text="content" />
+      <ins class="adsbygoogle"
+           data-ad-client="ca-pub-3208634444966567"
+           data-ad-format="fluid"
+           data-ad-layout="in-article"
+           data-ad-slot="2621880404"
+           style="display:block; text-align:center;width: 100%"
+      ></ins>
     </div>
   </div>
 </template>
@@ -44,7 +51,6 @@ useMeta({
 
 <style lang="less" scoped>
 .article-content {
-  width: 70%;
   margin: auto;
   background: #fff;
 }

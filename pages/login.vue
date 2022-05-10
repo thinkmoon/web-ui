@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <Title>登录 | </Title>
+    <Title>登录 | {{ config.TITLE }}</Title>
     <div class="login-dialog">
       <el-form :model="form">
         <el-form-item label="账号">
@@ -27,6 +27,9 @@
 </template>
 <script lang="ts" setup>
 import UserApi from '~/api/UserApi';
+
+const config = useRuntimeConfig();
+
 const {$message} = useNuxtApp();
 const auth = useCookie('auth');
 
