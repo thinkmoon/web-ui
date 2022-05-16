@@ -1,4 +1,7 @@
 (function() {
+  if (!location.href.startsWith('https://www.thinkmoon.cn')) {
+    return;
+  }
   const done = false;
   const script = document.createElement('script');
   script.async = true;
