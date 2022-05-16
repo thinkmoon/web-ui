@@ -15,6 +15,7 @@ module.exports = {
     'vue',
   ],
   'rules': {
-    'max-len': ['error', {'code': 120}],
+    'object-curly-spacing': ['error', 'always'],
+    'max-len': ['error', { 'code': 120 }],
   },
 };

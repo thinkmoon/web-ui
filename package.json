@@ -1,10 +1,12 @@
 {
   "private": true,
-  "version": "0.1.5",
+  "version": "0.1.7",
   "scripts": {
-    "dev": "yarn upgrade-interactive && nuxi dev",
-    "build": "nuxi build",
-    "start": "nuxi preview"
+    "upgrade": "yarn upgrade-interactive",
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "start": "nuxt preview",
+    "generate": "nuxt generate"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
@@ -26,6 +28,6 @@
     "eslint-plugin-vue": "^8.7.1",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "nuxt": "^3.0.0-rc.1"
+    "nuxt": "^3.0.0-rc.3"
   }
 }

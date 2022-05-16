@@ -1,28 +1,29 @@
-import { defineNuxtConfig } from "nuxt";
-import runtimeConfig from "./runtime.config";
+import {defineNuxtConfig} from 'nuxt';
+import runtimeConfig from './runtime.config';
+
 export default defineNuxtConfig({
+  app: {
+    buildAssetsDir: '/nuxt-asset/',
+  },
   publicRuntimeConfig: runtimeConfig,
   meta: {
     meta: [
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "keywords", content: runtimeConfig.KEYWORDS.join() },
-      { name: "description", content: runtimeConfig.DESCRIPTION },
+      {name: 'viewport', content: 'width=device-width, initial-scale=1'},
+      {name: 'keywords', content: runtimeConfig.KEYWORDS.join()},
+      {name: 'description', content: runtimeConfig.DESCRIPTION},
     ],
     script: [
       {
         async: true,
-        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3208634444966567",
-        crossorigin: "anonymous",
+        src: '/ads.js',
+        crossorigin: 'anonymous',
       },
     ],
   },
-  css: ["assets/css/index.less","element-plus/dist/index.css"],
+  css: ['assets/css/index.less', 'element-plus/dist/index.css'],
   components: true,
-  vueuse: {
-    ssrHandlers: true,
-  },
   buildModules: [
     '@vueuse/nuxt',
-    "@pinia/nuxt",
+    '@pinia/nuxt',
   ],
 });

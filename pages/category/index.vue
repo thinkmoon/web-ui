@@ -8,8 +8,8 @@
       class="category-list"
     >
       <el-link
-          type="info"
-          :href="`/category/${category.name}/1`"
+        :href="`/category/${category.name}/1`"
+        type="info"
       >
         {{ category.name }}({{ category.count }})
       </el-link>

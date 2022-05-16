@@ -23,7 +23,7 @@ jobs:
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
       - run: yarn
-      - run: yarn run build
+      - run: yarn run generate
 
       - name: GitHub Pages v3
         uses: peaceiris/actions-github-pages@v3.1.12

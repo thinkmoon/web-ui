@@ -1,48 +1,48 @@
 <template>
   <div class="blog-posts">
     <div
-        v-for="item in postList"
-        :key="item.cid"
-        class="content-box"
+      v-for="item in postList"
+      :key="item.cid"
+      class="content-box"
     >
       <div class="posts-default-img">
         <a
-            :href="`/post/${item.cid}`"
-            :title="item.title"
+          :href="`/post/${item.cid}`"
+          :title="item.title"
         >
-          <div class="overlay"/>
+          <div class="overlay" />
           <el-image
-              v-if="item.fields.thumb"
-              :src="item.fields.thumb"
-              fit="cover"
-              lazy
+            v-if="item.fields.thumb"
+            :src="item.fields.thumb"
+            fit="cover"
+            lazy
           />
         </a>
       </div>
       <div class="posts-default-box">
         <div class="posts-default-title">
           <div
-              v-if="item.tag"
-              class="post-entry-categories"
+            v-if="item.tag"
+            class="post-entry-categories"
           >
             <el-tag
-                v-for="tagItem in item.tag"
-                :key="tagItem"
-                class="post-tag"
-                rel="tag"
+              v-for="tagItem in item.tag"
+              :key="tagItem"
+              class="post-tag"
+              rel="tag"
             >
               <el-link
-                  :href="`/tag/${tagItem.tid}/1`"
-                  type="primary"
+                :href="`/tag/${tagItem.name}/1`"
+                type="primary"
               >
                 {{ tagItem.name }}
               </el-link>
             </el-tag>
           </div>
           <el-link
-              :href="`/post/${item.cid}`"
-              :underline="false"
-              class="post-title"
+            :href="`/post/${item.cid}`"
+            :underline="false"
+            class="post-title"
           >
             {{ item.title }}
           </el-link>
@@ -55,23 +55,23 @@
             <div class="left">
               <div class="post-author">
                 <img
-                    height="16"
-                    src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg"
-                    style="border-radius:50% "
-                    width="16"
+                  height="16"
+                  src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg"
+                  style="border-radius:50% "
+                  width="16"
                 >
                 <el-link
-                    href="https://www.thinkmoon.cn"
-                    target="_blank"
+                  href="https://www.thinkmoon.cn"
+                  target="_blank"
                 >
                   醉月思
                 </el-link>
               </div>
               <div class="ico-warp">
                 <el-icon>
-                  <icon-FolderOpened/>
+                  <icon-FolderOpened />
                 </el-icon>
-                <el-link :href="`/category/${item.category_id}/1`">
+                <el-link :href="`/category/${item.category}/1`">
                   {{ item.category }}
                 </el-link>
               </div>
@@ -107,7 +107,7 @@ const props = defineProps({
   postList: Array,
 });
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .blog-posts {
   text-align: left;
 }
@@ -140,6 +140,7 @@ const props = defineProps({
     margin: 4px 6px;
   }
 }
+
 .posts-default-info {
   margin-top: 6px;
   display: flex;
@@ -152,12 +153,12 @@ const props = defineProps({
     display: flex;
     align-items: center;
 
-    & :deep(.el-icon) {
+    :deep(.el-icon) {
       margin-right: 4px;
     }
   }
 
-  >div {
+  > div {
     display: flex;
   }
 

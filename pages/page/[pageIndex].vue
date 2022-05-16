@@ -24,19 +24,13 @@
         </div>
       </div>
     </div>
-    <div class="page-section">
-      <Search />
-      <Announcement />
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import axios from 'axios';
 import PostApi from '~/api/PostApi';
-import {useRoute} from 'vue-router';
-import Search from '~~/components/section/Search.vue';
-import Announcement from '~~/components/section/Announcement.vue';
+import { useRoute } from 'vue-router';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -46,7 +40,7 @@ const pageData = {
 };
 const pageIndex = route.params.pageIndex;
 pageData.current = Number(pageIndex);
-const {data} = await useAsyncData('res', () => PostApi.getList({current: pageIndex}));
+const { data } = await useAsyncData('res', () => PostApi.getList({ current: pageIndex }));
 
 const postList = reactive(data.value.records);
 postList.forEach((item) => {
@@ -70,21 +64,6 @@ if (process.server) {
 </script>
 
 <style lang="less" scoped>
-.page-content {
-  margin: auto;
-  padding-bottom: 20px;
-  width: 70%;
-  display: flex;
-
-  .post-container {
-    flex: 1;
-  }
-
-  .page-section {
-    width: 300px;
-    padding: 20px;
-  }
-}
 
 @media (max-width: 1024px) {
   .page-content {
