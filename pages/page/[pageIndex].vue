@@ -30,7 +30,7 @@
 <script lang="ts" setup>
 import axios from 'axios';
 import PostApi from '~/api/PostApi';
-import {useRoute} from 'vue-router';
+import { useRoute } from 'vue-router';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -40,7 +40,7 @@ const pageData = {
 };
 const pageIndex = route.params.pageIndex;
 pageData.current = Number(pageIndex);
-const {data} = await useAsyncData('res', () => PostApi.getList({current: pageIndex}));
+const { data } = await useAsyncData('res', () => PostApi.getList({ current: pageIndex }));
 
 const postList = reactive(data.value.records);
 postList.forEach((item) => {

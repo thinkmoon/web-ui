@@ -49,11 +49,11 @@ const form = reactive({
 function onSubmit() {
   UserApi.login(form).then((res: string) => {
     auth.value = res;
-    if (!process.server) {
+    if (process.server) {
       window.location.href = '/admin';
     }
   }).catch(() => {
-    if (!process.server) {
+    if (process.server) {
       $message.error('登录失败');
     }
   });

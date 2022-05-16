@@ -4,7 +4,7 @@ function request(options: AxiosRequestConfig) {
   return new Promise((resolve, reject) => {
     axios.defaults.baseURL = useRuntimeConfig().baseUrl;
     let auth = null;
-    if (!process.server) {
+    if (process.client) {
       auth = useCookie('auth');
       axios.defaults.headers.common['Authorization'] = auth.value;
     }
