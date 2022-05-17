@@ -25,7 +25,7 @@
     <div class="right">
       <el-link
         :underline="false"
-        href="/login"
+        href="/admin"
       >
         <el-icon
           :size="26"
@@ -38,7 +38,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {useRoute} from 'vue-router';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const defaultActive = route.path;
