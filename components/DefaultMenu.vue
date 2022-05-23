@@ -3,25 +3,27 @@
     <div class="left">
       <el-link href="/">指尖魔法屋</el-link>
     </div>
-    <el-menu
-      :default-active="defaultActive"
-      mode="horizontal"
-      @select="select"
-    >
-      <el-menu-item index="/page/1">
-        首页
-      </el-menu-item>
-      <el-menu-item index="/category">
-        <NuxtLink to="/category">
-          分类
-        </NuxtLink>
-      </el-menu-item>
-      <el-menu-item index="/tag">
-        <NuxtLink to="/tag">
-          标签
-        </NuxtLink>
-      </el-menu-item>
-    </el-menu>
+    <ClientOnly>
+      <el-menu
+        :default-active="defaultActive"
+        mode="horizontal"
+        @select="select"
+      >
+        <el-menu-item index="/page/1">
+          首页
+        </el-menu-item>
+        <el-menu-item index="/category">
+          <NuxtLink to="/category">
+            分类
+          </NuxtLink>
+        </el-menu-item>
+        <el-menu-item index="/tag">
+          <NuxtLink to="/tag">
+            标签
+          </NuxtLink>
+        </el-menu-item>
+      </el-menu>
+    </ClientOnly>
     <div class="right">
       <el-link
         :underline="false"

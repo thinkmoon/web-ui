@@ -30,11 +30,11 @@ import UserApi from '~/api/UserApi';
 
 const config = useRuntimeConfig();
 
-const {$message} = useNuxtApp();
+const { $message } = useNuxtApp();
 const auth = useCookie('auth');
 
 if (auth.value) {
-  navigateTo({path: '/admin'});
+  navigateTo({ path: '/admin' });
 }
 
 definePageMeta({
@@ -49,11 +49,11 @@ const form = reactive({
 function onSubmit() {
   UserApi.login(form).then((res: string) => {
     auth.value = res;
-    if (process.server) {
+    if (process.client) {
       window.location.href = '/admin';
     }
   }).catch(() => {
-    if (process.server) {
+    if (process.client) {
       $message.error('登录失败');
     }
   });

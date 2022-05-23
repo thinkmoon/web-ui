@@ -14,24 +14,46 @@
         @save="saveArticle"
         @upload-image="handleUploadImage"
       />
+      <div class="custom-options">
+        <el-input
+          v-for="custom in customList"
+          v-model="custom.value"
+          class="input-with-select"
+          placeholder="Please input"
+        >
+          <template #prepend>
+            <ClientOnly>
+              <el-select
+                v-model="custom.name"
+                disabled
+                placeholder="Select"
+                style="width: 115px"
+              >
+              </el-select>
+            </ClientOnly>
+          </template>
+        </el-input>
+      </div>
     </div>
     <div class="flex-2 right">
       <section>
         <span class="title">文章分类</span>
         <div class="content">
-          <el-select
-            key="category"
-            v-model="article.category_id"
-          >
-            <el-option
-              v-for="item of categoryList"
-              :key="item.mid"
-              :value="item.mid"
-              :label="item.name"
+          <ClientOnly>
+            <el-select
+              key="category"
+              v-model="article.category_id"
             >
-              {{ item.name }}
-            </el-option>
-          </el-select>
+              <el-option
+                v-for="item of categoryList"
+                :key="item.mid"
+                :label="item.name"
+                :value="item.mid"
+              >
+                {{ item.name }}
+              </el-option>
+            </el-select>
+          </ClientOnly>
         </div>
       </section>
     </div>
@@ -41,6 +63,17 @@
 definePageMeta({
   keepalive: true,
 });
+const customList = [
+  {
+    name: 'thumb',
+    value: '',
+  },
+  {
+    name: 'desc',
+    value: '',
+  },
+];
+
 </script>
 <script lang="ts">
 import PostApi from '~/api/PostApi';
@@ -62,7 +95,7 @@ export default defineComponent({
   },
   activated() {
     if (this.$route.query.cid) {
-      PostApi.getDetail({cid: this.$route.query.cid}).then((res) => {
+      PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
         this.article = res;
       });
     } else {
@@ -73,9 +106,9 @@ export default defineComponent({
   methods: {
     getCategory() {
       CategoryApi.getCategory()
-          .then((res) => {
-            this.categoryList = res;
-          });
+        .then((res) => {
+          this.categoryList = res;
+        });
     },
     saveArticle() {
       const op = this.$route.query.cid ? 'update' : 'add';
@@ -93,16 +126,16 @@ export default defineComponent({
     handleUploadImage(event, insertImage, files) {
       console.log(arguments);
       AttachmentApi.getUploadToken()
-          .then((token: string) => {
-            const key = dayjs().format('YYYY-MM-DD/HH-mm-ss');
-            const observable = qiniu.upload(files[0], key, token);
-            const subscription = observable.subscribe(null, null, (res) => {
-              console.log(res);
-              insertImage({
-                url: `https://blog.cdn.thinkmoon.cn/${res.key}`,
-              });
+        .then((token: string) => {
+          const key = dayjs().format('YYYY-MM-DD/HH-mm-ss');
+          const observable = qiniu.upload(files[0], key, token);
+          const subscription = observable.subscribe(null, null, (res) => {
+            console.log(res);
+            insertImage({
+              url: `https://blog.cdn.thinkmoon.cn/${res.key}`,
             });
           });
+        });
     },
   },
 });
@@ -147,6 +180,9 @@ export default defineComponent({
     min-height: 560px;
     box-sizing: border-box;
   }
+}
+.custom-options > .el-input-group{
+  margin: 6px 0 0 0;
 }
 </style>
 
