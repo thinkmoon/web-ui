@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>pyenv——简单的python版本管理器 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="python"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/nuxt-asset/entry-a0a9c288.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/entry.fedc1be4.css" as="style"><link rel="modulepreload" href="/nuxt-asset/default-10e5eaa9.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/default.86255851.css" as="style"><link rel="modulepreload" href="/nuxt-asset/Footer-3dd58ce4.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/_cid_-518e69bc.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/asyncData-38b92481.mjs" as="script" crossorigin><link rel="prefetch" href="/nuxt-asset/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/nuxt-asset/404-6271d218.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/editor-cb84eaae.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-a5a21114.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/post-list-8ebd2004.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-ee186c4f.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-8706ad22.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/PostList-cb4d7779.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-6b7d0274.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-a7781c56.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/login-bf2de25e.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-27b7ab33.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-4cfc3b71.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/TagApi-0ac04931.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-3ceff8c5.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/auth-e1847cfe.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-7dc5992b.mjs"><link rel="stylesheet" href="/nuxt-asset/entry.fedc1be4.css"><link rel="stylesheet" href="/nuxt-asset/default.86255851.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div data-v-062e129b><div class="top-menu" data-v-062e129b data-v-2a7a94f1><div class="left" data-v-2a7a94f1><a class="el-link el-link--default is-underline" href="/" data-v-2a7a94f1><!--v-if--><span class="el-link__inner"><!--[-->指尖魔法屋<!--]--></span><!--v-if--></a></div><span data-v-2a7a94f1></span><div class="right" data-v-2a7a94f1><a class="el-link el-link--default" href="/admin" data-v-2a7a94f1><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2a7a94f1><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2a7a94f1><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container" data-v-062e129b><div class="layout" data-v-062e129b><div class="main-content" data-v-062e129b><!--[--><div class="" data-v-4b611cb2><!----><div class="article-content" data-v-4b611cb2><div class="v-md-editor-preview" style="tab-size:2;" data-v-4b611cb2><div class="github-markdown-body"><h1 data-v-md-heading="pyenv-简单的python版本管理器" data-v-md-line="1">pyenv——简单的python版本管理器</h1>
+<h2 data-v-md-heading="简单的python版本管理器-pyenv" data-v-md-line="2">简单的python版本管理器: pyenv</h2>
+<blockquote data-v-md-line="4">
+<p data-v-md-line="4">pyenv可以让你轻松的在各版本的python环境中切换自如，它是一个简单而又不引人注目并遵循UNIX传统的专用工具。</p>
+</blockquote>
+<p data-v-md-line="6">这个项目是从<a href="https://github.com/rbenv/rbenv" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">rbenv</a>和<a href="https://github.com/rbenv/ruby-build" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">ruby-build</a>fork而来, 并且在配合Python的情况下做了适当的修改.</p>
+<p data-v-md-line="8"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2019-09-03T02:26:51.png" alt="Terminal output example"></p>
+<h2 data-v-md-heading="pyenv能做什么" data-v-md-line="11">pyenv能做什么？</h2>
+<ul data-v-md-line="13">
+<li>让你在<strong>用户基础</strong>上改变全局Python版本.</li>
+<li>支持为<strong>每一个项目</strong>设立一个Python版本.</li>
+<li>允许您使用<strong>环境变量</strong>覆盖Python版本.</li>
+<li>在<strong>多个python环境</strong>中搜索命令,这有助于在Python版本中进行测试 <a href="https://pypi.python.org/pypi/tox" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">tox</a>.</li>
+</ul>
+<h2 data-v-md-heading="与pythonbrew和pythonz相比-pyenv不能做什么" data-v-md-line="19">与pythonbrew和pythonz相比，pyenv不能做什么?</h2>
+<ul data-v-md-line="21">
+<li><strong>不依赖于Python本身。</strong> pyenv是由纯shell脚本制作的。没有Python的引导问题。</li>
+<li>**不需要加载到你的shell中。**相反，pyenv的shim方法的工作原理是在<code>$ PATH</code>中添加一个目录。</li>
+<li><strong>不能管理virtualenv</strong> 当然你可以自行创建virtualenv <a href="https://pypi.python.org/pypi/virtualenv" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">virtualenv</a>或者使用<a href="https://github.com/pyenv/pyenv-virtualenv" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">pyenv-virtualenv</a>去自动化构建</li>
+</ul>
+<h2 data-v-md-heading="工作原理" data-v-md-line="25">工作原理</h2>
+<p data-v-md-line="27">在较高的层次上，pyenv使用shim拦截Python命令注入<code>PATH</code>的可执行文件, 确定哪个Python版本已由您的应用程序指定，并传递您的命令使用你想要的Python安装版本。</p>
+<h3 data-v-md-heading="理解path-环境变量路径" data-v-md-line="29">理解PATH(环境变量路径)</h3>
+<p data-v-md-line="31">当你执行命令,如<code>python</code>或者<code>pip</code>, 你的操作系统会搜索目录列表以查找可执行文件的那个名字.此目录列表位于环境变量中称为<code>PATH</code>, 列表中的每个目录使用用冒号分隔.</p>
+<p data-v-md-line="33"><img src="https://www.thinkmoon.cn/usr/uploads/2019/01/1698659685.png" alt="PATH.png"></p>
+<p data-v-md-line="35"><code>PATH</code>中的目录从左到右搜索，因此首先匹配在列表开头的目录中的可执行文件, 然后一次往右匹配。在这个例子中，首先搜索<code>/usr/local/sbin</code>目录，然后搜索<code>/usr/local/bin</code>，然后是<code>/usr/sbin</code>。</p>
+<h3 data-v-md-heading="理解shims-垫片" data-v-md-line="37">理解Shims(垫片)</h3>
+<p data-v-md-line="39">pyenv的工作原理是在你的<code>PATH</code>前面插入一个shims目录，这样一来系统在搜索Python的时候第一个找到的就是pyenv管理的Python环境。这个插到最前面的路径就叫做垫片（shims）</p>
+<div data-v-md-line="41"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre><code>$(pyenv root)/shims:/usr/local/bin:/usr/bin:/bin
+</code></pre>
+</div></div><p data-v-md-line="43">通过一个叫做为_rehashing_的进程, pyenv维护shims目录以匹配每个已安装版本的每个Python命令,比如<code>python</code>，<code>pip</code>等。</p>
+<p data-v-md-line="45">垫片是轻量级可执行文件，只是简单地传递命令到pyenv。所以只要安装了pyenv，当你运行时，比如说，<code>pip</code>，你的操作系统将执行以下操作：</p>
+<ul data-v-md-line="47">
+<li>在<code>PATH</code>中搜索名为<code>pip</code>的可执行文件</li>
+<li>在<code>PATH</code>的开头找到名为<code>pip</code>的pyenv垫片</li>
+<li>运行名为<code>pip</code>的垫片，然后将命令传递给属于pyenv的pip命令</li>
+</ul>
+<h3 data-v-md-heading="选择python版本" data-v-md-line="51">选择Python版本</h3>
+<p data-v-md-line="53">执行shims程序时，pyenv会确定要使用的Python版本,并按此以下资源顺序读取:</p>
+<ol data-v-md-line="55">
+<li>
+<p data-v-md-line="55"><code>PYENV_VERSION</code>环境变量（如果指定）. 你可以使用<a href="https://github.com/pyenv/pyenv/blob/master/COMMANDS.md#pyenv-shell" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank"><code>pyenv shell</code></a> 去设置环境变量在你当前shell session.</p>
+</li>
+<li>
+<p data-v-md-line="57">当前特定于应用程序的<code>.python-version</code>文件目录（如果有）. 您可以使用 <a href="https://github.com/pyenv/pyenv/blob/master/COMMANDS.md#pyenv-local" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank"><code>pyenv local</code></a>修改当前目录<code>.python-version</code>文件.</p>
+</li>
+<li>
+<p data-v-md-line="59">通过搜索每个上层目录,找到第一个<code>.python-version</code>文件（如果有的话），直到到达文件系统的根目录</p>
+</li>
+<li>
+<p data-v-md-line="61">全局<code>$(pyenv root)/version</code>文件. 您可以使用<a href="https://github.com/pyenv/pyenv/blob/master/COMMANDS.md#pyenv-global" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank"><code>pyenv global</code></a> 修改这个文件. 如果是该全局文件不存在，pyenv假设您要使用“系统”Python。(换句话说，如果pyenv不在您的PATH中，那么任何版本都会运行.)</p>
+</li>
+</ol>
+<p data-v-md-line="63"><strong>NOTE:</strong> 您可以同时激活多个版本，甚至包括Python2或Python3的任何版本. 这允许平行使用Python2和Python3，并且需要像<code>tox</code>这样的工具. 例如，要设置你的首次使用的系统Python和Python3的路径（在这个例子中设置为2.7.9和3.4.2），但也可以在你的<code>PATH</code>使用Python 3.3.6,3.2和2.5，首先是<code>pyenv install</code>缺少的版本，然后设置<code>pyenv</code>全局3.3.6 3.2 2.5<code>.这时, 使用</code>pyenv which<code>应该能够找到每个可执行路径, 例如</code>pyenv which python2.5<code>（应该显示</code>$（pyenv root/versions/2.5 /bin/python2.5<code>) 或者</code>pyenv which python3.4<code>(应该显示系统Python3路径). 您还可以指定多个</code>.python-version`文件中的版本，由换行符或任何空格分隔。</p>
+<h3 data-v-md-heading="定位python的安装路径" data-v-md-line="65">定位Python的安装路径</h3>
+<p data-v-md-line="67">一旦pyenv确定了您的应用程序具有哪个版本的Python, 它将命令传递给相应的Python.</p>
+<p data-v-md-line="69">每个Python版本都安装在自己的目录下<br>
+<code>$(pyenv root)/versions</code>.</p>
+<p data-v-md-line="72">例如，您可能安装了这些版本:</p>
+<ul data-v-md-line="74">
+<li><code>$(pyenv root)/versions/2.7.8/</code></li>
+<li><code>$(pyenv root)/versions/3.4.2/</code></li>
+<li><code>$(pyenv root)/versions/pypy-2.4.0/</code></li>
+</ul>
+<p data-v-md-line="78">就pyenv而言，版本名称只是其中的目录名</p>
+<p data-v-md-line="80"><code>$(pyenv root)/versions</code>.</p>
+<h3 data-v-md-heading="管理虚拟环境" data-v-md-line="82">管理虚拟环境</h3>
+<p data-v-md-line="84">有一个叫做<a href="https://github.com/pyenv/pyenv-virtualenv" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">pyenv-virtualenv</a>的pyenv插件, 它有很多功能，可帮助pyenv用户管理virtualenv或Anaconda创建的虚拟环境。因为那些虚拟环境的<code>activate</code>脚本依赖于改变shell的<code>$ PATH</code>变量,<br>
+它会去hook拦截pyenv的shim样式命令钩子.如果您有计划使用这些虚拟环境，我们建议您安装pyenv-virtualenv。</p>
+<hr data-v-md-line="88">
+<h2 data-v-md-heading="安装" data-v-md-line="91">安装</h2>
+<p data-v-md-line="93">如果您是macOS,推荐转至<a href="#homebrew-on-macos" class="custom-internal-link">installing with Homebrew</a>.</p>
+<h3 data-v-md-heading="自动化安装器" data-v-md-line="96">自动化安装器</h3>
+<p data-v-md-line="98">访问以下项目:<br>
+https://github.com/pyenv/pyenv-installer</p>
+<h3 data-v-md-heading="基于github检出" data-v-md-line="102">基于GitHub检出</h3>
+<p data-v-md-line="105">这可以让你一直保持最新版本的pyenv, 并且fork上游分支的任何变化</p>
+<ol data-v-md-line="107">
+<li>
+<p data-v-md-line="107"><strong>在哪里检出.</strong><br>
+我们建议<code>$HOME/.pyenv</code> (但其实您可以安装在任何地方).</p>
+<div data-v-md-line="110"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre><code> $ git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+</code></pre>
+</div></div></li>
+<li>
+<p data-v-md-line="113"><strong>Define environment variable <code>PYENV_ROOT</code></strong> to point to the path where<br>
+pyenv repo is cloned and add <code>$PYENV_ROOT/bin</code> to your <code>$PATH</code> for access<br>
+to the <code>pyenv</code> command-line utility.</p>
+<div data-v-md-line="117"><div class="v-md-pre-wrapper v-md-pre-wrapper-sh extra-class"><pre class="v-md-hljs-sh"><code>$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;export PYENV_ROOT=&quot;$HOME/.pyenv&quot;&#x27;</span> &gt;&gt; ~/.bash_profile
+$ <span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;&#x27;</span> &gt;&gt; ~/.bash_profile
+</code></pre>
+</div></div><p data-v-md-line="121"><strong>Zsh note</strong>: Modify your <code>~/.zshenv</code> file instead of <code>~/.bash_profile</code>.<br>
+<strong>Ubuntu and Fedora note</strong>: Modify your <code>~/.bashrc</code> file instead of <code>~/.bash_profile</code>.<br>
+<strong>Proxy note</strong>: If you use a proxy, export <code>http_proxy</code> and <code>HTTPS_PROXY</code> too.</p>
+</li>
+<li>
+<p data-v-md-line="125"><strong>Add <code>pyenv init</code> to your shell</strong> to enable shims and autocompletion.<br>
+Please make sure <code>eval &quot;$(pyenv init -)&quot;</code> is placed toward the end of the shell<br>
+configuration file since it manipulates <code>PATH</code> during the initialization.</p>
+<div data-v-md-line="128"><div class="v-md-pre-wrapper v-md-pre-wrapper-sh extra-class"><pre class="v-md-hljs-sh"><code>$ <span class="hljs-built_in">echo</span> -e <span class="hljs-string">&#x27;if command -v pyenv 1&gt;/dev/null 2&gt;&amp;1; then\n  eval &quot;$(pyenv init -)&quot;\nfi&#x27;</span> &gt;&gt; ~/.bash_profile
+</code></pre>
+</div></div><ul data-v-md-line="131">
+<li><strong>Zsh note</strong>: Modify your <code>~/.zshenv</code> file instead of <code>~/.bash_profile</code>.</li>
+<li><strong>fish note</strong>: Use <code>pyenv init - | source</code> instead of <code>eval (pyenv init -)</code>.</li>
+<li><strong>Ubuntu and Fedora note</strong>: Modify your <code>~/.bashrc</code> file instead of <code>~/.bash_profile</code>.</li>
+</ul>
+<p data-v-md-line="135"><strong>General warning</strong>: There are some systems where the <code>BASH_ENV</code> variable is configured<br>
+to point to <code>.bashrc</code>. On such systems you should almost certainly put the abovementioned line<br>
+<code>eval &quot;$(pyenv init -)&quot;</code> into <code>.bash_profile</code>, and <strong>not</strong> into <code>.bashrc</code>. Otherwise you<br>
+may observe strange behaviour, such as <code>pyenv</code> getting into an infinite loop.<br>
+See <a href="https://github.com/pyenv/pyenv/issues/264" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">#264</a> for details.</p>
+</li>
+<li>
+<p data-v-md-line="141"><strong>Restart your shell so the path changes take effect.</strong><br>
+You can now begin using pyenv.</p>
+<div data-v-md-line="143"><div class="v-md-pre-wrapper v-md-pre-wrapper-sh extra-class"><pre class="v-md-hljs-sh"><code>$ <span class="hljs-built_in">exec</span> <span class="hljs-string">&quot;<span class="hljs-variable">$SHELL</span>&quot;</span>
+</code></pre>
+</div></div></li>
+<li>
+<p data-v-md-line="147"><strong>Install Python build dependencies</strong> before attempting to install a new Python version.  The<br>
+<a href="https://github.com/pyenv/pyenv/wiki" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">pyenv wiki</a> provides suggested installation packages<br>
+and commands for various operating systems.</p>
+</li>
+<li>
+<p data-v-md-line="151"><strong>Install Python versions into <code>$(pyenv root)/versions</code>.</strong><br>
+For example, to download and install Python 2.7.8, run:</p>
+<div data-v-md-line="153"><div class="v-md-pre-wrapper v-md-pre-wrapper-sh extra-class"><pre class="v-md-hljs-sh"><code>$ pyenv install 2.7.8
+</code></pre>
+</div></div><p data-v-md-line="156"><strong>NOTE:</strong> If you need to pass configure option to build, please use<br>
+<code>CONFIGURE_OPTS</code> environment variable.</p>
+<p data-v-md-line="159"><strong>NOTE:</strong> If you want to use proxy to download, please use <code>http_proxy</code> and <code>https_proxy</code><br>
+environment variable.</p>
+<p data-v-md-line="162"><strong>NOTE:</strong> If you are having trouble installing a python version,<br>
+please visit the wiki page about<br>
+<a href="https://github.com/pyenv/pyenv/wiki/Common-build-problems" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">Common Build Problems</a></p>
+</li>
+</ol>
+<h4 data-v-md-heading="upgrading" data-v-md-line="167">Upgrading</h4>
+<p data-v-md-line="169">If you’ve installed pyenv using the instructions above, you can<br>
+upgrade your installation at any time using git.</p>
+<p data-v-md-line="172">To upgrade to the latest development version of pyenv, use <code>git pull</code>:</p>
+<div data-v-md-line="174"><div class="v-md-pre-wrapper v-md-pre-wrapper-sh extra-class"><pre class="v-md-hljs-sh"><code>$ <span class="hljs-built_in">cd</span> $(pyenv root)
+$ git pull
+</code></pre>
+</div></div><p data-v-md-line="179">To upgrade to a specific release of pyenv, check out the corresponding tag:</p>
+<div data-v-md-line="181"><div class="v-md-pre-wrapper v-md-pre-wrapper-sh extra-class"><pre class="v-md-hljs-sh"><code>$ <span class="hljs-built_in">cd</span> $(pyenv root)
+$ git fetch
+$ git tag
+v0.1.0
+$ git checkout v0.1.0
+</code></pre>
+</div></div><h3 data-v-md-heading="uninstalling-pyenv" data-v-md-line="189">Uninstalling pyenv</h3>
+<p data-v-md-line="191">The simplicity of pyenv makes it easy to temporarily disable it, or<br>
+uninstall from the system.</p>
+<ol data-v-md-line="194">
+<li>To <strong>disable</strong> pyenv managing your Python versions, simply remove the<br>
+<code>pyenv init</code> line from your shell startup configuration. This will<br>
+remove pyenv shims directory from PATH, and future invocations like<br>
+<code>python</code> will execute the system Python version, as before pyenv.</li>
+</ol>
+<p data-v-md-line="199"><code>pyenv</code> will still be accessible on the command line, but your Python<br>
+apps won’t be affected by version switching.</p>
+<ol start="2" data-v-md-line="202">
+<li>
+<p data-v-md-line="202">To completely <strong>uninstall</strong> pyenv, perform step (1) and then remove<br>
+its root directory. This will <strong>delete all Python versions</strong> that were<br>
+installed under <code>$(pyenv root)/versions/</code> directory:</p>
+<div data-v-md-line="205"><div class="v-md-pre-wrapper v-md-pre-wrapper-sh extra-class"><pre class="v-md-hljs-sh"><code>rm -rf $(pyenv root)
+</code></pre>
+</div></div><p data-v-md-line="208">If you’ve installed pyenv using a package manager, as a final step<br>
+perform the pyenv package removal. For instance, for Homebrew:</p>
+<div data-v-md-line="211"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre><code> brew uninstall pyenv
+</code></pre>
+</div></div></li>
+</ol>
+<h3 data-v-md-heading="homebrew-on-macos" data-v-md-line="213">Homebrew on macOS</h3>
+<p data-v-md-line="215">You can also install pyenv using the <a href="https://brew.sh" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">Homebrew</a><br>
+package manager for macOS.</p>
+<div data-v-md-line="218"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre><code>$ brew update
+$ brew install pyenv
+</code></pre>
+</div></div><p data-v-md-line="222">To upgrade pyenv in the future, use <code>upgrade</code> instead of <code>install</code>.</p>
+<p data-v-md-line="224">Then follow the rest of the post-installation steps under <a href="https://github.com/pyenv/pyenv#basic-github-checkout" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">Basic GitHub Checkout</a> above, starting with #3 (“Add <code>pyenv init</code> to your shell to enable shims and autocompletion”).</p>
+<h3 data-v-md-heading="advanced-configuration" data-v-md-line="226">Advanced Configuration</h3>
+<p data-v-md-line="228">Skip this section unless you must know what every line in your shell<br>
+profile is doing.</p>
+<p data-v-md-line="231"><code>pyenv init</code> is the only command that crosses the line of loading<br>
+extra commands into your shell. Coming from rvm, some of you might be<br>
+opposed to this idea. Here’s what <code>pyenv init</code> actually does:</p>
+<ol data-v-md-line="235">
+<li>
+<p data-v-md-line="235"><strong>Sets up your shims path.</strong> This is the only requirement for pyenv to<br>
+function properly. You can do this by hand by prepending<br>
+<code>$(pyenv root)/shims</code> to your <code>$PATH</code>.</p>
+</li>
+<li>
+<p data-v-md-line="239"><strong>Installs autocompletion.</strong> This is entirely optional but pretty<br>
+useful. Sourcing <code>$(pyenv root)/completions/pyenv.bash</code> will set that<br>
+up. There is also a <code>$(pyenv root)/completions/pyenv.zsh</code> for Zsh<br>
+users.</p>
+</li>
+<li>
+<p data-v-md-line="244"><strong>Rehashes shims.</strong> From time to time you’ll need to rebuild your<br>
+shim files. Doing this on init makes sure everything is up to<br>
+date. You can always run <code>pyenv rehash</code> manually.</p>
+</li>
+<li>
+<p data-v-md-line="248"><strong>Installs the sh dispatcher.</strong> This bit is also optional, but allows<br>
+pyenv and plugins to change variables in your current shell, making<br>
+commands like <code>pyenv shell</code> possible. The sh dispatcher doesn’t do<br>
+anything crazy like override <code>cd</code> or hack your shell prompt, but if<br>
+for some reason you need <code>pyenv</code> to be a real script rather than a<br>
+shell function, you can safely skip it.</p>
+</li>
+</ol>
+<p data-v-md-line="255">To see exactly what happens under the hood for yourself, run <code>pyenv init -</code>.</p>
+<h3 data-v-md-heading="uninstalling-python-versions" data-v-md-line="258">Uninstalling Python Versions</h3>
+<p data-v-md-line="260">As time goes on, you will accumulate Python versions in your<br>
+<code>$(pyenv root)/versions</code> directory.</p>
+<p data-v-md-line="263">To remove old Python versions, <code>pyenv uninstall</code> command to automate<br>
+the removal process.</p>
+<p data-v-md-line="266">Alternatively, simply <code>rm -rf</code> the directory of the version you want<br>
+to remove. You can find the directory of a particular Python version<br>
+with the <code>pyenv prefix</code> command, e.g. <code>pyenv prefix 2.6.8</code>.</p>
+<hr data-v-md-line="271">
+<h2 data-v-md-heading="command-reference" data-v-md-line="274">Command Reference</h2>
+<p data-v-md-line="276">See <a href class="custom-internal-link">COMMANDS.md</a>.</p>
+<hr data-v-md-line="279">
+<h2 data-v-md-heading="environment-variables" data-v-md-line="281">Environment variables</h2>
+<p data-v-md-line="283">You can affect how pyenv operates with the following settings:</p>
+<table data-v-md-line="285">
+<thead>
+<tr>
+<th>name</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PYENV_VERSION</code></td>
+<td></td>
+<td>Specifies the Python version to be used.<br>Also see <a href="https://github.com/pyenv/pyenv/blob/master/COMMANDS.md#pyenv-shell" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank"><code>pyenv shell</code></a></td>
+</tr>
+<tr>
+<td><code>PYENV_ROOT</code></td>
+<td><code>~/.pyenv</code></td>
+<td>Defines the directory under which Python versions and shims reside.<br>Also see <code>pyenv root</code></td>
+</tr>
+<tr>
+<td><code>PYENV_DEBUG</code></td>
+<td></td>
+<td>Outputs debug information.<br>Also as: <code>pyenv --debug &lt;subcommand&gt;</code></td>
+</tr>
+<tr>
+<td><code>PYENV_HOOK_PATH</code></td>
+<td><a href="https://github.com/pyenv/pyenv/wiki/Authoring-plugins#pyenv-hooks" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank"><em>see wiki</em></a></td>
+<td>Colon-separated list of paths searched for pyenv hooks.</td>
+</tr>
+<tr>
+<td><code>PYENV_DIR</code></td>
+<td><code>$PWD</code></td>
+<td>Directory to start searching for <code>.python-version</code> files.</td>
+</tr>
+<tr>
+<td><code>PYTHON_BUILD_ARIA2_OPTS</code></td>
+<td></td>
+<td>Used to pass additional parameters to <a href="https://aria2.github.io/" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank"><code>aria2</code></a>.<br>if <code>aria2c</code> binary is available on PATH, pyenv use <code>aria2c</code> instead of <code>curl</code> or <code>wget</code> to download the Python Source code. If you have an unstable internet connection, you can use this variable to instruct <code>aria2</code> to accelerate the download.<br>In most cases, you will only need to use <code>-x 10 -k 1M</code> as value to <code>PYTHON_BUILD_ARIA2_OPTS</code> environment variable</td>
+</tr>
+</tbody>
+</table>
+<h2 data-v-md-heading="development" data-v-md-line="296">Development</h2>
+<p data-v-md-line="298">The pyenv source code is <a href="https://github.com/pyenv/pyenv" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">hosted on<br>
+GitHub</a>.  It’s clean, modular,<br>
+and easy to understand, even if you’re not a shell hacker.</p>
+<p data-v-md-line="302">Tests are executed using <a href="https://github.com/sstephenson/bats" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">Bats</a>:</p>
+<div data-v-md-line="304"><div class="v-md-pre-wrapper v-md-pre-wrapper- extra-class"><pre><code>$ bats test
+$ bats/test/&lt;file&gt;.bats
+</code></pre>
+</div></div><p data-v-md-line="307">Please feel free to submit pull requests and file bugs on the <a href="https://github.com/pyenv/pyenv/issues" class="custom-external-link" rel="nofollow noopener noreferrer" target="_blank">issue<br>
+tracker</a>.</p>
+<h3 data-v-md-heading="version-history" data-v-md-line="314">Version History</h3>
+<p data-v-md-line="316">See <a href class="custom-internal-link">CHANGELOG.md</a>.</p>
+<h3 data-v-md-heading="license" data-v-md-line="318">License</h3>
+<p data-v-md-line="320"><a href class="custom-internal-link">The MIT License</a></p>
+<blockquote data-v-md-line="325">
+<p data-v-md-line="325">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/96" class="custom-internal-link" target="_blank">指尖魔法屋-pyenv——简单的python版本管理器</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="fluid" data-ad-layout="in-article" data-ad-slot="2621880404" style="display:block;text-align:center;width:100%;" data-v-4b611cb2></ins></div></div><!--]--></div><div class="page-section" data-v-062e129b><div class="section" data-v-062e129b><div class="el-input el-input-group el-input-group--append input-with-select" style=""><!-- input --><!--[--><!-- prepend slot --><!--v-if--><div class="el-input__wrapper"><!-- prefix slot --><!--v-if--><input class="el-input__inner" type="text" autocomplete="off" tabindex="0" placeholder="站内搜索" style=""><!-- suffix slot --><!--v-if--></div><!-- append slot --><div class="el-input-group__append"><!--[--><button class="el-button" aria-disabled="false" type="button" style=""><i class="el-icon" style=""><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg><!--]--></i><!--v-if--></button><!--]--></div><!--]--></div></div><div class="section" data-v-062e129b><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="auto" data-ad-slot="2184618903" data-full-width-responsive="true" style="display:block;"></ins></div></div></div></div><span data-v-062e129b></span></div><div class="footer" data-v-062e129b data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.7 · build-20220610</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a){return {data:{pinia:{},article:{cid:96,title:"pyenv——简单的python版本管理器",created:1547981040,modified:1567477635,text:"## 简单的python版本管理器: pyenv\r\n\r\n\u003E pyenv可以让你轻松的在各版本的python环境中切换自如，它是一个简单而又不引人注目并遵循UNIX传统的专用工具。\r\n\r\n这个项目是从[rbenv](https:\u002F\u002Fgithub.com\u002Frbenv\u002Frbenv)和[ruby-build](https:\u002F\u002Fgithub.com\u002Frbenv\u002Fruby-build)fork而来, 并且在配合Python的情况下做了适当的修改.\r\n\r\n![Terminal output example][1]\r\n\r\n\r\n## pyenv能做什么？\r\n\r\n* 让你在**用户基础**上改变全局Python版本.\r\n* 支持为**每一个项目**设立一个Python版本.\r\n* 允许您使用**环境变量**覆盖Python版本.\r\n* 在**多个python环境**中搜索命令,这有助于在Python版本中进行测试 [tox](https:\u002F\u002Fpypi.python.org\u002Fpypi\u002Ftox).\r\n\r\n\r\n## 与pythonbrew和pythonz相比，pyenv不能做什么?\r\n\r\n* **不依赖于Python本身。** pyenv是由纯shell脚本制作的。没有Python的引导问题。\r\n* **不需要加载到你的shell中。**相反，pyenv的shim方法的工作原理是在`$ PATH`中添加一个目录。\r\n* **不能管理virtualenv** 当然你可以自行创建virtualenv [virtualenv](https:\u002F\u002Fpypi.python.org\u002Fpypi\u002Fvirtualenv)或者使用[pyenv-virtualenv](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv-virtualenv)去自动化构建\r\n\r\n## 工作原理\r\n\r\n在较高的层次上，pyenv使用shim拦截Python命令注入`PATH`的可执行文件, 确定哪个Python版本已由您的应用程序指定，并传递您的命令使用你想要的Python安装版本。\r\n\r\n### 理解PATH(环境变量路径)\r\n\r\n当你执行命令,如`python`或者`pip`, 你的操作系统会搜索目录列表以查找可执行文件的那个名字.此目录列表位于环境变量中称为`PATH`, 列表中的每个目录使用用冒号分隔.\r\n\r\n![PATH.png][2]\r\n\r\n`PATH`中的目录从左到右搜索，因此首先匹配在列表开头的目录中的可执行文件, 然后一次往右匹配。在这个例子中，首先搜索`\u002Fusr\u002Flocal\u002Fsbin`目录，然后搜索`\u002Fusr\u002Flocal\u002Fbin`，然后是`\u002Fusr\u002Fsbin`。\r\n\r\n### 理解Shims(垫片)\r\n\r\npyenv的工作原理是在你的`PATH`前面插入一个shims目录，这样一来系统在搜索Python的时候第一个找到的就是pyenv管理的Python环境。这个插到最前面的路径就叫做垫片（shims）\r\n\r\n    $(pyenv root)\u002Fshims:\u002Fusr\u002Flocal\u002Fbin:\u002Fusr\u002Fbin:\u002Fbin\r\n\r\n通过一个叫做为_rehashing_的进程, pyenv维护shims目录以匹配每个已安装版本的每个Python命令,比如`python`，`pip`等。\r\n\r\n垫片是轻量级可执行文件，只是简单地传递命令到pyenv。所以只要安装了pyenv，当你运行时，比如说，`pip`，你的操作系统将执行以下操作：\r\n\r\n* 在`PATH`中搜索名为`pip`的可执行文件\r\n* 在`PATH`的开头找到名为`pip`的pyenv垫片\r\n* 运行名为`pip`的垫片，然后将命令传递给属于pyenv的pip命令\r\n\r\n### 选择Python版本\r\n\r\n执行shims程序时，pyenv会确定要使用的Python版本,并按此以下资源顺序读取:\r\n\r\n1. `PYENV_VERSION`环境变量（如果指定）. 你可以使用[`pyenv shell`](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv\u002Fblob\u002Fmaster\u002FCOMMANDS.md#pyenv-shell) 去设置环境变量在你当前shell session.\r\n\r\n2. 当前特定于应用程序的`.python-version`文件目录（如果有）. 您可以使用 [`pyenv local`](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv\u002Fblob\u002Fmaster\u002FCOMMANDS.md#pyenv-local)修改当前目录`.python-version`文件.\r\n\r\n3. 通过搜索每个上层目录,找到第一个`.python-version`文件（如果有的话），直到到达文件系统的根目录\r\n\r\n4. 全局`$(pyenv root)\u002Fversion`文件. 您可以使用[`pyenv global`](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv\u002Fblob\u002Fmaster\u002FCOMMANDS.md#pyenv-global) 修改这个文件. 如果是该全局文件不存在，pyenv假设您要使用“系统”Python。(换句话说，如果pyenv不在您的PATH中，那么任何版本都会运行.)\r\n\r\n**NOTE:** 您可以同时激活多个版本，甚至包括Python2或Python3的任何版本. 这允许平行使用Python2和Python3，并且需要像`tox`这样的工具. 例如，要设置你的首次使用的系统Python和Python3的路径（在这个例子中设置为2.7.9和3.4.2），但也可以在你的`PATH`使用Python 3.3.6,3.2和2.5，首先是`pyenv install`缺少的版本，然后设置`pyenv`全局3.3.6 3.2 2.5`.这时, 使用`pyenv which`应该能够找到每个可执行路径, 例如`pyenv which python2.5`（应该显示`$（pyenv root\u002Fversions\u002F2.5 \u002Fbin\u002Fpython2.5`) 或者`pyenv which python3.4`(应该显示系统Python3路径). 您还可以指定多个`.python-version`文件中的版本，由换行符或任何空格分隔。\r\n\r\n### 定位Python的安装路径\r\n\r\n一旦pyenv确定了您的应用程序具有哪个版本的Python, 它将命令传递给相应的Python.\r\n\r\n每个Python版本都安装在自己的目录下\r\n`$(pyenv root)\u002Fversions`.\r\n\r\n例如，您可能安装了这些版本:\r\n\r\n* `$(pyenv root)\u002Fversions\u002F2.7.8\u002F`\r\n* `$(pyenv root)\u002Fversions\u002F3.4.2\u002F`\r\n* `$(pyenv root)\u002Fversions\u002Fpypy-2.4.0\u002F`\r\n\r\n就pyenv而言，版本名称只是其中的目录名\r\n\r\n`$(pyenv root)\u002Fversions`.\r\n\r\n### 管理虚拟环境\r\n\r\n有一个叫做[pyenv-virtualenv](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv-virtualenv)的pyenv插件, 它有很多功能，可帮助pyenv用户管理virtualenv或Anaconda创建的虚拟环境。因为那些虚拟环境的`activate`脚本依赖于改变shell的`$ PATH`变量, \r\n它会去hook拦截pyenv的shim样式命令钩子.如果您有计划使用这些虚拟环境，我们建议您安装pyenv-virtualenv。\r\n\r\n\r\n----\r\n\r\n\r\n## 安装\r\n\r\n如果您是macOS,推荐转至[installing with Homebrew](#homebrew-on-macos).\r\n\r\n\r\n### 自动化安装器\r\n\r\n访问以下项目:\r\nhttps:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv-installer\r\n\r\n\r\n### 基于GitHub检出\r\n\r\n\r\n这可以让你一直保持最新版本的pyenv, 并且fork上游分支的任何变化\r\n\r\n1. **在哪里检出.**\r\n   我们建议`$HOME\u002F.pyenv` (但其实您可以安装在任何地方).\r\n\r\n        $ git clone https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv.git ~\u002F.pyenv\r\n\r\n\r\n2. **Define environment variable `PYENV_ROOT`** to point to the path where\r\n   pyenv repo is cloned and add `$PYENV_ROOT\u002Fbin` to your `$PATH` for access\r\n   to the `pyenv` command-line utility.\r\n\r\n    ```sh\r\n    $ echo 'export PYENV_ROOT=\"$HOME\u002F.pyenv\"' \u003E\u003E ~\u002F.bash_profile\r\n    $ echo 'export PATH=\"$PYENV_ROOT\u002Fbin:$PATH\"' \u003E\u003E ~\u002F.bash_profile\r\n    ```\r\n    **Zsh note**: Modify your `~\u002F.zshenv` file instead of `~\u002F.bash_profile`.\r\n    **Ubuntu and Fedora note**: Modify your `~\u002F.bashrc` file instead of `~\u002F.bash_profile`.\r\n    **Proxy note**: If you use a proxy, export `http_proxy` and `HTTPS_PROXY` too.\r\n\r\n3. **Add `pyenv init` to your shell** to enable shims and autocompletion.\r\n   Please make sure `eval \"$(pyenv init -)\"` is placed toward the end of the shell\r\n   configuration file since it manipulates `PATH` during the initialization.\r\n    ```sh\r\n    $ echo -e 'if command -v pyenv 1\u003E\u002Fdev\u002Fnull 2\u003E&1; then\\n  eval \"$(pyenv init -)\"\\nfi' \u003E\u003E ~\u002F.bash_profile\r\n    ```\r\n    - **Zsh note**: Modify your `~\u002F.zshenv` file instead of `~\u002F.bash_profile`.\r\n    - **fish note**: Use `pyenv init - | source` instead of `eval (pyenv init -)`.\r\n    - **Ubuntu and Fedora note**: Modify your `~\u002F.bashrc` file instead of `~\u002F.bash_profile`.\r\n\r\n    **General warning**: There are some systems where the `BASH_ENV` variable is configured\r\n    to point to `.bashrc`. On such systems you should almost certainly put the abovementioned line\r\n    `eval \"$(pyenv init -)\"` into `.bash_profile`, and **not** into `.bashrc`. Otherwise you\r\n    may observe strange behaviour, such as `pyenv` getting into an infinite loop.\r\n    See [#264](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv\u002Fissues\u002F264) for details.\r\n\r\n4. **Restart your shell so the path changes take effect.**\r\n   You can now begin using pyenv.\r\n    ```sh\r\n    $ exec \"$SHELL\"\r\n    ```\r\n\r\n5. **Install Python build dependencies** before attempting to install a new Python version.  The\r\n   [pyenv wiki](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv\u002Fwiki) provides suggested installation packages\r\n   and commands for various operating systems.\r\n\r\n6. **Install Python versions into `$(pyenv root)\u002Fversions`.**\r\n   For example, to download and install Python 2.7.8, run:\r\n    ```sh\r\n    $ pyenv install 2.7.8\r\n    ```\r\n   **NOTE:** If you need to pass configure option to build, please use\r\n   ```CONFIGURE_OPTS``` environment variable.\r\n\r\n   **NOTE:** If you want to use proxy to download, please use `http_proxy` and `https_proxy`\r\n   environment variable.\r\n\r\n   **NOTE:** If you are having trouble installing a python version,\r\n   please visit the wiki page about\r\n   [Common Build Problems](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv\u002Fwiki\u002FCommon-build-problems)\r\n\r\n\r\n#### Upgrading\r\n\r\nIf you've installed pyenv using the instructions above, you can\r\nupgrade your installation at any time using git.\r\n\r\nTo upgrade to the latest development version of pyenv, use `git pull`:\r\n\r\n```sh\r\n$ cd $(pyenv root)\r\n$ git pull\r\n```\r\n\r\nTo upgrade to a specific release of pyenv, check out the corresponding tag:\r\n\r\n```sh\r\n$ cd $(pyenv root)\r\n$ git fetch\r\n$ git tag\r\nv0.1.0\r\n$ git checkout v0.1.0\r\n```\r\n\r\n### Uninstalling pyenv\r\n\r\nThe simplicity of pyenv makes it easy to temporarily disable it, or\r\nuninstall from the system.\r\n\r\n1. To **disable** pyenv managing your Python versions, simply remove the\r\n  `pyenv init` line from your shell startup configuration. This will\r\n  remove pyenv shims directory from PATH, and future invocations like\r\n  `python` will execute the system Python version, as before pyenv.\r\n\r\n  `pyenv` will still be accessible on the command line, but your Python\r\n  apps won't be affected by version switching.\r\n\r\n2. To completely **uninstall** pyenv, perform step (1) and then remove\r\n   its root directory. This will **delete all Python versions** that were\r\n   installed under `` $(pyenv root)\u002Fversions\u002F `` directory:\r\n    ```sh\r\n    rm -rf $(pyenv root)\r\n    ```\r\n   If you've installed pyenv using a package manager, as a final step\r\n   perform the pyenv package removal. For instance, for Homebrew:\r\n\r\n        brew uninstall pyenv\r\n\r\n### Homebrew on macOS\r\n\r\nYou can also install pyenv using the [Homebrew](https:\u002F\u002Fbrew.sh)\r\npackage manager for macOS.\r\n\r\n    $ brew update\r\n    $ brew install pyenv\r\n\r\n\r\nTo upgrade pyenv in the future, use `upgrade` instead of `install`.\r\n\r\nThen follow the rest of the post-installation steps under [Basic GitHub Checkout](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv#basic-github-checkout) above, starting with #3 (\"Add `pyenv init` to your shell to enable shims and autocompletion\").\r\n\r\n### Advanced Configuration\r\n\r\nSkip this section unless you must know what every line in your shell\r\nprofile is doing.\r\n\r\n`pyenv init` is the only command that crosses the line of loading\r\nextra commands into your shell. Coming from rvm, some of you might be\r\nopposed to this idea. Here's what `pyenv init` actually does:\r\n\r\n1. **Sets up your shims path.** This is the only requirement for pyenv to\r\n   function properly. You can do this by hand by prepending\r\n   `$(pyenv root)\u002Fshims` to your `$PATH`.\r\n\r\n2. **Installs autocompletion.** This is entirely optional but pretty\r\n   useful. Sourcing `$(pyenv root)\u002Fcompletions\u002Fpyenv.bash` will set that\r\n   up. There is also a `$(pyenv root)\u002Fcompletions\u002Fpyenv.zsh` for Zsh\r\n   users.\r\n\r\n3. **Rehashes shims.** From time to time you'll need to rebuild your\r\n   shim files. Doing this on init makes sure everything is up to\r\n   date. You can always run `pyenv rehash` manually.\r\n\r\n4. **Installs the sh dispatcher.** This bit is also optional, but allows\r\n   pyenv and plugins to change variables in your current shell, making\r\n   commands like `pyenv shell` possible. The sh dispatcher doesn't do\r\n   anything crazy like override `cd` or hack your shell prompt, but if\r\n   for some reason you need `pyenv` to be a real script rather than a\r\n   shell function, you can safely skip it.\r\n\r\nTo see exactly what happens under the hood for yourself, run `pyenv init -`.\r\n\r\n\r\n### Uninstalling Python Versions\r\n\r\nAs time goes on, you will accumulate Python versions in your\r\n`$(pyenv root)\u002Fversions` directory.\r\n\r\nTo remove old Python versions, `pyenv uninstall` command to automate\r\nthe removal process.\r\n\r\nAlternatively, simply `rm -rf` the directory of the version you want\r\nto remove. You can find the directory of a particular Python version\r\nwith the `pyenv prefix` command, e.g. `pyenv prefix 2.6.8`.\r\n\r\n\r\n----\r\n\r\n\r\n## Command Reference\r\n\r\nSee [COMMANDS.md](COMMANDS.md).\r\n\r\n\r\n----\r\n\r\n## Environment variables\r\n\r\nYou can affect how pyenv operates with the following settings:\r\n\r\nname | default | description\r\n-----|---------|------------\r\n`PYENV_VERSION` | | Specifies the Python version to be used.\u003Cbr\u003EAlso see [`pyenv shell`](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv\u002Fblob\u002Fmaster\u002FCOMMANDS.md#pyenv-shell)\r\n`PYENV_ROOT` | `~\u002F.pyenv` | Defines the directory under which Python versions and shims reside.\u003Cbr\u003EAlso see `pyenv root`\r\n`PYENV_DEBUG` | | Outputs debug information.\u003Cbr\u003EAlso as: `pyenv --debug \u003Csubcommand\u003E`\r\n`PYENV_HOOK_PATH` | [_see wiki_][hooks] | Colon-separated list of paths searched for pyenv hooks.\r\n`PYENV_DIR` | `$PWD` | Directory to start searching for `.python-version` files.\r\n`PYTHON_BUILD_ARIA2_OPTS` | | Used to pass additional parameters to [`aria2`](https:\u002F\u002Faria2.github.io\u002F).\u003Cbr\u003Eif `aria2c` binary is available on PATH, pyenv use `aria2c` instead of `curl` or `wget` to download the Python Source code. If you have an unstable internet connection, you can use this variable to instruct `aria2` to accelerate the download.\u003Cbr\u003EIn most cases, you will only need to use `-x 10 -k 1M` as value to `PYTHON_BUILD_ARIA2_OPTS` environment variable\r\n\r\n\r\n\r\n## Development\r\n\r\nThe pyenv source code is [hosted on\r\nGitHub](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv).  It's clean, modular,\r\nand easy to understand, even if you're not a shell hacker.\r\n\r\nTests are executed using [Bats](https:\u002F\u002Fgithub.com\u002Fsstephenson\u002Fbats):\r\n\r\n    $ bats test\r\n    $ bats\u002Ftest\u002F\u003Cfile\u003E.bats\r\n\r\nPlease feel free to submit pull requests and file bugs on the [issue\r\ntracker](https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv\u002Fissues).\r\n\r\n\r\n  [pyenv-virtualenv]: https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv-virtualenv#readme\r\n  [hooks]: https:\u002F\u002Fgithub.com\u002Fpyenv\u002Fpyenv\u002Fwiki\u002FAuthoring-plugins#pyenv-hooks\r\n\r\n### Version History\r\n\r\nSee [CHANGELOG.md](CHANGELOG.md).\r\n\r\n### License\r\n\r\n[The MIT License](LICENSE)\r\n\r\n\r\n  [1]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2019-09-03T02:26:51.png\r\n  [2]: https:\u002F\u002Fwww.thinkmoon.cn\u002Fusr\u002Fuploads\u002F2019\u002F01\u002F1698659685.png",authorId:a,comments:a,views:901,likes:3,tag:[{tid:6,name:"python",order:a,count:a}],category:"学习笔记",category_id:11,fields:{}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.7 · build-20220610",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002Fnuxt-asset\u002F",cdnURL:""}}}}(0))</script><script type="module" src="/nuxt-asset/entry-a0a9c288.mjs" crossorigin></script><script type="module" src="/nuxt-asset/default-10e5eaa9.mjs" crossorigin></script><script type="module" src="/nuxt-asset/_cid_-518e69bc.mjs" crossorigin></script>
+</body>
+
+</html>

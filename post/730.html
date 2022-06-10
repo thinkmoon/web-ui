@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>【leetcode】5. Longest Palindromic Substring最长回文子串 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="python,leetcode"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/nuxt-asset/entry-a0a9c288.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/entry.fedc1be4.css" as="style"><link rel="modulepreload" href="/nuxt-asset/default-10e5eaa9.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/default.86255851.css" as="style"><link rel="modulepreload" href="/nuxt-asset/Footer-3dd58ce4.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/_cid_-518e69bc.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/asyncData-38b92481.mjs" as="script" crossorigin><link rel="prefetch" href="/nuxt-asset/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/nuxt-asset/404-6271d218.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/editor-cb84eaae.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-a5a21114.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/post-list-8ebd2004.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-ee186c4f.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-8706ad22.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/PostList-cb4d7779.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-6b7d0274.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-a7781c56.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/login-bf2de25e.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-27b7ab33.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-4cfc3b71.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/TagApi-0ac04931.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-3ceff8c5.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/auth-e1847cfe.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-7dc5992b.mjs"><link rel="stylesheet" href="/nuxt-asset/entry.fedc1be4.css"><link rel="stylesheet" href="/nuxt-asset/default.86255851.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div data-v-062e129b><div class="top-menu" data-v-062e129b data-v-2a7a94f1><div class="left" data-v-2a7a94f1><a class="el-link el-link--default is-underline" href="/" data-v-2a7a94f1><!--v-if--><span class="el-link__inner"><!--[-->指尖魔法屋<!--]--></span><!--v-if--></a></div><span data-v-2a7a94f1></span><div class="right" data-v-2a7a94f1><a class="el-link el-link--default" href="/admin" data-v-2a7a94f1><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2a7a94f1><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2a7a94f1><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container" data-v-062e129b><div class="layout" data-v-062e129b><div class="main-content" data-v-062e129b><!--[--><div class="" data-v-4b611cb2><!----><div class="article-content" data-v-4b611cb2><div class="v-md-editor-preview" style="tab-size:2;" data-v-4b611cb2><div class="github-markdown-body"><h1 data-v-md-heading="【leetcode】5-longest-palindromic-substring最长回文子串" data-v-md-line="1">【leetcode】5. Longest Palindromic Substring最长回文子串</h1>
+<p data-v-md-line="2"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2020-01-18T14:20:17.png" alt="5. Longest Palindromic Substring最长回文子串"></p>
+<h2 data-v-md-heading="解法1-中心拓展算法" data-v-md-line="3">解法1：中心拓展算法</h2>
+<h3 data-v-md-heading="思路" data-v-md-line="4">思路</h3>
+<p data-v-md-line="5">首先，我们知道回文串一定是对称的，所以我们可以选择一个对称中心，进行左右扩展，判断左右字符是否相等即可。<br>
+由于存在奇数的字符串和偶数的字符串，所以我们需要从一个字符开始扩展，或者从两个字符之间开始扩展，所以总共有 n+n-1 个中心。</p>
+<h3 data-v-md-heading="实现代码" data-v-md-line="7">实现代码</h3>
+<div data-v-md-line="8"><div class="v-md-pre-wrapper v-md-pre-wrapper-python extra-class"><pre class="v-md-hljs-python"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longestPalindrome</span>(<span class="hljs-params">self, s: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">str</span>:</span>
+        n = <span class="hljs-built_in">len</span>(s)
+        Max,sub = <span class="hljs-number">0</span>,s[<span class="hljs-number">0</span>:<span class="hljs-number">1</span>]
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):
+            tmp = self.searchPalindrome(i-<span class="hljs-number">1</span>,i+<span class="hljs-number">1</span>,s)
+            <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(tmp) &gt; Max:
+                Max = <span class="hljs-built_in">len</span>(tmp)
+                sub = tmp
+            tmp = self.searchPalindrome(i-<span class="hljs-number">1</span>,i,s)
+            <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(tmp) &gt; Max:
+                Max = <span class="hljs-built_in">len</span>(tmp)
+                sub = tmp    
+        <span class="hljs-keyword">return</span> sub
+    
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">searchPalindrome</span>(<span class="hljs-params">self, left: <span class="hljs-built_in">int</span>, right: <span class="hljs-built_in">int</span>, s: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">int</span>:</span>
+        sub = <span class="hljs-string">&quot;&quot;</span>
+        <span class="hljs-keyword">while</span> left != -<span class="hljs-number">1</span> <span class="hljs-keyword">and</span> right != <span class="hljs-built_in">len</span>(s):
+            <span class="hljs-keyword">if</span> s[left] == s[right]:
+                sub = s[left:right+<span class="hljs-number">1</span>]
+                left-=<span class="hljs-number">1</span>
+                right+=<span class="hljs-number">1</span>
+            <span class="hljs-keyword">else</span> : <span class="hljs-keyword">break</span>
+        <span class="hljs-keyword">return</span> sub
+</code></pre>
+</div></div><h3 data-v-md-heading="马拉车算法" data-v-md-line="35">马拉车算法</h3>
+<div data-v-md-line="36"><div class="v-md-pre-wrapper v-md-pre-wrapper-python extra-class"><pre class="v-md-hljs-python"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-comment"># Manacher 算法</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longestPalindrome</span>(<span class="hljs-params">self, s: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">str</span>:</span>
+        <span class="hljs-comment"># 特判 </span>
+        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(s) &lt; <span class="hljs-number">2</span> <span class="hljs-keyword">or</span> s == s[::-<span class="hljs-number">1</span>]:
+            <span class="hljs-keyword">return</span> s
+
+        <span class="hljs-comment"># 得到预处理字符串</span>
+        t = <span class="hljs-string">&quot;#&quot;</span> + <span class="hljs-string">&quot;#&quot;</span>.join(s) + <span class="hljs-string">&quot;#&quot;</span>
+
+        <span class="hljs-comment"># 新字符串的长度</span>
+        t_len = <span class="hljs-built_in">len</span>(t)
+
+        <span class="hljs-comment"># 数组 p 记录了扫描过的回文子串的信息</span>
+        p = [<span class="hljs-number">0</span>]*t_len
+
+        <span class="hljs-comment"># 双指针，它们是一一对应的，须同时更新</span>
+        max_right = <span class="hljs-number">0</span>
+        center = <span class="hljs-number">0</span>
+
+        <span class="hljs-comment"># 当前遍历的中心最大扩散步数，其值等于原始字符串的最长回文子串的长度</span>
+        max_len = <span class="hljs-number">1</span>
+        <span class="hljs-comment"># 原始字符串的最长回文子串的起始位置，与 max_len 必须同时更新</span>
+        start = <span class="hljs-number">1</span>
+
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(t_len):
+            <span class="hljs-keyword">if</span> i &lt; max_right:
+                mirror = <span class="hljs-number">2</span> * center - i
+                <span class="hljs-comment"># 这一行代码是 Manacher 算法的关键所在，要结合图形来理解</span>
+                p[i] = <span class="hljs-built_in">min</span>(max_right - i, p[mirror])
+
+            <span class="hljs-comment"># 下一次尝试扩散的左右起点，能扩散的步数直接加到 p[i] 中</span>
+            left = i - (<span class="hljs-number">1</span> + p[i])
+            right = i + (<span class="hljs-number">1</span> + p[i])
+
+            <span class="hljs-comment"># left &gt;= 0 and right &lt; t_len 保证不越界</span>
+            <span class="hljs-comment"># t[left] == t[right] 表示可以扩散 1 次</span>
+            <span class="hljs-keyword">while</span> left &gt;= <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> right &lt; t_len <span class="hljs-keyword">and</span> t[left] == t[right]:
+                p[i] += <span class="hljs-number">1</span>
+                left -= <span class="hljs-number">1</span>
+                right += <span class="hljs-number">1</span>
+
+            <span class="hljs-comment"># 根据 max_right 的定义，它是遍历过的 i 的 i + p[i] 的最大者</span>
+            <span class="hljs-comment"># 如果 max_right 的值越大，进入上面 i &lt; max_right 的判断的可能性就越大，这样就可以重复利用之前判断过的回文信息了</span>
+            <span class="hljs-keyword">if</span> i + p[i] &gt; max_right:
+                <span class="hljs-comment"># max_right 和 center 需要同时更新</span>
+                max_right = i + p[i]
+                center = i
+
+            <span class="hljs-keyword">if</span> p[i] &gt; max_len:
+                <span class="hljs-comment"># 记录最长回文子串的长度和相应它在原始字符串中的起点</span>
+                max_len = p[i]
+                start = (i - max_len) // <span class="hljs-number">2</span>
+        <span class="hljs-keyword">return</span> s[start: start + max_len]
+</code></pre>
+</div></div><h3 data-v-md-heading="成果" data-v-md-line="92">成果</h3>
+<p data-v-md-line="93"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2020-01-19T15:04:32.png" alt="2020-01-19T15:04:32.png"></p>
+<blockquote data-v-md-line="98">
+<p data-v-md-line="98">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/730" class="custom-internal-link" target="_blank">指尖魔法屋-【leetcode】5. Longest Palindromic Substring最长回文子串</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="fluid" data-ad-layout="in-article" data-ad-slot="2621880404" style="display:block;text-align:center;width:100%;" data-v-4b611cb2></ins></div></div><!--]--></div><div class="page-section" data-v-062e129b><div class="section" data-v-062e129b><div class="el-input el-input-group el-input-group--append input-with-select" style=""><!-- input --><!--[--><!-- prepend slot --><!--v-if--><div class="el-input__wrapper"><!-- prefix slot --><!--v-if--><input class="el-input__inner" type="text" autocomplete="off" tabindex="0" placeholder="站内搜索" style=""><!-- suffix slot --><!--v-if--></div><!-- append slot --><div class="el-input-group__append"><!--[--><button class="el-button" aria-disabled="false" type="button" style=""><i class="el-icon" style=""><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg><!--]--></i><!--v-if--></button><!--]--></div><!--]--></div></div><div class="section" data-v-062e129b><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="auto" data-ad-slot="2184618903" data-full-width-responsive="true" style="display:block;"></ins></div></div></div></div><span data-v-062e129b></span></div><div class="footer" data-v-062e129b data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.7 · build-20220610</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a,b){return {data:{pinia:{},article:{cid:730,title:"【leetcode】5. Longest Palindromic Substring最长回文子串",created:1579357380,modified:1580971438,text:"![5. Longest Palindromic Substring最长回文子串][1]\r\n## 解法1：中心拓展算法\r\n### 思路\r\n首先，我们知道回文串一定是对称的，所以我们可以选择一个对称中心，进行左右扩展，判断左右字符是否相等即可。\r\n由于存在奇数的字符串和偶数的字符串，所以我们需要从一个字符开始扩展，或者从两个字符之间开始扩展，所以总共有 n+n-1 个中心。\r\n### 实现代码\r\n```python\r\nclass Solution:\r\n    def longestPalindrome(self, s: str) -\u003E str:\r\n        n = len(s)\r\n        Max,sub = 0,s[0:1]\r\n        for i in range(n):\r\n            tmp = self.searchPalindrome(i-1,i+1,s)\r\n            if len(tmp) \u003E Max:\r\n                Max = len(tmp)\r\n                sub = tmp\r\n            tmp = self.searchPalindrome(i-1,i,s)\r\n            if len(tmp) \u003E Max:\r\n                Max = len(tmp)\r\n                sub = tmp    \r\n        return sub\r\n    \r\n    def searchPalindrome(self, left: int, right: int, s: str) -\u003E int:\r\n        sub = \"\"\r\n        while left != -1 and right != len(s):\r\n            if s[left] == s[right]:\r\n                sub = s[left:right+1]\r\n                left-=1\r\n                right+=1\r\n            else : break\r\n        return sub\r\n```\r\n\r\n### 马拉车算法\r\n```python\r\nclass Solution:\r\n    # Manacher 算法\r\n    def longestPalindrome(self, s: str) -\u003E str:\r\n        # 特判 \r\n        if len(s) \u003C 2 or s == s[::-1]:\r\n            return s\r\n\r\n        # 得到预处理字符串\r\n        t = \"#\" + \"#\".join(s) + \"#\"\r\n\r\n        # 新字符串的长度\r\n        t_len = len(t)\r\n\r\n        # 数组 p 记录了扫描过的回文子串的信息\r\n        p = [0]*t_len\r\n\r\n        # 双指针，它们是一一对应的，须同时更新\r\n        max_right = 0\r\n        center = 0\r\n\r\n        # 当前遍历的中心最大扩散步数，其值等于原始字符串的最长回文子串的长度\r\n        max_len = 1\r\n        # 原始字符串的最长回文子串的起始位置，与 max_len 必须同时更新\r\n        start = 1\r\n\r\n        for i in range(t_len):\r\n            if i \u003C max_right:\r\n                mirror = 2 * center - i\r\n                # 这一行代码是 Manacher 算法的关键所在，要结合图形来理解\r\n                p[i] = min(max_right - i, p[mirror])\r\n\r\n            # 下一次尝试扩散的左右起点，能扩散的步数直接加到 p[i] 中\r\n            left = i - (1 + p[i])\r\n            right = i + (1 + p[i])\r\n\r\n            # left \u003E= 0 and right \u003C t_len 保证不越界\r\n            # t[left] == t[right] 表示可以扩散 1 次\r\n            while left \u003E= 0 and right \u003C t_len and t[left] == t[right]:\r\n                p[i] += 1\r\n                left -= 1\r\n                right += 1\r\n\r\n            # 根据 max_right 的定义，它是遍历过的 i 的 i + p[i] 的最大者\r\n            # 如果 max_right 的值越大，进入上面 i \u003C max_right 的判断的可能性就越大，这样就可以重复利用之前判断过的回文信息了\r\n            if i + p[i] \u003E max_right:\r\n                # max_right 和 center 需要同时更新\r\n                max_right = i + p[i]\r\n                center = i\r\n\r\n            if p[i] \u003E max_len:\r\n                # 记录最长回文子串的长度和相应它在原始字符串中的起点\r\n                max_len = p[i]\r\n                start = (i - max_len) \u002F\u002F 2\r\n        return s[start: start + max_len]\r\n```\r\n### 成果\r\n![2020-01-19T15:04:32.png][2]\r\n\r\n\r\n  [1]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-01-18T14:20:17.png\r\n  [2]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-01-19T15:04:32.png",authorId:a,comments:4,views:985,likes:b,tag:[{tid:6,name:"python",order:a,count:a},{tid:50,name:"leetcode",order:a,count:a}],category:"学习笔记",category_id:b,fields:{thumb:"https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-01-18T14:20:17.png"}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.7 · build-20220610",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002Fnuxt-asset\u002F",cdnURL:""}}}}(0,11))</script><script type="module" src="/nuxt-asset/entry-a0a9c288.mjs" crossorigin></script><script type="module" src="/nuxt-asset/default-10e5eaa9.mjs" crossorigin></script><script type="module" src="/nuxt-asset/_cid_-518e69bc.mjs" crossorigin></script>
+</body>
+
+</html>

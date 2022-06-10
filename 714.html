@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html  data-head-attrs="">
+
+<head >
+  <title>【leetcode】2. Add Two Numbers两数相加 | 指尖魔法屋-醉月思的博客</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script async src="/ads.js" crossorigin="anonymous"></script><meta name="keywords" content="python,leetcode"><meta name="description" content="web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！"><meta name="head:count" content="5"><link rel="modulepreload" href="/nuxt-asset/entry-a0a9c288.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/entry.fedc1be4.css" as="style"><link rel="modulepreload" href="/nuxt-asset/default-10e5eaa9.mjs" as="script" crossorigin><link rel="preload" href="/nuxt-asset/default.86255851.css" as="style"><link rel="modulepreload" href="/nuxt-asset/Footer-3dd58ce4.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/_cid_-518e69bc.mjs" as="script" crossorigin><link rel="modulepreload" href="/nuxt-asset/asyncData-38b92481.mjs" as="script" crossorigin><link rel="prefetch" href="/nuxt-asset/background.36a7be78.jpg"><link rel="prefetch" as="script" href="/nuxt-asset/404-6271d218.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/editor-cb84eaae.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-a5a21114.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/post-list-8ebd2004.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-ee186c4f.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-8706ad22.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/PostList-cb4d7779.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-6b7d0274.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-a7781c56.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/login-bf2de25e.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-27b7ab33.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/_pageIndex_-4cfc3b71.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/TagApi-0ac04931.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/index-3ceff8c5.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/auth-e1847cfe.mjs"><link rel="prefetch" as="script" href="/nuxt-asset/admin-7dc5992b.mjs"><link rel="stylesheet" href="/nuxt-asset/entry.fedc1be4.css"><link rel="stylesheet" href="/nuxt-asset/default.86255851.css">
+</head>
+
+<body  data-head-attrs="">
+  <div id="__nuxt"><!--[--><div data-v-062e129b><div class="top-menu" data-v-062e129b data-v-2a7a94f1><div class="left" data-v-2a7a94f1><a class="el-link el-link--default is-underline" href="/" data-v-2a7a94f1><!--v-if--><span class="el-link__inner"><!--[-->指尖魔法屋<!--]--></span><!--v-if--></a></div><span data-v-2a7a94f1></span><div class="right" data-v-2a7a94f1><a class="el-link el-link--default" href="/admin" data-v-2a7a94f1><!--v-if--><span class="el-link__inner"><!--[--><i class="el-icon pointer" style="font-size:26px;" data-v-2a7a94f1><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-2a7a94f1><path fill="currentColor" d="M512 512a192 192 0 1 0 0-384 192 192 0 0 0 0 384zm0 64a256 256 0 1 1 0-512 256 256 0 0 1 0 512zm320 320v-96a96 96 0 0 0-96-96H288a96 96 0 0 0-96 96v96a32 32 0 1 1-64 0v-96a160 160 0 0 1 160-160h448a160 160 0 0 1 160 160v96a32 32 0 1 1-64 0z"></path></svg><!--]--></i><!--]--></span><!--v-if--></a></div></div><div class="app-container" data-v-062e129b><div class="layout" data-v-062e129b><div class="main-content" data-v-062e129b><!--[--><div class="" data-v-4b611cb2><!----><div class="article-content" data-v-4b611cb2><div class="v-md-editor-preview" style="tab-size:2;" data-v-4b611cb2><div class="github-markdown-body"><h1 data-v-md-heading="【leetcode】2-add-two-numbers两数相加" data-v-md-line="1">【leetcode】2. Add Two Numbers两数相加</h1>
+<p data-v-md-line="2"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2020-01-14T08:20:00.png" alt="【leetcode】2. Add Two Numbers两数相加"></p>
+<h2 data-v-md-heading="描述" data-v-md-line="4">描述</h2>
+<p data-v-md-line="5">给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。</p>
+<p data-v-md-line="7">如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。</p>
+<p data-v-md-line="9">您可以假设除了数字 0 之外，这两个数都不会以 0 开头。</p>
+<blockquote data-v-md-line="11">
+<p data-v-md-line="11">示例：</p>
+</blockquote>
+<div data-v-md-line="12"><div class="v-md-pre-wrapper v-md-pre-wrapper-c extra-class"><pre class="v-md-hljs-c"><code>输入：(<span class="hljs-number">2</span> -&gt; <span class="hljs-number">4</span> -&gt; <span class="hljs-number">3</span>) + (<span class="hljs-number">5</span> -&gt; <span class="hljs-number">6</span> -&gt; <span class="hljs-number">4</span>)
+输出：<span class="hljs-number">7</span> -&gt; <span class="hljs-number">0</span> -&gt; <span class="hljs-number">8</span>
+原因：<span class="hljs-number">342</span> + <span class="hljs-number">465</span> = <span class="hljs-number">807</span>
+</code></pre>
+</div></div><h2 data-v-md-heading="思路" data-v-md-line="18">思路</h2>
+<p data-v-md-line="20">我看到这个题的第一感觉就是用递归把数获取出来，然后再相加，之后再把得数结构化。问题就被细分为了两个方面：</p>
+<ol data-v-md-line="21">
+<li>加数的提取</li>
+<li>得数的结构化</li>
+</ol>
+<h2 data-v-md-heading="我的初次实现" data-v-md-line="24">我的初次实现</h2>
+<div data-v-md-line="25"><div class="v-md-pre-wrapper v-md-pre-wrapper-python extra-class"><pre class="v-md-hljs-python"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getStr</span>(<span class="hljs-params">self,node: ListNode</span>) -&gt; <span class="hljs-built_in">str</span>:</span>
+        <span class="hljs-keyword">if</span> node.<span class="hljs-built_in">next</span> == <span class="hljs-literal">None</span>:
+            <span class="hljs-keyword">return</span> node.val
+        <span class="hljs-keyword">else</span>:
+            last = self.getStr(node.<span class="hljs-built_in">next</span>)
+            <span class="hljs-keyword">return</span>  <span class="hljs-built_in">str</span>(last) + <span class="hljs-built_in">str</span>(node.val)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">addTwoNumbers</span>(<span class="hljs-params">self, l1: ListNode, l2: ListNode</span>) -&gt; ListNode:</span>
+        num1 = self.getStr(l1)
+        num2 = self.getStr(l2)
+        result = <span class="hljs-built_in">int</span>(num1) + <span class="hljs-built_in">int</span>(num2)
+        resultList = <span class="hljs-built_in">list</span>(<span class="hljs-built_in">str</span>(result))
+        tmp = ListNode(<span class="hljs-built_in">int</span>(resultList.pop(<span class="hljs-number">0</span>)))
+        <span class="hljs-type">List</span> = tmp
+        <span class="hljs-keyword">while</span> resultList:
+            tmp = ListNode(<span class="hljs-built_in">int</span>(resultList.pop(<span class="hljs-number">0</span>)))
+            tmp.<span class="hljs-built_in">next</span> = <span class="hljs-type">List</span>
+            <span class="hljs-type">List</span> = tmp
+        <span class="hljs-keyword">return</span> <span class="hljs-type">List</span>
+</code></pre>
+</div></div><h3 data-v-md-heading="成果" data-v-md-line="47">成果</h3>
+<p data-v-md-line="48"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2020-01-14T08:25:07.png" alt="成果"></p>
+<h2 data-v-md-heading="改进思路" data-v-md-line="50">改进思路</h2>
+<p data-v-md-line="51">利用人列竖式算法的方法，计算每一列的值</p>
+<h3 data-v-md-heading="改进代码" data-v-md-line="53">改进代码</h3>
+<div data-v-md-line="54"><div class="v-md-pre-wrapper v-md-pre-wrapper-python extra-class"><pre class="v-md-hljs-python"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">addTwoNumbers</span>(<span class="hljs-params">self, l1: ListNode, l2: ListNode</span>) -&gt; ListNode:</span>
+        <span class="hljs-comment"># if l1.next == None and l1.val == 0:</span>
+        <span class="hljs-comment">#    return l2</span>
+        <span class="hljs-comment"># if l2.next == None and l2.val == 0:</span>
+        <span class="hljs-comment">#    return l1</span>
+        l1_iter = l1
+        l2_iter = l2
+        Sum = l1_iter.val + l2_iter.val
+        carry = <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> Sum &gt;= <span class="hljs-number">10</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+        Sum %= <span class="hljs-number">10</span>
+        <span class="hljs-type">List</span> = ListNode(Sum)
+        l1_iter = l1_iter.<span class="hljs-built_in">next</span>
+        l2_iter = l2_iter.<span class="hljs-built_in">next</span>
+        Site = <span class="hljs-type">List</span>
+        <span class="hljs-keyword">while</span>(l1_iter != <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> l2_iter != <span class="hljs-literal">None</span>):
+            Sum = l1_iter.val + l2_iter.val + carry
+            carry = <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> Sum &gt;= <span class="hljs-number">10</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+            Sum %= <span class="hljs-number">10</span>
+            tmp = ListNode(Sum)
+            Site.<span class="hljs-built_in">next</span> = tmp
+            Site = Site.<span class="hljs-built_in">next</span>
+            l1_iter = l1_iter.<span class="hljs-built_in">next</span>
+            l2_iter = l2_iter.<span class="hljs-built_in">next</span>
+        last = Site
+        <span class="hljs-keyword">if</span>(l1_iter == <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> l2_iter == <span class="hljs-literal">None</span>) :
+            <span class="hljs-keyword">if</span>(carry == <span class="hljs-number">1</span>):
+                tmp = ListNode(carry)
+                last.<span class="hljs-built_in">next</span> = tmp
+            <span class="hljs-keyword">return</span> <span class="hljs-type">List</span>
+        <span class="hljs-keyword">else</span>:
+            Site = l1_iter <span class="hljs-keyword">if</span> l2_iter == <span class="hljs-literal">None</span> <span class="hljs-keyword">else</span> l2_iter
+            tail = Site
+            <span class="hljs-keyword">while</span>(Site != <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> carry == <span class="hljs-number">1</span>):
+                Sum = Site.val + carry
+                Site.val = Sum % <span class="hljs-number">10</span>
+                carry = <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> Sum &lt; <span class="hljs-number">10</span> <span class="hljs-keyword">else</span> <span class="hljs-number">1</span>
+                <span class="hljs-keyword">if</span>(Site.<span class="hljs-built_in">next</span> == <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> carry == <span class="hljs-number">1</span>):
+                    tmp = ListNode(carry)
+                    Site.<span class="hljs-built_in">next</span> = tmp
+                    <span class="hljs-keyword">break</span>
+                Site = Site.<span class="hljs-built_in">next</span>
+            last.<span class="hljs-built_in">next</span> = tail
+        <span class="hljs-keyword">return</span> <span class="hljs-type">List</span>
+</code></pre>
+</div></div><h2 data-v-md-heading="成果-1" data-v-md-line="101">成果</h2>
+<p data-v-md-line="102"><img src="https://blog.cdn.thinkmoon.cn/blog/typecho/2020-01-14T10:23:51.png" alt="Add Two Numbers超越100%的Python用户"></p>
+<blockquote data-v-md-line="108">
+<p data-v-md-line="108">版权声明: 本文首发于<a href="https://www.thinkmoon.cn/post/714" class="custom-internal-link" target="_blank">指尖魔法屋-【leetcode】2. Add Two Numbers两数相加</a>,转载或引用必须申明原指尖魔法屋来源及源地址！</p>
+</blockquote>
+</div></div><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="fluid" data-ad-layout="in-article" data-ad-slot="2621880404" style="display:block;text-align:center;width:100%;" data-v-4b611cb2></ins></div></div><!--]--></div><div class="page-section" data-v-062e129b><div class="section" data-v-062e129b><div class="el-input el-input-group el-input-group--append input-with-select" style=""><!-- input --><!--[--><!-- prepend slot --><!--v-if--><div class="el-input__wrapper"><!-- prefix slot --><!--v-if--><input class="el-input__inner" type="text" autocomplete="off" tabindex="0" placeholder="站内搜索" style=""><!-- suffix slot --><!--v-if--></div><!-- append slot --><div class="el-input-group__append"><!--[--><button class="el-button" aria-disabled="false" type="button" style=""><i class="el-icon" style=""><!--[--><svg viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704z"></path></svg><!--]--></i><!--v-if--></button><!--]--></div><!--]--></div></div><div class="section" data-v-062e129b><ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="auto" data-ad-slot="2184618903" data-full-width-responsive="true" style="display:block;"></ins></div></div></div></div><span data-v-062e129b></span></div><div class="footer" data-v-062e129b data-v-68ae0dac><span data-v-68ae0dac>Copyright © 2017-2022 指尖魔法屋. All rights reserved</span><span data-v-68ae0dac>POWERED BY thinkBlog · v0.1.7 · build-20220610</span><span data-v-68ae0dac>网站持续搭建中，感谢关注</span><span data-v-68ae0dac>本站已顽强运行：蛮久了~</span><div data-v-68ae0dac><a class="el-link el-link--primary is-underline" href="http://beian.miit.gov.cn/" data-v-68ae0dac><!--v-if--><span class="el-link__inner"><!--[--> 粤ICP备17055617号 <!--]--></span><!--v-if--></a></div></div><!--]--></div><script>window.__NUXT__=(function(a){return {data:{pinia:{},article:{cid:714,title:"【leetcode】2. Add Two Numbers两数相加",created:1578990300,modified:1579182130,text:"![【leetcode】2. Add Two Numbers两数相加][1]\r\n\r\n## 描述\r\n给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。\r\n\r\n如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。\r\n\r\n您可以假设除了数字 0 之外，这两个数都不会以 0 开头。\r\n\r\n\u003E 示例：\r\n```c\r\n输入：(2 -\u003E 4 -\u003E 3) + (5 -\u003E 6 -\u003E 4)\r\n输出：7 -\u003E 0 -\u003E 8\r\n原因：342 + 465 = 807\r\n```\r\n\r\n## 思路\r\n\r\n我看到这个题的第一感觉就是用递归把数获取出来，然后再相加，之后再把得数结构化。问题就被细分为了两个方面：\r\n1. 加数的提取\r\n2. 得数的结构化\r\n\r\n## 我的初次实现\r\n```python\r\nclass Solution:\r\n    def getStr(self,node: ListNode) -\u003E str:\r\n        if node.next == None:\r\n            return node.val\r\n        else:\r\n            last = self.getStr(node.next)\r\n            return  str(last) + str(node.val)\r\n\r\n    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -\u003E ListNode:\r\n        num1 = self.getStr(l1)\r\n        num2 = self.getStr(l2)\r\n        result = int(num1) + int(num2)\r\n        resultList = list(str(result))\r\n        tmp = ListNode(int(resultList.pop(0)))\r\n        List = tmp\r\n        while resultList:\r\n            tmp = ListNode(int(resultList.pop(0)))\r\n            tmp.next = List\r\n            List = tmp\r\n        return List\r\n```\r\n### 成果\r\n![成果][2]\r\n\r\n## 改进思路\r\n利用人列竖式算法的方法，计算每一列的值\r\n\r\n### 改进代码\r\n```python\r\nclass Solution:\r\n    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -\u003E ListNode:\r\n        # if l1.next == None and l1.val == 0:\r\n        #    return l2\r\n        # if l2.next == None and l2.val == 0:\r\n        #    return l1\r\n        l1_iter = l1\r\n        l2_iter = l2\r\n        Sum = l1_iter.val + l2_iter.val\r\n        carry = 1 if Sum \u003E= 10 else 0\r\n        Sum %= 10\r\n        List = ListNode(Sum)\r\n        l1_iter = l1_iter.next\r\n        l2_iter = l2_iter.next\r\n        Site = List\r\n        while(l1_iter != None and l2_iter != None):\r\n            Sum = l1_iter.val + l2_iter.val + carry\r\n            carry = 1 if Sum \u003E= 10 else 0\r\n            Sum %= 10\r\n            tmp = ListNode(Sum)\r\n            Site.next = tmp\r\n            Site = Site.next\r\n            l1_iter = l1_iter.next\r\n            l2_iter = l2_iter.next\r\n        last = Site\r\n        if(l1_iter == None and l2_iter == None) :\r\n            if(carry == 1):\r\n                tmp = ListNode(carry)\r\n                last.next = tmp\r\n            return List\r\n        else:\r\n            Site = l1_iter if l2_iter == None else l2_iter\r\n            tail = Site\r\n            while(Site != None and carry == 1):\r\n                Sum = Site.val + carry\r\n                Site.val = Sum % 10\r\n                carry = 0 if Sum \u003C 10 else 1\r\n                if(Site.next == None and carry == 1):\r\n                    tmp = ListNode(carry)\r\n                    Site.next = tmp\r\n                    break\r\n                Site = Site.next\r\n            last.next = tail\r\n        return List\r\n```\r\n\r\n## 成果\r\n![Add Two Numbers超越100%的Python用户][3]\r\n\r\n\r\n  [1]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-01-14T08:20:00.png\r\n  [2]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-01-14T08:25:07.png\r\n  [3]: https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-01-14T10:23:51.png",authorId:a,comments:a,views:527,likes:2,tag:[{tid:6,name:"python",order:a,count:a},{tid:50,name:"leetcode",order:a,count:a}],category:"学习笔记",category_id:11,fields:{thumb:"https:\u002F\u002Fblog.cdn.thinkmoon.cn\u002Fblog\u002Ftypecho\u002F2020-01-14T08:20:00.png"}}},state:{error:null},_errors:{},serverRendered:true,config:{public:{TITLE:"指尖魔法屋-醉月思的博客",VERSION:"0.1.7 · build-20220610",KEYWORDS:["thinkmoon","指尖魔法屋","醉月思的博客"],DESCRIPTION:"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！",baseUrl:"https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"},app:{baseURL:"\u002F",buildAssetsDir:"\u002Fnuxt-asset\u002F",cdnURL:""}}}}(0))</script><script type="module" src="/nuxt-asset/entry-a0a9c288.mjs" crossorigin></script><script type="module" src="/nuxt-asset/default-10e5eaa9.mjs" crossorigin></script><script type="module" src="/nuxt-asset/_cid_-518e69bc.mjs" crossorigin></script>
+</body>
+
+</html>
