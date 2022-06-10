@@ -2,7 +2,6 @@
   "private": true,
   "version": "0.1.7",
   "scripts": {
-    "upgrade": "yarn upgrade-interactive",
     "dev": "nuxt dev",
     "build": "nuxt build",
     "start": "nuxt preview",
@@ -39,14 +38,6 @@
     "@types/lodash": "^4.14.176",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "nuxt": "^3.0.0-rc.3"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": ["vue"],
-      "allowedVersions": {
-        "vue": "3"
-      }
-    }
+    "nuxt": "npm:nuxt3@latest"
   }
 }
