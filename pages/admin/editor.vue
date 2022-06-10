@@ -15,24 +15,19 @@
         @upload-image="handleUploadImage"
       />
       <div class="custom-options">
-        <el-input
+        <template
           v-for="custom in customList"
-          v-model="custom.value"
-          class="input-with-select"
-          placeholder="Please input"
+          :key="custom.key"
         >
-          <template #prepend>
-            <ClientOnly>
-              <el-select
-                v-model="custom.name"
-                disabled
-                placeholder="Select"
-                style="width: 115px"
-              >
-              </el-select>
-            </ClientOnly>
-          </template>
-        </el-input>
+          <span>{{ custom.name }}</span>
+          <el-input
+            v-model="custom.value"
+            type="textarea"
+            class="input-with-select"
+            placeholder="Please input"
+          >
+          </el-input>
+        </template>
       </div>
     </div>
     <div class="flex-2 right">
@@ -181,7 +176,8 @@ export default defineComponent({
     box-sizing: border-box;
   }
 }
-.custom-options > .el-input-group{
+
+.custom-options > .el-input-group {
   margin: 6px 0 0 0;
 }
 </style>
