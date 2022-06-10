@@ -38,6 +38,6 @@
     "@types/lodash": "^4.14.176",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "nuxt": "npm:nuxt3@latest"
+    "nuxt": "3.0.0-rc.1"
   }
 }
