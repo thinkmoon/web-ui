@@ -1,5 +1,5 @@
-import {defineNuxtPlugin} from '#app';
-import ElementPlus, {ElMessage} from 'element-plus/dist/index.full';
+import { defineNuxtPlugin } from '#app';
+import ElementPlus, { ElMessage } from 'element-plus';
 import * as Icons from '@element-plus/icons-vue';
 
 export default defineNuxtPlugin((nuxtApp) => {

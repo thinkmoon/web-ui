@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "0.1.7",
+  "version": "0.1.8",
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
@@ -38,6 +38,6 @@
     "@types/lodash": "^4.14.176",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
-    "nuxt": "3.0.0-rc.1"
+    "nuxt": "^3.0.0-rc.3"
   }
 }
