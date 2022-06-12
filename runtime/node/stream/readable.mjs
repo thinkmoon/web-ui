@@ -8,6 +8,8 @@ export class Readable extends EventEmitter {
     this.readableHighWaterMark = 0;
     this.readableLength = 0;
     this.readableObjectMode = false;
+    this.readableAborted = false;
+    this.readableDidRead = false;
     this.readable = false;
     this.destroyed = false;
   }
@@ -46,7 +48,8 @@ export class Readable extends EventEmitter {
   }
   destroy(error) {
     this.destroyed = true;
-    return this._destroy(error);
+    this._destroy(error);
+    return this;
   }
   pipe(_destenition, _options) {
     return {};

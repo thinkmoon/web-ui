@@ -18,3 +18,8 @@ export function mergeFns(...functions) {
     }
   };
 }
+export function notImplemented(name) {
+  return () => {
+    throw new Error(`[unenv] ${name} is not implemented yet!`);
+  };
+}

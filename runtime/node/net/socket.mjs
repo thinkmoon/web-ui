@@ -12,6 +12,7 @@ export class Socket extends Duplex {
     this.remoteAddress = "";
     this.remoteFamily = "";
     this.remotePort = 0;
+    this.readyState = "readOnly";
   }
   write(_buffer, _arg1, _arg2) {
     return false;
@@ -20,6 +21,7 @@ export class Socket extends Duplex {
     return this;
   }
   end(_arg1, _arg2, _arg3) {
+    return this;
   }
   setEncoding(_encoding) {
     return this;

@@ -1,8 +1,8 @@
-import 'unenv/runtime/polyfill/fetch.node';
+globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import 'node-fetch-native/polyfill';
 import { Server as Server$1 } from 'http';
 import { Server } from 'https';
 import destr from 'destr';
-import { toEventHandler, defineEventHandler, handleCacheHeaders, createEvent, createApp, createRouter, lazyEventHandler } from 'h3';
+import { defineEventHandler, handleCacheHeaders, createEvent, eventHandler, createError, createApp, createRouter, lazyEventHandler } from 'h3';
 import { createFetch as createFetch$1, Headers } from 'ohmyfetch';
 import { createRouter as createRouter$1 } from 'radix3';
 import { createCall, createFetch } from 'unenv/runtime/fetch/index';
@@ -10,9 +10,12 @@ import { createHooks } from 'hookable';
 import { snakeCase } from 'scule';
 import { hash } from 'ohash';
 import { createStorage } from 'unstorage';
-import { withQuery } from 'ufo';
+import { withQuery, withLeadingSlash, withoutTrailingSlash, parseURL } from 'ufo';
+import { promises } from 'fs';
+import { resolve, dirname } from 'pathe';
+import { fileURLToPath } from 'url';
 
-const _runtimeConfig = (function(a,b,c,d,e,f,g){return {app:{baseURL:"\u002F",buildAssetsDir:"\u002Fnuxt-asset\u002F",cdnURL:""},nitro:{routes:{},envPrefix:"NUXT_"},TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g,public:{TITLE:a,VERSION:b,KEYWORDS:[c,d,e],DESCRIPTION:f,baseUrl:g}}}("指尖魔法屋-醉月思的博客","0.1.7 · build-20220612","thinkmoon","指尖魔法屋","醉月思的博客","web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！","https:\u002F\u002Fservice.thinkmoon.cn\u002Fapi"));
+const _runtimeConfig = {"app":{"baseURL":"/","buildAssetsDir":"/nuxt-asset/","cdnURL":""},"nitro":{"routes":{},"envPrefix":"NUXT_"},"TITLE":"指尖魔法屋-醉月思的博客","VERSION":"0.1.8 · build-20220612","KEYWORDS":["thinkmoon","指尖魔法屋","醉月思的博客"],"DESCRIPTION":"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！","baseUrl":"https://service.thinkmoon.cn/api","public":{"TITLE":"指尖魔法屋-醉月思的博客","VERSION":"0.1.8 · build-20220612","KEYWORDS":["thinkmoon","指尖魔法屋","醉月思的博客"],"DESCRIPTION":"web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！","baseUrl":"https://service.thinkmoon.cn/api"}};
 const ENV_PREFIX = "NITRO_";
 const ENV_PREFIX_ALT = _runtimeConfig.nitro.envPrefix ?? process.env.NITRO_ENV_PREFIX ?? "_";
 const getEnv = (key) => {
@@ -74,10 +77,13 @@ const _assets = {
 };
 
 function normalizeKey(key) {
-  return key.replace(/[/\\]/g, ":").replace(/^:|:$/g, "");
+  if (!key) {
+    return "";
+  }
+  return key.replace(/[/\\]/g, ":").replace(/:+/g, ":").replace(/^:|:$/g, "");
 }
 
-const assets = {
+const assets$1 = {
   getKeys() {
     return Promise.resolve(Object.keys(_assets))
   },
@@ -99,7 +105,7 @@ const storage = createStorage({});
 
 const useStorage = () => storage;
 
-storage.mount('/assets', assets);
+storage.mount('/assets', assets$1);
 
 const defaultCacheOptions = {
   name: "_",
@@ -164,7 +170,6 @@ function defineCachedEventHandler(handler, opts = defaultCacheOptions) {
       handler
     ]
   };
-  const _handler = toEventHandler(handler);
   const _cachedHandler = cachedFunction(async (incomingEvent) => {
     const reqProxy = cloneWithProxy(incomingEvent.req, { headers: {} });
     const resHeaders = {};
@@ -191,7 +196,8 @@ function defineCachedEventHandler(handler, opts = defaultCacheOptions) {
       }
     });
     const event = createEvent(reqProxy, resProxy);
-    const body = await _handler(event);
+    event.context = incomingEvent.context;
+    const body = await handler(event);
     const headers = event.res.getHeaders();
     headers.Etag = `W/"${hash(body)}"`;
     headers["Last-Modified"] = new Date().toUTCString();
@@ -294,7 +300,8 @@ const errorHandler = (async function errorhandler(_error, event) {
     statusCode,
     statusMessage,
     message,
-    description: ""
+    description: "",
+    data: _error.data
   };
   event.res.statusCode = errorObject.statusCode;
   event.res.statusMessage = errorObject.statusMessage;
@@ -315,13 +322,267 @@ const errorHandler = (async function errorhandler(_error, event) {
   event.res.end(html);
 });
 
-const _33be66 = () => import('./static.mjs');
-const _cde06a = () => import('../handlers/renderer.mjs');
+const assets = {
+  "/ads.js": {
+    "type": "application/javascript",
+    "etag": "\"2a6-QG3gIcUryNH3lTuW9EhtBAeMq38\"",
+    "mtime": "2022-06-12T07:48:09.343Z",
+    "path": "../public/ads.js"
+  },
+  "/ads.txt": {
+    "type": "text/plain; charset=utf-8",
+    "etag": "\"3a-S2QoHSLwjt3ITMCHGGdeZhacB8k\"",
+    "mtime": "2022-06-12T07:48:09.343Z",
+    "path": "../public/ads.txt"
+  },
+  "/favicon.ico": {
+    "type": "image/vnd.microsoft.icon",
+    "etag": "\"10be-trCOKZMCCmliCXLvpHbvfHMWd64\"",
+    "mtime": "2022-06-12T07:48:09.343Z",
+    "path": "../public/favicon.ico"
+  },
+  "/robots.txt": {
+    "type": "text/plain; charset=utf-8",
+    "etag": "\"4e-rNrKs1nSkmU1PPE2uMSVSowftYg\"",
+    "mtime": "2022-06-12T07:48:09.343Z",
+    "path": "../public/robots.txt"
+  },
+  "/sitemap.xml": {
+    "type": "application/xml",
+    "etag": "\"7e99-kyOMX0s2HpPcSVAmxcmZeh7RjIw\"",
+    "mtime": "2022-06-12T07:48:09.343Z",
+    "path": "../public/sitemap.xml"
+  },
+  "/nuxt-asset/404-745d1f5c.mjs": {
+    "type": "application/javascript",
+    "etag": "\"13c-7COMRSo7AKzol8/p35iZSKLqRBA\"",
+    "mtime": "2022-06-12T07:48:09.343Z",
+    "path": "../public/nuxt-asset/404-745d1f5c.mjs"
+  },
+  "/nuxt-asset/Footer-12cb056d.mjs": {
+    "type": "application/javascript",
+    "etag": "\"3e5-nHzwg+u98CyQab3WQ6iQRaESpBI\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/Footer-12cb056d.mjs"
+  },
+  "/nuxt-asset/PostList-69ad293c.mjs": {
+    "type": "application/javascript",
+    "etag": "\"9c4-8h50LC9TZSXHWWpaOxResUYCHDM\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/PostList-69ad293c.mjs"
+  },
+  "/nuxt-asset/TagApi-647c60af.mjs": {
+    "type": "application/javascript",
+    "etag": "\"85-XEhUguQfJdXCimAnP6JYvdqp0yc\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/TagApi-647c60af.mjs"
+  },
+  "/nuxt-asset/_cid_-2b493a48.mjs": {
+    "type": "application/javascript",
+    "etag": "\"7b9-TuErMHeBS2OWzWgMc2ihK8LQMjc\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/_cid_-2b493a48.mjs"
+  },
+  "/nuxt-asset/_pageIndex_-0a0729a2.mjs": {
+    "type": "application/javascript",
+    "etag": "\"46f-DhLnQA0LtWUPD9al8OGcYdBW/C8\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/_pageIndex_-0a0729a2.mjs"
+  },
+  "/nuxt-asset/_pageIndex_-1825cdee.mjs": {
+    "type": "application/javascript",
+    "etag": "\"61e-pzR1RjMxxkAdCzd/hV4EKSRbFMk\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/_pageIndex_-1825cdee.mjs"
+  },
+  "/nuxt-asset/_pageIndex_-764e02f5.mjs": {
+    "type": "application/javascript",
+    "etag": "\"62f-hNXIogmO0rpCIVHaEA/rg3+ztpw\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/_pageIndex_-764e02f5.mjs"
+  },
+  "/nuxt-asset/admin-0a600e78.mjs": {
+    "type": "application/javascript",
+    "etag": "\"128-KQfUaBA5+bJlcGZEYA4686vjVmc\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/admin-0a600e78.mjs"
+  },
+  "/nuxt-asset/admin-72975357.mjs": {
+    "type": "application/javascript",
+    "etag": "\"681-To2sykdZ6YXYQjLwiPVZVM2GC0k\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/admin-72975357.mjs"
+  },
+  "/nuxt-asset/asyncData-0b87a0ca.mjs": {
+    "type": "application/javascript",
+    "etag": "\"8a9-7RPHQVgyv75neN8Jsk0FSNa/9Bs\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/asyncData-0b87a0ca.mjs"
+  },
+  "/nuxt-asset/auth-3e43aaa1.mjs": {
+    "type": "application/javascript",
+    "etag": "\"86-PLGjoH7IGO9I50SaiDi8blMJBes\"",
+    "mtime": "2022-06-12T07:48:09.339Z",
+    "path": "../public/nuxt-asset/auth-3e43aaa1.mjs"
+  },
+  "/nuxt-asset/background.36a7be78.jpg": {
+    "type": "image/jpeg",
+    "etag": "\"b878d-1RGi4hRSqtRLcB3201BXKyn3WRg\"",
+    "mtime": "2022-06-12T07:48:09.335Z",
+    "path": "../public/nuxt-asset/background.36a7be78.jpg"
+  },
+  "/nuxt-asset/default-83460e76.mjs": {
+    "type": "application/javascript",
+    "etag": "\"c8d-rcP8j33e8AyAvUFRbdXDRjeduRU\"",
+    "mtime": "2022-06-12T07:48:09.335Z",
+    "path": "../public/nuxt-asset/default-83460e76.mjs"
+  },
+  "/nuxt-asset/default.e58caa34.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"282-YekdNzhBcHvHwm4EpPSYWOD4vjE\"",
+    "mtime": "2022-06-12T07:48:09.335Z",
+    "path": "../public/nuxt-asset/default.e58caa34.css"
+  },
+  "/nuxt-asset/editor-2763dfc2.mjs": {
+    "type": "application/javascript",
+    "etag": "\"c33-Savld3CKN0qCmQRmib5U40U/dYM\"",
+    "mtime": "2022-06-12T07:48:09.335Z",
+    "path": "../public/nuxt-asset/editor-2763dfc2.mjs"
+  },
+  "/nuxt-asset/entry-0e5efa6d.mjs": {
+    "type": "application/javascript",
+    "etag": "\"24c61a-7eH55dAFSfIksWpXNE3fRAdaFlA\"",
+    "mtime": "2022-06-12T07:48:09.335Z",
+    "path": "../public/nuxt-asset/entry-0e5efa6d.mjs"
+  },
+  "/nuxt-asset/entry.4d155bfb.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"5dcb9-9HaxZgBqIUo+vOppEvNCdDFrtig\"",
+    "mtime": "2022-06-12T07:48:09.331Z",
+    "path": "../public/nuxt-asset/entry.4d155bfb.css"
+  },
+  "/nuxt-asset/index-0dea7531.mjs": {
+    "type": "application/javascript",
+    "etag": "\"358-wi5e6csKhAYTqkU+0BAz9fkW39g\"",
+    "mtime": "2022-06-12T07:48:09.327Z",
+    "path": "../public/nuxt-asset/index-0dea7531.mjs"
+  },
+  "/nuxt-asset/index-570b3b8a.mjs": {
+    "type": "application/javascript",
+    "etag": "\"3c4-3kO7iaLVvYWInIxiHXYaTn1vzmQ\"",
+    "mtime": "2022-06-12T07:48:09.327Z",
+    "path": "../public/nuxt-asset/index-570b3b8a.mjs"
+  },
+  "/nuxt-asset/index-7ddb2d70.mjs": {
+    "type": "application/javascript",
+    "etag": "\"8b-bJZYI80Y07Yk39hccnQLUN5CK9U\"",
+    "mtime": "2022-06-12T07:48:09.327Z",
+    "path": "../public/nuxt-asset/index-7ddb2d70.mjs"
+  },
+  "/nuxt-asset/index-c4b8d09e.mjs": {
+    "type": "application/javascript",
+    "etag": "\"3c1-Iqn9pu5I+iRn86cZSPU1g9b+UHQ\"",
+    "mtime": "2022-06-12T07:48:09.327Z",
+    "path": "../public/nuxt-asset/index-c4b8d09e.mjs"
+  },
+  "/nuxt-asset/login-21c81b04.mjs": {
+    "type": "application/javascript",
+    "etag": "\"5f4-6aYJ6Qq0V5X+24pD+4xeIDMrhiM\"",
+    "mtime": "2022-06-12T07:48:09.327Z",
+    "path": "../public/nuxt-asset/login-21c81b04.mjs"
+  },
+  "/nuxt-asset/manifest.json": {
+    "type": "application/json",
+    "etag": "\"1901-xV2GDidMXuNbqOj/Kr6813fU1ig\"",
+    "mtime": "2022-06-12T07:48:09.327Z",
+    "path": "../public/nuxt-asset/manifest.json"
+  },
+  "/nuxt-asset/post-list-ff413d3c.mjs": {
+    "type": "application/javascript",
+    "etag": "\"a1b-tLu9BN58ketxIlT1xJ3B6tsGGOg\"",
+    "mtime": "2022-06-12T07:48:09.327Z",
+    "path": "../public/nuxt-asset/post-list-ff413d3c.mjs"
+  }
+};
+
+function readAsset (id) {
+  const serverDir = dirname(fileURLToPath(globalThis._importMeta_.url));
+  return promises.readFile(resolve(serverDir, assets[id].path))
+}
+
+const publicAssetBases = ["/nuxt-asset"];
+
+function isPublicAssetURL(id = '') {
+  if (assets[id]) {
+    return
+  }
+  for (const base of publicAssetBases) {
+    if (id.startsWith(base)) { return true }
+  }
+  return false
+}
+
+function getAsset (id) {
+  return assets[id]
+}
+
+const METHODS = ["HEAD", "GET"];
+const _152570 = eventHandler(async (event) => {
+  if (event.req.method && !METHODS.includes(event.req.method)) {
+    return;
+  }
+  let id = decodeURIComponent(withLeadingSlash(withoutTrailingSlash(parseURL(event.req.url).pathname)));
+  let asset;
+  for (const _id of [id, id + "/index.html"]) {
+    const _asset = getAsset(_id);
+    if (_asset) {
+      asset = _asset;
+      id = _id;
+      break;
+    }
+  }
+  if (!asset) {
+    if (isPublicAssetURL(id)) {
+      throw createError({
+        statusMessage: "Cannot find static asset " + id,
+        statusCode: 404
+      });
+    }
+    return;
+  }
+  const ifNotMatch = event.req.headers["if-none-match"] === asset.etag;
+  if (ifNotMatch) {
+    event.res.statusCode = 304;
+    event.res.end("Not Modified (etag)");
+    return;
+  }
+  const ifModifiedSinceH = event.req.headers["if-modified-since"];
+  if (ifModifiedSinceH && asset.mtime) {
+    if (new Date(ifModifiedSinceH) >= new Date(asset.mtime)) {
+      event.res.statusCode = 304;
+      event.res.end("Not Modified (mtime)");
+      return;
+    }
+  }
+  if (asset.type) {
+    event.res.setHeader("Content-Type", asset.type);
+  }
+  if (asset.etag) {
+    event.res.setHeader("ETag", asset.etag);
+  }
+  if (asset.mtime) {
+    event.res.setHeader("Last-Modified", asset.mtime);
+  }
+  const contents = await readAsset(id);
+  event.res.end(contents);
+});
+
+const _lazy_197530 = () => import('../handlers/renderer.mjs').then(function (n) { return n.r; });
 
 const handlers = [
-  { route: '', handler: _33be66, lazy: true, method: undefined },
-  { route: '/__nuxt_error', handler: _cde06a, lazy: true, method: undefined },
-  { route: '/**', handler: _cde06a, lazy: true, method: undefined }
+  { route: '', handler: _152570, lazy: false, middleware: true, method: undefined },
+  { route: '/__nuxt_error', handler: _lazy_197530, lazy: true, middleware: false, method: undefined },
+  { route: '/**', handler: _lazy_197530, lazy: true, middleware: false, method: undefined }
 ];
 
 function createNitroApp() {
@@ -343,8 +604,9 @@ function createNitroApp() {
         group: "nitro/routes"
       });
     }
-    if (h.route === "") {
-      h3App.use(config.app.baseURL, handler);
+    if (h.middleware || !h.route) {
+      const middlewareBase = (config.app.baseURL + (h.route || "/")).replace(/\/+/g, "/");
+      h3App.use(middlewareBase, handler);
     } else {
       router.use(h.route, handler, h.method);
     }
@@ -380,6 +642,10 @@ server.listen(port, hostname, (err) => {
   const protocol = cert && key ? "https" : "http";
   console.log(`Listening on ${protocol}://${hostname}:${port}${useRuntimeConfig().app.baseURL}`);
 });
+{
+  process.on("unhandledRejection", (err) => console.error("[nitro] [dev] [unhandledRejection] " + err));
+  process.on("uncaughtException", (err) => console.error("[nitro] [dev] [uncaughtException] " + err));
+}
 const nodeServer = {};
 
 export { nodeServer as n, useRuntimeConfig as u };
