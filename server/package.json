@@ -2,6 +2,7 @@
   "private": true,
   "bundledDependencies": [
     "source-map-support",
+    "node-fetch-native",
     "h3",
     "ohmyfetch",
     "radix3",
@@ -21,7 +22,6 @@
     "markdown-it-external-links",
     "@element-plus/icons-vue",
     "destr",
-    "node-fetch-native",
     "cookie-es",
     "@babel/runtime-corejs2",
     "source-map",
