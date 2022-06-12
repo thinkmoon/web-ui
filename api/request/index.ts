@@ -1,11 +1,13 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-function request(options: AxiosRequestConfig) {
+axios.defaults.withCredentials = true;
+
+function request(options: AxiosRequestConfig): Promise<any> {
   return new Promise((resolve, reject) => {
     axios.defaults.baseURL = useRuntimeConfig().baseUrl;
     let auth = null;
     if (process.client) {
-      auth = useCookie('auth');
+      auth = useCookie('auth', { domain: 'thinkmoon.cn' });
       axios.defaults.headers.common['Authorization'] = auth.value;
     }
     axios(options).then(res => {
@@ -17,8 +19,10 @@ function request(options: AxiosRequestConfig) {
     }).catch(err => {
       console.error(err);
       if (Number(err.response?.status) === 401) {
-        auth.value = null;
-        location.href = '/login';
+        if (process.client) {
+          auth.value = '';
+          location.href = '/login';
+        }
       }
     });
   });

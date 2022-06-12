@@ -27,13 +27,13 @@
 </template>
 <script lang="ts" setup>
 import UserApi from '~/api/UserApi';
+import { ElMessage } from 'element-plus';
 
 const config = useRuntimeConfig();
 
-const { $message } = useNuxtApp();
-const auth = useCookie('auth');
+const auth = useCookie('auth', { domain: 'thinkmoon.cn', maxAge: 3600 });
 
-if (auth.value) {
+if (process.client && auth.value) {
   navigateTo({ path: '/admin' });
 }
 
@@ -54,7 +54,7 @@ function onSubmit() {
     }
   }).catch(() => {
     if (process.client) {
-      $message.error('登录失败');
+      ElMessage.error('登录失败');
     }
   });
 }
