@@ -5712,7 +5712,7 @@ const meta$b = {
 axios.defaults.withCredentials = true;
 function request(options) {
   return new Promise((resolve, reject) => {
-    axios.defaults.baseURL = useRuntimeConfig().baseUrl;
+    axios.defaults.baseURL = useRuntimeConfig().serviceUrl;
     axios(options).then((res) => {
       var _a, _b;
       if (((_a = res == null ? void 0 : res.data) == null ? void 0 : _a.code) === 200) {
