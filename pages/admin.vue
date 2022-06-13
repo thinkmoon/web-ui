@@ -2,29 +2,31 @@
   <el-container class="app-container">
     <el-container>
       <el-header class="admin-header">
-        <el-menu
-          :default-active="defaultActive"
-          :collapse="false"
-          unique-opened
-          mode="horizontal"
-          active-text-color="#409eff"
-          @select="select"
-        >
-          <el-menu-item index="/admin">
-            主页
-          </el-menu-item>
-          <el-sub-menu index="2">
-            <template #title>
-              文章
-            </template>
-            <el-menu-item index="/admin/editor">
-              新增文章
+        <ClientOnly>
+          <el-menu
+            :collapse="false"
+            :default-active="defaultActive"
+            active-text-color="#409eff"
+            mode="horizontal"
+            unique-opened
+            @select="select"
+          >
+            <el-menu-item index="/admin">
+              主页
             </el-menu-item>
-            <el-menu-item index="/admin/post-list">
-              文章列表
-            </el-menu-item>
-          </el-sub-menu>
-        </el-menu>
+            <el-sub-menu index="2">
+              <template #title>
+                文章
+              </template>
+              <el-menu-item index="/admin/editor">
+                新增文章
+              </el-menu-item>
+              <el-menu-item index="/admin/post-list">
+                文章列表
+              </el-menu-item>
+            </el-sub-menu>
+          </el-menu>
+        </ClientOnly>
       </el-header>
       <el-scrollbar>
         <el-main>
@@ -44,7 +46,8 @@
 </template>
 
 <script lang="ts" setup>
-import {useRoute} from 'vue-router';
+import { useRoute } from 'vue-router';
+
 definePageMeta({
   layout: 'admin',
   middleware: ['auth'],
@@ -62,6 +65,7 @@ function select(url) {
   .admin-header {
     display: flex;
     padding: 0;
+
     :deep(.el-menu) {
       width: 100%;
     }
@@ -69,6 +73,7 @@ function select(url) {
 
   .el-main {
     padding: 8px 16px;
+
     .el-breadcrumb {
       margin-bottom: 8px;
     }

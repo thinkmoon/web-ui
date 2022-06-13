@@ -27,14 +27,14 @@
 </template>
 <script lang="ts" setup>
 import UserApi from '~/api/UserApi';
+import { ElMessage } from 'element-plus';
 
 const config = useRuntimeConfig();
 
-const {$message} = useNuxtApp();
-const auth = useCookie('auth');
+const auth = useCookie('auth', { domain: 'thinkmoon.cn', maxAge: 3600 });
 
-if (auth.value) {
-  navigateTo({path: '/admin'});
+if (process.client && auth.value) {
+  navigateTo({ path: '/admin' });
 }
 
 definePageMeta({
@@ -49,12 +49,12 @@ const form = reactive({
 function onSubmit() {
   UserApi.login(form).then((res: string) => {
     auth.value = res;
-    if (process.server) {
+    if (process.client) {
       window.location.href = '/admin';
     }
   }).catch(() => {
-    if (process.server) {
-      $message.error('登录失败');
+    if (process.client) {
+      ElMessage.error('登录失败');
     }
   });
 }

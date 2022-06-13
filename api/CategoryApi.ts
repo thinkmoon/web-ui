@@ -8,9 +8,8 @@ export default class CategoryApi {
    * 获取所有分类
    * @param {Object} params
    * @param {String} params.name
-   * @return {Axios.defaults}
    */
-  static getCategory(params: { name: string | string[] }) {
+  static getCategory(params: { name?: string | string[] } = {}) : Promise<unknown> {
     return request({
       method: 'get',
       url: `/category/list`,

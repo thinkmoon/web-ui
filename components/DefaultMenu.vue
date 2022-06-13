@@ -1,7 +1,9 @@
 <template>
   <div class="top-menu">
     <div class="left">
-      <el-link href="/">指尖魔法屋</el-link>
+      <el-link href="/">
+        指尖魔法屋
+      </el-link>
     </div>
     <el-menu
       :default-active="defaultActive"
@@ -25,7 +27,7 @@
     <div class="right">
       <el-link
         :underline="false"
-        href="/login"
+        href="/admin"
       >
         <el-icon
           :size="26"
@@ -38,7 +40,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {useRoute} from 'vue-router';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const defaultActive = route.path;
