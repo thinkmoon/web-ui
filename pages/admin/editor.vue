@@ -16,12 +16,12 @@
       />
       <div class="custom-options">
         <template
-          v-for="custom in customList"
-          :key="custom.key"
+          v-for="(custom,index) in article.customOptions"
+          :key="custom.name"
         >
           <span>{{ custom.name }}</span>
           <el-input
-            v-model="custom.value"
+            v-model="article.customOptions[index].value"
             type="textarea"
             class="input-with-select"
             placeholder="Please input"
@@ -76,7 +76,16 @@ import AttachmentApi from '~/api/AttachmentApi';
 import * as qiniu from 'qiniu-js';
 import dayjs from 'dayjs';
 import CategoryApi from '~/api/CategoryApi';
-
+const customOptions = [
+  {
+    name: 'thumb',
+    value: '',
+  },
+  {
+    name: 'desc',
+    value: '',
+  },
+];
 export default defineComponent({
   data() {
     return {
@@ -84,6 +93,7 @@ export default defineComponent({
         title: '',
         text: '',
         category_id: '',
+        customOptions,
       },
       categoryList: [],
     };
@@ -91,7 +101,10 @@ export default defineComponent({
   activated() {
     if (this.$route.query.cid) {
       PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
-        this.article = res;
+        this.article = {
+          ...this.article,
+          ...res
+        };
       });
     } else {
       this.data = {};
@@ -149,6 +162,13 @@ export default defineComponent({
     .content {
       margin: 6px;
     }
+  }
+}
+
+.custom-options {
+  >span{
+    margin: 4px 0;
+    display: flex;
   }
 }
 
