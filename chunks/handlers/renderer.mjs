@@ -11201,6 +11201,7 @@ const renderer = eventHandler(async (event) => {
     runtimeConfig: useRuntimeConfig(),
     noSSR: !!event.req.headers["x-nuxt-no-ssr"],
     error: ssrError,
+    redirected: void 0,
     nuxt: void 0,
     payload: void 0
   };
@@ -11213,7 +11214,7 @@ const renderer = eventHandler(async (event) => {
   if (!rendered) {
     return;
   }
-  if (event.res.writableEnded) {
+  if (ssrContext.redirected || event.res.writableEnded) {
     return;
   }
   if (ssrContext.error && !ssrError) {
