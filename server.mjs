@@ -5976,6 +5976,9 @@ const meta$a = {
   keepalive: true
 };
 const meta$9 = void 0;
+const formatTime$1 = (value, formatStr = "YYYY/MM/DD") => {
+  return dayjs(value).format(formatStr);
+};
 const __default__$1m = vue_cjs_prod.defineComponent({
   data() {
     return {
@@ -6033,6 +6036,7 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     return (_ctx, _push, _parent, _attrs) => {
       const _component_el_table = vue_cjs_prod.resolveComponent("el-table");
       const _component_el_table_column = vue_cjs_prod.resolveComponent("el-table-column");
+      const _component_el_image = vue_cjs_prod.resolveComponent("el-image");
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
       const _component_el_pagination = vue_cjs_prod.resolveComponent("el-pagination");
       _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)}>`);
@@ -6050,6 +6054,30 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
               align: "center"
             }, null, _parent2, _scopeId));
             _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
+              label: "\u7F29\u7565\u56FE",
+              prop: "title",
+              width: "100"
+            }, {
+              default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
+                if (_push3) {
+                  _push3(serverRenderer.exports.ssrRenderComponent(_component_el_image, {
+                    src: scope.row.fields.thumb,
+                    fit: "scale",
+                    style: { "width": "180px", "height": "60px" }
+                  }, null, _parent3, _scopeId2));
+                } else {
+                  return [
+                    vue_cjs_prod.createVNode(_component_el_image, {
+                      src: scope.row.fields.thumb,
+                      fit: "scale",
+                      style: { "width": "180px", "height": "60px" }
+                    }, null, 8, ["src"])
+                  ];
+                }
+              }),
+              _: 1
+            }, _parent2, _scopeId));
+            _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
               prop: "title",
               label: "\u6807\u9898",
               width: "320"
@@ -6061,10 +6089,10 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                   }, {
                     default: vue_cjs_prod.withCtx((_22, _push4, _parent4, _scopeId3) => {
                       if (_push4) {
-                        _push4(`${serverRenderer.exports.ssrInterpolate(scope.row.title)}`);
+                        _push4(`<strong${_scopeId3}>${serverRenderer.exports.ssrInterpolate(scope.row.title)}</strong>`);
                       } else {
                         return [
-                          vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(scope.row.title), 1)
+                          vue_cjs_prod.createVNode("strong", null, vue_cjs_prod.toDisplayString(scope.row.title), 1)
                         ];
                       }
                     }),
@@ -6076,7 +6104,7 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                       onClick: ($event) => _ctx.handleEdit(scope.$index, scope.row)
                     }, {
                       default: vue_cjs_prod.withCtx(() => [
-                        vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(scope.row.title), 1)
+                        vue_cjs_prod.createVNode("strong", null, vue_cjs_prod.toDisplayString(scope.row.title), 1)
                       ]),
                       _: 2
                     }, 1032, ["onClick"])
@@ -6088,7 +6116,7 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
               prop: "desc",
               label: "\u6458\u8981",
-              width: "500"
+              width: "600"
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
@@ -6107,10 +6135,10 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
-                  _push3(`<span${_scopeId2}>${serverRenderer.exports.ssrInterpolate(_ctx.$filters.time(scope.row.created * 1e3))}</span>`);
+                  _push3(`<span${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vue_cjs_prod.unref(formatTime$1)(scope.row.created * 1e3, "YYYY/MM/DD HH:mm:ss"))}</span>`);
                 } else {
                   return [
-                    vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(_ctx.$filters.time(scope.row.created * 1e3)), 1)
+                    vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.created * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
                   ];
                 }
               }),
@@ -6122,10 +6150,10 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
-                  _push3(`<span${_scopeId2}>${serverRenderer.exports.ssrInterpolate(_ctx.$filters.time(scope.row.modified * 1e3))}</span>`);
+                  _push3(`<span${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vue_cjs_prod.unref(formatTime$1)(scope.row.modified * 1e3, "YYYY/MM/DD HH:mm:ss"))}</span>`);
                 } else {
                   return [
-                    vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(_ctx.$filters.time(scope.row.modified * 1e3)), 1)
+                    vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.modified * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
                   ];
                 }
               }),
@@ -6140,6 +6168,20 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                 align: "center"
               }),
               vue_cjs_prod.createVNode(_component_el_table_column, {
+                label: "\u7F29\u7565\u56FE",
+                prop: "title",
+                width: "100"
+              }, {
+                default: vue_cjs_prod.withCtx((scope) => [
+                  vue_cjs_prod.createVNode(_component_el_image, {
+                    src: scope.row.fields.thumb,
+                    fit: "scale",
+                    style: { "width": "180px", "height": "60px" }
+                  }, null, 8, ["src"])
+                ]),
+                _: 1
+              }),
+              vue_cjs_prod.createVNode(_component_el_table_column, {
                 prop: "title",
                 label: "\u6807\u9898",
                 width: "320"
@@ -6149,7 +6191,7 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                     onClick: ($event) => _ctx.handleEdit(scope.$index, scope.row)
                   }, {
                     default: vue_cjs_prod.withCtx(() => [
-                      vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(scope.row.title), 1)
+                      vue_cjs_prod.createVNode("strong", null, vue_cjs_prod.toDisplayString(scope.row.title), 1)
                     ]),
                     _: 2
                   }, 1032, ["onClick"])
@@ -6159,7 +6201,7 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
               vue_cjs_prod.createVNode(_component_el_table_column, {
                 prop: "desc",
                 label: "\u6458\u8981",
-                width: "500"
+                width: "600"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
                   vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(scope.row.fields.desc), 1)
@@ -6171,7 +6213,7 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                 label: "\u521B\u5EFA\u65F6\u95F4"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
-                  vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(_ctx.$filters.time(scope.row.created * 1e3)), 1)
+                  vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.created * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
                 ]),
                 _: 1
               }),
@@ -6180,7 +6222,7 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                 label: "\u66F4\u65B0\u65F6\u95F4"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
-                  vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(_ctx.$filters.time(scope.row.modified * 1e3)), 1)
+                  vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.modified * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
                 ]),
                 _: 1
               })
@@ -6228,9 +6270,9 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       const _component_icon_Calendar = vue_cjs_prod.resolveComponent("icon-Calendar");
       const _component_icon_View = vue_cjs_prod.resolveComponent("icon-View");
       const _component_icon_Star = vue_cjs_prod.resolveComponent("icon-Star");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "blog-posts" }, _attrs))} data-v-b16c4dd8><!--[-->`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "blog-posts" }, _attrs))} data-v-53edba4c><!--[-->`);
       serverRenderer.exports.ssrRenderList(__props.postList, (item) => {
-        _push(`<div class="content-box" data-v-b16c4dd8><div class="posts-default-img" data-v-b16c4dd8><a${serverRenderer.exports.ssrRenderAttr("href", `/post/${item.cid}`)}${serverRenderer.exports.ssrRenderAttr("title", item.title)} data-v-b16c4dd8><div class="overlay" data-v-b16c4dd8></div>`);
+        _push(`<div class="content-box" data-v-53edba4c><div class="posts-default-img" data-v-53edba4c><a${serverRenderer.exports.ssrRenderAttr("href", `/post/${item.cid}`)}${serverRenderer.exports.ssrRenderAttr("title", item.title)} data-v-53edba4c><div class="overlay" data-v-53edba4c></div>`);
         if (item.fields.thumb) {
           _push(serverRenderer.exports.ssrRenderComponent(_component_el_image, {
             src: item.fields.thumb,
@@ -6240,9 +6282,9 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         } else {
           _push(`<!---->`);
         }
-        _push(`</a></div><div class="posts-default-box" data-v-b16c4dd8><div class="posts-default-title" data-v-b16c4dd8>`);
+        _push(`</a></div><div class="posts-default-box" data-v-53edba4c><div class="posts-default-title" data-v-53edba4c>`);
         if (item.tag) {
-          _push(`<div class="post-entry-categories" data-v-b16c4dd8><!--[-->`);
+          _push(`<div class="post-entry-categories" data-v-53edba4c><!--[-->`);
           serverRenderer.exports.ssrRenderList(item.tag, (tagItem) => {
             _push(serverRenderer.exports.ssrRenderComponent(_component_el_tag, {
               key: tagItem,
@@ -6303,7 +6345,7 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
           }),
           _: 2
         }, _parent));
-        _push(`</div><div class="posts-default-content" data-v-b16c4dd8><div class="posts-text" data-v-b16c4dd8>${serverRenderer.exports.ssrInterpolate(item.fields.desc)}</div><div class="posts-default-info" data-v-b16c4dd8><div class="left" data-v-b16c4dd8><div class="post-author" data-v-b16c4dd8><img height="16" src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg" style="${serverRenderer.exports.ssrRenderStyle({ "border-radius": "50%" })}" width="16" data-v-b16c4dd8>`);
+        _push(`</div><div class="posts-default-content" data-v-53edba4c><div class="posts-text" data-v-53edba4c>${serverRenderer.exports.ssrInterpolate(item.fields.desc)}</div><div class="posts-default-info" data-v-53edba4c><div class="left" data-v-53edba4c><div class="post-author" data-v-53edba4c><img height="16" src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg" style="${serverRenderer.exports.ssrRenderStyle({ "border-radius": "50%" })}" width="16" data-v-53edba4c>`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: "https://www.thinkmoon.cn",
           target: "_blank"
@@ -6319,7 +6361,7 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
           }),
           _: 2
         }, _parent));
-        _push(`</div><div class="ico-warp" data-v-b16c4dd8>`);
+        _push(`</div><div class="ico-warp" data-v-53edba4c>`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_icon, null, {
           default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
             if (_push2) {
@@ -6346,7 +6388,7 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
           }),
           _: 2
         }, _parent));
-        _push(`</div><div class="ico-warp" data-v-b16c4dd8>`);
+        _push(`</div><div class="ico-warp" data-v-53edba4c>`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_icon, null, {
           default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
             if (_push2) {
@@ -6359,7 +6401,7 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
           }),
           _: 2
         }, _parent));
-        _push(`<a data-v-b16c4dd8>${serverRenderer.exports.ssrInterpolate(_ctx.$filters.time(item.created * 1e3))}</a></div></div><div class="right" data-v-b16c4dd8><div class="ico-warp" data-v-b16c4dd8>`);
+        _push(`<a data-v-53edba4c>${serverRenderer.exports.ssrInterpolate(vue_cjs_prod.unref(formatTime$1)(item.created * 1e3))}</a></div></div><div class="right" data-v-53edba4c><div class="ico-warp" data-v-53edba4c>`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_icon, null, {
           default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
             if (_push2) {
@@ -6372,7 +6414,7 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
           }),
           _: 2
         }, _parent));
-        _push(`<span data-v-b16c4dd8>${serverRenderer.exports.ssrInterpolate(item.views)}</span></div><div class="ico-warp" data-v-b16c4dd8>`);
+        _push(`<span data-v-53edba4c>${serverRenderer.exports.ssrInterpolate(item.views)}</span></div><div class="ico-warp" data-v-53edba4c>`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_icon, null, {
           default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
             if (_push2) {
@@ -6385,7 +6427,7 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
           }),
           _: 2
         }, _parent));
-        _push(`<span data-v-b16c4dd8>${serverRenderer.exports.ssrInterpolate(item.likes)}</span></div></div></div></div></div></div>`);
+        _push(`<span data-v-53edba4c>${serverRenderer.exports.ssrInterpolate(item.likes)}</span></div></div></div></div></div></div>`);
       });
       _push(`<!--]--></div>`);
     };
@@ -6397,7 +6439,7 @@ _sfc_main$2L.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/PostList.vue");
   return _sfc_setup$x ? _sfc_setup$x(props, ctx) : void 0;
 };
-const __nuxt_component_0$2 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2L, [["__scopeId", "data-v-b16c4dd8"]]);
+const __nuxt_component_0$2 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2L, [["__scopeId", "data-v-53edba4c"]]);
 const _sfc_main$2K = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "[pageIndex]",
   __ssrInlineRender: true,
@@ -51690,13 +51732,6 @@ const _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47element_45ui_46t
     nuxtApp.vueApp.component(`icon-${key}`, Icons[key]);
   });
 });
-const _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47filter_46ts = defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.config.globalProperties.$filters = {
-    time(value) {
-      return dayjs(value).format("YYYY/MM/DD");
-    }
-  };
-});
 VMdEditor.use(githubTheme, {
   Hljs: hljs
 });
@@ -51731,7 +51766,6 @@ const _plugins = [
   PiniaNuxtPlugin,
   _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47_64vueuse_43nuxt_648_467_463_vue_643_462_4637_43webpack_645_4673_460_47node_modules_47_64vueuse_47nuxt_47ssr_45plugin_46mjs,
   _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47element_45ui_46ts,
-  _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47filter_46ts,
   _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47md_45editor_46ts,
   _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47md_45preview_46ts
 ];
@@ -52278,6 +52312,7 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
     return (_ctx, _push, _parent, _attrs) => {
       const _component_el_table = vue_cjs_prod.resolveComponent("el-table");
       const _component_el_table_column = vue_cjs_prod.resolveComponent("el-table-column");
+      const _component_el_image = vue_cjs_prod.resolveComponent("el-image");
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
       const _component_el_pagination = vue_cjs_prod.resolveComponent("el-pagination");
       _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)}>`);
@@ -52295,6 +52330,30 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
               align: "center"
             }, null, _parent2, _scopeId));
             _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
+              label: "\u7F29\u7565\u56FE",
+              prop: "title",
+              width: "100"
+            }, {
+              default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
+                if (_push3) {
+                  _push3(serverRenderer.exports.ssrRenderComponent(_component_el_image, {
+                    src: scope.row.fields.thumb,
+                    fit: "scale",
+                    style: { "width": "180px", "height": "60px" }
+                  }, null, _parent3, _scopeId2));
+                } else {
+                  return [
+                    vue_cjs_prod.createVNode(_component_el_image, {
+                      src: scope.row.fields.thumb,
+                      fit: "scale",
+                      style: { "width": "180px", "height": "60px" }
+                    }, null, 8, ["src"])
+                  ];
+                }
+              }),
+              _: 1
+            }, _parent2, _scopeId));
+            _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
               prop: "title",
               label: "\u6807\u9898",
               width: "320"
@@ -52306,10 +52365,10 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
                   }, {
                     default: vue_cjs_prod.withCtx((_22, _push4, _parent4, _scopeId3) => {
                       if (_push4) {
-                        _push4(`${serverRenderer.exports.ssrInterpolate(scope.row.title)}`);
+                        _push4(`<strong${_scopeId3}>${serverRenderer.exports.ssrInterpolate(scope.row.title)}</strong>`);
                       } else {
                         return [
-                          vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(scope.row.title), 1)
+                          vue_cjs_prod.createVNode("strong", null, vue_cjs_prod.toDisplayString(scope.row.title), 1)
                         ];
                       }
                     }),
@@ -52321,7 +52380,7 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
                       onClick: ($event) => _ctx.handleEdit(scope.$index, scope.row)
                     }, {
                       default: vue_cjs_prod.withCtx(() => [
-                        vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(scope.row.title), 1)
+                        vue_cjs_prod.createVNode("strong", null, vue_cjs_prod.toDisplayString(scope.row.title), 1)
                       ]),
                       _: 2
                     }, 1032, ["onClick"])
@@ -52333,7 +52392,7 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
             _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
               prop: "desc",
               label: "\u6458\u8981",
-              width: "500"
+              width: "600"
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
@@ -52352,10 +52411,10 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
-                  _push3(`<span${_scopeId2}>${serverRenderer.exports.ssrInterpolate(_ctx.$filters.time(scope.row.created * 1e3))}</span>`);
+                  _push3(`<span${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vue_cjs_prod.unref(formatTime$1)(scope.row.created * 1e3, "YYYY/MM/DD HH:mm:ss"))}</span>`);
                 } else {
                   return [
-                    vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(_ctx.$filters.time(scope.row.created * 1e3)), 1)
+                    vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.created * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
                   ];
                 }
               }),
@@ -52367,10 +52426,10 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
-                  _push3(`<span${_scopeId2}>${serverRenderer.exports.ssrInterpolate(_ctx.$filters.time(scope.row.modified * 1e3))}</span>`);
+                  _push3(`<span${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vue_cjs_prod.unref(formatTime$1)(scope.row.modified * 1e3, "YYYY/MM/DD HH:mm:ss"))}</span>`);
                 } else {
                   return [
-                    vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(_ctx.$filters.time(scope.row.modified * 1e3)), 1)
+                    vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.modified * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
                   ];
                 }
               }),
@@ -52385,6 +52444,20 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
                 align: "center"
               }),
               vue_cjs_prod.createVNode(_component_el_table_column, {
+                label: "\u7F29\u7565\u56FE",
+                prop: "title",
+                width: "100"
+              }, {
+                default: vue_cjs_prod.withCtx((scope) => [
+                  vue_cjs_prod.createVNode(_component_el_image, {
+                    src: scope.row.fields.thumb,
+                    fit: "scale",
+                    style: { "width": "180px", "height": "60px" }
+                  }, null, 8, ["src"])
+                ]),
+                _: 1
+              }),
+              vue_cjs_prod.createVNode(_component_el_table_column, {
                 prop: "title",
                 label: "\u6807\u9898",
                 width: "320"
@@ -52394,7 +52467,7 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
                     onClick: ($event) => _ctx.handleEdit(scope.$index, scope.row)
                   }, {
                     default: vue_cjs_prod.withCtx(() => [
-                      vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(scope.row.title), 1)
+                      vue_cjs_prod.createVNode("strong", null, vue_cjs_prod.toDisplayString(scope.row.title), 1)
                     ]),
                     _: 2
                   }, 1032, ["onClick"])
@@ -52404,7 +52477,7 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
               vue_cjs_prod.createVNode(_component_el_table_column, {
                 prop: "desc",
                 label: "\u6458\u8981",
-                width: "500"
+                width: "600"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
                   vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(scope.row.fields.desc), 1)
@@ -52416,7 +52489,7 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
                 label: "\u521B\u5EFA\u65F6\u95F4"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
-                  vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(_ctx.$filters.time(scope.row.created * 1e3)), 1)
+                  vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.created * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
                 ]),
                 _: 1
               }),
@@ -52425,7 +52498,7 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
                 label: "\u66F4\u65B0\u65F6\u95F4"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
-                  vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(_ctx.$filters.time(scope.row.modified * 1e3)), 1)
+                  vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.modified * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
                 ]),
                 _: 1
               })
