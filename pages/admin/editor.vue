@@ -58,17 +58,6 @@
 definePageMeta({
   keepalive: true,
 });
-const customList = [
-  {
-    name: 'thumb',
-    value: '',
-  },
-  {
-    name: 'desc',
-    value: '',
-  },
-];
-
 </script>
 <script lang="ts">
 import PostApi from '~/api/PostApi';
@@ -137,8 +126,7 @@ export default defineComponent({
         .then((token: string) => {
           const key = dayjs().format('YYYY-MM-DD/HH-mm-ss');
           const observable = qiniu.upload(files[0], key, token);
-          const subscription = observable.subscribe(null, null, (res) => {
-            console.log(res);
+          observable.subscribe(null, null, (res) => {
             insertImage({
               url: `https://blog.cdn.thinkmoon.cn/${res.key}`,
             });
