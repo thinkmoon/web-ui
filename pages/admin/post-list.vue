@@ -12,20 +12,33 @@
         align="center"
       />
       <el-table-column
+        label="缩略图"
+        prop="title"
+        width="100"
+      >
+        <template #default="scope">
+          <el-image
+            :src="scope.row.fields.thumb"
+            fit="scale"
+            style="width: 180px; height: 60px"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="title"
         label="标题"
         width="320"
       >
         <template #default="scope">
           <el-link @click="handleEdit(scope.$index, scope.row)">
-            {{ scope.row.title }}
+            <strong>{{ scope.row.title }}</strong>
           </el-link>
         </template>
       </el-table-column>
       <el-table-column
         prop="desc"
         label="摘要"
-        width="500"
+        width="600"
       >
         <template #default="scope">
           {{ scope.row.fields.desc }}
@@ -36,7 +49,7 @@
         label="创建时间"
       >
         <template #default="scope">
-          <span>{{ $filters.time(scope.row.created * 1000) }}</span>
+          <span>{{ formatTime(scope.row.created * 1000,'YYYY/MM/DD HH:mm:ss') }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -44,7 +57,7 @@
         label="更新时间"
       >
         <template #default="scope">
-          <span>{{ $filters.time(scope.row.modified * 1000) }}</span>
+          <span>{{ formatTime(scope.row.modified * 1000, 'YYYY/MM/DD HH:mm:ss') }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -60,12 +73,14 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { formatTime } from '~/utils/time';
+
 definePageMeta({
   keepalive: true,
 });
 </script>
 <script lang="ts">
-import {defineComponent} from 'vue';
+import { defineComponent } from 'vue';
 import PostApi from '~/api/PostApi';
 
 export default defineComponent({

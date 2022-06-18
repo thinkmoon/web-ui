@@ -79,7 +79,7 @@
                 <el-icon>
                   <icon-Calendar />
                 </el-icon>
-                <a>{{ $filters.time(item.created * 1000) }}</a>
+                <a>{{ formatTime(item.created * 1000) }}</a>
               </div>
             </div>
             <div class="right">
@@ -103,6 +103,8 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { formatTime } from '~/utils/time';
+
 const props = defineProps({
   postList: Array,
 });
