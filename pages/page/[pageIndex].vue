@@ -28,9 +28,10 @@
 </template>
 
 <script lang="ts" setup>
-import axios from 'axios';
 import PostApi from '~/api/PostApi';
 import { useRoute } from 'vue-router';
+
+import { pushUrl } from '~/utils/baiduSite';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -53,14 +54,7 @@ postList.forEach((item) => {
   }
 });
 pageData.total = data.value.total;
-if (process.server) {
-  const url = `https://www.thinkmoon.cn/page/${route.params.pageIndex}`;
-  axios.post('http://data.zz.baidu.com/urls?site=https://www.thinkmoon.cn&token=CKLtHWl6TKYOJw39', url).then((res) => {
-    console.log('推送成功:', url);
-  }).catch((err) => {
-    console.error('推送失败:', url);
-  });
-}
+pushUrl(`/page/${route.params.pageIndex}`)
 </script>
 
 <style lang="less" scoped>

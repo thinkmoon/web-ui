@@ -30,13 +30,25 @@ import GoogleAd from '~/components/section/GoogleAd.vue';</script>
   display: flex;
 
   .main-content {
-    width: 0;
     flex: 1;
   }
 
   .page-section {
     width: 300px;
     padding: 20px;
+  }
+}
+@media (max-aspect-ratio: 14/9) {
+  .layout {
+    width: 90%;
+  }
+}
+@media (max-aspect-ratio: 10/9) {
+  .layout {
+    flex-direction: column;
+    > .page-section {
+      width: auto;
+    }
   }
 }
 </style>

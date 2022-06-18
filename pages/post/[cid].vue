@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts" setup>
-import axios from 'axios';
 import PostApi from '~/api/PostApi';
 import { useRoute } from 'vue-router';
+import { pushUrl } from '~/utils/baiduSite';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -34,11 +34,7 @@ if (article.value.fields instanceof Array) {
 }
 const copyRight = `> 版权声明: 本文首发于[指尖魔法屋-${article.value.title}](${url}),转载或引用必须申明原指尖魔法屋来源及源地址！`;
 const content = computed(() => `# ${article.value.title} \r\n ${article.value.text} \r\n ${copyRight}`);
-axios.post('http://data.zz.baidu.com/urls?site=https://www.thinkmoon.cn&token=CKLtHWl6TKYOJw39', url).then((res) => {
-  console.log('推送成功:', url);
-}).catch((err) => {
-  console.error('推送失败:', url);
-});
+pushUrl(`/post/${route.params.cid}`)
 useMeta({
   meta: [
     { name: 'keywords', content: article.value.tag.map((i) => i.name).join(',') || config.KEYWORDS },
