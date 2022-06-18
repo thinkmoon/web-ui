@@ -268,4 +268,16 @@ async function dispose(driver) {
   }
 }
 
-export { createStorage, defineDriver, joinKeys, normalizeBaseKey, normalizeKey, prefixStorage, restoreSnapshot, snapshot };
+const builtinDrivers = {
+  cloudflareKVHTTP: "unstorage/drivers/cloudflare-kv-http",
+  cloudflareKVBinding: "unstorage/drivers/cloudflare-kv",
+  fs: "unstorage/drivers/fs",
+  github: "unstorage/drivers/github",
+  http: "unstorage/drivers/http",
+  localStorage: "unstorage/drivers/localstorage",
+  memory: "unstorage/drivers/memory",
+  overlay: "unstorage/drivers/overlay",
+  redis: "unstorage/drivers/redis"
+};
+
+export { builtinDrivers, createStorage, defineDriver, joinKeys, normalizeBaseKey, normalizeKey, prefixStorage, restoreSnapshot, snapshot };

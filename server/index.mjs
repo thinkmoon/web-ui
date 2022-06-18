@@ -10,9 +10,10 @@ import 'unenv/runtime/fetch/index';
 import 'hookable';
 import 'scule';
 import 'ohash';
-import 'unstorage';
 import 'ufo';
+import 'unstorage';
 import 'fs';
 import 'pathe';
 import 'url';
+import 'axios';
 //# sourceMappingURL=index.mjs.map

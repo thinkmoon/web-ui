@@ -1,5 +1,5 @@
 import { v as vue_cjs_prod, s as serverRenderer } from '../handlers/renderer.mjs';
-import { hasProtocol, isEqual as isEqual$2, withBase, withQuery } from 'ufo';
+import { hasProtocol, isEqual as isEqual$2, withBase, withQuery, joinURL } from 'ufo';
 import * as qiniu from 'qiniu-js';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -3589,7 +3589,7 @@ function defineGetter(obj, key, val) {
 }
 const wrapInRef = (value) => vue_cjs_prod.isRef(value) ? value : vue_cjs_prod.ref(value);
 const getDefault = () => null;
-function useAsyncData(key, handler, options = {}) {
+function useAsyncData$1(key, handler, options = {}) {
   var _a, _b, _c, _d, _e;
   if (typeof key !== "string") {
     throw new TypeError("asyncData key must be a string");
@@ -3840,7 +3840,7 @@ class H3Error extends Error {
   constructor() {
     super(...arguments);
     this.statusCode = 500;
-    this.statusMessage = "H3Error";
+    this.statusMessage = "Internal Server Error";
   }
 }
 function createError(input) {
@@ -3913,30 +3913,16 @@ const useRouter = () => {
 const useRoute = () => {
   return useNuxtApp()._route;
 };
-const defineNuxtRouteMiddleware = (middleware) => middleware;
-const isProcessingMiddleware = () => {
-  try {
-    if (useNuxtApp()._processingMiddleware) {
-      return true;
-    }
-  } catch {
-    return true;
-  }
-  return false;
-};
 const navigateTo = (to, options = {}) => {
   if (!to) {
     to = "/";
-  }
-  if (isProcessingMiddleware()) {
-    return to;
   }
   const router = useRouter();
   {
     const nuxtApp = useNuxtApp();
     if (nuxtApp.ssrContext && nuxtApp.ssrContext.event) {
-      const redirectLocation = router.resolve(to).fullPath || "/";
-      return nuxtApp.callHook("app:redirected").then(() => sendRedirect(nuxtApp.ssrContext.event, redirectLocation, options.redirectCode || 301));
+      const redirectLocation = joinURL(useRuntimeConfig().app.baseURL, router.resolve(to).fullPath || "/");
+      return nuxtApp.callHook("app:redirected").then(() => sendRedirect(nuxtApp.ssrContext.event, redirectLocation, options.redirectCode || 302));
     }
   }
   return options.replace ? router.replace(to) : router.push(to);
@@ -4421,7 +4407,7 @@ shared_cjs_prod.EMPTY_OBJ = EMPTY_OBJ;
 shared_cjs_prod.NO = NO;
 var NOOP_1 = shared_cjs_prod.NOOP = NOOP;
 shared_cjs_prod.PatchFlagNames = PatchFlagNames;
-shared_cjs_prod.camelize = camelize;
+var camelize_1 = shared_cjs_prod.camelize = camelize;
 var capitalize_1 = shared_cjs_prod.capitalize = capitalize;
 shared_cjs_prod.def = def;
 shared_cjs_prod.escapeHtml = escapeHtml$1;
@@ -4481,7 +4467,7 @@ function useHead(meta2) {
   const resolvedMeta = isFunction_1(meta2) ? vue_cjs_prod.computed(meta2) : meta2;
   useNuxtApp()._useHead(resolvedMeta);
 }
-function useMeta(meta2) {
+function useMeta$1(meta2) {
   return useHead(meta2);
 }
 const preload = defineNuxtPlugin((nuxtApp) => {
@@ -4494,7 +4480,7 @@ const preload = defineNuxtPlugin((nuxtApp) => {
   });
 });
 const components = {};
-function componentsPlugin_fe178482(nuxtApp) {
+function _47home_47runner_47work_47web_45ui_47web_45ui_47_46nuxt_47components_46plugin_46mjs(nuxtApp) {
   for (const name in components) {
     nuxtApp.vueApp.component(name, components[name]);
     nuxtApp.vueApp.component("Lazy" + name, components[name]);
@@ -4825,7 +4811,7 @@ function createDefu(merger) {
   return (...args) => args.reduce((p2, c) => _defu(p2, c, "", merger), {});
 }
 const defu = createDefu();
-const vueuseHead_6bc36c7d = defineNuxtPlugin((nuxtApp) => {
+const _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47nuxt_643_460_460_45rc_464_less_644_461_463_43webpack_645_4673_460_47node_modules_47nuxt_47dist_47head_47runtime_47lib_47vueuse_45head_46plugin = defineNuxtPlugin((nuxtApp) => {
   const head = createHead();
   nuxtApp.vueApp.use(head);
   nuxtApp.hooks.hookOnce("app:mounted", () => {
@@ -4916,6 +4902,7 @@ const globalProps = {
 };
 const Script = vue_cjs_prod.defineComponent({
   name: "Script",
+  inheritAttrs: false,
   props: __spreadProps(__spreadValues({}, globalProps), {
     async: Boolean,
     crossorigin: {
@@ -4938,6 +4925,7 @@ const Script = vue_cjs_prod.defineComponent({
 });
 const Link$1 = vue_cjs_prod.defineComponent({
   name: "Link",
+  inheritAttrs: false,
   props: __spreadProps(__spreadValues({}, globalProps), {
     as: String,
     crossorigin: String,
@@ -4966,6 +4954,7 @@ const Link$1 = vue_cjs_prod.defineComponent({
 });
 const Base = vue_cjs_prod.defineComponent({
   name: "Base",
+  inheritAttrs: false,
   props: __spreadProps(__spreadValues({}, globalProps), {
     href: String,
     target: String
@@ -4976,6 +4965,7 @@ const Base = vue_cjs_prod.defineComponent({
 });
 const Title = vue_cjs_prod.defineComponent({
   name: "Title",
+  inheritAttrs: false,
   setup: setupForUseMeta((_2, { slots }) => {
     var _a, _b, _c;
     const title = ((_c = (_b = (_a = slots.default) == null ? void 0 : _a.call(slots)) == null ? void 0 : _b[0]) == null ? void 0 : _c.children) || null;
@@ -4986,6 +4976,7 @@ const Title = vue_cjs_prod.defineComponent({
 });
 const Meta = vue_cjs_prod.defineComponent({
   name: "Meta",
+  inheritAttrs: false,
   props: __spreadProps(__spreadValues({}, globalProps), {
     charset: String,
     content: String,
@@ -4998,6 +4989,7 @@ const Meta = vue_cjs_prod.defineComponent({
 });
 const Style = vue_cjs_prod.defineComponent({
   name: "Style",
+  inheritAttrs: false,
   props: __spreadProps(__spreadValues({}, globalProps), {
     type: String,
     media: String,
@@ -5022,6 +5014,7 @@ const Style = vue_cjs_prod.defineComponent({
 });
 const Head = vue_cjs_prod.defineComponent({
   name: "Head",
+  inheritAttrs: false,
   setup: (_props, ctx) => () => {
     var _a, _b;
     return (_b = (_a = ctx.slots).default) == null ? void 0 : _b.call(_a);
@@ -5029,6 +5022,7 @@ const Head = vue_cjs_prod.defineComponent({
 });
 const Html = vue_cjs_prod.defineComponent({
   name: "Html",
+  inheritAttrs: false,
   props: __spreadProps(__spreadValues({}, globalProps), {
     manifest: String,
     version: String,
@@ -5038,6 +5032,7 @@ const Html = vue_cjs_prod.defineComponent({
 });
 const Body = vue_cjs_prod.defineComponent({
   name: "Body",
+  inheritAttrs: false,
   props: globalProps,
   setup: setupForUseMeta((bodyAttrs) => ({ bodyAttrs }), true)
 });
@@ -5069,8 +5064,8 @@ const metaMixin = {
     useHead(source);
   }
 };
-const _2153be71 = defineNuxtPlugin((nuxtApp) => {
-  useHead(vue_cjs_prod.markRaw(metaConfig.globalMeta));
+const _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47nuxt_643_460_460_45rc_464_less_644_461_463_43webpack_645_4673_460_47node_modules_47nuxt_47dist_47head_47runtime_47plugin = defineNuxtPlugin((nuxtApp) => {
+  useHead(vue_cjs_prod.markRaw(__spreadValues({ title: "" }, metaConfig.globalMeta)));
   nuxtApp.vueApp.mixin(metaMixin);
   for (const name in Components$1) {
     nuxtApp.vueApp.component(name, Components$1[name]);
@@ -5105,18 +5100,25 @@ const _wrapIf = (component2, props, slots) => {
 const isNestedKey = Symbol("isNested");
 const NuxtPage = vue_cjs_prod.defineComponent({
   name: "NuxtPage",
+  inheritAttrs: false,
   props: {
+    name: {
+      type: String
+    },
+    route: {
+      type: Object
+    },
     pageKey: {
       type: [Function, String],
       default: null
     }
   },
-  setup(props) {
+  setup(props, { attrs }) {
     const nuxtApp = useNuxtApp();
     const isNested = vue_cjs_prod.inject(isNestedKey, false);
     vue_cjs_prod.provide(isNestedKey, true);
     return () => {
-      return vue_cjs_prod.h(vueRouter_cjs.RouterView, {}, {
+      return vue_cjs_prod.h(vueRouter_cjs.RouterView, __spreadValues({ name: props.name, route: props.route }, attrs), {
         default: (routeProps) => {
           var _a;
           return routeProps.Component && _wrapIf(vue_cjs_prod.Transition, (_a = routeProps.route.meta.pageTransition) != null ? _a : defaultPageTransition, wrapInKeepAlive(routeProps.route.meta.keepalive, isNested && nuxtApp.isHydrating ? vue_cjs_prod.h(routeProps.Component, { key: generateRouteKey(props.pageKey, routeProps) }) : vue_cjs_prod.h(vue_cjs_prod.Suspense, {
@@ -5129,7 +5131,7 @@ const NuxtPage = vue_cjs_prod.defineComponent({
   }
 });
 const defaultPageTransition = { name: "page", mode: "out-in" };
-const _sfc_main$2Q = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$2P = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "404",
   __ssrInlineRender: true,
   setup(__props) {
@@ -5138,8 +5140,8 @@ const _sfc_main$2Q = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$B = _sfc_main$2Q.setup;
-_sfc_main$2Q.setup = (props, ctx) => {
+const _sfc_setup$B = _sfc_main$2P.setup;
+_sfc_main$2P.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/404.vue");
   return _sfc_setup$B ? _sfc_setup$B(props, ctx) : void 0;
@@ -5179,7 +5181,7 @@ const _export_sfc$1 = (sfc, props) => {
   }
   return target;
 };
-const _sfc_main$2P = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$2O = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "admin",
   __ssrInlineRender: true,
   setup(__props) {
@@ -5699,8 +5701,8 @@ const _sfc_main$2P = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$A = _sfc_main$2P.setup;
-_sfc_main$2P.setup = (props, ctx) => {
+const _sfc_setup$A = _sfc_main$2O.setup;
+_sfc_main$2O.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/admin.vue");
   return _sfc_setup$A ? _sfc_setup$A(props, ctx) : void 0;
@@ -5782,13 +5784,24 @@ class CategoryApi {
     });
   }
 }
-const __default__$1k = vue_cjs_prod.defineComponent({
+const customOptions$1 = [
+  {
+    name: "thumb",
+    value: ""
+  },
+  {
+    name: "desc",
+    value: ""
+  }
+];
+const __default__$1n = vue_cjs_prod.defineComponent({
   data() {
     return {
       article: {
         title: "",
         text: "",
-        category_id: ""
+        category_id: "",
+        customOptions: customOptions$1
       },
       categoryList: []
     };
@@ -5796,7 +5809,7 @@ const __default__$1k = vue_cjs_prod.defineComponent({
   activated() {
     if (this.$route.query.cid) {
       PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
-        this.article = res;
+        this.article = __spreadValues(__spreadValues({}, this.article), res);
       });
     } else {
       this.data = {};
@@ -5828,7 +5841,6 @@ const __default__$1k = vue_cjs_prod.defineComponent({
         const key = dayjs().format("YYYY-MM-DD/HH-mm-ss");
         const observable = qiniu.upload(files[0], key, token);
         observable.subscribe(null, null, (res) => {
-          console.log(res);
           insertImage({
             url: `https://blog.cdn.thinkmoon.cn/${res.key}`
           });
@@ -5837,20 +5849,10 @@ const __default__$1k = vue_cjs_prod.defineComponent({
     }
   }
 });
-const _sfc_main$2O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1k), {
+const _sfc_main$2N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1n), {
   __name: "editor",
   __ssrInlineRender: true,
   setup(__props) {
-    const customList = [
-      {
-        name: "thumb",
-        value: ""
-      },
-      {
-        name: "desc",
-        value: ""
-      }
-    ];
     return (_ctx, _push, _parent, _attrs) => {
       const _component_el_input = vue_cjs_prod.resolveComponent("el-input");
       const _component_v_md_editor = vue_cjs_prod.resolveComponent("v-md-editor");
@@ -5873,11 +5875,11 @@ const _sfc_main$2O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         onUploadImage: _ctx.handleUploadImage
       }, null, _parent));
       _push(`<div class="custom-options"><!--[-->`);
-      serverRenderer.exports.ssrRenderList(customList, (custom) => {
+      serverRenderer.exports.ssrRenderList(_ctx.article.customOptions, (custom, index2) => {
         _push(`<!--[--><span>${serverRenderer.exports.ssrInterpolate(custom.name)}</span>`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_input, {
-          modelValue: custom.value,
-          "onUpdate:modelValue": ($event) => custom.value = $event,
+          modelValue: _ctx.article.customOptions[index2].value,
+          "onUpdate:modelValue": ($event) => _ctx.article.customOptions[index2].value = $event,
           type: "textarea",
           class: "input-with-select",
           placeholder: "Please input"
@@ -5966,8 +5968,8 @@ const _sfc_main$2O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-const _sfc_setup$z = _sfc_main$2O.setup;
-_sfc_main$2O.setup = (props, ctx) => {
+const _sfc_setup$z = _sfc_main$2N.setup;
+_sfc_main$2N.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/admin/editor.vue");
   return _sfc_setup$z ? _sfc_setup$z(props, ctx) : void 0;
@@ -5976,7 +5978,7 @@ const meta$a = {
   keepalive: true
 };
 const meta$9 = void 0;
-const __default__$1j = vue_cjs_prod.defineComponent({
+const __default__$1m = vue_cjs_prod.defineComponent({
   data() {
     return {
       tableData: [],
@@ -6026,7 +6028,7 @@ const __default__$1j = vue_cjs_prod.defineComponent({
     }
   }
 });
-const _sfc_main$2N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1j), {
+const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1m), {
   __name: "post-list",
   __ssrInlineRender: true,
   setup(__props) {
@@ -6203,8 +6205,8 @@ const _sfc_main$2N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-const _sfc_setup$y = _sfc_main$2N.setup;
-_sfc_main$2N.setup = (props, ctx) => {
+const _sfc_setup$y = _sfc_main$2M.setup;
+_sfc_main$2M.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/admin/post-list.vue");
   return _sfc_setup$y ? _sfc_setup$y(props, ctx) : void 0;
@@ -6212,7 +6214,7 @@ _sfc_main$2N.setup = (props, ctx) => {
 const meta$8 = {
   keepalive: true
 };
-const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "PostList",
   __ssrInlineRender: true,
   props: {
@@ -6391,14 +6393,14 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$x = _sfc_main$2M.setup;
-_sfc_main$2M.setup = (props, ctx) => {
+const _sfc_setup$x = _sfc_main$2L.setup;
+_sfc_main$2L.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/PostList.vue");
   return _sfc_setup$x ? _sfc_setup$x(props, ctx) : void 0;
 };
-const __nuxt_component_0$2 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2M, [["__scopeId", "data-v-b16c4dd8"]]);
-const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const __nuxt_component_0$2 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2L, [["__scopeId", "data-v-b16c4dd8"]]);
+const _sfc_main$2K = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "[pageIndex]",
   __ssrInlineRender: true,
   async setup(__props) {
@@ -6411,8 +6413,8 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
     pageData.current = Number(route.params.pageIndex);
     const [{ data: category }, { data: post }] = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => Promise.all([
-      useAsyncData("category", () => CategoryApi.getCategory({ name: route.params.name })),
-      useAsyncData("post", () => PostApi.getList(__spreadProps(__spreadValues({}, pageData), { category: route.params.name })))
+      useAsyncData$1("category", () => CategoryApi.getCategory({ name: route.params.name })),
+      useAsyncData$1("post", () => PostApi.getList(__spreadProps(__spreadValues({}, pageData), { category: route.params.name })))
     ])), __temp = await __temp, __restore(), __temp);
     const postList2 = vue_cjs_prod.reactive(post.value.records);
     postList2.forEach((item) => {
@@ -6445,20 +6447,20 @@ const _sfc_main$2L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$w = _sfc_main$2L.setup;
-_sfc_main$2L.setup = (props, ctx) => {
+const _sfc_setup$w = _sfc_main$2K.setup;
+_sfc_main$2K.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/category/[name]/[pageIndex].vue");
   return _sfc_setup$w ? _sfc_setup$w(props, ctx) : void 0;
 };
 const meta$7 = void 0;
-const _sfc_main$2K = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$2J = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "index",
   __ssrInlineRender: true,
   async setup(__props) {
     let __temp, __restore;
     const config = useRuntimeConfig();
-    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("category", () => CategoryApi.getCategory())), __temp = await __temp, __restore(), __temp);
+    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData$1("category", () => CategoryApi.getCategory())), __temp = await __temp, __restore(), __temp);
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_el_tag = vue_cjs_prod.resolveComponent("el-tag");
@@ -6521,14 +6523,14 @@ const _sfc_main$2K = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$v = _sfc_main$2K.setup;
-_sfc_main$2K.setup = (props, ctx) => {
+const _sfc_setup$v = _sfc_main$2J.setup;
+_sfc_main$2J.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/category/index.vue");
   return _sfc_setup$v ? _sfc_setup$v(props, ctx) : void 0;
 };
 const meta$6 = void 0;
-const _sfc_main$2J = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$2I = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "Footer",
   __ssrInlineRender: true,
   setup(__props) {
@@ -6555,14 +6557,14 @@ const _sfc_main$2J = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$u = _sfc_main$2J.setup;
-_sfc_main$2J.setup = (props, ctx) => {
+const _sfc_setup$u = _sfc_main$2I.setup;
+_sfc_main$2I.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Footer.vue");
   return _sfc_setup$u ? _sfc_setup$u(props, ctx) : void 0;
 };
-const __nuxt_component_2 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2J, [["__scopeId", "data-v-68ae0dac"]]);
-const _sfc_main$2I = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const __nuxt_component_2 = /* @__PURE__ */ _export_sfc$1(_sfc_main$2I, [["__scopeId", "data-v-68ae0dac"]]);
+const _sfc_main$2H = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "index",
   __ssrInlineRender: true,
   setup(__props) {
@@ -6623,8 +6625,8 @@ const _sfc_main$2I = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-const _sfc_setup$t = _sfc_main$2I.setup;
-_sfc_main$2I.setup = (props, ctx) => {
+const _sfc_setup$t = _sfc_main$2H.setup;
+_sfc_main$2H.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/index.vue");
   return _sfc_setup$t ? _sfc_setup$t(props, ctx) : void 0;
@@ -8284,6 +8286,7 @@ function tryOnScopeDispose(fn2) {
   return false;
 }
 const isClient = false;
+const isDef = (val) => typeof val !== "undefined";
 const isBoolean = (val) => typeof val === "boolean";
 const isNumber = (val) => typeof val === "number";
 const isString = (val) => typeof val === "string";
@@ -8422,9 +8425,8 @@ function useTimeoutFn(cb, interval, options = {}) {
   };
 }
 function unrefElement(elRef) {
-  var _a;
   const plain = vue_cjs_prod.unref(elRef);
-  return (_a = plain == null ? void 0 : plain.$el) != null ? _a : plain;
+  return plain != null && "$el" in plain ? plain.$el : plain;
 }
 const defaultWindow = void 0;
 const defaultDocument = void 0;
@@ -8487,7 +8489,11 @@ function onClickOutside(target, handler, options = {}) {
       shouldListen.value = !!el && !e.composedPath().includes(el);
     }, { passive: true }),
     useEventListener(window2, "pointerup", (e) => {
-      fallback = window2.setTimeout(() => listener(e), 50);
+      if (e.button === 0) {
+        const path = e.composedPath();
+        e.composedPath = () => path;
+        fallback = window2.setTimeout(() => listener(e), 50);
+      }
     }, { passive: true })
   ];
   const stop = () => cleanup.forEach((fn2) => fn2());
@@ -8509,17 +8515,17 @@ function useDocumentVisibility({ document: document2 = defaultDocument } = {}) {
   });
   return visibility;
 }
-var __getOwnPropSymbols$c = Object.getOwnPropertySymbols;
-var __hasOwnProp$c = Object.prototype.hasOwnProperty;
-var __propIsEnum$c = Object.prototype.propertyIsEnumerable;
+var __getOwnPropSymbols$d = Object.getOwnPropertySymbols;
+var __hasOwnProp$d = Object.prototype.hasOwnProperty;
+var __propIsEnum$d = Object.prototype.propertyIsEnumerable;
 var __objRest$2 = (source, exclude) => {
   var target = {};
   for (var prop in source)
-    if (__hasOwnProp$c.call(source, prop) && exclude.indexOf(prop) < 0)
+    if (__hasOwnProp$d.call(source, prop) && exclude.indexOf(prop) < 0)
       target[prop] = source[prop];
-  if (source != null && __getOwnPropSymbols$c)
-    for (var prop of __getOwnPropSymbols$c(source)) {
-      if (exclude.indexOf(prop) < 0 && __propIsEnum$c.call(source, prop))
+  if (source != null && __getOwnPropSymbols$d)
+    for (var prop of __getOwnPropSymbols$d(source)) {
+      if (exclude.indexOf(prop) < 0 && __propIsEnum$d.call(source, prop))
         target[prop] = source[prop];
     }
   return target;
@@ -8621,6 +8627,45 @@ var SwipeDirection;
   SwipeDirection2["LEFT"] = "LEFT";
   SwipeDirection2["NONE"] = "NONE";
 })(SwipeDirection || (SwipeDirection = {}));
+function useVModel(props, key, emit, options = {}) {
+  var _a;
+  const {
+    passive = false,
+    eventName,
+    deep = false,
+    defaultValue
+  } = options;
+  const vm = vue_cjs_prod.getCurrentInstance();
+  const _emit = emit || (vm == null ? void 0 : vm.emit) || ((_a = vm == null ? void 0 : vm.$emit) == null ? void 0 : _a.bind(vm));
+  let event = eventName;
+  if (!key) {
+    {
+      key = "modelValue";
+    }
+  }
+  event = eventName || event || `update:${key.toString()}`;
+  const getValue2 = () => isDef(props[key]) ? props[key] : defaultValue;
+  if (passive) {
+    const proxy = vue_cjs_prod.ref(getValue2());
+    vue_cjs_prod.watch(() => props[key], (v2) => proxy.value = v2);
+    vue_cjs_prod.watch(proxy, (v2) => {
+      if (v2 !== props[key] || deep)
+        _emit(event, v2);
+    }, {
+      deep
+    });
+    return proxy;
+  } else {
+    return vue_cjs_prod.computed({
+      get() {
+        return getValue2();
+      },
+      set(value) {
+        _emit(event, value);
+      }
+    });
+  }
+}
 function useWindowFocus({ window: window2 = defaultWindow } = {}) {
   if (!window2)
     return vue_cjs_prod.ref(false);
@@ -8948,7 +8993,7 @@ const getNormalizedProps = (node) => {
     }
   });
   Object.keys(raw).forEach((key) => {
-    props[vue_cjs_prod.camelize(key)] = raw[key];
+    props[camelize_1(key)] = raw[key];
   });
   return props;
 };
@@ -9001,6 +9046,7 @@ const elPaginationKey = Symbol("elPaginationKey");
 const radioGroupKey = Symbol("radioGroupKey");
 const rowContextKey = Symbol("rowContextKey");
 const scrollbarContextKey = Symbol("scrollbarContextKey");
+const sliderContextKey = Symbol("sliderContextKey");
 const tabsRootContextKey = Symbol("tabsRootContextKey");
 const uploadContextKey = Symbol("uploadContextKey");
 const POPPER_INJECTION_KEY = Symbol("popper");
@@ -9958,7 +10004,7 @@ function useCursor(input) {
   }
   return [recordCursor, setCursor];
 }
-const version = "2.2.5";
+const version = "2.2.6";
 const makeInstaller = (components2 = []) => {
   const install = (app, options) => {
     if (app[INSTALLED_KEY])
@@ -10003,10 +10049,10 @@ var _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const __default__$1i = {
+const __default__$1l = {
   name: "ElAffix"
 };
-const _sfc_main$2H = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1i), {
+const _sfc_main$2G = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1l), {
   props: affixProps,
   emits: affixEmits,
   setup(__props, { expose, emit }) {
@@ -10108,7 +10154,7 @@ const _sfc_main$2H = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Affix = /* @__PURE__ */ _export_sfc(_sfc_main$2H, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/affix/src/affix.vue"]]);
+var Affix = /* @__PURE__ */ _export_sfc(_sfc_main$2G, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/affix/src/affix.vue"]]);
 const ElAffix = withInstall(Affix);
 const iconProps = buildProps({
   size: {
@@ -10118,11 +10164,11 @@ const iconProps = buildProps({
     type: String
   }
 });
-const __default__$1h = {
+const __default__$1k = {
   name: "ElIcon",
   inheritAttrs: false
 };
-const _sfc_main$2G = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1h), {
+const _sfc_main$2F = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1k), {
   props: iconProps,
   setup(__props) {
     const props = __props;
@@ -10145,7 +10191,7 @@ const _sfc_main$2G = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Icon = /* @__PURE__ */ _export_sfc(_sfc_main$2G, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/icon/src/icon.vue"]]);
+var Icon = /* @__PURE__ */ _export_sfc(_sfc_main$2F, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/icon/src/icon.vue"]]);
 const ElIcon = withInstall(Icon);
 const alertEffects = ["light", "dark"];
 const alertProps = buildProps({
@@ -10181,10 +10227,10 @@ const alertProps = buildProps({
 const alertEmits = {
   close: (evt) => evt instanceof MouseEvent
 };
-const __default__$1g = {
+const __default__$1j = {
   name: "ElAlert"
 };
-const _sfc_main$2F = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1g), {
+const _sfc_main$2E = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1j), {
   props: alertProps,
   emits: alertEmits,
   setup(__props, { emit }) {
@@ -10267,7 +10313,7 @@ const _sfc_main$2F = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Alert = /* @__PURE__ */ _export_sfc(_sfc_main$2F, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/alert/src/alert.vue"]]);
+var Alert = /* @__PURE__ */ _export_sfc(_sfc_main$2E, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/alert/src/alert.vue"]]);
 const ElAlert = withInstall(Alert);
 const inputProps = buildProps({
   id: {
@@ -10375,11 +10421,11 @@ const inputEmits = {
 const _hoisted_1$$ = ["role"];
 const _hoisted_2$E = ["id", "type", "disabled", "formatter", "parser", "readonly", "autocomplete", "tabindex", "aria-label", "placeholder"];
 const _hoisted_3$m = ["id", "tabindex", "disabled", "readonly", "autocomplete", "aria-label", "placeholder"];
-const __default__$1f = {
+const __default__$1i = {
   name: "ElInput",
   inheritAttrs: false
 };
-const _sfc_main$2E = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1f), {
+const _sfc_main$2D = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1i), {
   props: inputProps,
   emits: inputEmits,
   setup(__props, { expose, emit }) {
@@ -10427,7 +10473,7 @@ const _sfc_main$2E = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       return (_a = form == null ? void 0 : form.statusIcon) != null ? _a : false;
     });
     const validateState = vue_cjs_prod.computed(() => (formItem == null ? void 0 : formItem.validateState) || "");
-    const validateIcon = vue_cjs_prod.computed(() => ValidateComponentsMap[validateState.value]);
+    const validateIcon = vue_cjs_prod.computed(() => validateState.value && ValidateComponentsMap[validateState.value]);
     const passwordIcon = vue_cjs_prod.computed(() => passwordVisible.value ? View : Hide);
     const containerStyle = vue_cjs_prod.computed(() => [
       rawAttrs.style,
@@ -10704,15 +10750,14 @@ const _sfc_main$2E = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                 vue_cjs_prod.unref(showClear) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
                   key: 1,
                   class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(nsInput).e("icon"), vue_cjs_prod.unref(nsInput).e("clear")]),
-                  onMousedown: _cache[0] || (_cache[0] = vue_cjs_prod.withModifiers(() => {
-                  }, ["prevent"])),
+                  onMousedown: vue_cjs_prod.withModifiers(vue_cjs_prod.unref(NOOP_1), ["prevent"]),
                   onClick: clear
                 }, {
                   default: vue_cjs_prod.withCtx(() => [
                     vue_cjs_prod.createVNode(vue_cjs_prod.unref(CircleClose))
                   ]),
                   _: 1
-                }, 8, ["class"])) : vue_cjs_prod.createCommentVNode("v-if", true),
+                }, 8, ["class", "onMousedown"])) : vue_cjs_prod.createCommentVNode("v-if", true),
                 vue_cjs_prod.unref(showPwdVisible) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElIcon), {
                   key: 2,
                   class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(nsInput).e("icon"), vue_cjs_prod.unref(nsInput).e("password")]),
@@ -10790,7 +10835,7 @@ const _sfc_main$2E = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Input = /* @__PURE__ */ _export_sfc(_sfc_main$2E, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/input/src/input.vue"]]);
+var Input = /* @__PURE__ */ _export_sfc(_sfc_main$2D, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/input/src/input.vue"]]);
 const ElInput = withInstall(Input);
 const GAP = 4;
 const BAR_MAP = {
@@ -10833,7 +10878,7 @@ const thumbProps = buildProps({
   },
   always: Boolean
 });
-const _sfc_main$2D = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$2C = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "thumb",
   props: thumbProps,
   setup(__props) {
@@ -10953,7 +10998,7 @@ const _sfc_main$2D = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var Thumb = /* @__PURE__ */ _export_sfc(_sfc_main$2D, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/scrollbar/src/thumb.vue"]]);
+var Thumb = /* @__PURE__ */ _export_sfc(_sfc_main$2C, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/scrollbar/src/thumb.vue"]]);
 const barProps = buildProps({
   always: {
     type: Boolean,
@@ -10970,7 +11015,7 @@ const barProps = buildProps({
     default: 1
   }
 });
-const _sfc_main$2C = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$2B = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "bar",
   props: barProps,
   setup(__props, { expose }) {
@@ -11007,7 +11052,7 @@ const _sfc_main$2C = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var Bar = /* @__PURE__ */ _export_sfc(_sfc_main$2C, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/scrollbar/src/bar.vue"]]);
+var Bar = /* @__PURE__ */ _export_sfc(_sfc_main$2B, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/scrollbar/src/bar.vue"]]);
 const scrollbarProps = buildProps({
   height: {
     type: [String, Number],
@@ -11049,12 +11094,12 @@ const scrollbarEmits = {
   scroll: ({
     scrollTop,
     scrollLeft
-  }) => isNumber(scrollTop) && isNumber(scrollLeft)
+  }) => [scrollTop, scrollLeft].every(isNumber)
 };
-const __default__$1e = {
+const __default__$1h = {
   name: "ElScrollbar"
 };
-const _sfc_main$2B = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1e), {
+const _sfc_main$2A = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1h), {
   props: scrollbarProps,
   emits: scrollbarEmits,
   setup(__props, { expose, emit }) {
@@ -11200,7 +11245,7 @@ const _sfc_main$2B = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Scrollbar = /* @__PURE__ */ _export_sfc(_sfc_main$2B, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/scrollbar/src/scrollbar.vue"]]);
+var Scrollbar = /* @__PURE__ */ _export_sfc(_sfc_main$2A, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/scrollbar/src/scrollbar.vue"]]);
 const ElScrollbar = withInstall(Scrollbar);
 const Effect = {
   LIGHT: "light",
@@ -11212,11 +11257,11 @@ const usePopperProps = buildProps({
     default: "tooltip"
   }
 });
-const __default__$1d = {
+const __default__$1g = {
   name: "ElPopperRoot",
   inheritAttrs: false
 };
-const _sfc_main$2A = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1d), {
+const _sfc_main$2z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1g), {
   props: usePopperProps,
   setup(__props, { expose }) {
     const props = __props;
@@ -11239,18 +11284,18 @@ const _sfc_main$2A = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Popper = /* @__PURE__ */ _export_sfc(_sfc_main$2A, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popper/src/popper.vue"]]);
+var Popper = /* @__PURE__ */ _export_sfc(_sfc_main$2z, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popper/src/popper.vue"]]);
 const usePopperArrowProps = buildProps({
   arrowOffset: {
     type: Number,
     default: 5
   }
 });
-const __default__$1c = {
+const __default__$1f = {
   name: "ElPopperArrow",
   inheritAttrs: false
 };
-const _sfc_main$2z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1c), {
+const _sfc_main$2y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1f), {
   props: usePopperArrowProps,
   setup(__props, { expose }) {
     const props = __props;
@@ -11275,7 +11320,7 @@ const _sfc_main$2z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var ElPopperArrow = /* @__PURE__ */ _export_sfc(_sfc_main$2z, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popper/src/arrow.vue"]]);
+var ElPopperArrow = /* @__PURE__ */ _export_sfc(_sfc_main$2y, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popper/src/arrow.vue"]]);
 const NAME = "ElOnlyChild";
 const OnlyChild = vue_cjs_prod.defineComponent({
   name: NAME,
@@ -11345,11 +11390,11 @@ const usePopperTriggerProps = buildProps({
   id: String,
   open: Boolean
 });
-const __default__$1b = {
+const __default__$1e = {
   name: "ElPopperTrigger",
   inheritAttrs: false
 };
-const _sfc_main$2y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1b), {
+const _sfc_main$2x = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1e), {
   props: usePopperTriggerProps,
   setup(__props, { expose }) {
     const props = __props;
@@ -11447,7 +11492,7 @@ const _sfc_main$2y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var ElPopperTrigger = /* @__PURE__ */ _export_sfc(_sfc_main$2y, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popper/src/trigger.vue"]]);
+var ElPopperTrigger = /* @__PURE__ */ _export_sfc(_sfc_main$2x, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popper/src/trigger.vue"]]);
 var E$1 = "top", R = "bottom", W$1 = "right", P$1 = "left", me = "auto", G = [E$1, R, W$1, P$1], U$1 = "start", J = "end", Xe = "clippingParents", je = "viewport", K = "popper", Ye = "reference", De = G.reduce(function(t, e) {
   return t.concat([e + "-" + U$1, e + "-" + J]);
 }, []), Ee = [].concat(G, [me]).reduce(function(t, e) {
@@ -12094,7 +12139,7 @@ const FOCUS_AFTER_TRAPPED_OPTS = {
 const ON_TRAP_FOCUS_EVT = "focusAfterTrapped";
 const ON_RELEASE_FOCUS_EVT = "focusAfterReleased";
 const FOCUS_TRAP_INJECTION_KEY = Symbol("elFocusTrap");
-const _sfc_main$2x = vue_cjs_prod.defineComponent({
+const _sfc_main$2w = vue_cjs_prod.defineComponent({
   name: "ElFocusTrap",
   inheritAttrs: false,
   props: {
@@ -12296,10 +12341,10 @@ const _sfc_main$2x = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$N(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.renderSlot(_ctx.$slots, "default", { handleKeydown: _ctx.onKeydown });
 }
-var ElFocusTrap = /* @__PURE__ */ _export_sfc(_sfc_main$2x, [["render", _sfc_render$N], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/focus-trap/src/focus-trap.vue"]]);
+var ElFocusTrap = /* @__PURE__ */ _export_sfc(_sfc_main$2w, [["render", _sfc_render$K], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/focus-trap/src/focus-trap.vue"]]);
 const POSITIONING_STRATEGIES = ["fixed", "absolute"];
 const usePopperCoreConfigProps = buildProps({
   boundariesPadding: {
@@ -12450,10 +12495,10 @@ function deriveExtraModifiers(options, modifiers) {
     options.modifiers = [...options.modifiers, ...modifiers != null ? modifiers : []];
   }
 }
-const __default__$1a = {
+const __default__$1d = {
   name: "ElPopperContent"
 };
-const _sfc_main$2w = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1a), {
+const _sfc_main$2v = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1d), {
   props: usePopperContentProps,
   emits: usePopperContentEmits,
   setup(__props, { expose, emit }) {
@@ -12635,7 +12680,7 @@ const _sfc_main$2w = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var ElPopperContent = /* @__PURE__ */ _export_sfc(_sfc_main$2w, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popper/src/content.vue"]]);
+var ElPopperContent = /* @__PURE__ */ _export_sfc(_sfc_main$2v, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popper/src/content.vue"]]);
 const ElPopper = withInstall(Popper);
 const ns = useNamespace("tooltip");
 const useTooltipContentProps = buildProps(__spreadProps(__spreadValues(__spreadValues({}, useDelayedToggleProps), usePopperContentProps), {
@@ -12698,7 +12743,7 @@ const useTooltipProps = buildProps({
   }
 });
 const TOOLTIP_INJECTION_KEY = Symbol("elTooltip");
-const _sfc_main$2v = vue_cjs_prod.defineComponent({
+const _sfc_main$2u = vue_cjs_prod.defineComponent({
   name: "ElTooltipContent",
   components: {
     ElPopperContent
@@ -12815,7 +12860,7 @@ const _sfc_main$2v = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$M(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_popper_content = vue_cjs_prod.resolveComponent("el-popper-content");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.Teleport, {
     disabled: !_ctx.teleported,
@@ -12870,7 +12915,7 @@ function _sfc_render$M(_ctx, _cache, $props, $setup, $data, $options) {
     }, 8, ["name", "onAfterLeave", "onBeforeEnter", "onAfterEnter", "onBeforeLeave"])
   ], 8, ["disabled", "to"]);
 }
-var ElTooltipContent = /* @__PURE__ */ _export_sfc(_sfc_main$2v, [["render", _sfc_render$M], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/tooltip/src/content.vue"]]);
+var ElTooltipContent = /* @__PURE__ */ _export_sfc(_sfc_main$2u, [["render", _sfc_render$J], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/tooltip/src/content.vue"]]);
 const isTriggerType = (trigger, type4) => {
   if (isArray_1(trigger)) {
     return trigger.includes(type4);
@@ -12882,7 +12927,7 @@ const whenTrigger = (trigger, type4, handler) => {
     isTriggerType(vue_cjs_prod.unref(trigger), type4) && handler(e);
   };
 };
-const _sfc_main$2u = vue_cjs_prod.defineComponent({
+const _sfc_main$2t = vue_cjs_prod.defineComponent({
   name: "ElTooltipTrigger",
   components: {
     ElPopperTrigger
@@ -12933,7 +12978,7 @@ const _sfc_main$2u = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$L(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$I(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_popper_trigger = vue_cjs_prod.resolveComponent("el-popper-trigger");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_popper_trigger, {
     id: _ctx.id,
@@ -12955,9 +13000,9 @@ function _sfc_render$L(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["id", "virtual-ref", "open", "virtual-triggering", "class", "onBlur", "onClick", "onContextmenu", "onFocus", "onMouseenter", "onMouseleave", "onKeydown"]);
 }
-var ElTooltipTrigger = /* @__PURE__ */ _export_sfc(_sfc_main$2u, [["render", _sfc_render$L], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/tooltip/src/trigger.vue"]]);
+var ElTooltipTrigger = /* @__PURE__ */ _export_sfc(_sfc_main$2t, [["render", _sfc_render$I], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/tooltip/src/trigger.vue"]]);
 const { useModelToggleProps, useModelToggle, useModelToggleEmits } = createModelToggleComposable("visible");
-const _sfc_main$2t = vue_cjs_prod.defineComponent({
+const _sfc_main$2s = vue_cjs_prod.defineComponent({
   name: "ElTooltip",
   components: {
     ElPopper,
@@ -13066,7 +13111,7 @@ const _sfc_main$2t = vue_cjs_prod.defineComponent({
 });
 const _hoisted_1$_ = ["innerHTML"];
 const _hoisted_2$D = { key: 1 };
-function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_tooltip_trigger = vue_cjs_prod.resolveComponent("el-tooltip-trigger");
   const _component_el_popper_arrow = vue_cjs_prod.resolveComponent("el-popper-arrow");
   const _component_el_tooltip_content = vue_cjs_prod.resolveComponent("el-tooltip-content");
@@ -13135,7 +13180,7 @@ function _sfc_render$K(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["role"]);
 }
-var Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$2t, [["render", _sfc_render$K], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/tooltip/src/tooltip.vue"]]);
+var Tooltip = /* @__PURE__ */ _export_sfc(_sfc_main$2s, [["render", _sfc_render$H], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/tooltip/src/tooltip.vue"]]);
 const ElTooltip = withInstall(Tooltip);
 const autocompleteProps = buildProps({
   valueKey: {
@@ -13203,11 +13248,11 @@ const autocompleteEmits = {
 const _hoisted_1$Z = ["aria-expanded", "aria-owns"];
 const _hoisted_2$C = { key: 0 };
 const _hoisted_3$l = ["id", "aria-selected", "onClick"];
-const __default__$19 = {
+const __default__$1c = {
   name: "ElAutocomplete",
   inheritAttrs: false
 };
-const _sfc_main$2s = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$19), {
+const _sfc_main$2r = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1c), {
   props: autocompleteProps,
   emits: autocompleteEmits,
   setup(__props, { expose, emit }) {
@@ -13499,7 +13544,7 @@ const _sfc_main$2s = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Autocomplete = /* @__PURE__ */ _export_sfc(_sfc_main$2s, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/autocomplete/src/autocomplete.vue"]]);
+var Autocomplete = /* @__PURE__ */ _export_sfc(_sfc_main$2r, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/autocomplete/src/autocomplete.vue"]]);
 const ElAutocomplete = withInstall(Autocomplete);
 const avatarProps = buildProps({
   size: {
@@ -13531,10 +13576,10 @@ const avatarEmits = {
   error: (evt) => evt instanceof Event
 };
 const _hoisted_1$Y = ["src", "alt", "srcset"];
-const __default__$18 = {
+const __default__$1b = {
   name: "ElAvatar"
 };
-const _sfc_main$2r = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$18), {
+const _sfc_main$2q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1b), {
   props: avatarProps,
   emits: avatarEmits,
   setup(__props, { emit }) {
@@ -13588,7 +13633,7 @@ const _sfc_main$2r = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Avatar = /* @__PURE__ */ _export_sfc(_sfc_main$2r, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/avatar/src/avatar.vue"]]);
+var Avatar = /* @__PURE__ */ _export_sfc(_sfc_main$2q, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/avatar/src/avatar.vue"]]);
 const ElAvatar = withInstall(Avatar);
 const backtopProps = {
   visibilityHeight: {
@@ -13612,10 +13657,10 @@ const backtopEmits = {
   click: (evt) => evt instanceof MouseEvent
 };
 const _hoisted_1$X = ["onClick"];
-const __default__$17 = {
+const __default__$1a = {
   name: "ElBacktop"
 };
-const _sfc_main$2q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$17), {
+const _sfc_main$2p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$1a), {
   props: backtopProps,
   emits: backtopEmits,
   setup(__props, { emit }) {
@@ -13697,7 +13742,7 @@ const _sfc_main$2q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Backtop = /* @__PURE__ */ _export_sfc(_sfc_main$2q, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/backtop/src/backtop.vue"]]);
+var Backtop = /* @__PURE__ */ _export_sfc(_sfc_main$2p, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/backtop/src/backtop.vue"]]);
 const ElBacktop = withInstall(Backtop);
 const badgeProps = buildProps({
   value: {
@@ -13717,10 +13762,10 @@ const badgeProps = buildProps({
   }
 });
 const _hoisted_1$W = ["textContent"];
-const __default__$16 = {
+const __default__$19 = {
   name: "ElBadge"
 };
-const _sfc_main$2p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$16), {
+const _sfc_main$2o = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$19), {
   props: badgeProps,
   setup(__props, { expose }) {
     const props = __props;
@@ -13764,7 +13809,7 @@ const _sfc_main$2p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Badge = /* @__PURE__ */ _export_sfc(_sfc_main$2p, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/badge/src/badge.vue"]]);
+var Badge = /* @__PURE__ */ _export_sfc(_sfc_main$2o, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/badge/src/badge.vue"]]);
 const ElBadge = withInstall(Badge);
 const breadcrumbProps = buildProps({
   separator: {
@@ -13776,10 +13821,10 @@ const breadcrumbProps = buildProps({
     default: ""
   }
 });
-const __default__$15 = {
+const __default__$18 = {
   name: "ElBreadcrumb"
 };
-const _sfc_main$2o = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$15), {
+const _sfc_main$2n = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$18), {
   props: breadcrumbProps,
   setup(__props) {
     const props = __props;
@@ -13805,7 +13850,7 @@ const _sfc_main$2o = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$2o, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/breadcrumb/src/breadcrumb.vue"]]);
+var Breadcrumb = /* @__PURE__ */ _export_sfc(_sfc_main$2n, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/breadcrumb/src/breadcrumb.vue"]]);
 const breadcrumbItemProps = buildProps({
   to: {
     type: definePropType([String, Object]),
@@ -13816,10 +13861,10 @@ const breadcrumbItemProps = buildProps({
     default: false
   }
 });
-const __default__$14 = {
+const __default__$17 = {
   name: "ElBreadcrumbItem"
 };
-const _sfc_main$2n = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$14), {
+const _sfc_main$2m = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$17), {
   props: breadcrumbItemProps,
   setup(__props) {
     const props = __props;
@@ -13864,7 +13909,7 @@ const _sfc_main$2n = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var BreadcrumbItem = /* @__PURE__ */ _export_sfc(_sfc_main$2n, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/breadcrumb/src/breadcrumb-item.vue"]]);
+var BreadcrumbItem = /* @__PURE__ */ _export_sfc(_sfc_main$2m, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/breadcrumb/src/breadcrumb-item.vue"]]);
 const ElBreadcrumb = withInstall(Breadcrumb, {
   BreadcrumbItem
 });
@@ -14841,10 +14886,10 @@ function useButtonCustomStyle(props) {
   });
 }
 const _hoisted_1$V = ["aria-disabled", "disabled", "autofocus", "type"];
-const __default__$13 = {
+const __default__$16 = {
   name: "ElButton"
 };
-const _sfc_main$2m = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$13), {
+const _sfc_main$2l = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$16), {
   props: buttonProps,
   emits: buttonEmits,
   setup(__props, { expose, emit }) {
@@ -14945,15 +14990,15 @@ const _sfc_main$2m = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Button = /* @__PURE__ */ _export_sfc(_sfc_main$2m, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/button/src/button.vue"]]);
+var Button = /* @__PURE__ */ _export_sfc(_sfc_main$2l, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/button/src/button.vue"]]);
 const buttonGroupProps = {
   size: buttonProps.size,
   type: buttonProps.type
 };
-const __default__$12 = {
+const __default__$15 = {
   name: "ElButtonGroup"
 };
-const _sfc_main$2l = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$12), {
+const _sfc_main$2k = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$15), {
   props: buttonGroupProps,
   setup(__props) {
     const props = __props;
@@ -14971,7 +15016,7 @@ const _sfc_main$2l = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var ButtonGroup = /* @__PURE__ */ _export_sfc(_sfc_main$2l, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/button/src/button-group.vue"]]);
+var ButtonGroup = /* @__PURE__ */ _export_sfc(_sfc_main$2k, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/button/src/button-group.vue"]]);
 const ElButton = withInstall(Button, {
   ButtonGroup
 });
@@ -15040,7 +15085,38 @@ const formatter = function(date4, format2, lang) {
     return +date4;
   return dayjs(date4).locale(lang).format(format2);
 };
-const timePickerDefaultProps = buildProps({
+const makeList = (total2, method4) => {
+  var _a;
+  const arr = [];
+  const disabledArr = method4 == null ? void 0 : method4();
+  for (let i = 0; i < total2; i++) {
+    arr.push((_a = disabledArr == null ? void 0 : disabledArr.includes(i)) != null ? _a : false);
+  }
+  return arr;
+};
+const disabledTimeListsProps = buildProps({
+  disabledHours: {
+    type: definePropType(Function)
+  },
+  disabledMinutes: {
+    type: definePropType(Function)
+  },
+  disabledSeconds: {
+    type: definePropType(Function)
+  }
+});
+const timePanelSharedProps = buildProps({
+  visible: Boolean,
+  actualVisible: {
+    type: Boolean,
+    default: void 0
+  },
+  format: {
+    type: String,
+    default: ""
+  }
+});
+const timePickerDefaultProps = buildProps(__spreadProps(__spreadValues({
   id: {
     type: definePropType([Array, String])
   },
@@ -15110,16 +15186,8 @@ const timePickerDefaultProps = buildProps({
   isRange: {
     type: Boolean,
     default: false
-  },
-  disabledHours: {
-    type: Function
-  },
-  disabledMinutes: {
-    type: Function
-  },
-  disabledSeconds: {
-    type: Function
-  },
+  }
+}, disabledTimeListsProps), {
   disabledDate: {
     type: Function
   },
@@ -15147,13 +15215,13 @@ const timePickerDefaultProps = buildProps({
     default: true
   },
   unlinkPanels: Boolean
-});
+}));
 const _hoisted_1$U = ["id", "name", "placeholder", "value", "disabled", "readonly"];
 const _hoisted_2$B = ["id", "name", "placeholder", "value", "disabled", "readonly"];
-const __default__$11 = {
+const __default__$14 = {
   name: "Picker"
 };
-const _sfc_main$2k = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$11), {
+const _sfc_main$2j = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$14), {
   props: timePickerDefaultProps,
   emits: [
     "update:modelValue",
@@ -15285,7 +15353,7 @@ const _sfc_main$2k = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       pickerVisible.value = true;
       emit("focus", e);
     };
-    let currentHandleBlurDeferCallback;
+    let currentHandleBlurDeferCallback = void 0;
     const handleBlurInput = (e) => {
       const handleBlurDefer = async () => {
         setTimeout(() => {
@@ -15615,6 +15683,7 @@ const _sfc_main$2k = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             readonly: !_ctx.editable || _ctx.readonly || vue_cjs_prod.unref(isDatesPicker) || _ctx.type === "week",
             label: _ctx.label,
             tabindex: _ctx.tabindex,
+            "validate-event": _ctx.validateEvent,
             onInput: onUserInput,
             onFocus: handleFocusInput,
             onBlur: handleBlurInput,
@@ -15653,7 +15722,7 @@ const _sfc_main$2k = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
               }, 8, ["class", "onClick"])) : vue_cjs_prod.createCommentVNode("v-if", true)
             ]),
             _: 1
-          }, 8, ["id", "model-value", "name", "size", "disabled", "placeholder", "class", "style", "readonly", "label", "tabindex", "onKeydown"])) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
+          }, 8, ["id", "model-value", "name", "size", "disabled", "placeholder", "class", "style", "readonly", "label", "tabindex", "validate-event", "onKeydown"])) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
             key: 1,
             ref_key: "inputRef",
             ref: inputRef,
@@ -15761,22 +15830,13 @@ const _sfc_main$2k = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var CommonPicker = /* @__PURE__ */ _export_sfc(_sfc_main$2k, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/time-picker/src/common/picker.vue"]]);
-const panelTimePickerProps = buildProps({
-  visible: Boolean,
-  actualVisible: {
-    type: Boolean,
-    default: void 0
-  },
+var CommonPicker = /* @__PURE__ */ _export_sfc(_sfc_main$2j, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/time-picker/src/common/picker.vue"]]);
+const panelTimePickerProps = buildProps(__spreadProps(__spreadValues({}, timePanelSharedProps), {
   datetimeRole: String,
   parsedValue: {
     type: definePropType(Object)
-  },
-  format: {
-    type: String,
-    default: ""
   }
-});
+}));
 const useTimePanel = ({
   getAvailableHours,
   getAvailableMinutes,
@@ -15824,6 +15884,53 @@ const useTimePanel = ({
     getAvailableTime,
     onSetOption
   };
+};
+const makeAvailableArr = (disabledList) => {
+  const trueOrNumber = (isDisabled, index2) => isDisabled || index2;
+  const getNumber = (predicate) => predicate !== true;
+  return disabledList.map(trueOrNumber).filter(getNumber);
+};
+const getTimeLists = (disabledHours, disabledMinutes, disabledSeconds) => {
+  const getHoursList = (role, compare) => {
+    return makeList(24, disabledHours && (() => disabledHours == null ? void 0 : disabledHours(role, compare)));
+  };
+  const getMinutesList = (hour, role, compare) => {
+    return makeList(60, disabledMinutes && (() => disabledMinutes == null ? void 0 : disabledMinutes(hour, role, compare)));
+  };
+  const getSecondsList = (hour, minute, role, compare) => {
+    return makeList(60, disabledSeconds && (() => disabledSeconds == null ? void 0 : disabledSeconds(hour, minute, role, compare)));
+  };
+  return {
+    getHoursList,
+    getMinutesList,
+    getSecondsList
+  };
+};
+const buildAvailableTimeSlotGetter = (disabledHours, disabledMinutes, disabledSeconds) => {
+  const { getHoursList, getMinutesList, getSecondsList } = getTimeLists(disabledHours, disabledMinutes, disabledSeconds);
+  const getAvailableHours = (role, compare) => {
+    return makeAvailableArr(getHoursList(role, compare));
+  };
+  const getAvailableMinutes = (hour, role, compare) => {
+    return makeAvailableArr(getMinutesList(hour, role, compare));
+  };
+  const getAvailableSeconds = (hour, minute, role, compare) => {
+    return makeAvailableArr(getSecondsList(hour, minute, role, compare));
+  };
+  return {
+    getAvailableHours,
+    getAvailableMinutes,
+    getAvailableSeconds
+  };
+};
+const useOldValue = (props) => {
+  const oldValue = vue_cjs_prod.ref(props.parsedValue);
+  vue_cjs_prod.watch(() => props.visible, (val) => {
+    if (!val) {
+      oldValue.value = props.parsedValue;
+    }
+  });
+  return oldValue;
 };
 const nodeList = /* @__PURE__ */ new Map();
 function createDocumentHandler(el, binding) {
@@ -16005,7 +16112,7 @@ const Resize = {
     removeResizeListener(el, el._handleResize);
   }
 };
-const basicTimeSpinnerProps = buildProps({
+const basicTimeSpinnerProps = buildProps(__spreadValues({
   role: {
     type: String,
     required: true
@@ -16022,73 +16129,11 @@ const basicTimeSpinnerProps = buildProps({
   amPmMode: {
     type: definePropType(String),
     default: ""
-  },
-  disabledHours: {
-    type: definePropType(Function)
-  },
-  disabledMinutes: {
-    type: definePropType(Function)
-  },
-  disabledSeconds: {
-    type: definePropType(Function)
   }
-});
-const makeList = (total2, method4, methodFunc) => {
-  const arr = [];
-  const disabledArr = method4 && methodFunc();
-  for (let i = 0; i < total2; i++) {
-    arr[i] = disabledArr ? disabledArr.includes(i) : false;
-  }
-  return arr;
-};
-const makeAvailableArr = (list) => {
-  return list.map((_2, index2) => !_2 ? index2 : _2).filter((_2) => _2 !== true);
-};
-const getTimeLists = (disabledHours, disabledMinutes, disabledSeconds) => {
-  const getHoursList = (role, compare) => {
-    return makeList(24, disabledHours, () => disabledHours(role, compare));
-  };
-  const getMinutesList = (hour, role, compare) => {
-    return makeList(60, disabledMinutes, () => disabledMinutes(hour, role, compare));
-  };
-  const getSecondsList = (hour, minute, role, compare) => {
-    return makeList(60, disabledSeconds, () => disabledSeconds(hour, minute, role, compare));
-  };
-  return {
-    getHoursList,
-    getMinutesList,
-    getSecondsList
-  };
-};
-const getAvailableArrs = (disabledHours, disabledMinutes, disabledSeconds) => {
-  const { getHoursList, getMinutesList, getSecondsList } = getTimeLists(disabledHours, disabledMinutes, disabledSeconds);
-  const getAvailableHours = (role, compare) => {
-    return makeAvailableArr(getHoursList(role, compare));
-  };
-  const getAvailableMinutes = (hour, role, compare) => {
-    return makeAvailableArr(getMinutesList(hour, role, compare));
-  };
-  const getAvailableSeconds = (hour, minute, role, compare) => {
-    return makeAvailableArr(getSecondsList(hour, minute, role, compare));
-  };
-  return {
-    getAvailableHours,
-    getAvailableMinutes,
-    getAvailableSeconds
-  };
-};
-const useOldValue = (props) => {
-  const oldValue = vue_cjs_prod.ref(props.parsedValue);
-  vue_cjs_prod.watch(() => props.visible, (val) => {
-    if (!val) {
-      oldValue.value = props.parsedValue;
-    }
-  });
-  return oldValue;
-};
+}, disabledTimeListsProps));
 const _hoisted_1$T = ["onClick"];
 const _hoisted_2$A = ["onMouseenter"];
-const _sfc_main$2j = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$2i = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "basic-time-spinner",
   props: basicTimeSpinnerProps,
   emits: ["change", "select-range", "set-option"],
@@ -16362,8 +16407,8 @@ const _sfc_main$2j = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var TimeSpinner = /* @__PURE__ */ _export_sfc(_sfc_main$2j, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/time-picker/src/time-picker-com/basic-time-spinner.vue"]]);
-const _sfc_main$2i = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+var TimeSpinner = /* @__PURE__ */ _export_sfc(_sfc_main$2i, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/time-picker/src/time-picker-com/basic-time-spinner.vue"]]);
+const _sfc_main$2h = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "panel-time-pick",
   props: panelTimePickerProps,
   emits: ["pick", "select-range", "set-picker-option"],
@@ -16377,7 +16422,7 @@ const _sfc_main$2i = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       disabledSeconds,
       defaultValue
     } = pickerBase.props;
-    const { getAvailableHours, getAvailableMinutes, getAvailableSeconds } = getAvailableArrs(disabledHours, disabledMinutes, disabledSeconds);
+    const { getAvailableHours, getAvailableMinutes, getAvailableSeconds } = buildAvailableTimeSlotGetter(disabledHours, disabledMinutes, disabledSeconds);
     const ns2 = useNamespace("time");
     const { t, lang } = useLocale();
     const selectionRange = vue_cjs_prod.ref([0, 2]);
@@ -16515,20 +16560,14 @@ const _sfc_main$2i = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var TimePickPanel = /* @__PURE__ */ _export_sfc(_sfc_main$2i, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/time-picker/src/time-picker-com/panel-time-pick.vue"]]);
-const panelTimeRangeProps = buildProps({
-  visible: Boolean,
-  actualVisible: Boolean,
+var TimePickPanel = /* @__PURE__ */ _export_sfc(_sfc_main$2h, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/time-picker/src/time-picker-com/panel-time-pick.vue"]]);
+const panelTimeRangeProps = buildProps(__spreadProps(__spreadValues({}, timePanelSharedProps), {
   parsedValue: {
     type: definePropType(Array)
-  },
-  format: {
-    type: String,
-    default: ""
   }
-});
+}));
 const _hoisted_1$S = ["disabled"];
-const _sfc_main$2h = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$2g = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "panel-time-range",
   props: panelTimeRangeProps,
   emits: ["pick", "select-range", "set-picker-option"],
@@ -16667,7 +16706,7 @@ const _sfc_main$2h = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         getAvailableTime(end2, "end", false, start)
       ];
     };
-    const { getAvailableHours, getAvailableMinutes, getAvailableSeconds } = getAvailableArrs(disabledHours_, disabledMinutes_, disabledSeconds_);
+    const { getAvailableHours, getAvailableMinutes, getAvailableSeconds } = buildAvailableTimeSlotGetter(disabledHours_, disabledMinutes_, disabledSeconds_);
     const {
       timePickerOptions,
       getAvailableTime,
@@ -16794,7 +16833,7 @@ const _sfc_main$2h = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var TimeRangePanel = /* @__PURE__ */ _export_sfc(_sfc_main$2h, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/time-picker/src/time-picker-com/panel-time-range.vue"]]);
+var TimeRangePanel = /* @__PURE__ */ _export_sfc(_sfc_main$2g, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/time-picker/src/time-picker-com/panel-time-range.vue"]]);
 dayjs.extend(customParseFormat);
 var TimePicker = vue_cjs_prod.defineComponent({
   name: "ElTimePicker",
@@ -16872,10 +16911,10 @@ const dateTableEmits = {
 };
 const _hoisted_1$R = { key: 0 };
 const _hoisted_2$z = ["onClick"];
-const __default__$10 = {
+const __default__$13 = {
   name: "DateTable"
 };
-const _sfc_main$2g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$10), {
+const _sfc_main$2f = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$13), {
   props: dateTableProps,
   emits: dateTableEmits,
   setup(__props, { expose, emit }) {
@@ -17013,7 +17052,7 @@ const _sfc_main$2g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var DateTable$1 = /* @__PURE__ */ _export_sfc(_sfc_main$2g, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/calendar/src/date-table.vue"]]);
+var DateTable$1 = /* @__PURE__ */ _export_sfc(_sfc_main$2f, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/calendar/src/date-table.vue"]]);
 const isValidRange$1 = (range3) => isArray_1(range3) && range3.length === 2 && range3.every((item) => isDate_1(item));
 const calendarProps = buildProps({
   modelValue: {
@@ -17028,10 +17067,10 @@ const calendarEmits = {
   [UPDATE_MODEL_EVENT]: (value) => isDate_1(value),
   [INPUT_EVENT]: (value) => isDate_1(value)
 };
-const __default__$$ = {
+const __default__$12 = {
   name: "ElCalendar"
 };
-const _sfc_main$2f = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$$), {
+const _sfc_main$2e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$12), {
   props: calendarProps,
   emits: calendarEmits,
   setup(__props, { expose, emit }) {
@@ -17242,7 +17281,7 @@ const _sfc_main$2f = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Calendar = /* @__PURE__ */ _export_sfc(_sfc_main$2f, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/calendar/src/calendar.vue"]]);
+var Calendar = /* @__PURE__ */ _export_sfc(_sfc_main$2e, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/calendar/src/calendar.vue"]]);
 const ElCalendar = withInstall(Calendar);
 const cardProps = buildProps({
   header: {
@@ -17259,10 +17298,10 @@ const cardProps = buildProps({
     default: "always"
   }
 });
-const __default__$_ = {
+const __default__$11 = {
   name: "ElCard"
 };
-const _sfc_main$2e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$_), {
+const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$11), {
   props: cardProps,
   setup(__props) {
     const ns2 = useNamespace("card");
@@ -17288,16 +17327,20 @@ const _sfc_main$2e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Card = /* @__PURE__ */ _export_sfc(_sfc_main$2e, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/card/src/card.vue"]]);
+var Card = /* @__PURE__ */ _export_sfc(_sfc_main$2d, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/card/src/card.vue"]]);
 const ElCard = withInstall(Card);
 const carouselProps = buildProps({
   initialIndex: {
     type: Number,
     default: 0
   },
-  height: { type: String, default: "" },
+  height: {
+    type: String,
+    default: ""
+  },
   trigger: {
     type: String,
+    values: ["hover", "click"],
     default: "hover"
   },
   autoplay: {
@@ -17308,26 +17351,33 @@ const carouselProps = buildProps({
     type: Number,
     default: 3e3
   },
-  indicatorPosition: { type: String, default: "" },
+  indicatorPosition: {
+    type: String,
+    values: ["", "none", "outside"],
+    default: ""
+  },
   indicator: {
     type: Boolean,
     default: true
   },
   arrow: {
     type: String,
+    values: ["always", "hover", "never"],
     default: "hover"
   },
-  type: { type: String, default: "" },
+  type: {
+    type: String,
+    values: ["", "card"],
+    default: ""
+  },
   loop: {
     type: Boolean,
     default: true
   },
   direction: {
     type: String,
-    default: "horizontal",
-    validator(val) {
-      return ["horizontal", "vertical"].includes(val);
-    }
+    values: ["horizontal", "vertical"],
+    default: "horizontal"
   },
   pauseOnHover: {
     type: Boolean,
@@ -17340,10 +17390,10 @@ const carouselEmits = {
 const _hoisted_1$Q = ["onMouseenter", "onMouseleave"];
 const _hoisted_2$y = ["onMouseenter", "onClick"];
 const _hoisted_3$k = { key: 0 };
-const __default__$Z = {
+const __default__$10 = {
   name: "ElCarousel"
 };
-const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$Z), {
+const _sfc_main$2c = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$10), {
   props: carouselProps,
   emits: carouselEmits,
   setup(__props, { expose, emit }) {
@@ -17642,7 +17692,7 @@ const _sfc_main$2d = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$2d, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/carousel/src/carousel.vue"]]);
+var Carousel = /* @__PURE__ */ _export_sfc(_sfc_main$2c, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/carousel/src/carousel.vue"]]);
 const carouselItemProps = buildProps({
   name: { type: String, default: "" },
   label: {
@@ -17650,10 +17700,10 @@ const carouselItemProps = buildProps({
     default: ""
   }
 });
-const __default__$Y = {
+const __default__$$ = {
   name: "ElCarouselItem"
 };
-const _sfc_main$2c = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$Y), {
+const _sfc_main$2b = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$$), {
   props: carouselItemProps,
   setup(__props) {
     const props = __props;
@@ -17785,7 +17835,7 @@ const _sfc_main$2c = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var CarouselItem = /* @__PURE__ */ _export_sfc(_sfc_main$2c, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/carousel/src/carousel-item.vue"]]);
+var CarouselItem = /* @__PURE__ */ _export_sfc(_sfc_main$2b, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/carousel/src/carousel-item.vue"]]);
 const ElCarousel = withInstall(Carousel, {
   CarouselItem
 });
@@ -18020,6 +18070,10 @@ const checkboxEmits = {
   [UPDATE_MODEL_EVENT]: (val) => isString_1(val) || isNumber(val) || isBoolean(val),
   change: (val) => isString_1(val) || isNumber(val) || isBoolean(val)
 };
+const checkboxGroupEmits = {
+  [UPDATE_MODEL_EVENT]: (val) => isArray_1(val),
+  change: (val) => isArray_1(val)
+};
 const useCheckbox = (props, slots) => {
   const { model, isGroup, isLimitExceeded, elFormItem } = useModel(props);
   const { focus, size, isChecked, checkboxSize, hasOwnLabel } = useCheckboxStatus(props, slots, {
@@ -18058,10 +18112,10 @@ const useCheckbox = (props, slots) => {
 const _hoisted_1$P = ["tabindex", "role", "aria-checked"];
 const _hoisted_2$x = ["id", "aria-hidden", "name", "tabindex", "disabled", "true-value", "false-value"];
 const _hoisted_3$j = ["id", "aria-hidden", "disabled", "value", "name", "tabindex"];
-const __default__$X = {
+const __default__$_ = {
   name: "ElCheckbox"
 };
-const _sfc_main$2b = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$X), {
+const _sfc_main$2a = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$_), {
   props: checkboxProps,
   emits: checkboxEmits,
   setup(__props) {
@@ -18158,13 +18212,13 @@ const _sfc_main$2b = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$2b, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/checkbox/src/checkbox.vue"]]);
+var Checkbox = /* @__PURE__ */ _export_sfc(_sfc_main$2a, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/checkbox/src/checkbox.vue"]]);
 const _hoisted_1$O = ["name", "tabindex", "disabled", "true-value", "false-value"];
 const _hoisted_2$w = ["name", "tabindex", "disabled", "value"];
-const __default__$W = {
+const __default__$Z = {
   name: "ElCheckboxButton"
 };
-const _sfc_main$2a = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$W), {
+const _sfc_main$29 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$Z), {
   props: checkboxProps,
   emits: checkboxEmits,
   setup(__props) {
@@ -18236,13 +18290,13 @@ const _sfc_main$2a = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var CheckboxButton = /* @__PURE__ */ _export_sfc(_sfc_main$2a, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/checkbox/src/checkbox-button.vue"]]);
-const __default__$V = {
+var CheckboxButton = /* @__PURE__ */ _export_sfc(_sfc_main$29, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/checkbox/src/checkbox-button.vue"]]);
+const __default__$Y = {
   name: "ElCheckboxGroup"
 };
-const _sfc_main$29 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$V), {
+const _sfc_main$28 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$Y), {
   props: useCheckboxGroupProps,
-  emits: checkboxEmits,
+  emits: checkboxGroupEmits,
   setup(__props, { emit }) {
     const props = __props;
     const { elFormItem } = useCheckboxGroup();
@@ -18292,7 +18346,7 @@ const _sfc_main$29 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var CheckboxGroup = /* @__PURE__ */ _export_sfc(_sfc_main$29, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/checkbox/src/checkbox-group.vue"]]);
+var CheckboxGroup = /* @__PURE__ */ _export_sfc(_sfc_main$28, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/checkbox/src/checkbox-group.vue"]]);
 const ElCheckbox = withInstall(Checkbox, {
   CheckboxButton,
   CheckboxGroup
@@ -18357,10 +18411,10 @@ const useRadio = (props, emit) => {
   };
 };
 const _hoisted_1$N = ["value", "name", "disabled"];
-const __default__$U = {
+const __default__$X = {
   name: "ElRadio"
 };
-const _sfc_main$28 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$U), {
+const _sfc_main$27 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$X), {
   props: radioProps,
   emits: radioEmits,
   setup(__props, { emit }) {
@@ -18421,7 +18475,7 @@ const _sfc_main$28 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Radio = /* @__PURE__ */ _export_sfc(_sfc_main$28, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/radio/src/radio.vue"]]);
+var Radio = /* @__PURE__ */ _export_sfc(_sfc_main$27, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/radio/src/radio.vue"]]);
 const radioButtonProps = buildProps(__spreadProps(__spreadValues({}, radioPropsBase), {
   name: {
     type: String,
@@ -18429,10 +18483,10 @@ const radioButtonProps = buildProps(__spreadProps(__spreadValues({}, radioPropsB
   }
 }));
 const _hoisted_1$M = ["value", "name", "disabled"];
-const __default__$T = {
+const __default__$W = {
   name: "ElRadioButton"
 };
-const _sfc_main$27 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$T), {
+const _sfc_main$26 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$W), {
   props: radioButtonProps,
   setup(__props) {
     const props = __props;
@@ -18485,7 +18539,7 @@ const _sfc_main$27 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var RadioButton = /* @__PURE__ */ _export_sfc(_sfc_main$27, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/radio/src/radio-button.vue"]]);
+var RadioButton = /* @__PURE__ */ _export_sfc(_sfc_main$26, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/radio/src/radio-button.vue"]]);
 const radioGroupProps = buildProps({
   id: {
     type: String,
@@ -18516,10 +18570,10 @@ const radioGroupProps = buildProps({
 });
 const radioGroupEmits = radioEmits;
 const _hoisted_1$L = ["id", "aria-label", "aria-labelledby"];
-const __default__$S = {
+const __default__$V = {
   name: "ElRadioGroup"
 };
-const _sfc_main$26 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$S), {
+const _sfc_main$25 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$V), {
   props: radioGroupProps,
   emits: radioGroupEmits,
   setup(__props, { emit }) {
@@ -18565,7 +18619,7 @@ const _sfc_main$26 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var RadioGroup = /* @__PURE__ */ _export_sfc(_sfc_main$26, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/radio/src/radio-group.vue"]]);
+var RadioGroup = /* @__PURE__ */ _export_sfc(_sfc_main$25, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/radio/src/radio-group.vue"]]);
 const ElRadio = withInstall(Radio, {
   RadioButton,
   RadioGroup
@@ -18589,7 +18643,7 @@ var NodeContent$1 = vue_cjs_prod.defineComponent({
   }
 });
 const CASCADER_PANEL_INJECTION_KEY = Symbol();
-const _sfc_main$25 = vue_cjs_prod.defineComponent({
+const _sfc_main$24 = vue_cjs_prod.defineComponent({
   name: "ElCascaderNode",
   components: {
     ElCheckbox,
@@ -18706,7 +18760,7 @@ const _sfc_main$25 = vue_cjs_prod.defineComponent({
 });
 const _hoisted_1$K = ["id", "aria-haspopup", "aria-owns", "aria-expanded", "tabindex"];
 const _hoisted_2$v = /* @__PURE__ */ vue_cjs_prod.createElementVNode("span", null, null, -1);
-function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_checkbox = vue_cjs_prod.resolveComponent("el-checkbox");
   const _component_el_radio = vue_cjs_prod.resolveComponent("el-radio");
   const _component_check = vue_cjs_prod.resolveComponent("check");
@@ -18789,8 +18843,8 @@ function _sfc_render$J(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64)) : vue_cjs_prod.createCommentVNode("v-if", true)
   ], 42, _hoisted_1$K);
 }
-var ElCascaderNode = /* @__PURE__ */ _export_sfc(_sfc_main$25, [["render", _sfc_render$J], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/cascader-panel/src/node.vue"]]);
-const _sfc_main$24 = vue_cjs_prod.defineComponent({
+var ElCascaderNode = /* @__PURE__ */ _export_sfc(_sfc_main$24, [["render", _sfc_render$G], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/cascader-panel/src/node.vue"]]);
+const _sfc_main$23 = vue_cjs_prod.defineComponent({
   name: "ElCascaderMenu",
   components: {
     Loading: Loading$1,
@@ -18868,7 +18922,7 @@ const _sfc_main$24 = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$I(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$F(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_cascader_node = vue_cjs_prod.resolveComponent("el-cascader-node");
   const _component_loading = vue_cjs_prod.resolveComponent("loading");
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
@@ -18921,7 +18975,7 @@ function _sfc_render$I(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["class", "wrap-class", "view-class", "onMousemove", "onMouseleave"]);
 }
-var ElCascaderMenu = /* @__PURE__ */ _export_sfc(_sfc_main$24, [["render", _sfc_render$I], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/cascader-panel/src/menu.vue"]]);
+var ElCascaderMenu = /* @__PURE__ */ _export_sfc(_sfc_main$23, [["render", _sfc_render$F], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/cascader-panel/src/menu.vue"]]);
 var ExpandTrigger = /* @__PURE__ */ ((ExpandTrigger2) => {
   ExpandTrigger2["CLICK"] = "click";
   ExpandTrigger2["HOVER"] = "hover";
@@ -19148,7 +19202,7 @@ const sortByOriginalOrder = (oldNodes, newNodes) => {
   res.push(...newNodesCopy);
   return res;
 };
-const _sfc_main$23 = vue_cjs_prod.defineComponent({
+const _sfc_main$22 = vue_cjs_prod.defineComponent({
   name: "ElCascaderPanel",
   components: {
     ElCascaderMenu
@@ -19378,7 +19432,7 @@ const _sfc_main$23 = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_cascader_menu = vue_cjs_prod.resolveComponent("el-cascader-menu");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     class: vue_cjs_prod.normalizeClass([_ctx.ns.b("panel"), _ctx.ns.is("bordered", _ctx.border)]),
@@ -19395,7 +19449,7 @@ function _sfc_render$H(_ctx, _cache, $props, $setup, $data, $options) {
     }), 128))
   ], 34);
 }
-var CascaderPanel = /* @__PURE__ */ _export_sfc(_sfc_main$23, [["render", _sfc_render$H], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/cascader-panel/src/index.vue"]]);
+var CascaderPanel = /* @__PURE__ */ _export_sfc(_sfc_main$22, [["render", _sfc_render$E], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/cascader-panel/src/index.vue"]]);
 CascaderPanel.install = (app) => {
   app.component(CascaderPanel.name, CascaderPanel);
 };
@@ -19430,10 +19484,10 @@ const tagEmits = {
   close: (evt) => evt instanceof MouseEvent,
   click: (evt) => evt instanceof MouseEvent
 };
-const __default__$R = {
+const __default__$U = {
   name: "ElTag"
 };
-const _sfc_main$22 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$R), {
+const _sfc_main$21 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$U), {
   props: tagProps,
   emits: tagEmits,
   setup(__props, { emit }) {
@@ -19513,7 +19567,7 @@ const _sfc_main$22 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Tag = /* @__PURE__ */ _export_sfc(_sfc_main$22, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/tag/src/tag.vue"]]);
+var Tag = /* @__PURE__ */ _export_sfc(_sfc_main$21, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/tag/src/tag.vue"]]);
 const ElTag = withInstall(Tag);
 const DEFAULT_INPUT_HEIGHT = 40;
 const INPUT_HEIGHT_MAP = {
@@ -19538,7 +19592,7 @@ const popperOptions = {
   ]
 };
 const COMPONENT_NAME$c = "ElCascader";
-const _sfc_main$21 = vue_cjs_prod.defineComponent({
+const _sfc_main$20 = vue_cjs_prod.defineComponent({
   name: COMPONENT_NAME$c,
   components: {
     ElCascaderPanel: _CascaderPanel,
@@ -19943,7 +19997,7 @@ const _hoisted_1$J = { key: 0 };
 const _hoisted_2$u = { class: "el-cascader__collapse-tags" };
 const _hoisted_3$i = ["placeholder"];
 const _hoisted_4$c = ["onClick"];
-function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_circle_close = vue_cjs_prod.resolveComponent("circle-close");
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
   const _component_arrow_down = vue_cjs_prod.resolveComponent("arrow-down");
@@ -20170,7 +20224,7 @@ function _sfc_render$G(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["visible", "teleported", "popper-class", "popper-options", "transition", "onHide"]);
 }
-var Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$21, [["render", _sfc_render$G], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/cascader/src/index.vue"]]);
+var Cascader = /* @__PURE__ */ _export_sfc(_sfc_main$20, [["render", _sfc_render$D], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/cascader/src/index.vue"]]);
 Cascader.install = (app) => {
   app.component(Cascader.name, Cascader);
 };
@@ -20186,10 +20240,10 @@ const checkTagEmits = {
   "update:checked": (value) => isBoolean(value),
   [CHANGE_EVENT]: (value) => isBoolean(value)
 };
-const __default__$Q = {
+const __default__$T = {
   name: "ElCheckTag"
 };
-const _sfc_main$20 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$Q), {
+const _sfc_main$1$ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$T), {
   props: checkTagProps,
   emits: checkTagEmits,
   setup(__props, { emit }) {
@@ -20210,7 +20264,7 @@ const _sfc_main$20 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var CheckTag = /* @__PURE__ */ _export_sfc(_sfc_main$20, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/check-tag/src/check-tag.vue"]]);
+var CheckTag = /* @__PURE__ */ _export_sfc(_sfc_main$1$, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/check-tag/src/check-tag.vue"]]);
 const ElCheckTag = withInstall(CheckTag);
 const colProps = buildProps({
   tag: {
@@ -20254,10 +20308,10 @@ const colProps = buildProps({
     default: () => mutable({})
   }
 });
-const __default__$P = {
+const __default__$S = {
   name: "ElCol"
 };
-const _sfc_main$1$ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$P), {
+const _sfc_main$1_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$S), {
   props: colProps,
   setup(__props) {
     const props = __props;
@@ -20310,7 +20364,7 @@ const _sfc_main$1$ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Col = /* @__PURE__ */ _export_sfc(_sfc_main$1$, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/col/src/col.vue"]]);
+var Col = /* @__PURE__ */ _export_sfc(_sfc_main$1_, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/col/src/col.vue"]]);
 const ElCol = withInstall(Col);
 const emitChangeFn = (value) => typeof isNumber(value);
 const collapseProps = buildProps({
@@ -20324,10 +20378,10 @@ const collapseEmits = {
   [UPDATE_MODEL_EVENT]: emitChangeFn,
   [CHANGE_EVENT]: emitChangeFn
 };
-const __default__$O = {
+const __default__$R = {
   name: "ElCollapse"
 };
-const _sfc_main$1_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$O), {
+const _sfc_main$1Z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$R), {
   props: collapseProps,
   emits: collapseEmits,
   setup(__props, { expose, emit }) {
@@ -20376,11 +20430,11 @@ const _sfc_main$1_ = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$1_, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/collapse/src/collapse.vue"]]);
-const __default__$N = {
+var Collapse = /* @__PURE__ */ _export_sfc(_sfc_main$1Z, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/collapse/src/collapse.vue"]]);
+const __default__$Q = {
   name: "ElCollapseTransition"
 };
-const _sfc_main$1Z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$N), {
+const _sfc_main$1Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$Q), {
   setup(__props) {
     const ns2 = useNamespace("collapse-transition");
     const on2 = {
@@ -20445,7 +20499,7 @@ const _sfc_main$1Z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var CollapseTransition = /* @__PURE__ */ _export_sfc(_sfc_main$1Z, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/collapse-transition/src/collapse-transition.vue"]]);
+var CollapseTransition = /* @__PURE__ */ _export_sfc(_sfc_main$1Y, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/collapse-transition/src/collapse-transition.vue"]]);
 CollapseTransition.install = (app) => {
   app.component(CollapseTransition.name, CollapseTransition);
 };
@@ -20465,10 +20519,10 @@ const collapseItemProps = buildProps({
 const _hoisted_1$I = ["aria-expanded", "aria-controls", "aria-describedby"];
 const _hoisted_2$t = ["id", "tabindex", "onKeypress"];
 const _hoisted_3$h = ["id", "aria-hidden", "aria-labelledby"];
-const __default__$M = {
+const __default__$P = {
   name: "ElCollapseItem"
 };
-const _sfc_main$1Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$M), {
+const _sfc_main$1X = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$P), {
   props: collapseItemProps,
   setup(__props, { expose }) {
     const props = __props;
@@ -20565,7 +20619,7 @@ const _sfc_main$1Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var CollapseItem = /* @__PURE__ */ _export_sfc(_sfc_main$1Y, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/collapse/src/collapse-item.vue"]]);
+var CollapseItem = /* @__PURE__ */ _export_sfc(_sfc_main$1X, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/collapse/src/collapse-item.vue"]]);
 const ElCollapse = withInstall(Collapse, {
   CollapseItem
 });
@@ -20573,7 +20627,7 @@ const ElCollapseItem = withNoopInstall(CollapseItem);
 function draggable(element, options) {
   return;
 }
-const _sfc_main$1X = vue_cjs_prod.defineComponent({
+const _sfc_main$1W = vue_cjs_prod.defineComponent({
   name: "ElColorAlphaSlider",
   props: {
     color: {
@@ -20666,7 +20720,7 @@ const _sfc_main$1X = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$F(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     class: vue_cjs_prod.normalizeClass(["el-color-alpha-slider", { "is-vertical": _ctx.vertical }])
   }, [
@@ -20688,8 +20742,8 @@ function _sfc_render$F(_ctx, _cache, $props, $setup, $data, $options) {
     }, null, 4)
   ], 2);
 }
-var AlphaSlider = /* @__PURE__ */ _export_sfc(_sfc_main$1X, [["render", _sfc_render$F], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/components/alpha-slider.vue"]]);
-const _sfc_main$1W = vue_cjs_prod.defineComponent({
+var AlphaSlider = /* @__PURE__ */ _export_sfc(_sfc_main$1W, [["render", _sfc_render$C], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/components/alpha-slider.vue"]]);
+const _sfc_main$1V = vue_cjs_prod.defineComponent({
   name: "ElColorHueSlider",
   props: {
     color: {
@@ -20772,7 +20826,7 @@ const _sfc_main$1W = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     class: vue_cjs_prod.normalizeClass(["el-color-hue-slider", { "is-vertical": _ctx.vertical }])
   }, [
@@ -20791,7 +20845,7 @@ function _sfc_render$E(_ctx, _cache, $props, $setup, $data, $options) {
     }, null, 4)
   ], 2);
 }
-var HueSlider = /* @__PURE__ */ _export_sfc(_sfc_main$1W, [["render", _sfc_render$E], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/components/hue-slider.vue"]]);
+var HueSlider = /* @__PURE__ */ _export_sfc(_sfc_main$1V, [["render", _sfc_render$B], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/components/hue-slider.vue"]]);
 const OPTIONS_KEY = Symbol();
 const useOptions = () => {
   return vue_cjs_prod.inject(OPTIONS_KEY);
@@ -21066,7 +21120,7 @@ class Color {
     }
   }
 }
-const _sfc_main$1V = vue_cjs_prod.defineComponent({
+const _sfc_main$1U = vue_cjs_prod.defineComponent({
   props: {
     colors: { type: Array, required: true },
     color: {
@@ -21109,7 +21163,7 @@ const _sfc_main$1V = vue_cjs_prod.defineComponent({
 const _hoisted_1$H = { class: "el-color-predefine" };
 const _hoisted_2$s = { class: "el-color-predefine__colors" };
 const _hoisted_3$g = ["onClick"];
-function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_1$H, [
     vue_cjs_prod.createElementVNode("div", _hoisted_2$s, [
       (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.rgbaColors, (item, index2) => {
@@ -21126,8 +21180,8 @@ function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ]);
 }
-var Predefine = /* @__PURE__ */ _export_sfc(_sfc_main$1V, [["render", _sfc_render$D], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/components/predefine.vue"]]);
-const _sfc_main$1U = vue_cjs_prod.defineComponent({
+var Predefine = /* @__PURE__ */ _export_sfc(_sfc_main$1U, [["render", _sfc_render$A], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/components/predefine.vue"]]);
+const _sfc_main$1T = vue_cjs_prod.defineComponent({
   name: "ElSlPanel",
   props: {
     color: {
@@ -21194,7 +21248,7 @@ const _hoisted_3$f = /* @__PURE__ */ vue_cjs_prod.createElementVNode("div", null
 const _hoisted_4$b = [
   _hoisted_3$f
 ];
-function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     class: "el-color-svpanel",
     style: vue_cjs_prod.normalizeStyle({
@@ -21212,8 +21266,8 @@ function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
     }, _hoisted_4$b, 4)
   ], 4);
 }
-var SvPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1U, [["render", _sfc_render$C], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/components/sv-panel.vue"]]);
-const _sfc_main$1T = vue_cjs_prod.defineComponent({
+var SvPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1T, [["render", _sfc_render$z], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/components/sv-panel.vue"]]);
+const _sfc_main$1S = vue_cjs_prod.defineComponent({
   name: "ElColorPicker",
   components: {
     ElButton,
@@ -21412,7 +21466,7 @@ const _sfc_main$1T = vue_cjs_prod.defineComponent({
   }
 });
 const _hoisted_1$F = ["id", "aria-label", "aria-labelledby", "aria-description", "tabindex"];
-function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_hue_slider = vue_cjs_prod.resolveComponent("hue-slider");
   const _component_sv_panel = vue_cjs_prod.resolveComponent("sv-panel");
   const _component_alpha_slider = vue_cjs_prod.resolveComponent("alpha-slider");
@@ -21567,7 +21621,7 @@ function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["visible", "popper-class"]);
 }
-var ColorPicker = /* @__PURE__ */ _export_sfc(_sfc_main$1T, [["render", _sfc_render$B], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/index.vue"]]);
+var ColorPicker = /* @__PURE__ */ _export_sfc(_sfc_main$1S, [["render", _sfc_render$y], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/color-picker/src/index.vue"]]);
 ColorPicker.install = (app) => {
   app.component(ColorPicker.name, ColorPicker);
 };
@@ -21614,10 +21668,10 @@ const ConfigProvider = vue_cjs_prod.defineComponent({
   }
 });
 const ElConfigProvider = withInstall(ConfigProvider);
-const __default__$L = {
+const __default__$O = {
   name: "ElContainer"
 };
-const _sfc_main$1S = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$L), {
+const _sfc_main$1R = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$O), {
   props: {
     direction: {
       type: String
@@ -21652,11 +21706,11 @@ const _sfc_main$1S = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Container = /* @__PURE__ */ _export_sfc(_sfc_main$1S, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/container.vue"]]);
-const __default__$K = {
+var Container = /* @__PURE__ */ _export_sfc(_sfc_main$1R, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/container.vue"]]);
+const __default__$N = {
   name: "ElAside"
 };
-const _sfc_main$1R = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$K), {
+const _sfc_main$1Q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$N), {
   props: {
     width: {
       type: String,
@@ -21677,11 +21731,11 @@ const _sfc_main$1R = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Aside = /* @__PURE__ */ _export_sfc(_sfc_main$1R, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/aside.vue"]]);
-const __default__$J = {
+var Aside = /* @__PURE__ */ _export_sfc(_sfc_main$1Q, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/aside.vue"]]);
+const __default__$M = {
   name: "ElFooter"
 };
-const _sfc_main$1Q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$J), {
+const _sfc_main$1P = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$M), {
   props: {
     height: {
       type: String,
@@ -21702,11 +21756,11 @@ const _sfc_main$1Q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Footer$2 = /* @__PURE__ */ _export_sfc(_sfc_main$1Q, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/footer.vue"]]);
-const __default__$I = {
+var Footer$2 = /* @__PURE__ */ _export_sfc(_sfc_main$1P, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/footer.vue"]]);
+const __default__$L = {
   name: "ElHeader"
 };
-const _sfc_main$1P = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$I), {
+const _sfc_main$1O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$L), {
   props: {
     height: {
       type: String,
@@ -21731,11 +21785,11 @@ const _sfc_main$1P = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Header = /* @__PURE__ */ _export_sfc(_sfc_main$1P, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/header.vue"]]);
-const __default__$H = {
+var Header = /* @__PURE__ */ _export_sfc(_sfc_main$1O, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/header.vue"]]);
+const __default__$K = {
   name: "ElMain"
 };
-const _sfc_main$1O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$H), {
+const _sfc_main$1N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$K), {
   setup(__props) {
     const ns2 = useNamespace("main");
     return (_ctx, _cache) => {
@@ -21747,7 +21801,7 @@ const _sfc_main$1O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Main = /* @__PURE__ */ _export_sfc(_sfc_main$1O, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/main.vue"]]);
+var Main = /* @__PURE__ */ _export_sfc(_sfc_main$1N, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/container/src/main.vue"]]);
 const ElContainer = withInstall(Container, {
   Aside,
   Footer: Footer$2,
@@ -21939,7 +21993,7 @@ const _hoisted_2$q = {
 };
 const _hoisted_3$e = ["aria-label"];
 const _hoisted_4$a = ["aria-current", "aria-selected", "tabindex"];
-const _sfc_main$1N = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$1M = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "basic-date-table",
   props: basicDateTableProps,
   emits: ["changerange", "pick", "select"],
@@ -22271,14 +22325,14 @@ const _sfc_main$1N = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var DateTable = /* @__PURE__ */ _export_sfc(_sfc_main$1N, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/basic-date-table.vue"]]);
+var DateTable = /* @__PURE__ */ _export_sfc(_sfc_main$1M, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/basic-date-table.vue"]]);
 const basicMonthTableProps = buildProps(__spreadProps(__spreadValues({}, datePickerSharedProps), {
   selectionMode: selectionModeWithDefault("month")
 }));
 const _hoisted_1$D = ["aria-label"];
 const _hoisted_2$p = ["aria-selected", "aria-label", "tabindex", "onKeydown"];
 const _hoisted_3$d = { class: "cell" };
-const _sfc_main$1M = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$1L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "basic-month-table",
   props: basicMonthTableProps,
   emits: ["changerange", "pick", "select"],
@@ -22471,7 +22525,7 @@ const _sfc_main$1M = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var MonthTable = /* @__PURE__ */ _export_sfc(_sfc_main$1M, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/basic-month-table.vue"]]);
+var MonthTable = /* @__PURE__ */ _export_sfc(_sfc_main$1L, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/basic-month-table.vue"]]);
 const { date: date$1, disabledDate, parsedValue } = datePickerSharedProps;
 const basicYearTableProps = buildProps({
   date: date$1,
@@ -22482,7 +22536,7 @@ const _hoisted_1$C = ["aria-label"];
 const _hoisted_2$o = ["aria-selected", "tabindex", "onKeydown"];
 const _hoisted_3$c = { class: "cell" };
 const _hoisted_4$9 = { key: 1 };
-const _sfc_main$1L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _sfc_main$1K = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "basic-year-table",
   props: basicYearTableProps,
   emits: ["pick"],
@@ -22576,13 +22630,13 @@ const _sfc_main$1L = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var YearTable = /* @__PURE__ */ _export_sfc(_sfc_main$1L, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/basic-year-table.vue"]]);
+var YearTable = /* @__PURE__ */ _export_sfc(_sfc_main$1K, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/basic-year-table.vue"]]);
 const _hoisted_1$B = ["onClick"];
 const _hoisted_2$n = ["aria-label"];
 const _hoisted_3$b = ["aria-label"];
 const _hoisted_4$8 = ["aria-label"];
-const _hoisted_5$6 = ["aria-label"];
-const _sfc_main$1K = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _hoisted_5$7 = ["aria-label"];
+const _sfc_main$1J = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "panel-date-pick",
   props: panelDatePickProps,
   emits: ["pick", "set-picker-option", "panel-change"],
@@ -23120,7 +23174,7 @@ const _sfc_main$1K = /* @__PURE__ */ vue_cjs_prod.defineComponent({
                     ]),
                     _: 1
                   })
-                ], 10, _hoisted_5$6)
+                ], 10, _hoisted_5$7)
               ], 2)
             ], 2), [
               [vue_cjs_prod.vShow, currentView.value !== "time"]
@@ -23195,7 +23249,7 @@ const _sfc_main$1K = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var DatePickPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1K, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/panel-date-pick.vue"]]);
+var DatePickPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1J, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/panel-date-pick.vue"]]);
 const panelDateRangeProps = buildProps(__spreadValues(__spreadValues({}, panelSharedProps), panelRangeSharedProps));
 const useShortcut = (lang) => {
   const { emit } = vue_cjs_prod.getCurrentInstance();
@@ -23299,8 +23353,8 @@ const _hoisted_1$A = ["onClick"];
 const _hoisted_2$m = ["disabled"];
 const _hoisted_3$a = ["disabled"];
 const _hoisted_4$7 = ["disabled"];
-const _hoisted_5$5 = ["disabled"];
-const _sfc_main$1J = /* @__PURE__ */ vue_cjs_prod.defineComponent({
+const _hoisted_5$6 = ["disabled"];
+const _sfc_main$1I = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "panel-date-range",
   props: panelDateRangeProps,
   emits: [
@@ -23615,7 +23669,7 @@ const _sfc_main$1J = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }
       }
     }
-    emit("set-picker-option", ["isValidRange", isValidRange]);
+    emit("set-picker-option", ["isValidValue", isValidRange]);
     emit("set-picker-option", ["parseUserInput", parseUserInput]);
     emit("set-picker-option", ["formatToString", formatToString]);
     emit("set-picker-option", ["handleClear", handleClear]);
@@ -23861,7 +23915,7 @@ const _sfc_main$1J = /* @__PURE__ */ vue_cjs_prod.defineComponent({
                     ]),
                     _: 1
                   })
-                ], 10, _hoisted_5$5)) : vue_cjs_prod.createCommentVNode("v-if", true),
+                ], 10, _hoisted_5$6)) : vue_cjs_prod.createCommentVNode("v-if", true),
                 vue_cjs_prod.createElementVNode("button", {
                   type: "button",
                   class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(ppNs).e("icon-btn"), "d-arrow-right"]),
@@ -23936,7 +23990,7 @@ const _sfc_main$1J = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
   }
 });
-var DateRangePickPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1J, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/panel-date-range.vue"]]);
+var DateRangePickPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1I, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/panel-date-range.vue"]]);
 const panelMonthRangeProps = buildProps(__spreadValues({}, panelRangeSharedProps));
 const panelMonthRangeEmits = ["pick", "set-picker-option"];
 const useMonthRangeHeader = ({
@@ -23989,10 +24043,10 @@ const useMonthRangeHeader = ({
 const _hoisted_1$z = ["onClick"];
 const _hoisted_2$l = ["disabled"];
 const _hoisted_3$9 = ["disabled"];
-const __default__$G = {
+const __default__$J = {
   name: "DatePickerMonthRange"
 };
-const _sfc_main$1I = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$G), {
+const _sfc_main$1H = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$J), {
   props: panelMonthRangeProps,
   emits: panelMonthRangeEmits,
   setup(__props, { emit }) {
@@ -24197,7 +24251,7 @@ const _sfc_main$1I = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var MonthRangePickPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1I, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/panel-month-range.vue"]]);
+var MonthRangePickPanel = /* @__PURE__ */ _export_sfc(_sfc_main$1H, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/date-picker/src/date-picker-com/panel-month-range.vue"]]);
 const getPanel = function(type4) {
   switch (type4) {
     case "daterange":
@@ -24348,7 +24402,7 @@ var DescriptionsCell = vue_cjs_prod.defineComponent({
     }
   }
 });
-const _sfc_main$1H = vue_cjs_prod.defineComponent({
+const _sfc_main$1G = vue_cjs_prod.defineComponent({
   name: "ElDescriptionsRow",
   components: {
     [DescriptionsCell.name]: DescriptionsCell
@@ -24366,7 +24420,7 @@ const _sfc_main$1H = vue_cjs_prod.defineComponent({
   }
 });
 const _hoisted_1$y = { key: 1 };
-function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_descriptions_cell = vue_cjs_prod.resolveComponent("el-descriptions-cell");
   return _ctx.descriptions.direction === "vertical" ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 0 }, [
     vue_cjs_prod.createElementVNode("tr", null, [
@@ -24415,8 +24469,8 @@ function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
     }), 128))
   ]));
 }
-var DescriptionsRow = /* @__PURE__ */ _export_sfc(_sfc_main$1H, [["render", _sfc_render$A], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/descriptions/src/descriptions-row.vue"]]);
-const _sfc_main$1G = vue_cjs_prod.defineComponent({
+var DescriptionsRow = /* @__PURE__ */ _export_sfc(_sfc_main$1G, [["render", _sfc_render$x], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/descriptions/src/descriptions-row.vue"]]);
+const _sfc_main$1F = vue_cjs_prod.defineComponent({
   name: "ElDescriptions",
   components: {
     [DescriptionsRow.name]: DescriptionsRow
@@ -24520,7 +24574,7 @@ const _sfc_main$1G = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_descriptions_row = vue_cjs_prod.resolveComponent("el-descriptions-row");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     class: vue_cjs_prod.normalizeClass(_ctx.descriptionKls)
@@ -24562,7 +24616,7 @@ function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
     ], 2)
   ], 2);
 }
-var Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$1G, [["render", _sfc_render$z], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/descriptions/src/index.vue"]]);
+var Descriptions = /* @__PURE__ */ _export_sfc(_sfc_main$1F, [["render", _sfc_render$w], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/descriptions/src/index.vue"]]);
 var DescriptionsItem = vue_cjs_prod.defineComponent({
   name: "ElDescriptionsItem",
   props: {
@@ -24696,8 +24750,8 @@ const dialogContentEmits = {
 };
 const _hoisted_1$x = ["aria-label"];
 const _hoisted_2$k = ["id"];
-const __default__$F = { name: "ElDialogContent" };
-const _sfc_main$1F = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$F), {
+const __default__$I = { name: "ElDialogContent" };
+const _sfc_main$1E = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$I), {
   props: dialogContentProps,
   emits: dialogContentEmits,
   setup(__props) {
@@ -24768,7 +24822,7 @@ const _sfc_main$1F = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var ElDialogContent = /* @__PURE__ */ _export_sfc(_sfc_main$1F, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/dialog/src/dialog-content.vue"]]);
+var ElDialogContent = /* @__PURE__ */ _export_sfc(_sfc_main$1E, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/dialog/src/dialog-content.vue"]]);
 const dialogProps = buildProps(__spreadProps(__spreadValues({}, dialogContentProps), {
   appendToBody: {
     type: Boolean,
@@ -24984,10 +25038,10 @@ const useDialog = (props, targetRef) => {
   };
 };
 const _hoisted_1$w = ["aria-label", "aria-labelledby", "aria-describedby"];
-const __default__$E = {
+const __default__$H = {
   name: "ElDialog"
 };
-const _sfc_main$1E = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$E), {
+const _sfc_main$1D = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$H), {
   props: dialogProps,
   emits: dialogEmits,
   setup(__props, { expose }) {
@@ -25124,7 +25178,7 @@ const _sfc_main$1E = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$1E, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/dialog/src/dialog.vue"]]);
+var Dialog = /* @__PURE__ */ _export_sfc(_sfc_main$1D, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/dialog/src/dialog.vue"]]);
 const ElDialog = withInstall(Dialog);
 const dividerProps = buildProps({
   direction: {
@@ -25142,10 +25196,10 @@ const dividerProps = buildProps({
     default: "solid"
   }
 });
-const __default__$D = {
+const __default__$G = {
   name: "ElDivider"
 };
-const _sfc_main$1D = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$D), {
+const _sfc_main$1C = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$G), {
   props: dividerProps,
   setup(__props) {
     const props = __props;
@@ -25171,7 +25225,7 @@ const _sfc_main$1D = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Divider = /* @__PURE__ */ _export_sfc(_sfc_main$1D, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/divider/src/divider.vue"]]);
+var Divider = /* @__PURE__ */ _export_sfc(_sfc_main$1C, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/divider/src/divider.vue"]]);
 const ElDivider = withInstall(Divider);
 const drawerProps = buildProps(__spreadProps(__spreadValues({}, dialogProps), {
   direction: {
@@ -25193,7 +25247,7 @@ const drawerProps = buildProps(__spreadProps(__spreadValues({}, dialogProps), {
   }
 }));
 const drawerEmits = dialogEmits;
-const _sfc_main$1C = vue_cjs_prod.defineComponent({
+const _sfc_main$1B = vue_cjs_prod.defineComponent({
   name: "ElDrawer",
   components: {
     ElOverlay,
@@ -25231,7 +25285,7 @@ const _hoisted_1$v = ["aria-label", "aria-labelledby", "aria-describedby"];
 const _hoisted_2$j = ["id"];
 const _hoisted_3$8 = ["aria-label"];
 const _hoisted_4$6 = ["id"];
-function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_close = vue_cjs_prod.resolveComponent("close");
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
   const _component_el_focus_trap = vue_cjs_prod.resolveComponent("el-focus-trap");
@@ -25343,23 +25397,23 @@ function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
     }, 8, ["name", "onAfterEnter", "onAfterLeave", "onBeforeLeave"])
   ], 8, ["disabled"]);
 }
-var Drawer = /* @__PURE__ */ _export_sfc(_sfc_main$1C, [["render", _sfc_render$y], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/drawer/src/drawer.vue"]]);
+var Drawer = /* @__PURE__ */ _export_sfc(_sfc_main$1B, [["render", _sfc_render$v], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/drawer/src/drawer.vue"]]);
 const ElDrawer = withInstall(Drawer);
-const _sfc_main$1B = {
+const _sfc_main$1A = {
   inheritAttrs: false
 };
-function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.renderSlot(_ctx.$slots, "default");
 }
-var Collection = /* @__PURE__ */ _export_sfc(_sfc_main$1B, [["render", _sfc_render$x], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/collection/src/collection.vue"]]);
-const _sfc_main$1A = {
+var Collection = /* @__PURE__ */ _export_sfc(_sfc_main$1A, [["render", _sfc_render$u], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/collection/src/collection.vue"]]);
+const _sfc_main$1z = {
   name: "ElCollectionItem",
   inheritAttrs: false
 };
-function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.renderSlot(_ctx.$slots, "default");
 }
-var CollectionItem = /* @__PURE__ */ _export_sfc(_sfc_main$1A, [["render", _sfc_render$w], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/collection/src/collection-item.vue"]]);
+var CollectionItem = /* @__PURE__ */ _export_sfc(_sfc_main$1z, [["render", _sfc_render$t], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/collection/src/collection-item.vue"]]);
 const COLLECTION_ITEM_SIGN = `data-el-collection-item`;
 const createCollectionWithScope = (name) => {
   const COLLECTION_NAME = `El${name}Collection`;
@@ -25488,7 +25542,7 @@ const focusFirst = (elements) => {
 const CURRENT_TAB_ID_CHANGE_EVT = "currentTabIdChange";
 const ENTRY_FOCUS_EVT = "rovingFocusGroup.entryFocus";
 const EVT_OPTS = { bubbles: false, cancelable: true };
-const _sfc_main$1z = vue_cjs_prod.defineComponent({
+const _sfc_main$1y = vue_cjs_prod.defineComponent({
   name: "ElRovingFocusGroupImpl",
   inheritAttrs: false,
   props: rovingFocusGroupProps,
@@ -25578,18 +25632,18 @@ const _sfc_main$1z = vue_cjs_prod.defineComponent({
     });
   }
 });
-function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.renderSlot(_ctx.$slots, "default");
 }
-var ElRovingFocusGroupImpl = /* @__PURE__ */ _export_sfc(_sfc_main$1z, [["render", _sfc_render$v], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/roving-focus-group/src/roving-focus-group-impl.vue"]]);
-const _sfc_main$1y = vue_cjs_prod.defineComponent({
+var ElRovingFocusGroupImpl = /* @__PURE__ */ _export_sfc(_sfc_main$1y, [["render", _sfc_render$s], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/roving-focus-group/src/roving-focus-group-impl.vue"]]);
+const _sfc_main$1x = vue_cjs_prod.defineComponent({
   name: "ElRovingFocusGroup",
   components: {
     ElFocusGroupCollection: ElCollection$1,
     ElRovingFocusGroupImpl
   }
 });
-function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_roving_focus_group_impl = vue_cjs_prod.resolveComponent("el-roving-focus-group-impl");
   const _component_el_focus_group_collection = vue_cjs_prod.resolveComponent("el-focus-group-collection");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_focus_group_collection, null, {
@@ -25604,8 +25658,8 @@ function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   });
 }
-var ElRovingFocusGroup = /* @__PURE__ */ _export_sfc(_sfc_main$1y, [["render", _sfc_render$u], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/roving-focus-group/src/roving-focus-group.vue"]]);
-const _sfc_main$1x = vue_cjs_prod.defineComponent({
+var ElRovingFocusGroup = /* @__PURE__ */ _export_sfc(_sfc_main$1x, [["render", _sfc_render$r], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/roving-focus-group/src/roving-focus-group.vue"]]);
+const _sfc_main$1w = vue_cjs_prod.defineComponent({
   components: {
     ElRovingFocusCollectionItem: ElCollectionItem$1
   },
@@ -25690,7 +25744,7 @@ const _sfc_main$1x = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_roving_focus_collection_item = vue_cjs_prod.resolveComponent("el-roving-focus-collection-item");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_roving_focus_collection_item, {
     id: _ctx.id,
@@ -25703,7 +25757,7 @@ function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["id", "focusable", "active"]);
 }
-var ElRovingFocusItem = /* @__PURE__ */ _export_sfc(_sfc_main$1x, [["render", _sfc_render$t], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/roving-focus-group/src/roving-focus-item.vue"]]);
+var ElRovingFocusItem = /* @__PURE__ */ _export_sfc(_sfc_main$1w, [["render", _sfc_render$q], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/roving-focus-group/src/roving-focus-item.vue"]]);
 const dropdownProps = buildProps({
   trigger: useTooltipTriggerProps.trigger,
   effect: __spreadProps(__spreadValues({}, useTooltipContentProps.effect), {
@@ -25796,7 +25850,7 @@ const {
 } = createCollectionWithScope("Dropdown");
 const DROPDOWN_INJECTION_KEY = Symbol("elDropdown");
 const { ButtonGroup: ElButtonGroup } = ElButton;
-const _sfc_main$1w = vue_cjs_prod.defineComponent({
+const _sfc_main$1v = vue_cjs_prod.defineComponent({
   name: "ElDropdown",
   components: {
     ElButton,
@@ -25922,7 +25976,7 @@ const _sfc_main$1w = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
   var _a;
   const _component_el_dropdown_collection = vue_cjs_prod.resolveComponent("el-dropdown-collection");
   const _component_el_roving_focus_group = vue_cjs_prod.resolveComponent("el-roving-focus-group");
@@ -26053,8 +26107,8 @@ function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
     })) : vue_cjs_prod.createCommentVNode("v-if", true)
   ], 2);
 }
-var Dropdown = /* @__PURE__ */ _export_sfc(_sfc_main$1w, [["render", _sfc_render$s], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/dropdown/src/dropdown.vue"]]);
-const _sfc_main$1v = vue_cjs_prod.defineComponent({
+var Dropdown = /* @__PURE__ */ _export_sfc(_sfc_main$1v, [["render", _sfc_render$p], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/dropdown/src/dropdown.vue"]]);
+const _sfc_main$1u = vue_cjs_prod.defineComponent({
   name: "DropdownItemImpl",
   components: {
     ElIcon
@@ -26106,7 +26160,7 @@ const _sfc_main$1v = vue_cjs_prod.defineComponent({
   }
 });
 const _hoisted_1$u = ["aria-disabled", "tabindex", "role"];
-function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, [
     _ctx.divided ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", vue_cjs_prod.mergeProps({
@@ -26136,7 +26190,7 @@ function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
     ], 16, _hoisted_1$u)
   ], 64);
 }
-var ElDropdownItemImpl = /* @__PURE__ */ _export_sfc(_sfc_main$1v, [["render", _sfc_render$r], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/dropdown/src/dropdown-item-impl.vue"]]);
+var ElDropdownItemImpl = /* @__PURE__ */ _export_sfc(_sfc_main$1u, [["render", _sfc_render$o], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/dropdown/src/dropdown-item-impl.vue"]]);
 const useDropdown = () => {
   const elDropdown = vue_cjs_prod.inject("elDropdown", {});
   const _elDropdownSize = vue_cjs_prod.computed(() => elDropdown == null ? void 0 : elDropdown.dropdownSize);
@@ -26145,7 +26199,7 @@ const useDropdown = () => {
     _elDropdownSize
   };
 };
-const _sfc_main$1u = vue_cjs_prod.defineComponent({
+const _sfc_main$1t = vue_cjs_prod.defineComponent({
   name: "ElDropdownItem",
   components: {
     ElDropdownCollectionItem: ElCollectionItem,
@@ -26210,7 +26264,7 @@ const _sfc_main$1u = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
   var _a;
   const _component_el_dropdown_item_impl = vue_cjs_prod.resolveComponent("el-dropdown-item-impl");
   const _component_el_roving_focus_item = vue_cjs_prod.resolveComponent("el-roving-focus-item");
@@ -26241,8 +26295,8 @@ function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 8, ["disabled", "text-value"]);
 }
-var DropdownItem = /* @__PURE__ */ _export_sfc(_sfc_main$1u, [["render", _sfc_render$q], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/dropdown/src/dropdown-item.vue"]]);
-const _sfc_main$1t = vue_cjs_prod.defineComponent({
+var DropdownItem = /* @__PURE__ */ _export_sfc(_sfc_main$1t, [["render", _sfc_render$n], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/dropdown/src/dropdown-item.vue"]]);
+const _sfc_main$1s = vue_cjs_prod.defineComponent({
   name: "ElDropdownMenu",
   props: dropdownMenuProps,
   setup(props) {
@@ -26306,7 +26360,7 @@ const _sfc_main$1t = vue_cjs_prod.defineComponent({
   }
 });
 const _hoisted_1$t = ["role", "aria-labelledby"];
-function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("ul", {
     ref: _ctx.dropdownListWrapperRef,
     class: vue_cjs_prod.normalizeClass(_ctx.dropdownKls),
@@ -26322,7 +26376,7 @@ function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
     vue_cjs_prod.renderSlot(_ctx.$slots, "default")
   ], 46, _hoisted_1$t);
 }
-var DropdownMenu = /* @__PURE__ */ _export_sfc(_sfc_main$1t, [["render", _sfc_render$p], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/dropdown/src/dropdown-menu.vue"]]);
+var DropdownMenu = /* @__PURE__ */ _export_sfc(_sfc_main$1s, [["render", _sfc_render$m], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/dropdown/src/dropdown-menu.vue"]]);
 const ElDropdown = withInstall(Dropdown, {
   DropdownItem,
   DropdownMenu
@@ -26330,7 +26384,7 @@ const ElDropdown = withInstall(Dropdown, {
 const ElDropdownItem = withNoopInstall(DropdownItem);
 const ElDropdownMenu = withNoopInstall(DropdownMenu);
 let id = 0;
-const _sfc_main$1s = vue_cjs_prod.defineComponent({
+const _sfc_main$1r = vue_cjs_prod.defineComponent({
   name: "ImgEmpty",
   setup() {
     const ns2 = useNamespace("empty");
@@ -26349,8 +26403,8 @@ const _hoisted_1$s = {
 const _hoisted_2$i = ["id"];
 const _hoisted_3$7 = ["stop-color"];
 const _hoisted_4$5 = ["stop-color"];
-const _hoisted_5$4 = ["id"];
-const _hoisted_6 = ["stop-color"];
+const _hoisted_5$5 = ["id"];
+const _hoisted_6$1 = ["stop-color"];
 const _hoisted_7 = ["stop-color"];
 const _hoisted_8 = ["id"];
 const _hoisted_9 = {
@@ -26386,7 +26440,7 @@ const _hoisted_20 = {
 const _hoisted_21 = ["fill", "xlink:href"];
 const _hoisted_22 = ["fill", "mask"];
 const _hoisted_23 = ["fill"];
-function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("svg", _hoisted_1$s, [
     vue_cjs_prod.createElementVNode("defs", null, [
       vue_cjs_prod.createElementVNode("linearGradient", {
@@ -26415,12 +26469,12 @@ function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
         vue_cjs_prod.createElementVNode("stop", {
           "stop-color": `var(${_ctx.ns.cssVarBlockName("fill-color-1")})`,
           offset: "0%"
-        }, null, 8, _hoisted_6),
+        }, null, 8, _hoisted_6$1),
         vue_cjs_prod.createElementVNode("stop", {
           "stop-color": `var(${_ctx.ns.cssVarBlockName("fill-color-6")})`,
           offset: "100%"
         }, null, 8, _hoisted_7)
-      ], 8, _hoisted_5$4),
+      ], 8, _hoisted_5$5),
       vue_cjs_prod.createElementVNode("rect", {
         id: `path-3-${_ctx.id}`,
         x: "0",
@@ -26505,7 +26559,7 @@ function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ]);
 }
-var ImgEmpty = /* @__PURE__ */ _export_sfc(_sfc_main$1s, [["render", _sfc_render$o], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/empty/src/img-empty.vue"]]);
+var ImgEmpty = /* @__PURE__ */ _export_sfc(_sfc_main$1r, [["render", _sfc_render$l], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/empty/src/img-empty.vue"]]);
 const emptyProps = {
   image: {
     type: String,
@@ -26519,10 +26573,10 @@ const emptyProps = {
 };
 const _hoisted_1$r = ["src"];
 const _hoisted_2$h = { key: 1 };
-const __default__$C = {
+const __default__$F = {
   name: "ElEmpty"
 };
-const _sfc_main$1r = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$C), {
+const _sfc_main$1q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$F), {
   props: emptyProps,
   setup(__props) {
     const props = __props;
@@ -26563,7 +26617,7 @@ const _sfc_main$1r = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Empty = /* @__PURE__ */ _export_sfc(_sfc_main$1r, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/empty/src/empty.vue"]]);
+var Empty = /* @__PURE__ */ _export_sfc(_sfc_main$1q, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/empty/src/empty.vue"]]);
 const ElEmpty = withInstall(Empty);
 const formProps = buildProps({
   model: Object,
@@ -26644,10 +26698,10 @@ const filterFields = (fields, props) => {
   const normalized = castArray$1(props);
   return normalized.length > 0 ? fields.filter((field) => field.prop && normalized.includes(field.prop)) : fields;
 };
-const __default__$B = {
+const __default__$E = {
   name: "ElForm"
 };
-const _sfc_main$1q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$B), {
+const _sfc_main$1p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$E), {
   props: formProps,
   emits: formEmits,
   setup(__props, { expose, emit }) {
@@ -26768,9 +26822,9 @@ const _sfc_main$1q = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Form = /* @__PURE__ */ _export_sfc(_sfc_main$1q, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/form/src/form.vue"]]);
+var Form = /* @__PURE__ */ _export_sfc(_sfc_main$1p, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/form/src/form.vue"]]);
 function _extends() {
-  _extends = Object.assign || function(target) {
+  _extends = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -26789,13 +26843,13 @@ function _inheritsLoose(subClass, superClass) {
   _setPrototypeOf(subClass, superClass);
 }
 function _getPrototypeOf(o2) {
-  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf2(o3) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf2(o3) {
     return o3.__proto__ || Object.getPrototypeOf(o3);
   };
   return _getPrototypeOf(o2);
 }
 function _setPrototypeOf(o2, p2) {
-  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf2(o3, p3) {
+  _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf2(o3, p3) {
     o3.__proto__ = p3;
     return o3;
   };
@@ -26818,7 +26872,7 @@ function _isNativeReflectConstruct() {
 }
 function _construct(Parent, args, Class) {
   if (_isNativeReflectConstruct()) {
-    _construct = Reflect.construct;
+    _construct = Reflect.construct.bind();
   } else {
     _construct = function _construct2(Parent2, args2, Class2) {
       var a2 = [null];
@@ -27096,9 +27150,45 @@ var whitespace = function whitespace2(rule, value, source, errors, options) {
     errors.push(format(options.messages.whitespace, rule.fullField));
   }
 };
+var urlReg;
+var getUrlRegex = function() {
+  if (urlReg) {
+    return urlReg;
+  }
+  var word = "[a-fA-F\\d:]";
+  var b2 = function b3(options) {
+    return options && options.includeBoundaries ? "(?:(?<=\\s|^)(?=" + word + ")|(?<=" + word + ")(?=\\s|$))" : "";
+  };
+  var v4 = "(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)){3}";
+  var v6seg = "[a-fA-F\\d]{1,4}";
+  var v6 = ("\n(?:\n(?:" + v6seg + ":){7}(?:" + v6seg + "|:)|                                    // 1:2:3:4:5:6:7::  1:2:3:4:5:6:7:8\n(?:" + v6seg + ":){6}(?:" + v4 + "|:" + v6seg + "|:)|                             // 1:2:3:4:5:6::    1:2:3:4:5:6::8   1:2:3:4:5:6::8  1:2:3:4:5:6::1.2.3.4\n(?:" + v6seg + ":){5}(?::" + v4 + "|(?::" + v6seg + "){1,2}|:)|                   // 1:2:3:4:5::      1:2:3:4:5::7:8   1:2:3:4:5::8    1:2:3:4:5::7:1.2.3.4\n(?:" + v6seg + ":){4}(?:(?::" + v6seg + "){0,1}:" + v4 + "|(?::" + v6seg + "){1,3}|:)| // 1:2:3:4::        1:2:3:4::6:7:8   1:2:3:4::8      1:2:3:4::6:7:1.2.3.4\n(?:" + v6seg + ":){3}(?:(?::" + v6seg + "){0,2}:" + v4 + "|(?::" + v6seg + "){1,4}|:)| // 1:2:3::          1:2:3::5:6:7:8   1:2:3::8        1:2:3::5:6:7:1.2.3.4\n(?:" + v6seg + ":){2}(?:(?::" + v6seg + "){0,3}:" + v4 + "|(?::" + v6seg + "){1,5}|:)| // 1:2::            1:2::4:5:6:7:8   1:2::8          1:2::4:5:6:7:1.2.3.4\n(?:" + v6seg + ":){1}(?:(?::" + v6seg + "){0,4}:" + v4 + "|(?::" + v6seg + "){1,6}|:)| // 1::              1::3:4:5:6:7:8   1::8            1::3:4:5:6:7:1.2.3.4\n(?::(?:(?::" + v6seg + "){0,5}:" + v4 + "|(?::" + v6seg + "){1,7}|:))             // ::2:3:4:5:6:7:8  ::2:3:4:5:6:7:8  ::8             ::1.2.3.4\n)(?:%[0-9a-zA-Z]{1,})?                                             // %eth0            %1\n").replace(/\s*\/\/.*$/gm, "").replace(/\n/g, "").trim();
+  var v46Exact = new RegExp("(?:^" + v4 + "$)|(?:^" + v6 + "$)");
+  var v4exact = new RegExp("^" + v4 + "$");
+  var v6exact = new RegExp("^" + v6 + "$");
+  var ip = function ip2(options) {
+    return options && options.exact ? v46Exact : new RegExp("(?:" + b2(options) + v4 + b2(options) + ")|(?:" + b2(options) + v6 + b2(options) + ")", "g");
+  };
+  ip.v4 = function(options) {
+    return options && options.exact ? v4exact : new RegExp("" + b2(options) + v4 + b2(options), "g");
+  };
+  ip.v6 = function(options) {
+    return options && options.exact ? v6exact : new RegExp("" + b2(options) + v6 + b2(options), "g");
+  };
+  var protocol = "(?:(?:[a-z]+:)?//)";
+  var auth = "(?:\\S+(?::\\S*)?@)?";
+  var ipv4 = ip.v4().source;
+  var ipv6 = ip.v6().source;
+  var host = "(?:(?:[a-z\\u00a1-\\uffff0-9][-_]*)*[a-z\\u00a1-\\uffff0-9]+)";
+  var domain = "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*";
+  var tld = "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))";
+  var port = "(?::\\d{2,5})?";
+  var path = '(?:[/?#][^\\s"]*)?';
+  var regex = "(?:" + protocol + "|www\\.)" + auth + "(?:localhost|" + ipv4 + "|" + ipv6 + "|" + host + domain + tld + ")" + port + path;
+  urlReg = new RegExp("(?:^" + regex + "$)", "i");
+  return urlReg;
+};
 var pattern$2 = {
   email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+\.)+[a-zA-Z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]{2,}))$/,
-  url: new RegExp("^(?!mailto:)(?:(?:http|https|ftp)://|//)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$", "i"),
   hex: /^#?([a-f0-9]{6}|[a-f0-9]{3})$/i
 };
 var types = {
@@ -27140,7 +27230,7 @@ var types = {
     return typeof value === "string" && value.length <= 320 && !!value.match(pattern$2.email);
   },
   url: function url(value) {
-    return typeof value === "string" && value.length <= 2048 && !!value.match(pattern$2.url);
+    return typeof value === "string" && value.length <= 2048 && !!value.match(getUrlRegex());
   },
   hex: function hex(value) {
     return typeof value === "string" && !!value.match(pattern$2.hex);
@@ -27719,9 +27809,11 @@ var Schema = /* @__PURE__ */ function() {
           res = rule.validator(rule, data.value, cb, data.source, options);
         } catch (error) {
           console.error == null ? void 0 : console.error(error);
-          setTimeout(function() {
-            throw error;
-          }, 0);
+          if (!options.suppressValidatorError) {
+            setTimeout(function() {
+              throw error;
+            }, 0);
+          }
           cb(error.message);
         }
         if (res === true) {
@@ -27905,10 +27997,10 @@ var FormLabelWrap = vue_cjs_prod.defineComponent({
   }
 });
 const _hoisted_1$q = ["role", "aria-labelledby"];
-const __default__$A = {
+const __default__$D = {
   name: "ElFormItem"
 };
-const _sfc_main$1p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$A), {
+const _sfc_main$1o = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$D), {
   props: formItemProps,
   setup(__props, { expose }) {
     const props = __props;
@@ -28191,7 +28283,7 @@ const _sfc_main$1p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var FormItem = /* @__PURE__ */ _export_sfc(_sfc_main$1p, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/form/src/form-item.vue"]]);
+var FormItem = /* @__PURE__ */ _export_sfc(_sfc_main$1o, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/form/src/form-item.vue"]]);
 const ElForm = withInstall(Form, {
   FormItem
 });
@@ -28230,10 +28322,10 @@ const imageViewerEmits = {
   switch: (index2) => typeof index2 === "number"
 };
 const _hoisted_1$p = ["src"];
-const __default__$z = {
+const __default__$C = {
   name: "ElImageViewer"
 };
-const _sfc_main$1o = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$z), {
+const _sfc_main$1n = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$C), {
   props: imageViewerProps,
   emits: imageViewerEmits,
   setup(__props, { emit }) {
@@ -28608,7 +28700,7 @@ const _sfc_main$1o = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var ImageViewer = /* @__PURE__ */ _export_sfc(_sfc_main$1o, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/image-viewer/src/image-viewer.vue"]]);
+var ImageViewer = /* @__PURE__ */ _export_sfc(_sfc_main$1n, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/image-viewer/src/image-viewer.vue"]]);
 const ElImageViewer = withInstall(ImageViewer);
 const imageProps = buildProps({
   hideOnClickModal: {
@@ -28660,17 +28752,18 @@ const imageProps = buildProps({
   }
 });
 const imageEmits = {
+  load: (evt) => evt instanceof Event,
   error: (evt) => evt instanceof Event,
   switch: (val) => isNumber(val),
   close: () => true
 };
 const _hoisted_1$o = ["src", "loading"];
 const _hoisted_2$g = { key: 0 };
-const __default__$y = {
+const __default__$B = {
   name: "ElImage",
   inheritAttrs: false
 };
-const _sfc_main$1n = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$y), {
+const _sfc_main$1m = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$B), {
   props: imageProps,
   emits: imageEmits,
   setup(__props, { emit }) {
@@ -28708,9 +28801,10 @@ const _sfc_main$1n = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         return false;
       return props.loading === "lazy" || props.lazy;
     });
-    function handleLoad() {
+    function handleLoad(event) {
       isLoading.value = false;
       hasLoadError.value = false;
+      emit("load", event);
     }
     function handleError(event) {
       isLoading.value = false;
@@ -28773,21 +28867,30 @@ const _sfc_main$1n = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
           src: imageSrc.value,
           loading: _ctx.loading,
           style: vue_cjs_prod.unref(imageStyle),
-          class: [vue_cjs_prod.unref(ns2).e("inner"), vue_cjs_prod.unref(preview2) ? vue_cjs_prod.unref(ns2).e("preview") : ""],
+          class: [
+            vue_cjs_prod.unref(ns2).e("inner"),
+            vue_cjs_prod.unref(preview2) && vue_cjs_prod.unref(ns2).e("preview"),
+            isLoading.value && vue_cjs_prod.unref(ns2).is("loading")
+          ],
           onClick: clickHandler,
           onLoad: handleLoad,
           onError: handleError
         }), null, 16, _hoisted_1$o)) : vue_cjs_prod.createCommentVNode("v-if", true),
-        isLoading.value ? vue_cjs_prod.renderSlot(_ctx.$slots, "placeholder", { key: 1 }, () => [
-          vue_cjs_prod.createElementVNode("div", {
-            class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(ns2).e("placeholder"))
-          }, null, 2)
-        ]) : hasLoadError.value ? vue_cjs_prod.renderSlot(_ctx.$slots, "error", { key: 2 }, () => [
-          vue_cjs_prod.createElementVNode("div", {
-            class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(ns2).e("error"))
-          }, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(t)("el.image.error")), 3)
-        ]) : vue_cjs_prod.createCommentVNode("v-if", true),
-        vue_cjs_prod.unref(preview2) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 3 }, [
+        isLoading.value || hasLoadError.value ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
+          key: 1,
+          class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(ns2).e("wrapper"))
+        }, [
+          isLoading.value ? vue_cjs_prod.renderSlot(_ctx.$slots, "placeholder", { key: 0 }, () => [
+            vue_cjs_prod.createElementVNode("div", {
+              class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(ns2).e("placeholder"))
+            }, null, 2)
+          ]) : hasLoadError.value ? vue_cjs_prod.renderSlot(_ctx.$slots, "error", { key: 1 }, () => [
+            vue_cjs_prod.createElementVNode("div", {
+              class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(ns2).e("error"))
+            }, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(t)("el.image.error")), 3)
+          ]) : vue_cjs_prod.createCommentVNode("v-if", true)
+        ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true),
+        vue_cjs_prod.unref(preview2) ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 2 }, [
           showViewer.value ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElImageViewer), {
             key: 0,
             "z-index": _ctx.zIndex,
@@ -28812,7 +28915,7 @@ const _sfc_main$1n = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Image = /* @__PURE__ */ _export_sfc(_sfc_main$1n, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/image/src/image.vue"]]);
+var Image = /* @__PURE__ */ _export_sfc(_sfc_main$1m, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/image/src/image.vue"]]);
 const ElImage = withInstall(Image);
 const inputNumberProps = buildProps({
   id: {
@@ -28866,10 +28969,10 @@ const inputNumberEmits = {
 };
 const _hoisted_1$n = ["aria-label", "onKeydown"];
 const _hoisted_2$f = ["aria-label", "onKeydown"];
-const __default__$x = {
+const __default__$A = {
   name: "ElInputNumber"
 };
-const _sfc_main$1m = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$x), {
+const _sfc_main$1l = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$A), {
   props: inputNumberProps,
   emits: inputNumberEmits,
   setup(__props, { expose, emit }) {
@@ -29136,7 +29239,7 @@ const _sfc_main$1m = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$1m, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/input-number/src/input-number.vue"]]);
+var InputNumber = /* @__PURE__ */ _export_sfc(_sfc_main$1l, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/input-number/src/input-number.vue"]]);
 const ElInputNumber = withInstall(InputNumber);
 const linkProps = buildProps({
   type: {
@@ -29159,10 +29262,10 @@ const linkEmits = {
   click: (evt) => evt instanceof MouseEvent
 };
 const _hoisted_1$m = ["href"];
-const __default__$w = {
+const __default__$z = {
   name: "ElLink"
 };
-const _sfc_main$1l = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$w), {
+const _sfc_main$1k = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$z), {
   props: linkProps,
   emits: linkEmits,
   setup(__props, { emit }) {
@@ -29200,7 +29303,7 @@ const _sfc_main$1l = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Link = /* @__PURE__ */ _export_sfc(_sfc_main$1l, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/link/src/link.vue"]]);
+var Link = /* @__PURE__ */ _export_sfc(_sfc_main$1k, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/link/src/link.vue"]]);
 const ElLink = withInstall(Link);
 class SubMenu$1 {
   constructor(parent, domNode) {
@@ -29321,7 +29424,7 @@ class Menu$1 {
     });
   }
 }
-const _sfc_main$1k = vue_cjs_prod.defineComponent({
+const _sfc_main$1j = vue_cjs_prod.defineComponent({
   name: "ElMenuCollapseTransition",
   setup() {
     const ns2 = useNamespace("menu");
@@ -29364,7 +29467,7 @@ const _sfc_main$1k = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.Transition, vue_cjs_prod.mergeProps({ mode: "out-in" }, _ctx.listeners), {
     default: vue_cjs_prod.withCtx(() => [
       vue_cjs_prod.renderSlot(_ctx.$slots, "default")
@@ -29372,7 +29475,7 @@ function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 16);
 }
-var ElMenuCollapseTransition = /* @__PURE__ */ _export_sfc(_sfc_main$1k, [["render", _sfc_render$n], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/menu/src/menu-collapse-transition.vue"]]);
+var ElMenuCollapseTransition = /* @__PURE__ */ _export_sfc(_sfc_main$1j, [["render", _sfc_render$k], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/menu/src/menu-collapse-transition.vue"]]);
 function useMenu(instance, currentIndex) {
   const indexPath = vue_cjs_prod.computed(() => {
     let parent = instance.parent;
@@ -29967,7 +30070,7 @@ const menuItemEmits = {
   click: (item) => isString_1(item.index) && Array.isArray(item.indexPath)
 };
 const COMPONENT_NAME$9 = "ElMenuItem";
-const _sfc_main$1j = vue_cjs_prod.defineComponent({
+const _sfc_main$1i = vue_cjs_prod.defineComponent({
   name: COMPONENT_NAME$9,
   components: {
     ElTooltip
@@ -30020,7 +30123,7 @@ const _sfc_main$1j = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_tooltip = vue_cjs_prod.resolveComponent("el-tooltip");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
     class: vue_cjs_prod.normalizeClass([
@@ -30056,12 +30159,12 @@ function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
     ], 64))
   ], 2);
 }
-var MenuItem = /* @__PURE__ */ _export_sfc(_sfc_main$1j, [["render", _sfc_render$m], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/menu/src/menu-item.vue"]]);
+var MenuItem = /* @__PURE__ */ _export_sfc(_sfc_main$1i, [["render", _sfc_render$j], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/menu/src/menu-item.vue"]]);
 const menuItemGroupProps = {
   title: String
 };
 const COMPONENT_NAME$8 = "ElMenuItemGroup";
-const _sfc_main$1i = vue_cjs_prod.defineComponent({
+const _sfc_main$1h = vue_cjs_prod.defineComponent({
   name: COMPONENT_NAME$8,
   props: menuItemGroupProps,
   setup() {
@@ -30071,7 +30174,7 @@ const _sfc_main$1i = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
     class: vue_cjs_prod.normalizeClass(_ctx.ns.b())
   }, [
@@ -30087,7 +30190,7 @@ function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ], 2);
 }
-var MenuItemGroup = /* @__PURE__ */ _export_sfc(_sfc_main$1i, [["render", _sfc_render$l], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/menu/src/menu-item-group.vue"]]);
+var MenuItemGroup = /* @__PURE__ */ _export_sfc(_sfc_main$1h, [["render", _sfc_render$i], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/menu/src/menu-item-group.vue"]]);
 const ElMenu = withInstall(Menu, {
   MenuItem,
   MenuItemGroup,
@@ -30110,10 +30213,10 @@ const pageHeaderProps = buildProps({
 const pageHeaderEmits = {
   back: () => true
 };
-const __default__$v = {
+const __default__$y = {
   name: "ElPageHeader"
 };
-const _sfc_main$1h = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$v), {
+const _sfc_main$1g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$y), {
   props: pageHeaderProps,
   emits: pageHeaderEmits,
   setup(__props, { emit }) {
@@ -30162,7 +30265,7 @@ const _sfc_main$1h = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var PageHeader = /* @__PURE__ */ _export_sfc(_sfc_main$1h, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/page-header/src/page-header.vue"]]);
+var PageHeader = /* @__PURE__ */ _export_sfc(_sfc_main$1g, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/page-header/src/page-header.vue"]]);
 const ElPageHeader = withInstall(PageHeader);
 const paginationPrevProps = buildProps({
   disabled: Boolean,
@@ -30179,10 +30282,10 @@ const paginationPrevEmits = {
 };
 const _hoisted_1$l = ["disabled", "aria-disabled"];
 const _hoisted_2$e = { key: 0 };
-const __default__$u = {
+const __default__$x = {
   name: "ElPaginationPrev"
 };
-const _sfc_main$1g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$u), {
+const _sfc_main$1f = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$x), {
   props: paginationPrevProps,
   emits: paginationPrevEmits,
   setup(__props) {
@@ -30206,7 +30309,7 @@ const _sfc_main$1g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Prev = /* @__PURE__ */ _export_sfc(_sfc_main$1g, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/prev.vue"]]);
+var Prev = /* @__PURE__ */ _export_sfc(_sfc_main$1f, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/prev.vue"]]);
 const paginationNextProps = buildProps({
   disabled: Boolean,
   currentPage: {
@@ -30223,10 +30326,10 @@ const paginationNextProps = buildProps({
 });
 const _hoisted_1$k = ["disabled", "aria-disabled"];
 const _hoisted_2$d = { key: 0 };
-const __default__$t = {
+const __default__$w = {
   name: "ElPaginationNext"
 };
-const _sfc_main$1f = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$t), {
+const _sfc_main$1e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$w), {
   props: paginationNextProps,
   emits: ["click"],
   setup(__props) {
@@ -30250,7 +30353,7 @@ const _sfc_main$1f = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Next = /* @__PURE__ */ _export_sfc(_sfc_main$1f, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/next.vue"]]);
+var Next = /* @__PURE__ */ _export_sfc(_sfc_main$1e, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/next.vue"]]);
 const selectGroupKey = "ElSelectGroup";
 const selectKey = "ElSelect";
 function useOption$1(props, states) {
@@ -30341,7 +30444,7 @@ function useOption$1(props, states) {
     hoverItem
   };
 }
-const _sfc_main$1e = vue_cjs_prod.defineComponent({
+const _sfc_main$1d = vue_cjs_prod.defineComponent({
   name: "ElOption",
   componentName: "ElOption",
   props: {
@@ -30402,7 +30505,7 @@ const _sfc_main$1e = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.withDirectives((vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
     class: vue_cjs_prod.normalizeClass([
       _ctx.ns.be("dropdown", "item"),
@@ -30422,8 +30525,8 @@ function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     [vue_cjs_prod.vShow, _ctx.visible]
   ]);
 }
-var Option = /* @__PURE__ */ _export_sfc(_sfc_main$1e, [["render", _sfc_render$k], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select/src/option.vue"]]);
-const _sfc_main$1d = vue_cjs_prod.defineComponent({
+var Option = /* @__PURE__ */ _export_sfc(_sfc_main$1d, [["render", _sfc_render$h], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select/src/option.vue"]]);
+const _sfc_main$1c = vue_cjs_prod.defineComponent({
   name: "ElSelectDropdown",
   componentName: "ElSelectDropdown",
   setup() {
@@ -30450,7 +30553,7 @@ const _sfc_main$1d = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     class: vue_cjs_prod.normalizeClass([_ctx.ns.b("dropdown"), _ctx.ns.is("multiple", _ctx.isMultiple), _ctx.popperClass]),
     style: vue_cjs_prod.normalizeStyle({ [_ctx.isFitInputWidth ? "width" : "minWidth"]: _ctx.minWidth })
@@ -30458,7 +30561,7 @@ function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
     vue_cjs_prod.renderSlot(_ctx.$slots, "default")
   ], 6);
 }
-var ElSelectMenu$1 = /* @__PURE__ */ _export_sfc(_sfc_main$1d, [["render", _sfc_render$j], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select/src/select-dropdown.vue"]]);
+var ElSelectMenu$1 = /* @__PURE__ */ _export_sfc(_sfc_main$1c, [["render", _sfc_render$g], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select/src/select-dropdown.vue"]]);
 function useSelectStates(props) {
   const { t } = useLocale();
   return vue_cjs_prod.reactive({
@@ -31112,7 +31215,7 @@ const useSelect$2 = (props, states, ctx) => {
   };
 };
 const COMPONENT_NAME$7 = "ElSelect";
-const _sfc_main$1c = vue_cjs_prod.defineComponent({
+const _sfc_main$1b = vue_cjs_prod.defineComponent({
   name: COMPONENT_NAME$7,
   componentName: COMPONENT_NAME$7,
   components: {
@@ -31417,7 +31520,7 @@ const _sfc_main$1c = vue_cjs_prod.defineComponent({
 const _hoisted_1$j = { class: "select-trigger" };
 const _hoisted_2$c = ["disabled", "autocomplete"];
 const _hoisted_3$6 = { style: { "height": "100%", "display": "flex", "justify-content": "center", "align-items": "center" } };
-function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_tag = vue_cjs_prod.resolveComponent("el-tag");
   const _component_el_tooltip = vue_cjs_prod.resolveComponent("el-tooltip");
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
@@ -31719,8 +31822,8 @@ function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
     [_directive_click_outside, _ctx.handleClose, _ctx.popperPaneRef]
   ]);
 }
-var Select$1 = /* @__PURE__ */ _export_sfc(_sfc_main$1c, [["render", _sfc_render$i], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select/src/select.vue"]]);
-const _sfc_main$1b = vue_cjs_prod.defineComponent({
+var Select$1 = /* @__PURE__ */ _export_sfc(_sfc_main$1b, [["render", _sfc_render$f], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select/src/select.vue"]]);
+const _sfc_main$1a = vue_cjs_prod.defineComponent({
   name: "ElOptionGroup",
   componentName: "ElOptionGroup",
   props: {
@@ -31764,7 +31867,7 @@ const _sfc_main$1b = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.withDirectives((vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("ul", {
     class: vue_cjs_prod.normalizeClass(_ctx.ns.be("group", "wrap"))
   }, [
@@ -31782,7 +31885,7 @@ function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
     [vue_cjs_prod.vShow, _ctx.visible]
   ]);
 }
-var OptionGroup = /* @__PURE__ */ _export_sfc(_sfc_main$1b, [["render", _sfc_render$h], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select/src/option-group.vue"]]);
+var OptionGroup = /* @__PURE__ */ _export_sfc(_sfc_main$1a, [["render", _sfc_render$e], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select/src/option-group.vue"]]);
 const ElSelect = withInstall(Select$1, {
   Option,
   OptionGroup
@@ -31808,10 +31911,10 @@ const paginationSizesProps = buildProps({
     default: "default"
   }
 });
-const __default__$s = {
+const __default__$v = {
   name: "ElPaginationSizes"
 };
-const _sfc_main$1a = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$s), {
+const _sfc_main$19 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$v), {
   props: paginationSizesProps,
   emits: ["page-size-change"],
   setup(__props, { emit }) {
@@ -31865,12 +31968,12 @@ const _sfc_main$1a = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Sizes = /* @__PURE__ */ _export_sfc(_sfc_main$1a, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/sizes.vue"]]);
+var Sizes = /* @__PURE__ */ _export_sfc(_sfc_main$19, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/sizes.vue"]]);
 const _hoisted_1$i = ["disabled"];
-const __default__$r = {
+const __default__$u = {
   name: "ElPaginationJumper"
 };
-const _sfc_main$19 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$r), {
+const _sfc_main$18 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$u), {
   setup(__props) {
     const { t } = useLocale();
     const ns2 = useNamespace("pagination");
@@ -31910,7 +32013,7 @@ const _sfc_main$19 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Jumper = /* @__PURE__ */ _export_sfc(_sfc_main$19, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/jumper.vue"]]);
+var Jumper = /* @__PURE__ */ _export_sfc(_sfc_main$18, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/jumper.vue"]]);
 const paginationTotalProps = buildProps({
   total: {
     type: Number,
@@ -31918,10 +32021,10 @@ const paginationTotalProps = buildProps({
   }
 });
 const _hoisted_1$h = ["disabled"];
-const __default__$q = {
+const __default__$t = {
   name: "ElPaginationTotal"
 };
-const _sfc_main$18 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$q), {
+const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$t), {
   props: paginationTotalProps,
   setup(__props) {
     const { t } = useLocale();
@@ -31937,7 +32040,7 @@ const _sfc_main$18 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Total = /* @__PURE__ */ _export_sfc(_sfc_main$18, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/total.vue"]]);
+var Total = /* @__PURE__ */ _export_sfc(_sfc_main$17, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/total.vue"]]);
 const paginationPagerProps = buildProps({
   currentPage: {
     type: Number,
@@ -31954,13 +32057,15 @@ const paginationPagerProps = buildProps({
   disabled: Boolean
 });
 const _hoisted_1$g = ["onKeyup"];
-const _hoisted_2$b = ["aria-current"];
-const _hoisted_3$5 = ["aria-current"];
-const _hoisted_4$4 = ["aria-current"];
-const __default__$p = {
+const _hoisted_2$b = ["aria-current", "tabindex"];
+const _hoisted_3$5 = ["tabindex"];
+const _hoisted_4$4 = ["aria-current", "tabindex"];
+const _hoisted_5$4 = ["tabindex"];
+const _hoisted_6 = ["aria-current", "tabindex"];
+const __default__$s = {
   name: "ElPaginationPager"
 };
-const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$p), {
+const _sfc_main$16 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$s), {
   props: paginationPagerProps,
   emits: ["change"],
   setup(__props, { emit }) {
@@ -31971,6 +32076,8 @@ const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     const showNextMore = vue_cjs_prod.ref(false);
     const quickPrevHover = vue_cjs_prod.ref(false);
     const quickNextHover = vue_cjs_prod.ref(false);
+    const quickPrevFocus = vue_cjs_prod.ref(false);
+    const quickNextFocus = vue_cjs_prod.ref(false);
     const pagers = vue_cjs_prod.computed(() => {
       const pagerCount = props.pagerCount;
       const halfPagerCount = (pagerCount - 1) / 2;
@@ -32008,6 +32115,7 @@ const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       }
       return array4;
     });
+    const tabindex = vue_cjs_prod.computed(() => props.disabled ? -1 : 0);
     vue_cjs_prod.watchEffect(() => {
       const halfPagerCount = (props.pagerCount - 1) / 2;
       showPrevMore.value = false;
@@ -32021,13 +32129,20 @@ const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         }
       }
     });
-    function onMouseenter(direction2) {
+    function onMouseEnter(forward = false) {
       if (props.disabled)
         return;
-      if (direction2 === "left") {
+      if (forward) {
         quickPrevHover.value = true;
       } else {
         quickNextHover.value = true;
+      }
+    }
+    function onFocus(forward = false) {
+      if (forward) {
+        quickPrevFocus.value = true;
+      } else {
+        quickNextFocus.value = true;
       }
     }
     function onEnter(e) {
@@ -32037,6 +32152,8 @@ const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         if (newPage !== props.currentPage) {
           emit("change", newPage);
         }
+      } else if (target.tagName.toLowerCase() === "li" && Array.from(target.classList).includes("more")) {
+        onPagerClick(e);
       }
     }
     function onPagerClick(event) {
@@ -32080,7 +32197,7 @@ const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             vue_cjs_prod.unref(nsPager).is("disabled", _ctx.disabled)
           ], "number"]),
           "aria-current": _ctx.currentPage === 1,
-          tabindex: "0"
+          tabindex: vue_cjs_prod.unref(tabindex)
         }, " 1 ", 10, _hoisted_2$b)) : vue_cjs_prod.createCommentVNode("v-if", true),
         showPrevMore.value ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
           key: 1,
@@ -32090,11 +32207,14 @@ const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             vue_cjs_prod.unref(nsIcon).b(),
             vue_cjs_prod.unref(nsPager).is("disabled", _ctx.disabled)
           ]),
-          onMouseenter: _cache[0] || (_cache[0] = ($event) => onMouseenter("left")),
-          onMouseleave: _cache[1] || (_cache[1] = ($event) => quickPrevHover.value = false)
+          tabindex: vue_cjs_prod.unref(tabindex),
+          onMouseenter: _cache[0] || (_cache[0] = ($event) => onMouseEnter(true)),
+          onMouseleave: _cache[1] || (_cache[1] = ($event) => quickPrevHover.value = false),
+          onFocus: _cache[2] || (_cache[2] = ($event) => onFocus(true)),
+          onBlur: _cache[3] || (_cache[3] = ($event) => quickPrevFocus.value = false)
         }, [
-          quickPrevHover.value ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(DArrowLeft), { key: 0 })) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(MoreFilled), { key: 1 }))
-        ], 34)) : vue_cjs_prod.createCommentVNode("v-if", true),
+          quickPrevHover.value || quickPrevFocus.value ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(DArrowLeft), { key: 0 })) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(MoreFilled), { key: 1 }))
+        ], 42, _hoisted_3$5)) : vue_cjs_prod.createCommentVNode("v-if", true),
         (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(vue_cjs_prod.unref(pagers), (pager) => {
           return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
             key: pager,
@@ -32103,8 +32223,8 @@ const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
               vue_cjs_prod.unref(nsPager).is("disabled", _ctx.disabled)
             ], "number"]),
             "aria-current": _ctx.currentPage === pager,
-            tabindex: "0"
-          }, vue_cjs_prod.toDisplayString(pager), 11, _hoisted_3$5);
+            tabindex: vue_cjs_prod.unref(tabindex)
+          }, vue_cjs_prod.toDisplayString(pager), 11, _hoisted_4$4);
         }), 128)),
         showNextMore.value ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
           key: 2,
@@ -32114,11 +32234,14 @@ const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             vue_cjs_prod.unref(nsIcon).b(),
             vue_cjs_prod.unref(nsPager).is("disabled", _ctx.disabled)
           ]),
-          onMouseenter: _cache[2] || (_cache[2] = ($event) => onMouseenter("right")),
-          onMouseleave: _cache[3] || (_cache[3] = ($event) => quickNextHover.value = false)
+          tabindex: vue_cjs_prod.unref(tabindex),
+          onMouseenter: _cache[4] || (_cache[4] = ($event) => onMouseEnter()),
+          onMouseleave: _cache[5] || (_cache[5] = ($event) => quickNextHover.value = false),
+          onFocus: _cache[6] || (_cache[6] = ($event) => onFocus()),
+          onBlur: _cache[7] || (_cache[7] = ($event) => quickNextFocus.value = false)
         }, [
-          quickNextHover.value ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(DArrowRight), { key: 0 })) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(MoreFilled), { key: 1 }))
-        ], 34)) : vue_cjs_prod.createCommentVNode("v-if", true),
+          quickNextHover.value || quickNextFocus.value ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(DArrowRight), { key: 0 })) : (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(MoreFilled), { key: 1 }))
+        ], 42, _hoisted_5$4)) : vue_cjs_prod.createCommentVNode("v-if", true),
         _ctx.pageCount > 1 ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
           key: 3,
           class: vue_cjs_prod.normalizeClass([[
@@ -32126,13 +32249,13 @@ const _sfc_main$17 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             vue_cjs_prod.unref(nsPager).is("disabled", _ctx.disabled)
           ], "number"]),
           "aria-current": _ctx.currentPage === _ctx.pageCount,
-          tabindex: "0"
-        }, vue_cjs_prod.toDisplayString(_ctx.pageCount), 11, _hoisted_4$4)) : vue_cjs_prod.createCommentVNode("v-if", true)
+          tabindex: vue_cjs_prod.unref(tabindex)
+        }, vue_cjs_prod.toDisplayString(_ctx.pageCount), 11, _hoisted_6)) : vue_cjs_prod.createCommentVNode("v-if", true)
       ], 42, _hoisted_1$g);
     };
   }
 }));
-var Pager = /* @__PURE__ */ _export_sfc(_sfc_main$17, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/pager.vue"]]);
+var Pager = /* @__PURE__ */ _export_sfc(_sfc_main$16, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/pagination/src/components/pager.vue"]]);
 const isAbsent = (v2) => typeof v2 !== "number";
 const paginationProps = buildProps({
   total: Number,
@@ -32417,10 +32540,10 @@ const popconfirmProps = buildProps({
   teleported: useTooltipContentProps.teleported,
   persistent: useTooltipContentProps.persistent
 });
-const __default__$o = {
+const __default__$r = {
   name: "ElPopconfirm"
 };
-const _sfc_main$16 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$o), {
+const _sfc_main$15 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$r), {
   props: popconfirmProps,
   setup(__props) {
     const props = __props;
@@ -32513,7 +32636,7 @@ const _sfc_main$16 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Popconfirm = /* @__PURE__ */ _export_sfc(_sfc_main$16, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popconfirm/src/popconfirm.vue"]]);
+var Popconfirm = /* @__PURE__ */ _export_sfc(_sfc_main$15, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/popconfirm/src/popconfirm.vue"]]);
 const ElPopconfirm = withInstall(Popconfirm);
 const usePopoverProps = buildProps({
   trigger: useTooltipTriggerProps.trigger,
@@ -32571,7 +32694,7 @@ const emits = [
   "after-leave"
 ];
 const COMPONENT_NAME$6 = "ElPopover";
-const _sfc_main$15 = vue_cjs_prod.defineComponent({
+const _sfc_main$14 = vue_cjs_prod.defineComponent({
   name: COMPONENT_NAME$6,
   components: {
     ElTooltip
@@ -32637,7 +32760,7 @@ const _sfc_main$15 = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_tooltip = vue_cjs_prod.resolveComponent("el-tooltip");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_tooltip, vue_cjs_prod.mergeProps({ ref: "tooltipRef" }, _ctx.$attrs, {
     trigger: _ctx.trigger,
@@ -32682,7 +32805,7 @@ function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
     _: 3
   }, 16, ["trigger", "placement", "disabled", "visible", "transition", "popper-options", "tabindex", "content", "offset", "show-after", "hide-after", "auto-close", "show-arrow", "aria-label", "effect", "enterable", "popper-class", "popper-style", "teleported", "persistent", "gpu-acceleration", "onBeforeShow", "onBeforeHide", "onShow", "onHide"]);
 }
-var Popover = /* @__PURE__ */ _export_sfc(_sfc_main$15, [["render", _sfc_render$g], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/popover/src/index.vue"]]);
+var Popover = /* @__PURE__ */ _export_sfc(_sfc_main$14, [["render", _sfc_render$d], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/popover/src/index.vue"]]);
 const attachEvents = (el, binding) => {
   const popperComponent = binding.arg || binding.value;
   const popover = popperComponent == null ? void 0 : popperComponent.popperRef;
@@ -32772,10 +32895,10 @@ const _hoisted_2$a = { viewBox: "0 0 100 100" };
 const _hoisted_3$4 = ["d", "stroke", "stroke-width"];
 const _hoisted_4$3 = ["d", "stroke", "opacity", "stroke-linecap", "stroke-width"];
 const _hoisted_5$3 = { key: 0 };
-const __default__$n = {
+const __default__$q = {
   name: "ElProgress"
 };
-const _sfc_main$14 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$n), {
+const _sfc_main$13 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$q), {
   props: progressProps,
   setup(__props) {
     const props = __props;
@@ -32960,7 +33083,7 @@ const _sfc_main$14 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Progress = /* @__PURE__ */ _export_sfc(_sfc_main$14, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/progress/src/progress.vue"]]);
+var Progress = /* @__PURE__ */ _export_sfc(_sfc_main$13, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/progress/src/progress.vue"]]);
 const ElProgress = withInstall(Progress);
 const rateProps = buildProps({
   modelValue: {
@@ -33052,10 +33175,10 @@ const rateEmits = {
 };
 const _hoisted_1$e = ["id", "aria-label", "aria-labelledby", "aria-valuenow", "aria-valuetext", "aria-valuemax"];
 const _hoisted_2$9 = ["onMousemove", "onClick"];
-const __default__$m = {
+const __default__$p = {
   name: "ElRate"
 };
-const _sfc_main$13 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$m), {
+const _sfc_main$12 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$p), {
   props: rateProps,
   emits: rateEmits,
   setup(__props, { expose, emit }) {
@@ -33283,7 +33406,7 @@ const _sfc_main$13 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Rate = /* @__PURE__ */ _export_sfc(_sfc_main$13, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/rate/src/rate.vue"]]);
+var Rate = /* @__PURE__ */ _export_sfc(_sfc_main$12, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/rate/src/rate.vue"]]);
 const ElRate = withInstall(Rate);
 const IconMap = {
   success: "icon-success",
@@ -33312,10 +33435,10 @@ const resultProps = buildProps({
     default: "info"
   }
 });
-const __default__$l = {
+const __default__$o = {
   name: "ElResult"
 };
-const _sfc_main$12 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$l), {
+const _sfc_main$11 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$o), {
   props: resultProps,
   setup(__props) {
     const props = __props;
@@ -33369,7 +33492,7 @@ const _sfc_main$12 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Result = /* @__PURE__ */ _export_sfc(_sfc_main$12, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/result/src/result.vue"]]);
+var Result = /* @__PURE__ */ _export_sfc(_sfc_main$11, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/result/src/result.vue"]]);
 const ElResult = withInstall(Result);
 const RowJustify = [
   "start",
@@ -33400,10 +33523,10 @@ const rowProps = buildProps({
     default: "top"
   }
 });
-const __default__$k = {
+const __default__$n = {
   name: "ElRow"
 };
-const _sfc_main$11 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$k), {
+const _sfc_main$10 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$n), {
   props: rowProps,
   setup(__props) {
     const props = __props;
@@ -33437,7 +33560,7 @@ const _sfc_main$11 = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
   }
 }));
-var Row = /* @__PURE__ */ _export_sfc(_sfc_main$11, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/row/src/row.vue"]]);
+var Row = /* @__PURE__ */ _export_sfc(_sfc_main$10, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/row/src/row.vue"]]);
 const ElRow = withInstall(Row);
 var safeIsNaN = Number.isNaN || function ponyfill(value) {
   return typeof value === "number" && value !== value;
@@ -34184,7 +34307,7 @@ const createList = ({
         total: total2
       });
       const listContainer = vue_cjs_prod.h(Container2, {
-        class: ["el-vl__window", className],
+        class: [ns2.e("window"), className],
         style: windowStyle,
         onScroll,
         onWheel,
@@ -35185,7 +35308,7 @@ const DynamicSizeGrid = createGrid({
   validateProps: ({ columnWidth, rowHeight }) => {
   }
 });
-const _sfc_main$10 = vue_cjs_prod.defineComponent({
+const _sfc_main$$ = vue_cjs_prod.defineComponent({
   props: {
     item: {
       type: Object,
@@ -35201,7 +35324,7 @@ const _sfc_main$10 = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
   return _ctx.item.isTitle ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     key: 0,
     class: vue_cjs_prod.normalizeClass(_ctx.ns.be("group", "title")),
@@ -35217,7 +35340,7 @@ function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
     }, null, 6)
   ], 6));
 }
-var GroupItem = /* @__PURE__ */ _export_sfc(_sfc_main$10, [["render", _sfc_render$f], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select-v2/src/group-item.vue"]]);
+var GroupItem = /* @__PURE__ */ _export_sfc(_sfc_main$$, [["render", _sfc_render$c], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select-v2/src/group-item.vue"]]);
 function useOption(props, { emit }) {
   return {
     hoverItem: () => {
@@ -35331,7 +35454,7 @@ const OptionProps = {
   selected: Boolean,
   created: Boolean
 };
-const _sfc_main$$ = vue_cjs_prod.defineComponent({
+const _sfc_main$_ = vue_cjs_prod.defineComponent({
   props: OptionProps,
   emits: ["select", "hover"],
   setup(props, { emit }) {
@@ -35345,7 +35468,7 @@ const _sfc_main$$ = vue_cjs_prod.defineComponent({
   }
 });
 const _hoisted_1$d = ["aria-selected"];
-function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("li", {
     "aria-selected": _ctx.selected,
     style: vue_cjs_prod.normalizeStyle(_ctx.style),
@@ -35368,7 +35491,7 @@ function _sfc_render$e(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ], 46, _hoisted_1$d);
 }
-var OptionItem = /* @__PURE__ */ _export_sfc(_sfc_main$$, [["render", _sfc_render$e], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select-v2/src/option-item.vue"]]);
+var OptionItem = /* @__PURE__ */ _export_sfc(_sfc_main$_, [["render", _sfc_render$b], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select-v2/src/option-item.vue"]]);
 const selectV2InjectionKey = "ElSelectV2Injection";
 var ElSelectMenu = vue_cjs_prod.defineComponent({
   name: "ElSelectDropdown",
@@ -36326,7 +36449,7 @@ const useSelect$1 = (props, emit) => {
     handleCompositionUpdate
   };
 };
-const _sfc_main$_ = vue_cjs_prod.defineComponent({
+const _sfc_main$Z = vue_cjs_prod.defineComponent({
   name: "ElSelectV2",
   components: {
     ElSelectMenu,
@@ -36364,7 +36487,7 @@ const _hoisted_2$8 = ["id", "autocomplete", "aria-expanded", "aria-labelledby", 
 const _hoisted_3$3 = ["textContent"];
 const _hoisted_4$2 = ["id", "aria-labelledby", "aria-expanded", "autocomplete", "disabled", "name", "readonly", "unselectable"];
 const _hoisted_5$2 = ["textContent"];
-function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_tag = vue_cjs_prod.resolveComponent("el-tag");
   const _component_el_tooltip = vue_cjs_prod.resolveComponent("el-tooltip");
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
@@ -36706,7 +36829,7 @@ function _sfc_render$d(_ctx, _cache, $props, $setup, $data, $options) {
     [_directive_click_outside, _ctx.handleClickOutside, _ctx.popperRef]
   ]);
 }
-var Select = /* @__PURE__ */ _export_sfc(_sfc_main$_, [["render", _sfc_render$d], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select-v2/src/select.vue"]]);
+var Select = /* @__PURE__ */ _export_sfc(_sfc_main$Z, [["render", _sfc_render$a], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/select-v2/src/select.vue"]]);
 Select.install = (app) => {
   app.component(Select.name, Select);
 };
@@ -36750,10 +36873,10 @@ const skeletonItemProps = buildProps({
     default: "text"
   }
 });
-const __default__$j = {
+const __default__$m = {
   name: "ElSkeletonItem"
 };
-const _sfc_main$Z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$j), {
+const _sfc_main$Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$m), {
   props: skeletonItemProps,
   setup(__props) {
     const ns2 = useNamespace("skeleton");
@@ -36766,11 +36889,11 @@ const _sfc_main$Z = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
     };
   }
 }));
-var SkeletonItem = /* @__PURE__ */ _export_sfc(_sfc_main$Z, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/skeleton/src/skeleton-item.vue"]]);
-const __default__$i = {
+var SkeletonItem = /* @__PURE__ */ _export_sfc(_sfc_main$Y, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/skeleton/src/skeleton-item.vue"]]);
+const __default__$l = {
   name: "ElSkeleton"
 };
-const _sfc_main$Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$i), {
+const _sfc_main$X = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$l), {
   props: skeletonProps,
   setup(__props, { expose }) {
     const props = __props;
@@ -36808,11 +36931,262 @@ const _sfc_main$Y = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
     };
   }
 }));
-var Skeleton = /* @__PURE__ */ _export_sfc(_sfc_main$Y, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/skeleton/src/skeleton.vue"]]);
+var Skeleton = /* @__PURE__ */ _export_sfc(_sfc_main$X, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/skeleton/src/skeleton.vue"]]);
 const ElSkeleton = withInstall(Skeleton, {
   SkeletonItem
 });
 const ElSkeletonItem = withNoopInstall(SkeletonItem);
+const sliderProps = buildProps({
+  modelValue: {
+    type: definePropType([Number, Array]),
+    default: 0
+  },
+  id: {
+    type: String,
+    default: void 0
+  },
+  min: {
+    type: Number,
+    default: 0
+  },
+  max: {
+    type: Number,
+    default: 100
+  },
+  step: {
+    type: Number,
+    default: 1
+  },
+  showInput: Boolean,
+  showInputControls: {
+    type: Boolean,
+    default: true
+  },
+  size: useSizeProp,
+  inputSize: useSizeProp,
+  showStops: Boolean,
+  showTooltip: {
+    type: Boolean,
+    default: true
+  },
+  formatTooltip: {
+    type: definePropType(Function),
+    default: void 0
+  },
+  disabled: Boolean,
+  range: Boolean,
+  vertical: Boolean,
+  height: String,
+  debounce: {
+    type: Number,
+    default: 300
+  },
+  label: {
+    type: String,
+    default: void 0
+  },
+  rangeStartLabel: {
+    type: String,
+    default: void 0
+  },
+  rangeEndLabel: {
+    type: String,
+    default: void 0
+  },
+  formatValueText: {
+    type: definePropType(Function),
+    default: void 0
+  },
+  tooltipClass: {
+    type: String,
+    default: void 0
+  },
+  marks: {
+    type: definePropType(Object)
+  }
+});
+const isValidValue$1 = (value) => isNumber(value) || isArray_1(value) && value.every(isNumber);
+const sliderEmits = {
+  [UPDATE_MODEL_EVENT]: isValidValue$1,
+  [INPUT_EVENT]: isValidValue$1,
+  [CHANGE_EVENT]: isValidValue$1
+};
+const useLifecycle = (props, initData, resetSize) => {
+  const sliderWrapper = vue_cjs_prod.ref();
+  vue_cjs_prod.onMounted(async () => {
+    if (props.range) {
+      if (Array.isArray(props.modelValue)) {
+        initData.firstValue = Math.max(props.min, props.modelValue[0]);
+        initData.secondValue = Math.min(props.max, props.modelValue[1]);
+      } else {
+        initData.firstValue = props.min;
+        initData.secondValue = props.max;
+      }
+      initData.oldValue = [initData.firstValue, initData.secondValue];
+    } else {
+      if (typeof props.modelValue !== "number" || Number.isNaN(props.modelValue)) {
+        initData.firstValue = props.min;
+      } else {
+        initData.firstValue = Math.min(props.max, Math.max(props.min, props.modelValue));
+      }
+      initData.oldValue = initData.firstValue;
+    }
+    useEventListener(window, "resize", resetSize);
+    await vue_cjs_prod.nextTick();
+    resetSize();
+  });
+  return {
+    sliderWrapper
+  };
+};
+const useMarks = (props) => {
+  return vue_cjs_prod.computed(() => {
+    if (!props.marks) {
+      return [];
+    }
+    const marksKeys = Object.keys(props.marks);
+    return marksKeys.map(parseFloat).sort((a2, b2) => a2 - b2).filter((point) => point <= props.max && point >= props.min).map((point) => ({
+      point,
+      position: (point - props.min) * 100 / (props.max - props.min),
+      mark: props.marks[point]
+    }));
+  });
+};
+const useSlide = (props, initData, emit) => {
+  const { form: elForm, formItem: elFormItem } = useFormItem();
+  const slider = vue_cjs_prod.shallowRef();
+  const firstButton = vue_cjs_prod.ref();
+  const secondButton = vue_cjs_prod.ref();
+  const buttonRefs = {
+    firstButton,
+    secondButton
+  };
+  const sliderDisabled = vue_cjs_prod.computed(() => {
+    return props.disabled || (elForm == null ? void 0 : elForm.disabled) || false;
+  });
+  const minValue = vue_cjs_prod.computed(() => {
+    return Math.min(initData.firstValue, initData.secondValue);
+  });
+  const maxValue = vue_cjs_prod.computed(() => {
+    return Math.max(initData.firstValue, initData.secondValue);
+  });
+  const barSize = vue_cjs_prod.computed(() => {
+    return props.range ? `${100 * (maxValue.value - minValue.value) / (props.max - props.min)}%` : `${100 * (initData.firstValue - props.min) / (props.max - props.min)}%`;
+  });
+  const barStart = vue_cjs_prod.computed(() => {
+    return props.range ? `${100 * (minValue.value - props.min) / (props.max - props.min)}%` : "0%";
+  });
+  const runwayStyle = vue_cjs_prod.computed(() => {
+    return props.vertical ? { height: props.height } : {};
+  });
+  const barStyle = vue_cjs_prod.computed(() => {
+    return props.vertical ? {
+      height: barSize.value,
+      bottom: barStart.value
+    } : {
+      width: barSize.value,
+      left: barStart.value
+    };
+  });
+  const resetSize = () => {
+    if (slider.value) {
+      initData.sliderSize = slider.value[`client${props.vertical ? "Height" : "Width"}`];
+    }
+  };
+  const getButtonRefByPercent = (percent) => {
+    const targetValue = props.min + percent * (props.max - props.min) / 100;
+    if (!props.range) {
+      return firstButton;
+    }
+    let buttonRefName;
+    if (Math.abs(minValue.value - targetValue) < Math.abs(maxValue.value - targetValue)) {
+      buttonRefName = initData.firstValue < initData.secondValue ? "firstButton" : "secondButton";
+    } else {
+      buttonRefName = initData.firstValue > initData.secondValue ? "firstButton" : "secondButton";
+    }
+    return buttonRefs[buttonRefName];
+  };
+  const setPosition = (percent) => {
+    const buttonRef = getButtonRefByPercent(percent);
+    buttonRef.value.setPosition(percent);
+    return buttonRef;
+  };
+  const setFirstValue = (firstValue) => {
+    initData.firstValue = firstValue;
+    _emit(props.range ? [minValue.value, maxValue.value] : firstValue);
+  };
+  const setSecondValue = (secondValue) => {
+    initData.secondValue = secondValue;
+    if (props.range) {
+      _emit([minValue.value, maxValue.value]);
+    }
+  };
+  const _emit = (val) => {
+    emit(UPDATE_MODEL_EVENT, val);
+    emit(INPUT_EVENT, val);
+  };
+  const emitChange = async () => {
+    await vue_cjs_prod.nextTick();
+    emit(CHANGE_EVENT, props.range ? [minValue.value, maxValue.value] : props.modelValue);
+  };
+  const handleSliderPointerEvent = (event) => {
+    var _a, _b, _c, _d, _e, _f;
+    if (sliderDisabled.value || initData.dragging)
+      return;
+    resetSize();
+    let newPercent = 0;
+    if (props.vertical) {
+      const clientY = (_c = (_b = (_a = event.touches) == null ? void 0 : _a.item(0)) == null ? void 0 : _b.clientY) != null ? _c : event.clientY;
+      const sliderOffsetBottom = slider.value.getBoundingClientRect().bottom;
+      newPercent = (sliderOffsetBottom - clientY) / initData.sliderSize * 100;
+    } else {
+      const clientX = (_f = (_e = (_d = event.touches) == null ? void 0 : _d.item(0)) == null ? void 0 : _e.clientX) != null ? _f : event.clientX;
+      const sliderOffsetLeft = slider.value.getBoundingClientRect().left;
+      newPercent = (clientX - sliderOffsetLeft) / initData.sliderSize * 100;
+    }
+    if (newPercent < 0 || newPercent > 100)
+      return;
+    return setPosition(newPercent);
+  };
+  const onSliderWrapperPrevent = (event) => {
+    var _a, _b;
+    if (((_a = buttonRefs["firstButton"].value) == null ? void 0 : _a.dragging) || ((_b = buttonRefs["secondButton"].value) == null ? void 0 : _b.dragging)) {
+      event.preventDefault();
+    }
+  };
+  const onSliderDown = async (event) => {
+    const buttonRef = handleSliderPointerEvent(event);
+    if (buttonRef) {
+      await vue_cjs_prod.nextTick();
+      buttonRef.value.onButtonDown(event);
+    }
+  };
+  const onSliderClick = (event) => {
+    const buttonRef = handleSliderPointerEvent(event);
+    if (buttonRef) {
+      emitChange();
+    }
+  };
+  return {
+    elFormItem,
+    slider,
+    firstButton,
+    secondButton,
+    sliderDisabled,
+    minValue,
+    maxValue,
+    runwayStyle,
+    barStyle,
+    resetSize,
+    setPosition,
+    emitChange,
+    onSliderWrapperPrevent,
+    onSliderClick,
+    onSliderDown,
+    setFirstValue,
+    setSecondValue
+  };
+};
 const { left, down, right, up, home, end, pageUp, pageDown } = EVENT_CODE;
 const useTooltip = (props, formatTooltip, showTooltip) => {
   const tooltip = vue_cjs_prod.ref();
@@ -36850,7 +37224,7 @@ const useSliderButton = (props, initData, emit) => {
     emitChange,
     resetSize,
     updateDragging
-  } = vue_cjs_prod.inject("SliderProvider");
+  } = vue_cjs_prod.inject(sliderContextKey);
   const { tooltip, tooltipVisible, formatValue, displayTooltip, hideTooltip } = useTooltip(props, formatTooltip, showTooltip);
   const button = vue_cjs_prod.ref();
   const currentPosition = vue_cjs_prod.computed(() => {
@@ -37032,27 +37406,119 @@ const useSliderButton = (props, initData, emit) => {
     setPosition
   };
 };
-const _sfc_main$X = vue_cjs_prod.defineComponent({
-  name: "ElSliderButton",
-  components: {
-    ElTooltip
-  },
-  props: {
-    modelValue: {
-      type: Number,
-      default: 0
-    },
-    vertical: {
-      type: Boolean,
-      default: false
-    },
-    tooltipClass: {
-      type: String,
-      default: ""
+const useStops = (props, initData, minValue, maxValue) => {
+  const stops = vue_cjs_prod.computed(() => {
+    if (!props.showStops || props.min > props.max)
+      return [];
+    if (props.step === 0) {
+      return [];
     }
+    const stopCount = (props.max - props.min) / props.step;
+    const stepWidth = 100 * props.step / (props.max - props.min);
+    const result = Array.from({ length: stopCount - 1 }).map((_2, index2) => (index2 + 1) * stepWidth);
+    if (props.range) {
+      return result.filter((step) => {
+        return step < 100 * (minValue.value - props.min) / (props.max - props.min) || step > 100 * (maxValue.value - props.min) / (props.max - props.min);
+      });
+    } else {
+      return result.filter((step) => step > 100 * (initData.firstValue - props.min) / (props.max - props.min));
+    }
+  });
+  const getStopStyle = (position) => {
+    return props.vertical ? { bottom: `${position}%` } : { left: `${position}%` };
+  };
+  return {
+    stops,
+    getStopStyle
+  };
+};
+const useWatch = (props, initData, minValue, maxValue, emit, elFormItem) => {
+  const _emit = (val) => {
+    emit(UPDATE_MODEL_EVENT, val);
+    emit(INPUT_EVENT, val);
+  };
+  const valueChanged = () => {
+    if (props.range) {
+      return ![minValue.value, maxValue.value].every((item, index2) => item === initData.oldValue[index2]);
+    } else {
+      return props.modelValue !== initData.oldValue;
+    }
+  };
+  const setValues = () => {
+    var _a, _b;
+    if (props.min > props.max) {
+      throwError("Slider", "min should not be greater than max.");
+      return;
+    }
+    const val = props.modelValue;
+    if (props.range && Array.isArray(val)) {
+      if (val[1] < props.min) {
+        _emit([props.min, props.min]);
+      } else if (val[0] > props.max) {
+        _emit([props.max, props.max]);
+      } else if (val[0] < props.min) {
+        _emit([props.min, val[1]]);
+      } else if (val[1] > props.max) {
+        _emit([val[0], props.max]);
+      } else {
+        initData.firstValue = val[0];
+        initData.secondValue = val[1];
+        if (valueChanged()) {
+          (_a = elFormItem == null ? void 0 : elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
+          initData.oldValue = val.slice();
+        }
+      }
+    } else if (!props.range && typeof val === "number" && !Number.isNaN(val)) {
+      if (val < props.min) {
+        _emit(props.min);
+      } else if (val > props.max) {
+        _emit(props.max);
+      } else {
+        initData.firstValue = val;
+        if (valueChanged()) {
+          (_b = elFormItem == null ? void 0 : elFormItem.validate) == null ? void 0 : _b.call(elFormItem, "change").catch((err) => debugWarn());
+          initData.oldValue = val;
+        }
+      }
+    }
+  };
+  setValues();
+  vue_cjs_prod.watch(() => initData.dragging, (val) => {
+    if (!val) {
+      setValues();
+    }
+  });
+  vue_cjs_prod.watch(() => props.modelValue, (val, oldVal) => {
+    if (initData.dragging || Array.isArray(val) && Array.isArray(oldVal) && val.every((item, index2) => item === oldVal[index2]) && initData.firstValue === val[0] && initData.secondValue === val[1]) {
+      return;
+    }
+    setValues();
+  }, {
+    deep: true
+  });
+  vue_cjs_prod.watch(() => [props.min, props.max], () => {
+    setValues();
+  });
+};
+const sliderButtonProps = buildProps({
+  modelValue: {
+    type: Number,
+    default: 0
   },
-  emits: [UPDATE_MODEL_EVENT],
-  setup(props, { emit }) {
+  vertical: Boolean,
+  tooltipClass: String
+});
+const sliderButtonEmits = {
+  [UPDATE_MODEL_EVENT]: (value) => isNumber(value)
+};
+const __default__$k = {
+  name: "ElSliderButton"
+};
+const _sfc_main$W = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$k), {
+  props: sliderButtonProps,
+  emits: sliderButtonEmits,
+  setup(__props, { expose, emit }) {
+    const props = __props;
     const ns2 = useNamespace("slider");
     const initData = vue_cjs_prod.reactive({
       hovering: false,
@@ -37080,364 +37546,85 @@ const _sfc_main$X = vue_cjs_prod.defineComponent({
       setPosition
     } = useSliderButton(props, initData, emit);
     const { hovering, dragging } = vue_cjs_prod.toRefs(initData);
-    return {
-      ns: ns2,
-      button,
-      tooltip,
-      tooltipVisible,
-      showTooltip,
-      wrapperStyle,
-      formatValue,
-      handleMouseEnter,
-      handleMouseLeave,
+    expose({
       onButtonDown,
       onKeyDown,
       setPosition,
       hovering,
       dragging
+    });
+    return (_ctx, _cache) => {
+      return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
+        ref_key: "button",
+        ref: button,
+        class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(ns2).e("button-wrapper"), { hover: vue_cjs_prod.unref(hovering), dragging: vue_cjs_prod.unref(dragging) }]),
+        style: vue_cjs_prod.normalizeStyle(vue_cjs_prod.unref(wrapperStyle)),
+        tabindex: "0",
+        onMouseenter: _cache[1] || (_cache[1] = (...args) => vue_cjs_prod.unref(handleMouseEnter) && vue_cjs_prod.unref(handleMouseEnter)(...args)),
+        onMouseleave: _cache[2] || (_cache[2] = (...args) => vue_cjs_prod.unref(handleMouseLeave) && vue_cjs_prod.unref(handleMouseLeave)(...args)),
+        onMousedown: _cache[3] || (_cache[3] = (...args) => vue_cjs_prod.unref(onButtonDown) && vue_cjs_prod.unref(onButtonDown)(...args)),
+        onTouchstart: _cache[4] || (_cache[4] = (...args) => vue_cjs_prod.unref(onButtonDown) && vue_cjs_prod.unref(onButtonDown)(...args)),
+        onFocus: _cache[5] || (_cache[5] = (...args) => vue_cjs_prod.unref(handleMouseEnter) && vue_cjs_prod.unref(handleMouseEnter)(...args)),
+        onBlur: _cache[6] || (_cache[6] = (...args) => vue_cjs_prod.unref(handleMouseLeave) && vue_cjs_prod.unref(handleMouseLeave)(...args)),
+        onKeydown: _cache[7] || (_cache[7] = (...args) => vue_cjs_prod.unref(onKeyDown) && vue_cjs_prod.unref(onKeyDown)(...args))
+      }, [
+        vue_cjs_prod.createVNode(vue_cjs_prod.unref(ElTooltip), {
+          ref_key: "tooltip",
+          ref: tooltip,
+          visible: vue_cjs_prod.unref(tooltipVisible),
+          "onUpdate:visible": _cache[0] || (_cache[0] = ($event) => vue_cjs_prod.isRef(tooltipVisible) ? tooltipVisible.value = $event : null),
+          placement: "top",
+          "stop-popper-mouse-event": false,
+          "popper-class": _ctx.tooltipClass,
+          disabled: !vue_cjs_prod.unref(showTooltip),
+          persistent: ""
+        }, {
+          content: vue_cjs_prod.withCtx(() => [
+            vue_cjs_prod.createElementVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatValue)), 1)
+          ]),
+          default: vue_cjs_prod.withCtx(() => [
+            vue_cjs_prod.createElementVNode("div", {
+              class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(ns2).e("button"), { hover: vue_cjs_prod.unref(hovering), dragging: vue_cjs_prod.unref(dragging) }])
+            }, null, 2)
+          ]),
+          _: 1
+        }, 8, ["visible", "popper-class", "disabled"])
+      ], 38);
     };
   }
+}));
+var SliderButton = /* @__PURE__ */ _export_sfc(_sfc_main$W, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/slider/src/button.vue"]]);
+const sliderMarkerProps = buildProps({
+  mark: {
+    type: definePropType([String, Object]),
+    default: void 0
+  }
 });
-function _sfc_render$c(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_el_tooltip = vue_cjs_prod.resolveComponent("el-tooltip");
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
-    ref: "button",
-    class: vue_cjs_prod.normalizeClass([_ctx.ns.e("button-wrapper"), { hover: _ctx.hovering, dragging: _ctx.dragging }]),
-    style: vue_cjs_prod.normalizeStyle(_ctx.wrapperStyle),
-    tabindex: "0",
-    onMouseenter: _cache[1] || (_cache[1] = (...args) => _ctx.handleMouseEnter && _ctx.handleMouseEnter(...args)),
-    onMouseleave: _cache[2] || (_cache[2] = (...args) => _ctx.handleMouseLeave && _ctx.handleMouseLeave(...args)),
-    onMousedown: _cache[3] || (_cache[3] = (...args) => _ctx.onButtonDown && _ctx.onButtonDown(...args)),
-    onTouchstart: _cache[4] || (_cache[4] = (...args) => _ctx.onButtonDown && _ctx.onButtonDown(...args)),
-    onFocus: _cache[5] || (_cache[5] = (...args) => _ctx.handleMouseEnter && _ctx.handleMouseEnter(...args)),
-    onBlur: _cache[6] || (_cache[6] = (...args) => _ctx.handleMouseLeave && _ctx.handleMouseLeave(...args)),
-    onKeydown: _cache[7] || (_cache[7] = (...args) => _ctx.onKeyDown && _ctx.onKeyDown(...args))
-  }, [
-    vue_cjs_prod.createVNode(_component_el_tooltip, {
-      ref: "tooltip",
-      visible: _ctx.tooltipVisible,
-      "onUpdate:visible": _cache[0] || (_cache[0] = ($event) => _ctx.tooltipVisible = $event),
-      placement: "top",
-      "stop-popper-mouse-event": false,
-      "popper-class": _ctx.tooltipClass,
-      disabled: !_ctx.showTooltip,
-      persistent: ""
-    }, {
-      content: vue_cjs_prod.withCtx(() => [
-        vue_cjs_prod.createElementVNode("span", null, vue_cjs_prod.toDisplayString(_ctx.formatValue), 1)
-      ]),
-      default: vue_cjs_prod.withCtx(() => [
-        vue_cjs_prod.createElementVNode("div", {
-          class: vue_cjs_prod.normalizeClass([_ctx.ns.e("button"), { hover: _ctx.hovering, dragging: _ctx.dragging }])
-        }, null, 2)
-      ]),
-      _: 1
-    }, 8, ["visible", "popper-class", "disabled"])
-  ], 38);
-}
-var SliderButton = /* @__PURE__ */ _export_sfc(_sfc_main$X, [["render", _sfc_render$c], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/slider/src/button.vue"]]);
-const _sfc_main$W = vue_cjs_prod.defineComponent({
-  name: "ElMarker",
-  props: {
-    mark: {
-      type: [String, Object],
-      default: () => void 0
-    }
-  },
+var SliderMarker = vue_cjs_prod.defineComponent({
+  name: "ElSliderMarker",
+  props: sliderMarkerProps,
   setup(props) {
     const ns2 = useNamespace("slider");
     const label = vue_cjs_prod.computed(() => {
-      return typeof props.mark === "string" ? props.mark : props.mark.label;
+      return isString_1(props.mark) ? props.mark : props.mark.label;
     });
-    return {
-      ns: ns2,
-      label
-    };
-  },
-  render() {
-    var _a;
-    return vue_cjs_prod.h("div", {
-      class: this.ns.e("marks-text"),
-      style: (_a = this.mark) == null ? void 0 : _a.style
-    }, this.label);
+    const style = vue_cjs_prod.computed(() => isString_1(props.mark) ? void 0 : props.mark.style);
+    return () => vue_cjs_prod.h("div", {
+      class: ns2.e("marks-text"),
+      style
+    }, label.value);
   }
 });
-var SliderMarker = /* @__PURE__ */ _export_sfc(_sfc_main$W, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/slider/src/marker.vue"]]);
-const useMarks = (props) => {
-  return vue_cjs_prod.computed(() => {
-    if (!props.marks) {
-      return [];
-    }
-    const marksKeys = Object.keys(props.marks);
-    return marksKeys.map(parseFloat).sort((a2, b2) => a2 - b2).filter((point) => point <= props.max && point >= props.min).map((point) => ({
-      point,
-      position: (point - props.min) * 100 / (props.max - props.min),
-      mark: props.marks[point]
-    }));
-  });
+const _hoisted_1$b = ["id", "role", "aria-label", "aria-labelledby"];
+const _hoisted_2$7 = { key: 1 };
+const __default__$j = {
+  name: "ElSlider"
 };
-const useSlide = (props, initData, emit) => {
-  const elForm = vue_cjs_prod.inject(formContextKey, {});
-  const elFormItem = vue_cjs_prod.inject(formItemContextKey, {});
-  const slider = vue_cjs_prod.shallowRef();
-  const firstButton = vue_cjs_prod.ref();
-  const secondButton = vue_cjs_prod.ref();
-  const buttonRefs = {
-    firstButton,
-    secondButton
-  };
-  const sliderDisabled = vue_cjs_prod.computed(() => {
-    return props.disabled || elForm.disabled || false;
-  });
-  const minValue = vue_cjs_prod.computed(() => {
-    return Math.min(initData.firstValue, initData.secondValue);
-  });
-  const maxValue = vue_cjs_prod.computed(() => {
-    return Math.max(initData.firstValue, initData.secondValue);
-  });
-  const barSize = vue_cjs_prod.computed(() => {
-    return props.range ? `${100 * (maxValue.value - minValue.value) / (props.max - props.min)}%` : `${100 * (initData.firstValue - props.min) / (props.max - props.min)}%`;
-  });
-  const barStart = vue_cjs_prod.computed(() => {
-    return props.range ? `${100 * (minValue.value - props.min) / (props.max - props.min)}%` : "0%";
-  });
-  const runwayStyle = vue_cjs_prod.computed(() => {
-    return props.vertical ? { height: props.height } : {};
-  });
-  const barStyle = vue_cjs_prod.computed(() => {
-    return props.vertical ? {
-      height: barSize.value,
-      bottom: barStart.value
-    } : {
-      width: barSize.value,
-      left: barStart.value
-    };
-  });
-  const resetSize = () => {
-    if (slider.value) {
-      initData.sliderSize = slider.value[`client${props.vertical ? "Height" : "Width"}`];
-    }
-  };
-  const getButtonRefByPercent = (percent) => {
-    const targetValue = props.min + percent * (props.max - props.min) / 100;
-    if (!props.range) {
-      return firstButton;
-    }
-    let buttonRefName;
-    if (Math.abs(minValue.value - targetValue) < Math.abs(maxValue.value - targetValue)) {
-      buttonRefName = initData.firstValue < initData.secondValue ? "firstButton" : "secondButton";
-    } else {
-      buttonRefName = initData.firstValue > initData.secondValue ? "firstButton" : "secondButton";
-    }
-    return buttonRefs[buttonRefName];
-  };
-  const setPosition = (percent) => {
-    const buttonRef = getButtonRefByPercent(percent);
-    buttonRef.value.setPosition(percent);
-    return buttonRef;
-  };
-  const setFirstValue = (firstValue) => {
-    initData.firstValue = firstValue;
-    _emit(props.range ? [minValue.value, maxValue.value] : firstValue);
-  };
-  const setSecondValue = (secondValue) => {
-    initData.secondValue = secondValue;
-    if (props.range) {
-      _emit([minValue.value, maxValue.value]);
-    }
-  };
-  const _emit = (val) => {
-    emit(UPDATE_MODEL_EVENT, val);
-    emit(INPUT_EVENT, val);
-  };
-  const emitChange = async () => {
-    await vue_cjs_prod.nextTick();
-    emit(CHANGE_EVENT, props.range ? [minValue.value, maxValue.value] : props.modelValue);
-  };
-  const handleSliderPointerEvent = (event) => {
-    var _a, _b, _c, _d, _e, _f;
-    if (sliderDisabled.value || initData.dragging)
-      return;
-    resetSize();
-    let newPercent = 0;
-    if (props.vertical) {
-      const clientY = (_c = (_b = (_a = event.touches) == null ? void 0 : _a.item(0)) == null ? void 0 : _b.clientY) != null ? _c : event.clientY;
-      const sliderOffsetBottom = slider.value.getBoundingClientRect().bottom;
-      newPercent = (sliderOffsetBottom - clientY) / initData.sliderSize * 100;
-    } else {
-      const clientX = (_f = (_e = (_d = event.touches) == null ? void 0 : _d.item(0)) == null ? void 0 : _e.clientX) != null ? _f : event.clientX;
-      const sliderOffsetLeft = slider.value.getBoundingClientRect().left;
-      newPercent = (clientX - sliderOffsetLeft) / initData.sliderSize * 100;
-    }
-    if (newPercent < 0 || newPercent > 100)
-      return;
-    return setPosition(newPercent);
-  };
-  const onSliderWrapperPrevent = (event) => {
-    var _a, _b;
-    if (((_a = buttonRefs["firstButton"].value) == null ? void 0 : _a.dragging) || ((_b = buttonRefs["secondButton"].value) == null ? void 0 : _b.dragging)) {
-      event.preventDefault();
-    }
-  };
-  const onSliderDown = async (event) => {
-    const buttonRef = handleSliderPointerEvent(event);
-    if (buttonRef) {
-      await vue_cjs_prod.nextTick();
-      buttonRef.value.onButtonDown(event);
-    }
-  };
-  const onSliderClick = (event) => {
-    const buttonRef = handleSliderPointerEvent(event);
-    if (buttonRef) {
-      emitChange();
-    }
-  };
-  return {
-    elFormItem,
-    slider,
-    firstButton,
-    secondButton,
-    sliderDisabled,
-    minValue,
-    maxValue,
-    runwayStyle,
-    barStyle,
-    resetSize,
-    setPosition,
-    emitChange,
-    onSliderWrapperPrevent,
-    onSliderClick,
-    onSliderDown,
-    setFirstValue,
-    setSecondValue
-  };
-};
-const useStops = (props, initData, minValue, maxValue) => {
-  const stops = vue_cjs_prod.computed(() => {
-    if (!props.showStops || props.min > props.max)
-      return [];
-    if (props.step === 0) {
-      return [];
-    }
-    const stopCount = (props.max - props.min) / props.step;
-    const stepWidth = 100 * props.step / (props.max - props.min);
-    const result = Array.from({ length: stopCount - 1 }).map((_2, index2) => (index2 + 1) * stepWidth);
-    if (props.range) {
-      return result.filter((step) => {
-        return step < 100 * (minValue.value - props.min) / (props.max - props.min) || step > 100 * (maxValue.value - props.min) / (props.max - props.min);
-      });
-    } else {
-      return result.filter((step) => step > 100 * (initData.firstValue - props.min) / (props.max - props.min));
-    }
-  });
-  const getStopStyle = (position) => {
-    return props.vertical ? { bottom: `${position}%` } : { left: `${position}%` };
-  };
-  return {
-    stops,
-    getStopStyle
-  };
-};
-const _sfc_main$V = vue_cjs_prod.defineComponent({
-  name: "ElSlider",
-  components: {
-    ElInputNumber,
-    SliderButton,
-    SliderMarker
-  },
-  props: {
-    modelValue: {
-      type: [Number, Array],
-      default: 0
-    },
-    id: {
-      type: String,
-      default: void 0
-    },
-    min: {
-      type: Number,
-      default: 0
-    },
-    max: {
-      type: Number,
-      default: 100
-    },
-    step: {
-      type: Number,
-      default: 1
-    },
-    showInput: {
-      type: Boolean,
-      default: false
-    },
-    showInputControls: {
-      type: Boolean,
-      default: true
-    },
-    size: {
-      type: String,
-      validator: isValidComponentSize
-    },
-    inputSize: {
-      type: String,
-      validator: isValidComponentSize
-    },
-    showStops: {
-      type: Boolean,
-      default: false
-    },
-    showTooltip: {
-      type: Boolean,
-      default: true
-    },
-    formatTooltip: {
-      type: Function,
-      default: void 0
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    range: {
-      type: Boolean,
-      default: false
-    },
-    vertical: {
-      type: Boolean,
-      default: false
-    },
-    height: {
-      type: String,
-      default: ""
-    },
-    debounce: {
-      type: Number,
-      default: 300
-    },
-    label: {
-      type: String,
-      default: void 0
-    },
-    rangeStartLabel: {
-      type: String,
-      default: void 0
-    },
-    rangeEndLabel: {
-      type: String,
-      default: void 0
-    },
-    formatValueText: {
-      type: Function,
-      default: void 0
-    },
-    tooltipClass: {
-      type: String,
-      default: void 0
-    },
-    marks: Object
-  },
-  emits: [UPDATE_MODEL_EVENT, CHANGE_EVENT, INPUT_EVENT],
-  setup(props, { emit }) {
+const _sfc_main$V = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$j), {
+  props: sliderProps,
+  emits: sliderEmits,
+  setup(__props, { expose, emit }) {
+    const props = __props;
     const ns2 = useNamespace("slider");
     const { t } = useLocale();
     const initData = vue_cjs_prod.reactive({
@@ -37509,11 +37696,11 @@ const _sfc_main$V = vue_cjs_prod.defineComponent({
       return Math.max.apply(null, precisions);
     });
     const { sliderWrapper } = useLifecycle(props, initData, resetSize);
-    const { firstValue, secondValue, oldValue, dragging, sliderSize } = vue_cjs_prod.toRefs(initData);
+    const { firstValue, secondValue, sliderSize } = vue_cjs_prod.toRefs(initData);
     const updateDragging = (val) => {
       initData.dragging = val;
     };
-    vue_cjs_prod.provide("SliderProvider", __spreadProps(__spreadValues({}, vue_cjs_prod.toRefs(props)), {
+    vue_cjs_prod.provide(sliderContextKey, __spreadProps(__spreadValues({}, vue_cjs_prod.toRefs(props)), {
       sliderSize,
       disabled: sliderDisabled,
       precision,
@@ -37521,261 +37708,126 @@ const _sfc_main$V = vue_cjs_prod.defineComponent({
       resetSize,
       updateDragging
     }));
-    return {
-      ns: ns2,
-      firstValue,
-      secondValue,
-      oldValue,
-      dragging,
-      sliderSize,
-      inputId,
-      isLabeledByFormItem,
-      elFormItem,
-      slider,
-      groupLabel,
-      firstButton,
-      firstButtonLabel,
-      firstValueText,
-      secondButton,
-      secondButtonLabel,
-      secondValueText,
-      sliderDisabled,
-      runwayStyle,
-      barStyle,
-      emitChange,
-      onSliderClick,
-      onSliderWrapperPrevent,
-      onSliderDown,
-      getStopStyle,
-      setFirstValue,
-      setSecondValue,
-      stops,
-      markList,
-      sliderWrapper,
-      sliderWrapperSize,
-      sliderInputSize,
-      sliderKls
+    expose({
+      onSliderClick
+    });
+    return (_ctx, _cache) => {
+      var _a, _b;
+      return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
+        id: _ctx.range ? vue_cjs_prod.unref(inputId) : void 0,
+        ref_key: "sliderWrapper",
+        ref: sliderWrapper,
+        class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(sliderKls)),
+        role: _ctx.range ? "group" : void 0,
+        "aria-label": _ctx.range && !vue_cjs_prod.unref(isLabeledByFormItem) ? vue_cjs_prod.unref(groupLabel) : void 0,
+        "aria-labelledby": _ctx.range && vue_cjs_prod.unref(isLabeledByFormItem) ? (_a = vue_cjs_prod.unref(elFormItem)) == null ? void 0 : _a.labelId : void 0,
+        onTouchstart: _cache[2] || (_cache[2] = (...args) => vue_cjs_prod.unref(onSliderWrapperPrevent) && vue_cjs_prod.unref(onSliderWrapperPrevent)(...args)),
+        onTouchmove: _cache[3] || (_cache[3] = (...args) => vue_cjs_prod.unref(onSliderWrapperPrevent) && vue_cjs_prod.unref(onSliderWrapperPrevent)(...args))
+      }, [
+        vue_cjs_prod.createElementVNode("div", {
+          ref_key: "slider",
+          ref: slider,
+          class: vue_cjs_prod.normalizeClass([
+            vue_cjs_prod.unref(ns2).e("runway"),
+            { "show-input": _ctx.showInput && !_ctx.range },
+            vue_cjs_prod.unref(ns2).is("disabled", vue_cjs_prod.unref(sliderDisabled))
+          ]),
+          style: vue_cjs_prod.normalizeStyle(vue_cjs_prod.unref(runwayStyle)),
+          onMousedown: _cache[0] || (_cache[0] = (...args) => vue_cjs_prod.unref(onSliderDown) && vue_cjs_prod.unref(onSliderDown)(...args)),
+          onTouchstart: _cache[1] || (_cache[1] = (...args) => vue_cjs_prod.unref(onSliderDown) && vue_cjs_prod.unref(onSliderDown)(...args))
+        }, [
+          vue_cjs_prod.createElementVNode("div", {
+            class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(ns2).e("bar")),
+            style: vue_cjs_prod.normalizeStyle(vue_cjs_prod.unref(barStyle))
+          }, null, 6),
+          vue_cjs_prod.createVNode(SliderButton, {
+            id: !_ctx.range ? vue_cjs_prod.unref(inputId) : void 0,
+            ref_key: "firstButton",
+            ref: firstButton,
+            "model-value": vue_cjs_prod.unref(firstValue),
+            vertical: _ctx.vertical,
+            "tooltip-class": _ctx.tooltipClass,
+            role: "slider",
+            "aria-label": _ctx.range || !vue_cjs_prod.unref(isLabeledByFormItem) ? vue_cjs_prod.unref(firstButtonLabel) : void 0,
+            "aria-labelledby": !_ctx.range && vue_cjs_prod.unref(isLabeledByFormItem) ? (_b = vue_cjs_prod.unref(elFormItem)) == null ? void 0 : _b.labelId : void 0,
+            "aria-valuemin": _ctx.min,
+            "aria-valuemax": _ctx.range ? vue_cjs_prod.unref(secondValue) : _ctx.max,
+            "aria-valuenow": vue_cjs_prod.unref(firstValue),
+            "aria-valuetext": vue_cjs_prod.unref(firstValueText),
+            "aria-orientation": _ctx.vertical ? "vertical" : "horizontal",
+            "aria-disabled": vue_cjs_prod.unref(sliderDisabled),
+            "onUpdate:modelValue": vue_cjs_prod.unref(setFirstValue)
+          }, null, 8, ["id", "model-value", "vertical", "tooltip-class", "aria-label", "aria-labelledby", "aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-valuetext", "aria-orientation", "aria-disabled", "onUpdate:modelValue"]),
+          _ctx.range ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(SliderButton, {
+            key: 0,
+            ref_key: "secondButton",
+            ref: secondButton,
+            "model-value": vue_cjs_prod.unref(secondValue),
+            vertical: _ctx.vertical,
+            "tooltip-class": _ctx.tooltipClass,
+            role: "slider",
+            "aria-label": vue_cjs_prod.unref(secondButtonLabel),
+            "aria-valuemin": vue_cjs_prod.unref(firstValue),
+            "aria-valuemax": _ctx.max,
+            "aria-valuenow": vue_cjs_prod.unref(secondValue),
+            "aria-valuetext": vue_cjs_prod.unref(secondValueText),
+            "aria-orientation": _ctx.vertical ? "vertical" : "horizontal",
+            "aria-disabled": vue_cjs_prod.unref(sliderDisabled),
+            "onUpdate:modelValue": vue_cjs_prod.unref(setSecondValue)
+          }, null, 8, ["model-value", "vertical", "tooltip-class", "aria-label", "aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-valuetext", "aria-orientation", "aria-disabled", "onUpdate:modelValue"])) : vue_cjs_prod.createCommentVNode("v-if", true),
+          _ctx.showStops ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_2$7, [
+            (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(vue_cjs_prod.unref(stops), (item, key) => {
+              return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
+                key,
+                class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(ns2).e("stop")),
+                style: vue_cjs_prod.normalizeStyle(vue_cjs_prod.unref(getStopStyle)(item))
+              }, null, 6);
+            }), 128))
+          ])) : vue_cjs_prod.createCommentVNode("v-if", true),
+          vue_cjs_prod.unref(markList).length > 0 ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 2 }, [
+            vue_cjs_prod.createElementVNode("div", null, [
+              (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(vue_cjs_prod.unref(markList), (item, key) => {
+                return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
+                  key,
+                  style: vue_cjs_prod.normalizeStyle(vue_cjs_prod.unref(getStopStyle)(item.position)),
+                  class: vue_cjs_prod.normalizeClass([vue_cjs_prod.unref(ns2).e("stop"), vue_cjs_prod.unref(ns2).e("marks-stop")])
+                }, null, 6);
+              }), 128))
+            ]),
+            vue_cjs_prod.createElementVNode("div", {
+              class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(ns2).e("marks"))
+            }, [
+              (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(vue_cjs_prod.unref(markList), (item, key) => {
+                return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(SliderMarker), {
+                  key,
+                  mark: item.mark,
+                  style: vue_cjs_prod.normalizeStyle(vue_cjs_prod.unref(getStopStyle)(item.position))
+                }, null, 8, ["mark", "style"]);
+              }), 128))
+            ], 2)
+          ], 64)) : vue_cjs_prod.createCommentVNode("v-if", true)
+        ], 38),
+        _ctx.showInput && !_ctx.range ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(vue_cjs_prod.unref(ElInputNumber), {
+          key: 0,
+          ref: "input",
+          "model-value": vue_cjs_prod.unref(firstValue),
+          class: vue_cjs_prod.normalizeClass(vue_cjs_prod.unref(ns2).e("input")),
+          step: _ctx.step,
+          disabled: vue_cjs_prod.unref(sliderDisabled),
+          controls: _ctx.showInputControls,
+          min: _ctx.min,
+          max: _ctx.max,
+          debounce: _ctx.debounce,
+          size: vue_cjs_prod.unref(sliderInputSize),
+          "onUpdate:modelValue": vue_cjs_prod.unref(setFirstValue),
+          onChange: vue_cjs_prod.unref(emitChange)
+        }, null, 8, ["model-value", "class", "step", "disabled", "controls", "min", "max", "debounce", "size", "onUpdate:modelValue", "onChange"])) : vue_cjs_prod.createCommentVNode("v-if", true)
+      ], 42, _hoisted_1$b);
     };
   }
-});
-const useWatch = (props, initData, minValue, maxValue, emit, elFormItem) => {
-  const _emit = (val) => {
-    emit(UPDATE_MODEL_EVENT, val);
-    emit(INPUT_EVENT, val);
-  };
-  const valueChanged = () => {
-    if (props.range) {
-      return ![minValue.value, maxValue.value].every((item, index2) => item === initData.oldValue[index2]);
-    } else {
-      return props.modelValue !== initData.oldValue;
-    }
-  };
-  const setValues = () => {
-    var _a, _b;
-    if (props.min > props.max) {
-      throwError("Slider", "min should not be greater than max.");
-      return;
-    }
-    const val = props.modelValue;
-    if (props.range && Array.isArray(val)) {
-      if (val[1] < props.min) {
-        _emit([props.min, props.min]);
-      } else if (val[0] > props.max) {
-        _emit([props.max, props.max]);
-      } else if (val[0] < props.min) {
-        _emit([props.min, val[1]]);
-      } else if (val[1] > props.max) {
-        _emit([val[0], props.max]);
-      } else {
-        initData.firstValue = val[0];
-        initData.secondValue = val[1];
-        if (valueChanged()) {
-          (_a = elFormItem.validate) == null ? void 0 : _a.call(elFormItem, "change").catch((err) => debugWarn());
-          initData.oldValue = val.slice();
-        }
-      }
-    } else if (!props.range && typeof val === "number" && !Number.isNaN(val)) {
-      if (val < props.min) {
-        _emit(props.min);
-      } else if (val > props.max) {
-        _emit(props.max);
-      } else {
-        initData.firstValue = val;
-        if (valueChanged()) {
-          (_b = elFormItem.validate) == null ? void 0 : _b.call(elFormItem, "change").catch((err) => debugWarn());
-          initData.oldValue = val;
-        }
-      }
-    }
-  };
-  setValues();
-  vue_cjs_prod.watch(() => initData.dragging, (val) => {
-    if (!val) {
-      setValues();
-    }
-  });
-  vue_cjs_prod.watch(() => props.modelValue, (val, oldVal) => {
-    if (initData.dragging || Array.isArray(val) && Array.isArray(oldVal) && val.every((item, index2) => item === oldVal[index2]) && initData.firstValue === val[0] && initData.secondValue === val[1]) {
-      return;
-    }
-    setValues();
-  }, {
-    deep: true
-  });
-  vue_cjs_prod.watch(() => [props.min, props.max], () => {
-    setValues();
-  });
-};
-const useLifecycle = (props, initData, resetSize) => {
-  const sliderWrapper = vue_cjs_prod.ref();
-  vue_cjs_prod.onMounted(async () => {
-    if (props.range) {
-      if (Array.isArray(props.modelValue)) {
-        initData.firstValue = Math.max(props.min, props.modelValue[0]);
-        initData.secondValue = Math.min(props.max, props.modelValue[1]);
-      } else {
-        initData.firstValue = props.min;
-        initData.secondValue = props.max;
-      }
-      initData.oldValue = [initData.firstValue, initData.secondValue];
-    } else {
-      if (typeof props.modelValue !== "number" || Number.isNaN(props.modelValue)) {
-        initData.firstValue = props.min;
-      } else {
-        initData.firstValue = Math.min(props.max, Math.max(props.min, props.modelValue));
-      }
-      initData.oldValue = initData.firstValue;
-    }
-    window.addEventListener("resize", resetSize);
-    await vue_cjs_prod.nextTick();
-    resetSize();
-  });
-  vue_cjs_prod.onBeforeUnmount(() => {
-    window.removeEventListener("resize", resetSize);
-  });
-  return {
-    sliderWrapper
-  };
-};
-const _hoisted_1$b = ["id", "role", "aria-label", "aria-labelledby"];
-const _hoisted_2$7 = { key: 1 };
-function _sfc_render$b(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_slider_button = vue_cjs_prod.resolveComponent("slider-button");
-  const _component_slider_marker = vue_cjs_prod.resolveComponent("slider-marker");
-  const _component_el_input_number = vue_cjs_prod.resolveComponent("el-input-number");
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
-    id: _ctx.range ? _ctx.inputId : void 0,
-    ref: "sliderWrapper",
-    class: vue_cjs_prod.normalizeClass(_ctx.sliderKls),
-    role: _ctx.range ? "group" : void 0,
-    "aria-label": _ctx.range && !_ctx.isLabeledByFormItem ? _ctx.groupLabel : void 0,
-    "aria-labelledby": _ctx.range && _ctx.isLabeledByFormItem ? _ctx.elFormItem.labelId : void 0,
-    onTouchstart: _cache[2] || (_cache[2] = (...args) => _ctx.onSliderWrapperPrevent && _ctx.onSliderWrapperPrevent(...args)),
-    onTouchmove: _cache[3] || (_cache[3] = (...args) => _ctx.onSliderWrapperPrevent && _ctx.onSliderWrapperPrevent(...args))
-  }, [
-    vue_cjs_prod.createElementVNode("div", {
-      ref: "slider",
-      class: vue_cjs_prod.normalizeClass([
-        _ctx.ns.e("runway"),
-        { "show-input": _ctx.showInput && !_ctx.range },
-        _ctx.ns.is("disabled", _ctx.sliderDisabled)
-      ]),
-      style: vue_cjs_prod.normalizeStyle(_ctx.runwayStyle),
-      onMousedown: _cache[0] || (_cache[0] = (...args) => _ctx.onSliderDown && _ctx.onSliderDown(...args)),
-      onTouchstart: _cache[1] || (_cache[1] = (...args) => _ctx.onSliderDown && _ctx.onSliderDown(...args))
-    }, [
-      vue_cjs_prod.createElementVNode("div", {
-        class: vue_cjs_prod.normalizeClass(_ctx.ns.e("bar")),
-        style: vue_cjs_prod.normalizeStyle(_ctx.barStyle)
-      }, null, 6),
-      vue_cjs_prod.createVNode(_component_slider_button, {
-        id: !_ctx.range ? _ctx.inputId : void 0,
-        ref: "firstButton",
-        "model-value": _ctx.firstValue,
-        vertical: _ctx.vertical,
-        "tooltip-class": _ctx.tooltipClass,
-        role: "slider",
-        "aria-label": _ctx.range || !_ctx.isLabeledByFormItem ? _ctx.firstButtonLabel : void 0,
-        "aria-labelledby": !_ctx.range && _ctx.isLabeledByFormItem ? _ctx.elFormItem.labelId : void 0,
-        "aria-valuemin": _ctx.min,
-        "aria-valuemax": _ctx.range ? _ctx.secondValue : _ctx.max,
-        "aria-valuenow": _ctx.firstValue,
-        "aria-valuetext": _ctx.firstValueText,
-        "aria-orientation": _ctx.vertical ? "vertical" : "horizontal",
-        "aria-disabled": _ctx.sliderDisabled,
-        "onUpdate:modelValue": _ctx.setFirstValue
-      }, null, 8, ["id", "model-value", "vertical", "tooltip-class", "aria-label", "aria-labelledby", "aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-valuetext", "aria-orientation", "aria-disabled", "onUpdate:modelValue"]),
-      _ctx.range ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_slider_button, {
-        key: 0,
-        ref: "secondButton",
-        "model-value": _ctx.secondValue,
-        vertical: _ctx.vertical,
-        "tooltip-class": _ctx.tooltipClass,
-        role: "slider",
-        "aria-label": _ctx.secondButtonLabel,
-        "aria-valuemin": _ctx.firstValue,
-        "aria-valuemax": _ctx.max,
-        "aria-valuenow": _ctx.secondValue,
-        "aria-valuetext": _ctx.secondValueText,
-        "aria-orientation": _ctx.vertical ? "vertical" : "horizontal",
-        "aria-disabled": _ctx.sliderDisabled,
-        "onUpdate:modelValue": _ctx.setSecondValue
-      }, null, 8, ["model-value", "vertical", "tooltip-class", "aria-label", "aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-valuetext", "aria-orientation", "aria-disabled", "onUpdate:modelValue"])) : vue_cjs_prod.createCommentVNode("v-if", true),
-      _ctx.showStops ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", _hoisted_2$7, [
-        (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.stops, (item, key) => {
-          return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
-            key,
-            class: vue_cjs_prod.normalizeClass(_ctx.ns.e("stop")),
-            style: vue_cjs_prod.normalizeStyle(_ctx.getStopStyle(item))
-          }, null, 6);
-        }), 128))
-      ])) : vue_cjs_prod.createCommentVNode("v-if", true),
-      _ctx.markList.length > 0 ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, { key: 2 }, [
-        vue_cjs_prod.createElementVNode("div", null, [
-          (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.markList, (item, key) => {
-            return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
-              key,
-              style: vue_cjs_prod.normalizeStyle(_ctx.getStopStyle(item.position)),
-              class: vue_cjs_prod.normalizeClass([_ctx.ns.e("stop"), _ctx.ns.e("marks-stop")])
-            }, null, 6);
-          }), 128))
-        ]),
-        vue_cjs_prod.createElementVNode("div", {
-          class: vue_cjs_prod.normalizeClass(_ctx.ns.e("marks"))
-        }, [
-          (vue_cjs_prod.openBlock(true), vue_cjs_prod.createElementBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.markList, (item, key) => {
-            return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_slider_marker, {
-              key,
-              mark: item.mark,
-              style: vue_cjs_prod.normalizeStyle(_ctx.getStopStyle(item.position))
-            }, null, 8, ["mark", "style"]);
-          }), 128))
-        ], 2)
-      ], 64)) : vue_cjs_prod.createCommentVNode("v-if", true)
-    ], 38),
-    _ctx.showInput && !_ctx.range ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_input_number, {
-      key: 0,
-      ref: "input",
-      "model-value": _ctx.firstValue,
-      class: vue_cjs_prod.normalizeClass(_ctx.ns.e("input")),
-      step: _ctx.step,
-      disabled: _ctx.sliderDisabled,
-      controls: _ctx.showInputControls,
-      min: _ctx.min,
-      max: _ctx.max,
-      debounce: _ctx.debounce,
-      size: _ctx.sliderInputSize,
-      "onUpdate:modelValue": _ctx.setFirstValue,
-      onChange: _ctx.emitChange
-    }, null, 8, ["model-value", "class", "step", "disabled", "controls", "min", "max", "debounce", "size", "onUpdate:modelValue", "onChange"])) : vue_cjs_prod.createCommentVNode("v-if", true)
-  ], 42, _hoisted_1$b);
-}
-var Slider = /* @__PURE__ */ _export_sfc(_sfc_main$V, [["render", _sfc_render$b], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/slider/src/index.vue"]]);
-Slider.install = (app) => {
-  app.component(Slider.name, Slider);
-};
-const _Slider = Slider;
-const ElSlider = _Slider;
+}));
+var Slider = /* @__PURE__ */ _export_sfc(_sfc_main$V, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/slider/src/slider.vue"]]);
+const ElSlider = withInstall(Slider);
 const spaceItem = buildProps({
   prefixCls: {
     type: String,
@@ -37792,14 +37844,14 @@ const _sfc_main$U = vue_cjs_prod.defineComponent({
     };
   }
 });
-function _sfc_render$a(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     class: vue_cjs_prod.normalizeClass(_ctx.classes)
   }, [
     vue_cjs_prod.renderSlot(_ctx.$slots, "default")
   ], 2);
 }
-var Item = /* @__PURE__ */ _export_sfc(_sfc_main$U, [["render", _sfc_render$a], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/space/src/item.vue"]]);
+var Item = /* @__PURE__ */ _export_sfc(_sfc_main$U, [["render", _sfc_render$9], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/space/src/item.vue"]]);
 const SIZE_MAP = {
   small: 8,
   default: 12,
@@ -38005,10 +38057,10 @@ const stepsProps = buildProps({
 const stepsEmits = {
   [CHANGE_EVENT]: (newVal, oldVal) => [newVal, oldVal].every(isNumber)
 };
-const __default__$h = {
+const __default__$i = {
   name: "ElSteps"
 };
-const _sfc_main$T = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$h), {
+const _sfc_main$T = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$i), {
   props: stepsProps,
   emits: stepsEmits,
   setup(__props, { emit }) {
@@ -38052,10 +38104,10 @@ const stepProps = buildProps({
     default: ""
   }
 });
-const __default__$g = {
+const __default__$h = {
   name: "ElStep"
 };
-const _sfc_main$S = vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$g), {
+const _sfc_main$S = vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$h), {
   props: stepProps,
   setup(__props) {
     const props = __props;
@@ -38363,9 +38415,6 @@ const _sfc_main$R = vue_cjs_prod.defineComponent({
     vue_cjs_prod.watch(checked, () => {
       var _a;
       input.value.checked = checked.value;
-      if (props.activeColor || props.inactiveColor) {
-        setBackgroundColor();
-      }
       if (props.validateEvent) {
         (_a = formItem == null ? void 0 : formItem.validate) == null ? void 0 : _a.call(formItem, "change").catch((err) => debugWarn());
       }
@@ -38406,24 +38455,14 @@ const _sfc_main$R = vue_cjs_prod.defineComponent({
         handleChange();
       }
     };
-    const setBackgroundColor = () => {
-      const newColor = checked.value ? props.activeColor : props.inactiveColor;
-      const coreEl = core.value;
-      if (props.borderColor)
-        coreEl.style.borderColor = props.borderColor;
-      else if (!props.borderColor)
-        coreEl.style.borderColor = newColor;
-      coreEl.style.backgroundColor = newColor;
-      coreEl.children[0].style.color = newColor;
-    };
+    const styles = vue_cjs_prod.computed(() => {
+      return ns2.cssVarBlock(__spreadValues(__spreadValues(__spreadValues({}, props.activeColor ? { "on-color": props.activeColor } : null), props.inactiveColor ? { "off-color": props.inactiveColor } : null), props.borderColor ? { "border-color": props.borderColor } : null));
+    });
     const focus = () => {
       var _a, _b;
       (_b = (_a = input.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
     };
     vue_cjs_prod.onMounted(() => {
-      if (props.activeColor || props.inactiveColor || props.borderColor) {
-        setBackgroundColor();
-      }
       input.value.checked = checked.value;
     });
     return {
@@ -38437,7 +38476,8 @@ const _sfc_main$R = vue_cjs_prod.defineComponent({
       coreStyle,
       handleChange,
       switchValue,
-      focus
+      focus,
+      styles
     };
   }
 });
@@ -38446,11 +38486,12 @@ const _hoisted_2$6 = ["aria-hidden"];
 const _hoisted_3$2 = ["aria-hidden"];
 const _hoisted_4$1 = ["aria-hidden"];
 const _hoisted_5$1 = ["aria-hidden"];
-function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_icon = vue_cjs_prod.resolveComponent("el-icon");
   const _component_loading = vue_cjs_prod.resolveComponent("loading");
   return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("div", {
     class: vue_cjs_prod.normalizeClass(_ctx.switchKls),
+    style: vue_cjs_prod.normalizeStyle(_ctx.styles),
     onClick: _cache[2] || (_cache[2] = vue_cjs_prod.withModifiers((...args) => _ctx.switchValue && _ctx.switchValue(...args), ["prevent"]))
   }, [
     vue_cjs_prod.createElementVNode("input", {
@@ -38562,9 +38603,9 @@ function _sfc_render$9(_ctx, _cache, $props, $setup, $data, $options) {
         "aria-hidden": !_ctx.checked
       }, vue_cjs_prod.toDisplayString(_ctx.activeText), 9, _hoisted_5$1)) : vue_cjs_prod.createCommentVNode("v-if", true)
     ], 2)) : vue_cjs_prod.createCommentVNode("v-if", true)
-  ], 2);
+  ], 6);
 }
-var Switch = /* @__PURE__ */ _export_sfc(_sfc_main$R, [["render", _sfc_render$9], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/switch/src/switch.vue"]]);
+var Switch = /* @__PURE__ */ _export_sfc(_sfc_main$R, [["render", _sfc_render$8], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/switch/src/switch.vue"]]);
 const ElSwitch = withInstall(Switch);
 /*!
  * escape-html
@@ -40245,7 +40286,7 @@ const _sfc_main$Q = vue_cjs_prod.defineComponent({
 const _hoisted_1$9 = { key: 0 };
 const _hoisted_2$5 = ["disabled"];
 const _hoisted_3$1 = ["label", "onClick"];
-function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_el_checkbox = vue_cjs_prod.resolveComponent("el-checkbox");
   const _component_el_checkbox_group = vue_cjs_prod.resolveComponent("el-checkbox-group");
   const _component_el_scrollbar = vue_cjs_prod.resolveComponent("el-scrollbar");
@@ -40359,7 +40400,7 @@ function _sfc_render$8(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
   }, 8, ["visible", "placement", "popper-class"]);
 }
-var FilterPanel = /* @__PURE__ */ _export_sfc(_sfc_main$Q, [["render", _sfc_render$8], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/table/src/filter-panel.vue"]]);
+var FilterPanel = /* @__PURE__ */ _export_sfc(_sfc_main$Q, [["render", _sfc_render$7], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/table/src/filter-panel.vue"]]);
 function useLayoutObserver(root2) {
   const instance = vue_cjs_prod.getCurrentInstance();
   vue_cjs_prod.onBeforeMount(() => {
@@ -41021,6 +41062,7 @@ function useStyles$1(props) {
 }
 function useRender$1(props) {
   const parent = vue_cjs_prod.inject(TABLE_INJECTION_KEY);
+  const ns2 = useNamespace("table");
   const {
     handleDoubleClick,
     handleClick,
@@ -41056,7 +41098,7 @@ function useRender$1(props) {
     const rowClasses = getRowClass(row, $index);
     let display = true;
     if (treeRowData) {
-      rowClasses.push(`el-table__row--level-${treeRowData.level}`);
+      rowClasses.push(ns2.em("row", `level-${treeRowData.level}`));
       display = treeRowData.display;
     }
     const displayStyle = display ? null : {
@@ -42089,7 +42131,7 @@ const _hoisted_2$4 = {
   ref: "hiddenColumns",
   class: "hidden-columns"
 };
-function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_hColgroup = vue_cjs_prod.resolveComponent("hColgroup");
   const _component_table_header = vue_cjs_prod.resolveComponent("table-header");
   const _component_table_body = vue_cjs_prod.resolveComponent("table-body");
@@ -42255,7 +42297,7 @@ function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ], 46, _hoisted_1$8);
 }
-var Table = /* @__PURE__ */ _export_sfc(_sfc_main$P, [["render", _sfc_render$7], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/table/src/table.vue"]]);
+var Table = /* @__PURE__ */ _export_sfc(_sfc_main$P, [["render", _sfc_render$6], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/table/src/table.vue"]]);
 const defaultClassNames = {
   selection: "table-column--selection",
   expand: "table__expand-column"
@@ -42881,7 +42923,7 @@ const calcColumnStyle = (column, fixedColumn, fixed) => {
     if (column.maxWidth)
       style.maxWidth = column.maxWidth;
     if (column.minWidth)
-      style.maxWidth = column.minWidth;
+      style.minWidth = column.minWidth;
   }
   return style;
 };
@@ -44868,10 +44910,10 @@ const tabBarProps = buildProps({
     default: () => mutable([])
   }
 });
-const __default__$f = {
+const __default__$g = {
   name: "ElTabBar"
 };
-const _sfc_main$O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$f), {
+const _sfc_main$O = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$g), {
   props: tabBarProps,
   setup(__props, { expose }) {
     const props = __props;
@@ -45008,10 +45050,11 @@ const TabNav = vue_cjs_prod.defineComponent({
       const newOffset = navSize - currentOffset > containerSize * 2 ? currentOffset + containerSize : navSize - containerSize;
       navOffset.value = newOffset;
     };
-    const scrollToActiveTab = () => {
+    const scrollToActiveTab = async () => {
       const nav = nav$.value;
       if (!scrollable.value || !el$.value || !navScroll$.value || !nav)
         return;
+      await vue_cjs_prod.nextTick();
       const activeTab = el$.value.querySelector(".is-active");
       if (!activeTab)
         return;
@@ -45341,10 +45384,10 @@ const tabPaneProps = buildProps({
   lazy: Boolean
 });
 const _hoisted_1$7 = ["id", "aria-hidden", "aria-labelledby"];
-const __default__$e = {
+const __default__$f = {
   name: "ElTabPane"
 };
-const _sfc_main$N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$e), {
+const _sfc_main$N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$f), {
   props: tabPaneProps,
   setup(__props) {
     const props = __props;
@@ -45501,10 +45544,10 @@ const nextTime = (time, step) => {
   next.minutes = next.minutes % 60;
   return formatTime(next);
 };
-const __default__$d = {
+const __default__$e = {
   name: "ElTimeSelect"
 };
-const _sfc_main$M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$d), {
+const _sfc_main$M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$e), {
   props: timeSelectProps,
   emits: ["change", "blur", "focus", "update:modelValue"],
   setup(__props, { expose }) {
@@ -45663,10 +45706,10 @@ const timelineItemProps = buildProps({
     default: false
   }
 });
-const __default__$c = {
+const __default__$d = {
   name: "ElTimelineItem"
 };
-const _sfc_main$L = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$c), {
+const _sfc_main$L = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$d), {
   props: timelineItemProps,
   setup(__props) {
     const ns2 = useNamespace("timeline-item");
@@ -45853,10 +45896,10 @@ const tooltipV2Props = buildProps(__spreadProps(__spreadValues(__spreadValues(__
     default: "body"
   }
 }));
-const __default__$b = {
+const __default__$c = {
   name: "ElTooltipV2Root"
 };
-const _sfc_main$K = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$b), {
+const _sfc_main$K = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$c), {
   props: tooltipV2RootProps,
   setup(__props, { expose }) {
     const props = __props;
@@ -45924,10 +45967,10 @@ const _sfc_main$K = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
   }
 }));
 var TooltipV2Root = /* @__PURE__ */ _export_sfc(_sfc_main$K, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/tooltip-v2/src/root.vue"]]);
-const __default__$a = {
+const __default__$b = {
   name: "ElTooltipV2Arrow"
 };
-const _sfc_main$J = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$a), {
+const _sfc_main$J = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$b), {
   props: __spreadValues(__spreadValues({}, tooltipV2ArrowProps), tooltipV2ArrowSpecialProps),
   setup(__props) {
     const props = __props;
@@ -45954,41 +45997,44 @@ const _sfc_main$J = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
   }
 }));
 var TooltipV2Arrow = /* @__PURE__ */ _export_sfc(_sfc_main$J, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/tooltip-v2/src/arrow.vue"]]);
-const _sfc_main$I = vue_cjs_prod.defineComponent({
-  name: "ElVisuallyHidden",
-  props: {
-    style: {
-      type: [String, Object, Array]
-    }
-  },
-  setup(props) {
-    return {
-      computedStyle: vue_cjs_prod.computed(() => {
-        return [
-          props.style,
-          {
-            position: "absolute",
-            border: 0,
-            width: 1,
-            height: 1,
-            padding: 0,
-            margin: -1,
-            overflow: "hidden",
-            clip: "rect(0, 0, 0, 0)",
-            whiteSpace: "nowrap",
-            wordWrap: "normal"
-          }
-        ];
-      })
-    };
+const visualHiddenProps = buildProps({
+  style: {
+    type: definePropType([String, Object, Array]),
+    default: () => ({})
   }
 });
-function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", vue_cjs_prod.mergeProps(_ctx.$attrs, { style: _ctx.computedStyle }), [
-    vue_cjs_prod.renderSlot(_ctx.$slots, "default")
-  ], 16);
-}
-var ElVisuallyHidden = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["render", _sfc_render$6], ["__file", "/home/runner/work/element-plus/element-plus/packages/components/visual-hidden/src/visual-hidden.vue"]]);
+const __default__$a = {
+  name: "ElVisuallyHidden"
+};
+const _sfc_main$I = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(__spreadValues({}, __default__$a), {
+  props: visualHiddenProps,
+  setup(__props) {
+    const props = __props;
+    const computedStyle = vue_cjs_prod.computed(() => {
+      return [
+        props.style,
+        {
+          position: "absolute",
+          border: 0,
+          width: 1,
+          height: 1,
+          padding: 0,
+          margin: -1,
+          overflow: "hidden",
+          clip: "rect(0, 0, 0, 0)",
+          whiteSpace: "nowrap",
+          wordWrap: "normal"
+        }
+      ];
+    });
+    return (_ctx, _cache) => {
+      return vue_cjs_prod.openBlock(), vue_cjs_prod.createElementBlock("span", vue_cjs_prod.mergeProps(_ctx.$attrs, { style: vue_cjs_prod.unref(computedStyle) }), [
+        vue_cjs_prod.renderSlot(_ctx.$slots, "default")
+      ], 16);
+    };
+  }
+}));
+var ElVisuallyHidden = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/visual-hidden/src/visual-hidden.vue"]]);
 const _hoisted_1$6 = ["data-side"];
 const __default__$9 = {
   name: "ElTooltipV2Content"
@@ -49899,10 +49945,6 @@ const _sfc_main$v = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
 }));
 var UploadDragger = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__file", "/home/runner/work/element-plus/element-plus/packages/components/upload/src/upload-dragger.vue"]]);
 const uploadContentProps = buildProps(__spreadProps(__spreadValues({}, uploadBaseProps), {
-  fileList: {
-    type: definePropType(Array),
-    default: () => mutable([])
-  },
   beforeUpload: {
     type: definePropType(Function),
     default: NOOP_1
@@ -50102,7 +50144,7 @@ const revokeObjectURL = (file) => {
   }
 };
 const useHandlers = (props, uploadRef) => {
-  const uploadFiles = vue_cjs_prod.ref([]);
+  const uploadFiles = useVModel(props, "fileList", void 0, { passive: true });
   const getFile = (rawFile) => uploadFiles.value.find((file) => file.uid === rawFile.uid);
   function abort(file) {
     var _a;
@@ -50115,6 +50157,7 @@ const useHandlers = (props, uploadRef) => {
     const file = getFile(rawFile);
     if (!file)
       return;
+    console.error(err);
     file.status = "fail";
     uploadFiles.value.splice(uploadFiles.value.indexOf(file), 1);
     props.onError(err, file, uploadFiles.value);
@@ -50198,14 +50241,14 @@ const useHandlers = (props, uploadRef) => {
       return file;
     });
   });
-  vue_cjs_prod.watch(() => props.fileList, (fileList) => {
-    for (const file of fileList) {
+  vue_cjs_prod.watch(uploadFiles, (files) => {
+    for (const file of files) {
       file.uid || (file.uid = genFileId());
       file.status || (file.status = "success");
     }
-    uploadFiles.value = fileList;
   }, { immediate: true, deep: true });
   return {
+    uploadFiles,
     abort,
     clearFiles,
     handleError,
@@ -50213,8 +50256,7 @@ const useHandlers = (props, uploadRef) => {
     handleStart,
     handleSuccess,
     handleRemove,
-    submit,
-    uploadFiles
+    submit
   };
 };
 const __default__$3 = {
@@ -50869,14 +50911,14 @@ const _sfc_main$s = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
     const config = useRuntimeConfig();
-    const auth2 = useCookie("auth", { domain: "thinkmoon.cn", maxAge: 3600 });
+    const auth = useCookie("auth", { domain: "thinkmoon.cn", maxAge: 3600 });
     const form = vue_cjs_prod.reactive({
       account: "",
       password: ""
     });
     function onSubmit() {
       UserApi.login(form).then((res) => {
-        auth2.value = res;
+        auth.value = res;
       }).catch(() => {
       });
     }
@@ -51039,7 +51081,7 @@ const _sfc_main$r = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const config = useRuntimeConfig();
     const route = vueRouter_cjs.useRoute();
     const pageIndex = route.params.pageIndex;
-    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("res", () => PostApi.getList({ current: pageIndex }))), __temp = await __temp, __restore(), __temp);
+    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData$1("res", () => PostApi.getList({ current: pageIndex }))), __temp = await __temp, __restore(), __temp);
     const postList2 = vue_cjs_prod.reactive(data.value.records);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
@@ -51146,7 +51188,7 @@ const _sfc_main$q = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       article.value.fields = fields;
     }
     const copyRight = `> \u7248\u6743\u58F0\u660E: \u672C\u6587\u9996\u53D1\u4E8E[\u6307\u5C16\u9B54\u6CD5\u5C4B-${article.value.title}](${url2}),\u8F6C\u8F7D\u6216\u5F15\u7528\u5FC5\u987B\u7533\u660E\u539F\u6307\u5C16\u9B54\u6CD5\u5C4B\u6765\u6E90\u53CA\u6E90\u5730\u5740\uFF01`;
-    const content = vue_cjs_prod.computed(() => `# ${article.value.title} \r
+    const content = computed(() => `# ${article.value.title} \r
  ${article.value.text} \r
  ${copyRight}`);
     axios.post("http://data.zz.baidu.com/urls?site=https://www.thinkmoon.cn&token=CKLtHWl6TKYOJw39", url2).then((res) => {
@@ -51207,8 +51249,8 @@ const _sfc_main$p = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const route = vueRouter_cjs.useRoute();
     Number(route.params.pageIndex);
     const [{ data: tag }, { data: post }] = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => Promise.all([
-      useAsyncData("tag", () => TagApi.getTag({ name: route.params.name })),
-      useAsyncData("post", () => PostApi.getListByTag({ name: route.params.name }))
+      useAsyncData$1("tag", () => TagApi.getTag({ name: route.params.name })),
+      useAsyncData$1("post", () => PostApi.getListByTag({ name: route.params.name }))
     ])), __temp = await __temp, __restore(), __temp);
     const postList2 = vue_cjs_prod.reactive(post.value);
     postList2.forEach((item) => {
@@ -51254,7 +51296,7 @@ const _sfc_main$o = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   async setup(__props) {
     let __temp, __restore;
     const config = useRuntimeConfig();
-    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("tag", () => TagApi.getTag())), __temp = await __temp, __restore(), __temp);
+    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData$1("tag", () => TagApi.getTag())), __temp = await __temp, __restore(), __temp);
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_el_tag = vue_cjs_prod.resolveComponent("el-tag");
@@ -51472,12 +51514,8 @@ const routes = [
 const configRouterOptions = {};
 const routerOptions = __spreadValues({}, configRouterOptions);
 const globalMiddleware = [];
-const namedMiddleware = {
-  auth: () => Promise.resolve().then(function() {
-    return auth$1;
-  })
-};
-const _60e55e1a = defineNuxtPlugin(async (nuxtApp) => {
+const namedMiddleware = {};
+const _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47nuxt_643_460_460_45rc_464_less_644_461_463_43webpack_645_4673_460_47node_modules_47nuxt_47dist_47pages_47runtime_47router = defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.vueApp.component("NuxtPage", NuxtPage);
   nuxtApp.vueApp.component("NuxtNestedPage", NuxtPage);
   nuxtApp.vueApp.component("NuxtChild", NuxtPage);
@@ -51522,16 +51560,6 @@ const _60e55e1a = defineNuxtPlugin(async (nuxtApp) => {
     named: {}
   };
   useError();
-  router.afterEach(async (to) => {
-    if (to.matched.length === 0) {
-      callWithNuxt(nuxtApp, throwError$1, [createError({
-        statusCode: 404,
-        statusMessage: `Page not found: ${to.fullPath}`
-      })]);
-    } else if (to.matched[0].name === "404" && nuxtApp.ssrContext) {
-      nuxtApp.ssrContext.res.statusCode = 404;
-    }
-  });
   try {
     if (true) {
       await router.push(initialURL);
@@ -51560,6 +51588,9 @@ const _60e55e1a = defineNuxtPlugin(async (nuxtApp) => {
     }
     for (const entry2 of middlewareEntries) {
       const middleware = typeof entry2 === "string" ? nuxtApp._middleware.named[entry2] || await ((_a = namedMiddleware[entry2]) == null ? void 0 : _a.call(namedMiddleware).then((r) => r.default || r)) : entry2;
+      if (!middleware) {
+        throw new Error(`Unknown route middleware: '${entry2}'.`);
+      }
       const result = await callWithNuxt(nuxtApp, middleware, [to, from]);
       {
         if (result === false || result instanceof Error) {
@@ -51576,7 +51607,14 @@ const _60e55e1a = defineNuxtPlugin(async (nuxtApp) => {
   });
   router.afterEach(async (to) => {
     delete nuxtApp._processingMiddleware;
-    {
+    if (to.matched.length === 0) {
+      callWithNuxt(nuxtApp, throwError$1, [createError({
+        statusCode: 404,
+        statusMessage: `Page not found: ${to.fullPath}`
+      })]);
+    } else if (to.matched[0].name === "404" && nuxtApp.ssrContext) {
+      nuxtApp.ssrContext.res.statusCode = 404;
+    } else {
       const currentURL = to.fullPath || "/";
       if (!isEqual$2(currentURL, initialURL)) {
         await callWithNuxt(nuxtApp, navigateTo, [currentURL]);
@@ -51586,6 +51624,7 @@ const _60e55e1a = defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.hooks.hookOnce("app:created", async () => {
     try {
       await router.replace(__spreadProps(__spreadValues({}, router.resolve(initialURL)), {
+        name: void 0,
         force: true
       }));
     } catch (error2) {
@@ -51627,13 +51666,13 @@ setSSRHandler("getDefaultStorage", () => {
 {
   setSSRHandler("updateHTMLAttrs", (selector, attr, value) => {
     if (selector === "html") {
-      useMeta({
+      useMeta$1({
         htmlAttrs: {
           [attr]: value
         }
       });
     } else if (selector === "body") {
-      useMeta({
+      useMeta$1({
         bodyAttrs: {
           [attr]: value
         }
@@ -51643,15 +51682,15 @@ setSSRHandler("getDefaultStorage", () => {
     }
   });
 }
-const ssrPlugin_4ade6bb9 = () => {
+const _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47_64vueuse_43nuxt_648_467_463_vue_643_462_4637_43webpack_645_4673_460_47node_modules_47_64vueuse_47nuxt_47ssr_45plugin_46mjs = () => {
 };
-const elementUi_7cb3993a = defineNuxtPlugin((nuxtApp) => {
+const _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47element_45ui_46ts = defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(installer);
   Object.keys(Icons).forEach((key) => {
     nuxtApp.vueApp.component(`icon-${key}`, Icons[key]);
   });
 });
-const filter_a9e908e0 = defineNuxtPlugin((nuxtApp) => {
+const _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47filter_46ts = defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.config.globalProperties.$filters = {
     time(value) {
       return dayjs(value).format("YYYY/MM/DD");
@@ -51661,10 +51700,10 @@ const filter_a9e908e0 = defineNuxtPlugin((nuxtApp) => {
 VMdEditor.use(githubTheme, {
   Hljs: hljs
 });
-const mdEditor_5fc2952f = defineNuxtPlugin((nuxtApp) => {
+const _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47md_45editor_46ts = defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(VMdEditor);
 });
-const mdPreview_1a2cb494 = defineNuxtPlugin((nuxtApp) => {
+const _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47md_45preview_46ts = defineNuxtPlugin((nuxtApp) => {
   VMdPreview.xss.extend({
     whiteList: {
       a: ["target", "href", "title", "rel"]
@@ -51685,16 +51724,16 @@ const mdPreview_1a2cb494 = defineNuxtPlugin((nuxtApp) => {
 });
 const _plugins = [
   preload,
-  componentsPlugin_fe178482,
-  vueuseHead_6bc36c7d,
-  _2153be71,
-  _60e55e1a,
+  _47home_47runner_47work_47web_45ui_47web_45ui_47_46nuxt_47components_46plugin_46mjs,
+  _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47nuxt_643_460_460_45rc_464_less_644_461_463_43webpack_645_4673_460_47node_modules_47nuxt_47dist_47head_47runtime_47lib_47vueuse_45head_46plugin,
+  _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47nuxt_643_460_460_45rc_464_less_644_461_463_43webpack_645_4673_460_47node_modules_47nuxt_47dist_47head_47runtime_47plugin,
+  _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47nuxt_643_460_460_45rc_464_less_644_461_463_43webpack_645_4673_460_47node_modules_47nuxt_47dist_47pages_47runtime_47router,
   PiniaNuxtPlugin,
-  ssrPlugin_4ade6bb9,
-  elementUi_7cb3993a,
-  filter_a9e908e0,
-  mdEditor_5fc2952f,
-  mdPreview_1a2cb494
+  _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47_64vueuse_43nuxt_648_467_463_vue_643_462_4637_43webpack_645_4673_460_47node_modules_47_64vueuse_47nuxt_47ssr_45plugin_46mjs,
+  _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47element_45ui_46ts,
+  _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47filter_46ts,
+  _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47md_45editor_46ts,
+  _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47md_45preview_46ts
 ];
 const _sfc_main$n = {
   __name: "error-404",
@@ -51844,7 +51883,7 @@ const _sfc_main$k = {
 const _sfc_setup$k = _sfc_main$k.setup;
 _sfc_main$k.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.0.0-rc.3_less@4.1.3+webpack@5.73.0/node_modules/nuxt/dist/app/components/nuxt-error-page.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.0.0-rc.4_less@4.1.3+webpack@5.73.0/node_modules/nuxt/dist/app/components/nuxt-error-page.vue");
   return _sfc_setup$k ? _sfc_setup$k(props, ctx) : void 0;
 };
 const _sfc_main$j = {
@@ -51878,7 +51917,7 @@ const _sfc_main$j = {
 const _sfc_setup$j = _sfc_main$j.setup;
 _sfc_main$j.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.0.0-rc.3_less@4.1.3+webpack@5.73.0/node_modules/nuxt/dist/app/components/nuxt-root.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.0.0-rc.4_less@4.1.3+webpack@5.73.0/node_modules/nuxt/dist/app/components/nuxt-root.vue");
   return _sfc_setup$j ? _sfc_setup$j(props, ctx) : void 0;
 };
 const layouts = {
@@ -51927,7 +51966,7 @@ function _sfc_ssrRender$3(_ctx, _push, _parent, _attrs) {
 const _sfc_setup$i = _sfc_main$i.setup;
 _sfc_main$i.setup = (props, ctx) => {
   const ssrContext = vue_cjs_prod.useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.0.0-rc.3_less@4.1.3+webpack@5.73.0/node_modules/nuxt/dist/pages/runtime/app.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.0.0-rc.4_less@4.1.3+webpack@5.73.0/node_modules/nuxt/dist/pages/runtime/app.vue");
   return _sfc_setup$i ? _sfc_setup$i(props, ctx) : void 0;
 };
 const AppComponent = /* @__PURE__ */ _export_sfc$1(_sfc_main$i, [["ssrRender", _sfc_ssrRender$3]]);
@@ -51939,7 +51978,7 @@ if (!globalThis.$fetch) {
 let entry;
 const plugins = normalizePlugins(_plugins);
 {
-  entry = async function createNuxtAppServer(ssrContext = {}) {
+  entry = async function createNuxtAppServer(ssrContext) {
     const vueApp = vue_cjs_prod.createApp(_sfc_main$j);
     vueApp.component("App", AppComponent);
     const nuxt = createNuxtApp({ vueApp, ssrContext });
@@ -51973,13 +52012,24 @@ const _404 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   __proto__: null,
   "default": _sfc_main$h
 }, Symbol.toStringTag, { value: "Module" }));
+const customOptions = [
+  {
+    name: "thumb",
+    value: ""
+  },
+  {
+    name: "desc",
+    value: ""
+  }
+];
 const __default__$2 = vue_cjs_prod.defineComponent({
   data() {
     return {
       article: {
         title: "",
         text: "",
-        category_id: ""
+        category_id: "",
+        customOptions
       },
       categoryList: []
     };
@@ -51987,7 +52037,7 @@ const __default__$2 = vue_cjs_prod.defineComponent({
   activated() {
     if (this.$route.query.cid) {
       PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
-        this.article = res;
+        this.article = __spreadValues(__spreadValues({}, this.article), res);
       });
     } else {
       this.data = {};
@@ -52019,7 +52069,6 @@ const __default__$2 = vue_cjs_prod.defineComponent({
         const key = dayjs().format("YYYY-MM-DD/HH-mm-ss");
         const observable = qiniu.upload(files[0], key, token);
         observable.subscribe(null, null, (res) => {
-          console.log(res);
           insertImage({
             url: `https://blog.cdn.thinkmoon.cn/${res.key}`
           });
@@ -52032,16 +52081,6 @@ const _sfc_main$g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
   __name: "editor",
   __ssrInlineRender: true,
   setup(__props) {
-    const customList = [
-      {
-        name: "thumb",
-        value: ""
-      },
-      {
-        name: "desc",
-        value: ""
-      }
-    ];
     return (_ctx, _push, _parent, _attrs) => {
       const _component_el_input = vue_cjs_prod.resolveComponent("el-input");
       const _component_v_md_editor = vue_cjs_prod.resolveComponent("v-md-editor");
@@ -52064,11 +52103,11 @@ const _sfc_main$g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
         onUploadImage: _ctx.handleUploadImage
       }, null, _parent));
       _push(`<div class="custom-options"><!--[-->`);
-      serverRenderer.exports.ssrRenderList(customList, (custom) => {
+      serverRenderer.exports.ssrRenderList(_ctx.article.customOptions, (custom, index2) => {
         _push(`<!--[--><span>${serverRenderer.exports.ssrInterpolate(custom.name)}</span>`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_input, {
-          modelValue: custom.value,
-          "onUpdate:modelValue": ($event) => custom.value = $event,
+          modelValue: _ctx.article.customOptions[index2].value,
+          "onUpdate:modelValue": ($event) => _ctx.article.customOptions[index2].value = $event,
           type: "textarea",
           class: "input-with-select",
           placeholder: "Please input"
@@ -52963,8 +53002,8 @@ const _sfc_main$c = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     };
     pageData.current = Number(route.params.pageIndex);
     const [{ data: category }, { data: post }] = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => Promise.all([
-      useAsyncData("category", () => CategoryApi.getCategory({ name: route.params.name })),
-      useAsyncData("post", () => PostApi.getList(__spreadProps(__spreadValues({}, pageData), { category: route.params.name })))
+      useAsyncData$1("category", () => CategoryApi.getCategory({ name: route.params.name })),
+      useAsyncData$1("post", () => PostApi.getList(__spreadProps(__spreadValues({}, pageData), { category: route.params.name })))
     ])), __temp = await __temp, __restore(), __temp);
     const postList2 = vue_cjs_prod.reactive(post.value.records);
     postList2.forEach((item) => {
@@ -53013,7 +53052,7 @@ const _sfc_main$b = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   async setup(__props) {
     let __temp, __restore;
     const config = useRuntimeConfig();
-    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("category", () => CategoryApi.getCategory())), __temp = await __temp, __restore(), __temp);
+    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData$1("category", () => CategoryApi.getCategory())), __temp = await __temp, __restore(), __temp);
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_el_tag = vue_cjs_prod.resolveComponent("el-tag");
@@ -53164,14 +53203,14 @@ const _sfc_main$9 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
     const config = useRuntimeConfig();
-    const auth2 = useCookie("auth", { domain: "thinkmoon.cn", maxAge: 3600 });
+    const auth = useCookie("auth", { domain: "thinkmoon.cn", maxAge: 3600 });
     const form = vue_cjs_prod.reactive({
       account: "",
       password: ""
     });
     function onSubmit() {
       UserApi.login(form).then((res) => {
-        auth2.value = res;
+        auth.value = res;
       }).catch(() => {
       });
     }
@@ -53336,7 +53375,7 @@ const _sfc_main$8 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const config = useRuntimeConfig();
     const route = vueRouter_cjs.useRoute();
     const pageIndex = route.params.pageIndex;
-    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("res", () => PostApi.getList({ current: pageIndex }))), __temp = await __temp, __restore(), __temp);
+    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData$1("res", () => PostApi.getList({ current: pageIndex }))), __temp = await __temp, __restore(), __temp);
     const postList2 = vue_cjs_prod.reactive(data.value.records);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
@@ -53447,7 +53486,7 @@ const _sfc_main$7 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       article.value.fields = fields;
     }
     const copyRight = `> \u7248\u6743\u58F0\u660E: \u672C\u6587\u9996\u53D1\u4E8E[\u6307\u5C16\u9B54\u6CD5\u5C4B-${article.value.title}](${url2}),\u8F6C\u8F7D\u6216\u5F15\u7528\u5FC5\u987B\u7533\u660E\u539F\u6307\u5C16\u9B54\u6CD5\u5C4B\u6765\u6E90\u53CA\u6E90\u5730\u5740\uFF01`;
-    const content = vue_cjs_prod.computed(() => `# ${article.value.title} \r
+    const content = computed(() => `# ${article.value.title} \r
  ${article.value.text} \r
  ${copyRight}`);
     axios.post("http://data.zz.baidu.com/urls?site=https://www.thinkmoon.cn&token=CKLtHWl6TKYOJw39", url2).then((res) => {
@@ -53503,8 +53542,8 @@ const _sfc_main$6 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const route = vueRouter_cjs.useRoute();
     Number(route.params.pageIndex);
     const [{ data: tag }, { data: post }] = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => Promise.all([
-      useAsyncData("tag", () => TagApi.getTag({ name: route.params.name })),
-      useAsyncData("post", () => PostApi.getListByTag({ name: route.params.name }))
+      useAsyncData$1("tag", () => TagApi.getTag({ name: route.params.name })),
+      useAsyncData$1("post", () => PostApi.getListByTag({ name: route.params.name }))
     ])), __temp = await __temp, __restore(), __temp);
     const postList2 = vue_cjs_prod.reactive(post.value);
     postList2.forEach((item) => {
@@ -53553,7 +53592,7 @@ const _sfc_main$5 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   async setup(__props) {
     let __temp, __restore;
     const config = useRuntimeConfig();
-    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("tag", () => TagApi.getTag())), __temp = await __temp, __restore(), __temp);
+    const { data } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData$1("tag", () => TagApi.getTag())), __temp = await __temp, __restore(), __temp);
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_el_tag = vue_cjs_prod.resolveComponent("el-tag");
@@ -53626,16 +53665,6 @@ const index = /* @__PURE__ */ _export_sfc$1(_sfc_main$5, [["__scopeId", "data-v-
 const index$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": index
-}, Symbol.toStringTag, { value: "Module" }));
-const auth = defineNuxtRouteMiddleware((to, from) => {
-  const auth2 = useCookie("auth");
-  if (!auth2.value) {
-    return navigateTo("/login");
-  }
-});
-const auth$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  "default": auth
 }, Symbol.toStringTag, { value: "Module" }));
 const _sfc_main$4 = {};
 function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs) {

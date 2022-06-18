@@ -175,7 +175,7 @@ class H3Error extends Error {
   constructor() {
     super(...arguments);
     this.statusCode = 500;
-    this.statusMessage = "H3Error";
+    this.statusMessage = "Internal Server Error";
   }
 }
 function createError(input) {
