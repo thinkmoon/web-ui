@@ -3913,6 +3913,7 @@ const useRouter = () => {
 const useRoute = () => {
   return useNuxtApp()._route;
 };
+const defineNuxtRouteMiddleware = (middleware) => middleware;
 const navigateTo = (to, options = {}) => {
   if (!to) {
     to = "/";
@@ -27175,7 +27176,7 @@ var getUrlRegex = function() {
     return options && options.exact ? v6exact : new RegExp("" + b2(options) + v6 + b2(options), "g");
   };
   var protocol = "(?:(?:[a-z]+:)?//)";
-  var auth = "(?:\\S+(?::\\S*)?@)?";
+  var auth2 = "(?:\\S+(?::\\S*)?@)?";
   var ipv4 = ip.v4().source;
   var ipv6 = ip.v6().source;
   var host = "(?:(?:[a-z\\u00a1-\\uffff0-9][-_]*)*[a-z\\u00a1-\\uffff0-9]+)";
@@ -27183,7 +27184,7 @@ var getUrlRegex = function() {
   var tld = "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))";
   var port = "(?::\\d{2,5})?";
   var path = '(?:[/?#][^\\s"]*)?';
-  var regex = "(?:" + protocol + "|www\\.)" + auth + "(?:localhost|" + ipv4 + "|" + ipv6 + "|" + host + domain + tld + ")" + port + path;
+  var regex = "(?:" + protocol + "|www\\.)" + auth2 + "(?:localhost|" + ipv4 + "|" + ipv6 + "|" + host + domain + tld + ")" + port + path;
   urlReg = new RegExp("(?:^" + regex + "$)", "i");
   return urlReg;
 };
@@ -50911,14 +50912,14 @@ const _sfc_main$s = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
     const config = useRuntimeConfig();
-    const auth = useCookie("auth", { domain: "thinkmoon.cn", maxAge: 3600 });
+    const auth2 = useCookie("auth", { domain: "thinkmoon.cn", maxAge: 3600 });
     const form = vue_cjs_prod.reactive({
       account: "",
       password: ""
     });
     function onSubmit() {
       UserApi.login(form).then((res) => {
-        auth.value = res;
+        auth2.value = res;
       }).catch(() => {
       });
     }
@@ -51514,7 +51515,11 @@ const routes = [
 const configRouterOptions = {};
 const routerOptions = __spreadValues({}, configRouterOptions);
 const globalMiddleware = [];
-const namedMiddleware = {};
+const namedMiddleware = {
+  auth: () => Promise.resolve().then(function() {
+    return auth$1;
+  })
+};
 const _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47nuxt_643_460_460_45rc_464_less_644_461_463_43webpack_645_4673_460_47node_modules_47nuxt_47dist_47pages_47runtime_47router = defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.vueApp.component("NuxtPage", NuxtPage);
   nuxtApp.vueApp.component("NuxtNestedPage", NuxtPage);
@@ -53203,14 +53208,14 @@ const _sfc_main$9 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
     const config = useRuntimeConfig();
-    const auth = useCookie("auth", { domain: "thinkmoon.cn", maxAge: 3600 });
+    const auth2 = useCookie("auth", { domain: "thinkmoon.cn", maxAge: 3600 });
     const form = vue_cjs_prod.reactive({
       account: "",
       password: ""
     });
     function onSubmit() {
       UserApi.login(form).then((res) => {
-        auth.value = res;
+        auth2.value = res;
       }).catch(() => {
       });
     }
@@ -53665,6 +53670,16 @@ const index = /* @__PURE__ */ _export_sfc$1(_sfc_main$5, [["__scopeId", "data-v-
 const index$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": index
+}, Symbol.toStringTag, { value: "Module" }));
+const auth = defineNuxtRouteMiddleware((to, from) => {
+  const auth2 = useCookie("auth");
+  if (!auth2.value) {
+    return navigateTo("/login");
+  }
+});
+const auth$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  "default": auth
 }, Symbol.toStringTag, { value: "Module" }));
 const _sfc_main$4 = {};
 function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs) {
