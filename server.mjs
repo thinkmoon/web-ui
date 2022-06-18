@@ -2,7 +2,6 @@ import { v as vue_cjs_prod, s as serverRenderer } from '../handlers/renderer.mjs
 import { hasProtocol, isEqual as isEqual$2, withBase, withQuery } from 'ufo';
 import * as qiniu from 'qiniu-js';
 import dayjs from 'dayjs';
-import axios from 'axios';
 import { createPinia, setActivePinia } from 'pinia/dist/pinia.mjs';
 import * as Icons from '@element-plus/icons-vue';
 import { View, Hide, CircleClose, Loading as Loading$1, CaretTop, Clock, Calendar as Calendar$1, ArrowLeft, ArrowRight, Check, Close, ArrowDown, DArrowLeft, DArrowRight, FullScreen, ScaleToOriginal, ZoomOut, ZoomIn, RefreshLeft, RefreshRight, Minus, ArrowUp, Plus, More, Back, MoreFilled, QuestionFilled, WarningFilled, CircleCheck, StarFilled, Star, PictureFilled, Search, CaretRight, Document, Delete, SuccessFilled, CircleCloseFilled, InfoFilled, CircleCheckFilled, SortUp, SortDown } from '@element-plus/icons-vue';
@@ -19,6 +18,7 @@ import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import hljs from 'highlight.js';
 import VMdPreview from '@kangc/v-md-editor/lib/preview.js';
 import externalLinks from 'markdown-it-external-links';
+import axios from 'axios';
 import { u as useRuntimeConfig$1 } from '../nitro/node-server.mjs';
 import 'h3';
 import 'unenv/runtime/mock/proxy';
@@ -51071,6 +51071,16 @@ _sfc_main$s.setup = (props, ctx) => {
 const meta$4 = {
   layout: false
 };
+const pushUrl = (url2) => {
+  {
+    const site = "https://www.thinkmoon.cn";
+    axios.post(`http://data.zz.baidu.com/urls?site=${site}&token=CKLtHWl6TKYOJw39`, `${site}/url`).then(() => {
+      console.log("[info] \u63A8\u9001\u6210\u529F:", url2);
+    }).catch(() => {
+      console.error("[error] \u63A8\u9001\u5931\u8D25:", url2);
+    });
+  }
+};
 const _sfc_main$r = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "[pageIndex]",
   __ssrInlineRender: true,
@@ -51091,19 +51101,12 @@ const _sfc_main$r = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       }
     });
     data.value.total;
-    {
-      const url2 = `https://www.thinkmoon.cn/page/${route.params.pageIndex}`;
-      axios.post("http://data.zz.baidu.com/urls?site=https://www.thinkmoon.cn&token=CKLtHWl6TKYOJw39", url2).then((res) => {
-        console.log("\u63A8\u9001\u6210\u529F:", url2);
-      }).catch((err) => {
-        console.error("\u63A8\u9001\u5931\u8D25:", url2);
-      });
-    }
+    pushUrl(`/page/${route.params.pageIndex}`);
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_PostList = __nuxt_component_0$2;
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "page-content" }, _attrs))} data-v-5cb61f34>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "page-content" }, _attrs))} data-v-56e7bf10>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -51116,9 +51119,9 @@ const _sfc_main$r = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`<div class="post-container" data-v-5cb61f34>`);
+      _push(`<div class="post-container" data-v-56e7bf10>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_PostList, { "post-list": postList2 }, null, _parent));
-      _push(`<div class="pagination-div" data-v-5cb61f34><div data-v-5cb61f34>`);
+      _push(`<div class="pagination-div" data-v-56e7bf10><div data-v-56e7bf10>`);
       if (Number(vue_cjs_prod.unref(pageIndex)) !== 1) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: `/page/${Number(vue_cjs_prod.unref(pageIndex)) - 1}`,
@@ -51138,7 +51141,7 @@ const _sfc_main$r = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       } else {
         _push(`<!---->`);
       }
-      _push(`</div><div data-v-5cb61f34>`);
+      _push(`</div><div data-v-56e7bf10>`);
       if (Number(vue_cjs_prod.unref(pageIndex)) !== vue_cjs_prod.unref(data).pages) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: `/page/${Number(vue_cjs_prod.unref(pageIndex)) + 1}`,
@@ -51189,11 +51192,7 @@ const _sfc_main$q = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const content = vue_cjs_prod.computed(() => `# ${article.value.title} \r
  ${article.value.text} \r
  ${copyRight}`);
-    axios.post("http://data.zz.baidu.com/urls?site=https://www.thinkmoon.cn&token=CKLtHWl6TKYOJw39", url2).then((res) => {
-      console.log("\u63A8\u9001\u6210\u529F:", url2);
-    }).catch((err) => {
-      console.error("\u63A8\u9001\u5931\u8D25:", url2);
-    });
+    pushUrl(`/post/${route.params.cid}`);
     useMeta({
       meta: [
         { name: "keywords", content: article.value.tag.map((i) => i.name).join(",") || config.KEYWORDS },
@@ -51203,7 +51202,7 @@ const _sfc_main$q = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_v_md_preview = vue_cjs_prod.resolveComponent("v-md-preview");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "" }, _attrs))} data-v-4b611cb2>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "" }, _attrs))} data-v-8b755b0c>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -51216,9 +51215,9 @@ const _sfc_main$q = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`<div class="article-content" data-v-4b611cb2>`);
+      _push(`<div class="article-content" data-v-8b755b0c>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_v_md_preview, { text: vue_cjs_prod.unref(content) }, null, _parent));
-      _push(`<ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="fluid" data-ad-layout="in-article" data-ad-slot="2621880404" style="${serverRenderer.exports.ssrRenderStyle({ "display": "block", "text-align": "center", "width": "100%" })}" data-v-4b611cb2></ins></div></div>`);
+      _push(`<ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="fluid" data-ad-layout="in-article" data-ad-slot="2621880404" style="${serverRenderer.exports.ssrRenderStyle({ "display": "block", "text-align": "center", "width": "100%" })}" data-v-8b755b0c></ins></div></div>`);
     };
   }
 });
@@ -53388,19 +53387,12 @@ const _sfc_main$8 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       }
     });
     data.value.total;
-    {
-      const url2 = `https://www.thinkmoon.cn/page/${route.params.pageIndex}`;
-      axios.post("http://data.zz.baidu.com/urls?site=https://www.thinkmoon.cn&token=CKLtHWl6TKYOJw39", url2).then((res) => {
-        console.log("\u63A8\u9001\u6210\u529F:", url2);
-      }).catch((err) => {
-        console.error("\u63A8\u9001\u5931\u8D25:", url2);
-      });
-    }
+    pushUrl(`/page/${route.params.pageIndex}`);
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_PostList = __nuxt_component_0$2;
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "page-content" }, _attrs))} data-v-5cb61f34>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "page-content" }, _attrs))} data-v-56e7bf10>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -53413,9 +53405,9 @@ const _sfc_main$8 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`<div class="post-container" data-v-5cb61f34>`);
+      _push(`<div class="post-container" data-v-56e7bf10>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_PostList, { "post-list": postList2 }, null, _parent));
-      _push(`<div class="pagination-div" data-v-5cb61f34><div data-v-5cb61f34>`);
+      _push(`<div class="pagination-div" data-v-56e7bf10><div data-v-56e7bf10>`);
       if (Number(vue_cjs_prod.unref(pageIndex)) !== 1) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: `/page/${Number(vue_cjs_prod.unref(pageIndex)) - 1}`,
@@ -53435,7 +53427,7 @@ const _sfc_main$8 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       } else {
         _push(`<!---->`);
       }
-      _push(`</div><div data-v-5cb61f34>`);
+      _push(`</div><div data-v-56e7bf10>`);
       if (Number(vue_cjs_prod.unref(pageIndex)) !== vue_cjs_prod.unref(data).pages) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_link, {
           href: `/page/${Number(vue_cjs_prod.unref(pageIndex)) + 1}`,
@@ -53465,7 +53457,7 @@ _sfc_main$8.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/page/[pageIndex].vue");
   return _sfc_setup$8 ? _sfc_setup$8(props, ctx) : void 0;
 };
-const _pageIndex_$1 = /* @__PURE__ */ _export_sfc$1(_sfc_main$8, [["__scopeId", "data-v-5cb61f34"]]);
+const _pageIndex_$1 = /* @__PURE__ */ _export_sfc$1(_sfc_main$8, [["__scopeId", "data-v-56e7bf10"]]);
 const _pageIndex_$2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": _pageIndex_$1
@@ -53490,11 +53482,7 @@ const _sfc_main$7 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const content = vue_cjs_prod.computed(() => `# ${article.value.title} \r
  ${article.value.text} \r
  ${copyRight}`);
-    axios.post("http://data.zz.baidu.com/urls?site=https://www.thinkmoon.cn&token=CKLtHWl6TKYOJw39", url2).then((res) => {
-      console.log("\u63A8\u9001\u6210\u529F:", url2);
-    }).catch((err) => {
-      console.error("\u63A8\u9001\u5931\u8D25:", url2);
-    });
+    pushUrl(`/post/${route.params.cid}`);
     useMeta({
       meta: [
         { name: "keywords", content: article.value.tag.map((i) => i.name).join(",") || config.KEYWORDS },
@@ -53504,7 +53492,7 @@ const _sfc_main$7 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     return (_ctx, _push, _parent, _attrs) => {
       const _component_Title = vue_cjs_prod.resolveComponent("Title");
       const _component_v_md_preview = vue_cjs_prod.resolveComponent("v-md-preview");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "" }, _attrs))} data-v-4b611cb2>`);
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "" }, _attrs))} data-v-8b755b0c>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Title, null, {
         default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -53517,9 +53505,9 @@ const _sfc_main$7 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`<div class="article-content" data-v-4b611cb2>`);
+      _push(`<div class="article-content" data-v-8b755b0c>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_v_md_preview, { text: vue_cjs_prod.unref(content) }, null, _parent));
-      _push(`<ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="fluid" data-ad-layout="in-article" data-ad-slot="2621880404" style="${serverRenderer.exports.ssrRenderStyle({ "display": "block", "text-align": "center", "width": "100%" })}" data-v-4b611cb2></ins></div></div>`);
+      _push(`<ins class="adsbygoogle" data-ad-client="ca-pub-3208634444966567" data-ad-format="fluid" data-ad-layout="in-article" data-ad-slot="2621880404" style="${serverRenderer.exports.ssrRenderStyle({ "display": "block", "text-align": "center", "width": "100%" })}" data-v-8b755b0c></ins></div></div>`);
     };
   }
 });
@@ -53529,7 +53517,7 @@ _sfc_main$7.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/post/[cid].vue");
   return _sfc_setup$7 ? _sfc_setup$7(props, ctx) : void 0;
 };
-const _cid_ = /* @__PURE__ */ _export_sfc$1(_sfc_main$7, [["__scopeId", "data-v-4b611cb2"]]);
+const _cid_ = /* @__PURE__ */ _export_sfc$1(_sfc_main$7, [["__scopeId", "data-v-8b755b0c"]]);
 const _cid_$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": _cid_
@@ -53948,11 +53936,11 @@ const _sfc_main = /* @__PURE__ */ vue_cjs_prod.defineComponent({
       const _component_ClientOnly = __nuxt_component_1;
       const _component_el_backtop = vue_cjs_prod.resolveComponent("el-backtop");
       const _component_Footer = __nuxt_component_2;
-      _push(`<!--[--><div data-v-062e129b>`);
+      _push(`<!--[--><div data-v-022595ca>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_DefaultMenu, null, null, _parent));
-      _push(`<div class="app-container" data-v-062e129b><div class="layout" data-v-062e129b><div class="main-content" data-v-062e129b>`);
+      _push(`<div class="app-container" data-v-022595ca><div class="layout" data-v-022595ca><div class="main-content" data-v-022595ca>`);
       serverRenderer.exports.ssrRenderSlot(_ctx.$slots, "default", {}, null, _push, _parent);
-      _push(`</div><div class="page-section" data-v-062e129b>`);
+      _push(`</div><div class="page-section" data-v-022595ca>`);
       _push(serverRenderer.exports.ssrRenderComponent(_sfc_main$2, null, null, _parent));
       _push(serverRenderer.exports.ssrRenderComponent(GoogleAd, null, null, _parent));
       _push(`</div></div></div>`);
@@ -53980,7 +53968,7 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("layouts/default.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
-const _default = /* @__PURE__ */ _export_sfc$1(_sfc_main, [["__scopeId", "data-v-062e129b"]]);
+const _default = /* @__PURE__ */ _export_sfc$1(_sfc_main, [["__scopeId", "data-v-022595ca"]]);
 const _default$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": _default
