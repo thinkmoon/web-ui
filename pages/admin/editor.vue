@@ -108,7 +108,7 @@ export default defineComponent({
         category_id: '',
         tag: [],
         selectedTag: [],
-        fields,
+        fields: [],
       },
       categoryList: [],
       tagList: [],
@@ -122,9 +122,13 @@ export default defineComponent({
           ...res,
         };
         this.article.selectedTag = this.article.tag.map(item => item.tid);
+        if (!this.article.fields.length) {
+          this.article.fields = fields;
+        }
       });
     } else {
       this.data = {};
+      this.article.fields = fields;
     }
     this.getCategory();
     this.getTag();
