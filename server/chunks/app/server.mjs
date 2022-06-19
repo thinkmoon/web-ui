@@ -5782,7 +5782,16 @@ class CategoryApi {
     });
   }
 }
-const customOptions$1 = [
+class TagApi {
+  static getTag(params = {}) {
+    return request({
+      method: "get",
+      url: `/tag/list`,
+      params
+    });
+  }
+}
+const fields$1 = [
   {
     name: "thumb",
     value: ""
@@ -5799,22 +5808,32 @@ const __default__$1n = vue_cjs_prod.defineComponent({
         title: "",
         text: "",
         category_id: "",
-        customOptions: customOptions$1
+        tag: [],
+        selectedTag: [],
+        fields: fields$1
       },
-      categoryList: []
+      categoryList: [],
+      tagList: []
     };
   },
   activated() {
     if (this.$route.query.cid) {
       PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
         this.article = __spreadValues(__spreadValues({}, this.article), res);
+        this.article.selectedTag = this.article.tag.map((item) => item.tid);
       });
     } else {
       this.data = {};
     }
     this.getCategory();
+    this.getTag();
   },
   methods: {
+    getTag() {
+      TagApi.getTag().then((res) => {
+        this.tagList = res;
+      });
+    },
     getCategory() {
       CategoryApi.getCategory().then((res) => {
         this.categoryList = res;
@@ -5873,11 +5892,11 @@ const _sfc_main$2N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         onUploadImage: _ctx.handleUploadImage
       }, null, _parent));
       _push(`<div class="custom-options"><!--[-->`);
-      serverRenderer.exports.ssrRenderList(_ctx.article.customOptions, (custom, index2) => {
+      serverRenderer.exports.ssrRenderList(_ctx.article.fields, (custom, index2) => {
         _push(`<!--[--><span>${serverRenderer.exports.ssrInterpolate(custom.name)}</span>`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_input, {
-          modelValue: _ctx.article.customOptions[index2].value,
-          "onUpdate:modelValue": ($event) => _ctx.article.customOptions[index2].value = $event,
+          modelValue: _ctx.article.fields[index2].value,
+          "onUpdate:modelValue": ($event) => _ctx.article.fields[index2].value = $event,
           type: "textarea",
           class: "input-with-select",
           placeholder: "Please input"
@@ -5962,6 +5981,88 @@ const _sfc_main$2N = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         }),
         _: 1
       }, _parent));
+      _push(`</div></section><section><span class="title">\u6587\u7AE0\u6807\u7B7E</span><div class="content">`);
+      _push(serverRenderer.exports.ssrRenderComponent(_component_ClientOnly, null, {
+        default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
+          if (_push2) {
+            _push2(serverRenderer.exports.ssrRenderComponent(_component_el_select, {
+              key: "category",
+              modelValue: _ctx.article.selectedTag,
+              "onUpdate:modelValue": ($event) => _ctx.article.selectedTag = $event,
+              filterable: "",
+              multiple: ""
+            }, {
+              default: vue_cjs_prod.withCtx((_22, _push3, _parent3, _scopeId2) => {
+                if (_push3) {
+                  _push3(`<!--[-->`);
+                  serverRenderer.exports.ssrRenderList(_ctx.tagList, (item) => {
+                    _push3(serverRenderer.exports.ssrRenderComponent(_component_el_option, {
+                      key: item.tid,
+                      label: item.name,
+                      value: item.tid
+                    }, {
+                      default: vue_cjs_prod.withCtx((_3, _push4, _parent4, _scopeId3) => {
+                        if (_push4) {
+                          _push4(`${serverRenderer.exports.ssrInterpolate(item.name)}`);
+                        } else {
+                          return [
+                            vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                          ];
+                        }
+                      }),
+                      _: 2
+                    }, _parent3, _scopeId2));
+                  });
+                  _push3(`<!--]-->`);
+                } else {
+                  return [
+                    (vue_cjs_prod.openBlock(true), vue_cjs_prod.createBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.tagList, (item) => {
+                      return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_option, {
+                        key: item.tid,
+                        label: item.name,
+                        value: item.tid
+                      }, {
+                        default: vue_cjs_prod.withCtx(() => [
+                          vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                        ]),
+                        _: 2
+                      }, 1032, ["label", "value"]);
+                    }), 128))
+                  ];
+                }
+              }),
+              _: 1
+            }, _parent2, _scopeId));
+          } else {
+            return [
+              vue_cjs_prod.createVNode(_component_el_select, {
+                key: "category",
+                modelValue: _ctx.article.selectedTag,
+                "onUpdate:modelValue": ($event) => _ctx.article.selectedTag = $event,
+                filterable: "",
+                multiple: ""
+              }, {
+                default: vue_cjs_prod.withCtx(() => [
+                  (vue_cjs_prod.openBlock(true), vue_cjs_prod.createBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.tagList, (item) => {
+                    return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_option, {
+                      key: item.tid,
+                      label: item.name,
+                      value: item.tid
+                    }, {
+                      default: vue_cjs_prod.withCtx(() => [
+                        vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                      ]),
+                      _: 2
+                    }, 1032, ["label", "value"]);
+                  }), 128))
+                ]),
+                _: 1
+              }, 8, ["modelValue", "onUpdate:modelValue"])
+            ];
+          }
+        }),
+        _: 1
+      }, _parent));
       _push(`</div></section></div></div>`);
     };
   }
@@ -6005,11 +6106,11 @@ const __default__$1m = vue_cjs_prod.defineComponent({
         this.tableData = res.records;
         this.tableData.forEach((item) => {
           if (item.fields instanceof Array) {
-            const fields = {};
+            const fields2 = {};
             item.fields.forEach((i) => {
-              fields[i.name] = i.value;
+              fields2[i.name] = i.value;
             });
-            item.fields = fields;
+            item.fields = fields2;
           }
         });
         this.pagination.index = res.current;
@@ -6459,11 +6560,11 @@ const _sfc_main$2K = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const postList2 = vue_cjs_prod.reactive(post.value.records);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
-        const fields = {};
+        const fields2 = {};
         item.fields.forEach((i) => {
-          fields[i.name] = i.value;
+          fields2[i.name] = i.value;
         });
-        item.fields = fields;
+        item.fields = fields2;
       }
     });
     return (_ctx, _push, _parent, _attrs) => {
@@ -26734,9 +26835,9 @@ function useFormLabelWidth() {
     deregisterLabelWidth
   };
 }
-const filterFields = (fields, props) => {
+const filterFields = (fields2, props) => {
   const normalized = castArray$1(props);
-  return normalized.length > 0 ? fields.filter((field) => field.prop && normalized.includes(field.prop)) : fields;
+  return normalized.length > 0 ? fields2.filter((field) => field.prop && normalized.includes(field.prop)) : fields2;
 };
 const __default__$E = {
   name: "ElForm"
@@ -26746,7 +26847,7 @@ const _sfc_main$1p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
   emits: formEmits,
   setup(__props, { expose, emit }) {
     const props = __props;
-    const fields = [];
+    const fields2 = [];
     const formSize = useSize();
     const ns2 = useNamespace("form");
     const formClasses = vue_cjs_prod.computed(() => {
@@ -26761,30 +26862,30 @@ const _sfc_main$1p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       ];
     });
     const addField = (field) => {
-      fields.push(field);
+      fields2.push(field);
     };
     const removeField = (field) => {
       if (field.prop) {
-        fields.splice(fields.indexOf(field), 1);
+        fields2.splice(fields2.indexOf(field), 1);
       }
     };
     const resetFields = (properties = []) => {
       if (!props.model) {
         return;
       }
-      filterFields(fields, properties).forEach((field) => field.resetField());
+      filterFields(fields2, properties).forEach((field) => field.resetField());
     };
     const clearValidate = (props2 = []) => {
-      filterFields(fields, props2).forEach((field) => field.clearValidate());
+      filterFields(fields2, props2).forEach((field) => field.clearValidate());
     };
     const isValidatable = vue_cjs_prod.computed(() => {
       const hasModel = !!props.model;
       return hasModel;
     });
     const obtainValidateFields = (props2) => {
-      if (fields.length === 0)
+      if (fields2.length === 0)
         return [];
-      const filteredFields = filterFields(fields, props2);
+      const filteredFields = filterFields(fields2, props2);
       if (!filteredFields.length) {
         return [];
       }
@@ -26794,11 +26895,11 @@ const _sfc_main$1p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     const doValidateField = async (props2 = []) => {
       if (!isValidatable.value)
         return false;
-      const fields2 = obtainValidateFields(props2);
-      if (fields2.length === 0)
+      const fields22 = obtainValidateFields(props2);
+      if (fields22.length === 0)
         return true;
       let validationErrors = {};
-      for (const field of fields2) {
+      for (const field of fields22) {
         try {
           await field.validate("");
         } catch (fields3) {
@@ -26828,7 +26929,7 @@ const _sfc_main$1p = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
     const scrollToField = (prop) => {
       var _a;
-      const field = filterFields(fields, prop)[0];
+      const field = filterFields(fields2, prop)[0];
       if (field) {
         (_a = field.$el) == null ? void 0 : _a.scrollIntoView();
       }
@@ -26974,13 +27075,13 @@ if (typeof process !== "undefined" && process.env && "production" !== "productio
 function convertFieldsError(errors) {
   if (!errors || !errors.length)
     return null;
-  var fields = {};
+  var fields2 = {};
   errors.forEach(function(error) {
     var field = error.field;
-    fields[field] = fields[field] || [];
-    fields[field].push(error);
+    fields2[field] = fields2[field] || [];
+    fields2[field].push(error);
   });
-  return fields;
+  return fields2;
 }
 function format(template) {
   for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -27076,11 +27177,11 @@ function flattenObjArr(objArr) {
 }
 var AsyncValidationError = /* @__PURE__ */ function(_Error) {
   _inheritsLoose(AsyncValidationError2, _Error);
-  function AsyncValidationError2(errors, fields) {
+  function AsyncValidationError2(errors, fields2) {
     var _this;
     _this = _Error.call(this, "Async Validation Error") || this;
     _this.errors = errors;
-    _this.fields = fields;
+    _this.fields = fields2;
     return _this;
   }
   return AsyncValidationError2;
@@ -27706,7 +27807,7 @@ var Schema = /* @__PURE__ */ function() {
     }
     function complete(results) {
       var errors = [];
-      var fields = {};
+      var fields2 = {};
       function add(e) {
         if (Array.isArray(e)) {
           var _errors;
@@ -27721,8 +27822,8 @@ var Schema = /* @__PURE__ */ function() {
       if (!errors.length) {
         callback(null, source);
       } else {
-        fields = convertFieldsError(errors);
-        callback(errors, fields);
+        fields2 = convertFieldsError(errors);
+        callback(errors, fields2);
       }
     }
     if (options.messages) {
@@ -28157,8 +28258,8 @@ const _sfc_main$1o = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
     };
     const onValidationFailed = (error) => {
       var _a, _b;
-      const { errors, fields } = error;
-      if (!errors || !fields) {
+      const { errors, fields: fields2 } = error;
+      if (!errors || !fields2) {
         console.error(error);
       }
       setValidationState("error");
@@ -28202,9 +28303,9 @@ const _sfc_main$1o = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
         callback == null ? void 0 : callback(true);
         return true;
       }).catch((err) => {
-        const { fields } = err;
-        callback == null ? void 0 : callback(false, fields);
-        return hasCallback ? false : Promise.reject(fields);
+        const { fields: fields2 } = err;
+        callback == null ? void 0 : callback(false, fields2);
+        return hasCallback ? false : Promise.reject(fields2);
       });
     };
     const clearValidate = () => {
@@ -51135,11 +51236,11 @@ const _sfc_main$r = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const postList2 = vue_cjs_prod.reactive(data.value.records);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
-        const fields = {};
+        const fields2 = {};
         item.fields.forEach((i) => {
-          fields[i.name] = i.value;
+          fields2[i.name] = i.value;
         });
-        item.fields = fields;
+        item.fields = fields2;
       }
     });
     data.value.total;
@@ -51224,11 +51325,11 @@ const _sfc_main$q = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const url2 = `https://www.thinkmoon.cn/post/${route.params.cid}`;
     const { data: article } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("article", () => PostApi.getDetail({ cid: route.params.cid }))), __temp = await __temp, __restore(), __temp);
     if (article.value.fields instanceof Array) {
-      const fields = {};
+      const fields2 = {};
       article.value.fields.forEach((i) => {
-        fields[i.name] = i.value;
+        fields2[i.name] = i.value;
       });
-      article.value.fields = fields;
+      article.value.fields = fields2;
     }
     const copyRight = `> \u7248\u6743\u58F0\u660E: \u672C\u6587\u9996\u53D1\u4E8E[\u6307\u5C16\u9B54\u6CD5\u5C4B-${article.value.title}](${url2}),\u8F6C\u8F7D\u6216\u5F15\u7528\u5FC5\u987B\u7533\u660E\u539F\u6307\u5C16\u9B54\u6CD5\u5C4B\u6765\u6E90\u53CA\u6E90\u5730\u5740\uFF01`;
     const content = vue_cjs_prod.computed(() => `# ${article.value.title} \r
@@ -51270,15 +51371,6 @@ _sfc_main$q.setup = (props, ctx) => {
   return _sfc_setup$q ? _sfc_setup$q(props, ctx) : void 0;
 };
 const meta$2 = void 0;
-class TagApi {
-  static getTag(params) {
-    return request({
-      method: "get",
-      url: `/tag/list`,
-      params
-    });
-  }
-}
 const _sfc_main$p = /* @__PURE__ */ vue_cjs_prod.defineComponent({
   __name: "[pageIndex]",
   __ssrInlineRender: true,
@@ -51294,11 +51386,11 @@ const _sfc_main$p = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const postList2 = vue_cjs_prod.reactive(post.value);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
-        const fields = {};
+        const fields2 = {};
         item.fields.forEach((i) => {
-          fields[i.name] = i.value;
+          fields2[i.name] = i.value;
         });
-        item.fields = fields;
+        item.fields = fields2;
       }
     });
     return (_ctx, _push, _parent, _attrs) => {
@@ -52046,7 +52138,7 @@ const _404 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   __proto__: null,
   "default": _sfc_main$h
 }, Symbol.toStringTag, { value: "Module" }));
-const customOptions = [
+const fields = [
   {
     name: "thumb",
     value: ""
@@ -52063,22 +52155,32 @@ const __default__$2 = vue_cjs_prod.defineComponent({
         title: "",
         text: "",
         category_id: "",
-        customOptions
+        tag: [],
+        selectedTag: [],
+        fields
       },
-      categoryList: []
+      categoryList: [],
+      tagList: []
     };
   },
   activated() {
     if (this.$route.query.cid) {
       PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
         this.article = __spreadValues(__spreadValues({}, this.article), res);
+        this.article.selectedTag = this.article.tag.map((item) => item.tid);
       });
     } else {
       this.data = {};
     }
     this.getCategory();
+    this.getTag();
   },
   methods: {
+    getTag() {
+      TagApi.getTag().then((res) => {
+        this.tagList = res;
+      });
+    },
     getCategory() {
       CategoryApi.getCategory().then((res) => {
         this.categoryList = res;
@@ -52137,11 +52239,11 @@ const _sfc_main$g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
         onUploadImage: _ctx.handleUploadImage
       }, null, _parent));
       _push(`<div class="custom-options"><!--[-->`);
-      serverRenderer.exports.ssrRenderList(_ctx.article.customOptions, (custom, index2) => {
+      serverRenderer.exports.ssrRenderList(_ctx.article.fields, (custom, index2) => {
         _push(`<!--[--><span>${serverRenderer.exports.ssrInterpolate(custom.name)}</span>`);
         _push(serverRenderer.exports.ssrRenderComponent(_component_el_input, {
-          modelValue: _ctx.article.customOptions[index2].value,
-          "onUpdate:modelValue": ($event) => _ctx.article.customOptions[index2].value = $event,
+          modelValue: _ctx.article.fields[index2].value,
+          "onUpdate:modelValue": ($event) => _ctx.article.fields[index2].value = $event,
           type: "textarea",
           class: "input-with-select",
           placeholder: "Please input"
@@ -52226,6 +52328,88 @@ const _sfc_main$g = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
         }),
         _: 1
       }, _parent));
+      _push(`</div></section><section><span class="title">\u6587\u7AE0\u6807\u7B7E</span><div class="content">`);
+      _push(serverRenderer.exports.ssrRenderComponent(_component_ClientOnly, null, {
+        default: vue_cjs_prod.withCtx((_2, _push2, _parent2, _scopeId) => {
+          if (_push2) {
+            _push2(serverRenderer.exports.ssrRenderComponent(_component_el_select, {
+              key: "category",
+              modelValue: _ctx.article.selectedTag,
+              "onUpdate:modelValue": ($event) => _ctx.article.selectedTag = $event,
+              filterable: "",
+              multiple: ""
+            }, {
+              default: vue_cjs_prod.withCtx((_22, _push3, _parent3, _scopeId2) => {
+                if (_push3) {
+                  _push3(`<!--[-->`);
+                  serverRenderer.exports.ssrRenderList(_ctx.tagList, (item) => {
+                    _push3(serverRenderer.exports.ssrRenderComponent(_component_el_option, {
+                      key: item.tid,
+                      label: item.name,
+                      value: item.tid
+                    }, {
+                      default: vue_cjs_prod.withCtx((_3, _push4, _parent4, _scopeId3) => {
+                        if (_push4) {
+                          _push4(`${serverRenderer.exports.ssrInterpolate(item.name)}`);
+                        } else {
+                          return [
+                            vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                          ];
+                        }
+                      }),
+                      _: 2
+                    }, _parent3, _scopeId2));
+                  });
+                  _push3(`<!--]-->`);
+                } else {
+                  return [
+                    (vue_cjs_prod.openBlock(true), vue_cjs_prod.createBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.tagList, (item) => {
+                      return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_option, {
+                        key: item.tid,
+                        label: item.name,
+                        value: item.tid
+                      }, {
+                        default: vue_cjs_prod.withCtx(() => [
+                          vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                        ]),
+                        _: 2
+                      }, 1032, ["label", "value"]);
+                    }), 128))
+                  ];
+                }
+              }),
+              _: 1
+            }, _parent2, _scopeId));
+          } else {
+            return [
+              vue_cjs_prod.createVNode(_component_el_select, {
+                key: "category",
+                modelValue: _ctx.article.selectedTag,
+                "onUpdate:modelValue": ($event) => _ctx.article.selectedTag = $event,
+                filterable: "",
+                multiple: ""
+              }, {
+                default: vue_cjs_prod.withCtx(() => [
+                  (vue_cjs_prod.openBlock(true), vue_cjs_prod.createBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(_ctx.tagList, (item) => {
+                    return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_option, {
+                      key: item.tid,
+                      label: item.name,
+                      value: item.tid
+                    }, {
+                      default: vue_cjs_prod.withCtx(() => [
+                        vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                      ]),
+                      _: 2
+                    }, 1032, ["label", "value"]);
+                  }), 128))
+                ]),
+                _: 1
+              }, 8, ["modelValue", "onUpdate:modelValue"])
+            ];
+          }
+        }),
+        _: 1
+      }, _parent));
       _push(`</div></section></div></div>`);
     };
   }
@@ -52281,11 +52465,11 @@ const __default__$1 = vue_cjs_prod.defineComponent({
         this.tableData = res.records;
         this.tableData.forEach((item) => {
           if (item.fields instanceof Array) {
-            const fields = {};
+            const fields2 = {};
             item.fields.forEach((i) => {
-              fields[i.name] = i.value;
+              fields2[i.name] = i.value;
             });
-            item.fields = fields;
+            item.fields = fields2;
           }
         });
         this.pagination.index = res.current;
@@ -53081,11 +53265,11 @@ const _sfc_main$c = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const postList2 = vue_cjs_prod.reactive(post.value.records);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
-        const fields = {};
+        const fields2 = {};
         item.fields.forEach((i) => {
-          fields[i.name] = i.value;
+          fields2[i.name] = i.value;
         });
-        item.fields = fields;
+        item.fields = fields2;
       }
     });
     return (_ctx, _push, _parent, _attrs) => {
@@ -53452,11 +53636,11 @@ const _sfc_main$8 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const postList2 = vue_cjs_prod.reactive(data.value.records);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
-        const fields = {};
+        const fields2 = {};
         item.fields.forEach((i) => {
-          fields[i.name] = i.value;
+          fields2[i.name] = i.value;
         });
-        item.fields = fields;
+        item.fields = fields2;
       }
     });
     data.value.total;
@@ -53545,11 +53729,11 @@ const _sfc_main$7 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const url2 = `https://www.thinkmoon.cn/post/${route.params.cid}`;
     const { data: article } = ([__temp, __restore] = vue_cjs_prod.withAsyncContext(() => useAsyncData("article", () => PostApi.getDetail({ cid: route.params.cid }))), __temp = await __temp, __restore(), __temp);
     if (article.value.fields instanceof Array) {
-      const fields = {};
+      const fields2 = {};
       article.value.fields.forEach((i) => {
-        fields[i.name] = i.value;
+        fields2[i.name] = i.value;
       });
-      article.value.fields = fields;
+      article.value.fields = fields2;
     }
     const copyRight = `> \u7248\u6743\u58F0\u660E: \u672C\u6587\u9996\u53D1\u4E8E[\u6307\u5C16\u9B54\u6CD5\u5C4B-${article.value.title}](${url2}),\u8F6C\u8F7D\u6216\u5F15\u7528\u5FC5\u987B\u7533\u660E\u539F\u6307\u5C16\u9B54\u6CD5\u5C4B\u6765\u6E90\u53CA\u6E90\u5730\u5740\uFF01`;
     const content = vue_cjs_prod.computed(() => `# ${article.value.title} \r
@@ -53610,11 +53794,11 @@ const _sfc_main$6 = /* @__PURE__ */ vue_cjs_prod.defineComponent({
     const postList2 = vue_cjs_prod.reactive(post.value);
     postList2.forEach((item) => {
       if (item.fields instanceof Array) {
-        const fields = {};
+        const fields2 = {};
         item.fields.forEach((i) => {
-          fields[i.name] = i.value;
+          fields2[i.name] = i.value;
         });
-        item.fields = fields;
+        item.fields = fields2;
       }
     });
     return (_ctx, _push, _parent, _attrs) => {
