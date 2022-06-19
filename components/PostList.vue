@@ -59,6 +59,7 @@
                   src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg"
                   style="border-radius:50% "
                   width="16"
+                  alt="醉月思"
                 >
                 <el-link
                   href="https://www.thinkmoon.cn"
@@ -79,7 +80,7 @@
                 <el-icon>
                   <icon-Calendar />
                 </el-icon>
-                <a>{{ $filters.time(item.created * 1000) }}</a>
+                <a>{{ formatTime(item.created * 1000) }}</a>
               </div>
             </div>
             <div class="right">
@@ -103,7 +104,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-const props = defineProps({
+import { formatTime } from '~/utils/time';
+
+defineProps({
   postList: Array,
 });
 </script>

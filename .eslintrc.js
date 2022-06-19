@@ -5,7 +5,7 @@ module.exports = {
   'extends': [
     'plugin:vue/vue3-recommended',
     'eslint:recommended',
-    '@vue/typescript/recommended'
+    '@vue/typescript/recommended',
   ],
   'parserOptions': {
     'ecmaVersion': 'latest',
@@ -15,5 +15,6 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     'max-len': ['error', { 'code': 120 }],
     'no-undef': 'off',
+    'no-explicit-any': 'off',
   },
 };

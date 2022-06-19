@@ -16,12 +16,12 @@
       />
       <div class="custom-options">
         <template
-          v-for="custom in customList"
-          :key="custom.key"
+          v-for="(custom,index) in article.fields"
+          :key="custom.name"
         >
           <span>{{ custom.name }}</span>
           <el-input
-            v-model="custom.value"
+            v-model="article.fields[index].value"
             type="textarea"
             class="input-with-select"
             placeholder="Please input"
@@ -51,6 +51,28 @@
           </ClientOnly>
         </div>
       </section>
+      <section>
+        <span class="title">文章标签</span>
+        <div class="content">
+          <ClientOnly>
+            <el-select
+              key="category"
+              v-model="article.selectedTag"
+              filterable
+              multiple
+            >
+              <el-option
+                v-for="item of tagList"
+                :key="item.tid"
+                :label="item.name"
+                :value="item.tid"
+              >
+                {{ item.name }}
+              </el-option>
+            </el-select>
+          </ClientOnly>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -58,7 +80,16 @@
 definePageMeta({
   keepalive: true,
 });
-const customList = [
+</script>
+<script lang="ts">
+import PostApi from '~/api/PostApi';
+import AttachmentApi from '~/api/AttachmentApi';
+import * as qiniu from 'qiniu-js';
+import dayjs from 'dayjs';
+import CategoryApi from '~/api/CategoryApi';
+import TagApi from '~/api/TagApi';
+
+const fields = [
   {
     name: 'thumb',
     value: '',
@@ -68,15 +99,6 @@ const customList = [
     value: '',
   },
 ];
-
-</script>
-<script lang="ts">
-import PostApi from '~/api/PostApi';
-import AttachmentApi from '~/api/AttachmentApi';
-import * as qiniu from 'qiniu-js';
-import dayjs from 'dayjs';
-import CategoryApi from '~/api/CategoryApi';
-
 export default defineComponent({
   data() {
     return {
@@ -84,21 +106,36 @@ export default defineComponent({
         title: '',
         text: '',
         category_id: '',
+        tag: [],
+        selectedTag: [],
+        fields,
       },
       categoryList: [],
+      tagList: [],
     };
   },
   activated() {
     if (this.$route.query.cid) {
       PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
-        this.article = res;
+        this.article = {
+          ...this.article,
+          ...res,
+        };
+        this.article.selectedTag = this.article.tag.map(item => item.tid);
       });
     } else {
       this.data = {};
     }
     this.getCategory();
+    this.getTag();
   },
   methods: {
+    getTag() {
+      TagApi.getTag()
+        .then((res) => {
+          this.tagList = res;
+        });
+    },
     getCategory() {
       CategoryApi.getCategory()
         .then((res) => {
@@ -124,8 +161,7 @@ export default defineComponent({
         .then((token: string) => {
           const key = dayjs().format('YYYY-MM-DD/HH-mm-ss');
           const observable = qiniu.upload(files[0], key, token);
-          const subscription = observable.subscribe(null, null, (res) => {
-            console.log(res);
+          observable.subscribe(null, null, (res) => {
             insertImage({
               url: `https://blog.cdn.thinkmoon.cn/${res.key}`,
             });
@@ -149,6 +185,13 @@ export default defineComponent({
     .content {
       margin: 6px;
     }
+  }
+}
+
+.custom-options {
+  > span {
+    margin: 4px 0;
+    display: flex;
   }
 }
 

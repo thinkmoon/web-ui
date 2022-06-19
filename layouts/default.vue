@@ -39,4 +39,20 @@ import GoogleAd from '~/components/section/GoogleAd.vue';</script>
     padding: 20px;
   }
 }
+@media (max-aspect-ratio: 14/9) {
+  .layout {
+    width: 90%;
+  }
+}
+@media (max-aspect-ratio: 10/9) {
+  .layout {
+    flex-direction: column;
+    > .main-content {
+      width: auto;
+    }
+    > .page-section {
+      width: auto;
+    }
+  }
+}
 </style>
