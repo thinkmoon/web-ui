@@ -19,9 +19,24 @@
         <template #default="scope">
           <el-image
             :src="scope.row.fields.thumb"
-            fit="scale"
+            fit="cover"
             style="width: 180px; height: 60px"
           />
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="标签"
+        prop="title"
+        width="160"
+      >
+        <template #default="scope">
+          <el-tag
+            v-for="item of scope.row.tag"
+            :key="item.tid"
+            class="margin-xs"
+          >
+            {{ item.name }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -47,14 +62,16 @@
       <el-table-column
         prop="created"
         label="创建时间"
+        width="110"
       >
         <template #default="scope">
-          <span>{{ formatTime(scope.row.created * 1000,'YYYY/MM/DD HH:mm:ss') }}</span>
+          <span>{{ formatTime(scope.row.created * 1000, 'YYYY/MM/DD HH:mm:ss') }}</span>
         </template>
       </el-table-column>
       <el-table-column
         prop="modified"
         label="更新时间"
+        width="110"
       >
         <template #default="scope">
           <span>{{ formatTime(scope.row.modified * 1000, 'YYYY/MM/DD HH:mm:ss') }}</span>

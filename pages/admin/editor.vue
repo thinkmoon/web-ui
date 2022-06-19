@@ -151,6 +151,9 @@ export default defineComponent({
       if (!this.article.category_id) {
         return this.$message.error('请选择文章分类');
       }
+      if (!this.article.fields.length) {
+        return this.$message.error('请选择文章标签');
+      }
       PostApi[op](this.article).then(() => {
         this.$message.success('保存成功');
         location.href = '/admin/post-list';
