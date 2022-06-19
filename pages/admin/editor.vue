@@ -16,12 +16,12 @@
       />
       <div class="custom-options">
         <template
-          v-for="(custom,index) in article.customOptions"
+          v-for="(custom,index) in article.fields"
           :key="custom.name"
         >
           <span>{{ custom.name }}</span>
           <el-input
-            v-model="article.customOptions[index].value"
+            v-model="article.fields[index].value"
             type="textarea"
             class="input-with-select"
             placeholder="Please input"
@@ -51,6 +51,28 @@
           </ClientOnly>
         </div>
       </section>
+      <section>
+        <span class="title">文章标签</span>
+        <div class="content">
+          <ClientOnly>
+            <el-select
+              key="category"
+              v-model="article.selectedTag"
+              filterable
+              multiple
+            >
+              <el-option
+                v-for="item of tagList"
+                :key="item.tid"
+                :label="item.name"
+                :value="item.tid"
+              >
+                {{ item.name }}
+              </el-option>
+            </el-select>
+          </ClientOnly>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -65,7 +87,9 @@ import AttachmentApi from '~/api/AttachmentApi';
 import * as qiniu from 'qiniu-js';
 import dayjs from 'dayjs';
 import CategoryApi from '~/api/CategoryApi';
-const customOptions = [
+import TagApi from '~/api/TagApi';
+
+const fields = [
   {
     name: 'thumb',
     value: '',
@@ -82,9 +106,12 @@ export default defineComponent({
         title: '',
         text: '',
         category_id: '',
-        customOptions,
+        tag: [],
+        selectedTag: [],
+        fields,
       },
       categoryList: [],
+      tagList: [],
     };
   },
   activated() {
@@ -92,15 +119,23 @@ export default defineComponent({
       PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
         this.article = {
           ...this.article,
-          ...res
+          ...res,
         };
+        this.article.selectedTag = this.article.tag.map(item => item.tid);
       });
     } else {
       this.data = {};
     }
     this.getCategory();
+    this.getTag();
   },
   methods: {
+    getTag() {
+      TagApi.getTag()
+        .then((res) => {
+          this.tagList = res;
+        });
+    },
     getCategory() {
       CategoryApi.getCategory()
         .then((res) => {
@@ -154,7 +189,7 @@ export default defineComponent({
 }
 
 .custom-options {
-  >span{
+  > span {
     margin: 4px 0;
     display: flex;
   }
