@@ -5810,7 +5810,7 @@ const __default__$1n = vue_cjs_prod.defineComponent({
         category_id: "",
         tag: [],
         selectedTag: [],
-        fields: fields$1
+        fields: []
       },
       categoryList: [],
       tagList: []
@@ -5821,9 +5821,13 @@ const __default__$1n = vue_cjs_prod.defineComponent({
       PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
         this.article = __spreadValues(__spreadValues({}, this.article), res);
         this.article.selectedTag = this.article.tag.map((item) => item.tid);
+        if (!this.article.fields.length) {
+          this.article.fields = fields$1;
+        }
       });
     } else {
       this.data = {};
+      this.article.fields = fields$1;
     }
     this.getCategory();
     this.getTag();
@@ -52157,7 +52161,7 @@ const __default__$2 = vue_cjs_prod.defineComponent({
         category_id: "",
         tag: [],
         selectedTag: [],
-        fields
+        fields: []
       },
       categoryList: [],
       tagList: []
@@ -52168,9 +52172,13 @@ const __default__$2 = vue_cjs_prod.defineComponent({
       PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
         this.article = __spreadValues(__spreadValues({}, this.article), res);
         this.article.selectedTag = this.article.tag.map((item) => item.tid);
+        if (!this.article.fields.length) {
+          this.article.fields = fields;
+        }
       });
     } else {
       this.data = {};
+      this.article.fields = fields;
     }
     this.getCategory();
     this.getTag();
