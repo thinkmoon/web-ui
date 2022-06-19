@@ -61,7 +61,7 @@ pushUrl(`/page/${route.params.pageIndex}`)
 
 @media (max-width: 1024px) {
   .page-content {
-    width: 90%;
+    width: 100%;
 
     .blog-posts {
       width: 100%;

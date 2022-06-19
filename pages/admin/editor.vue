@@ -24,9 +24,8 @@
             v-model="article.fields[index].value"
             type="textarea"
             class="input-with-select"
-            placeholder="Please input"
-          >
-          </el-input>
+            placeholder="请输入"
+          />
         </template>
       </div>
     </div>
