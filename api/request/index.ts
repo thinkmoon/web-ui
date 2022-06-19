@@ -9,7 +9,9 @@ function request(options: AxiosRequestConfig): Promise<any> {
     let auth = null;
     if (process.client) {
       auth = useCookie('auth', { domain: 'thinkmoon.cn' });
-      axios.defaults.headers.common['Authorization'] = auth.value;
+      if(auth.value && auth.value !== 'undefined'){
+        axios.defaults.headers.common['Authorization'] = auth.value;
+      }
     }
     axios(options).then(res => {
       if (res?.data?.code === 200) {
