@@ -5848,6 +5848,9 @@ const __default__$1n = vue_cjs_prod.defineComponent({
       if (!this.article.category_id) {
         return this.$message.error("\u8BF7\u9009\u62E9\u6587\u7AE0\u5206\u7C7B");
       }
+      if (!this.article.fields.length) {
+        return this.$message.error("\u8BF7\u9009\u62E9\u6587\u7AE0\u6807\u7B7E");
+      }
       PostApi[op](this.article).then(() => {
         this.$message.success("\u4FDD\u5B58\u6210\u529F");
         location.href = "/admin/post-list";
@@ -6142,6 +6145,7 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
       const _component_el_table = vue_cjs_prod.resolveComponent("el-table");
       const _component_el_table_column = vue_cjs_prod.resolveComponent("el-table-column");
       const _component_el_image = vue_cjs_prod.resolveComponent("el-image");
+      const _component_el_tag = vue_cjs_prod.resolveComponent("el-tag");
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
       const _component_el_pagination = vue_cjs_prod.resolveComponent("el-pagination");
       _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)}>`);
@@ -6167,16 +6171,60 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                 if (_push3) {
                   _push3(serverRenderer.exports.ssrRenderComponent(_component_el_image, {
                     src: scope.row.fields.thumb,
-                    fit: "scale",
+                    fit: "cover",
                     style: { "width": "180px", "height": "60px" }
                   }, null, _parent3, _scopeId2));
                 } else {
                   return [
                     vue_cjs_prod.createVNode(_component_el_image, {
                       src: scope.row.fields.thumb,
-                      fit: "scale",
+                      fit: "cover",
                       style: { "width": "180px", "height": "60px" }
                     }, null, 8, ["src"])
+                  ];
+                }
+              }),
+              _: 1
+            }, _parent2, _scopeId));
+            _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
+              label: "\u6807\u7B7E",
+              prop: "title",
+              width: "160"
+            }, {
+              default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
+                if (_push3) {
+                  _push3(`<!--[-->`);
+                  serverRenderer.exports.ssrRenderList(scope.row.tag, (item) => {
+                    _push3(serverRenderer.exports.ssrRenderComponent(_component_el_tag, {
+                      key: item.tid,
+                      class: "margin-xs"
+                    }, {
+                      default: vue_cjs_prod.withCtx((_22, _push4, _parent4, _scopeId3) => {
+                        if (_push4) {
+                          _push4(`${serverRenderer.exports.ssrInterpolate(item.name)}`);
+                        } else {
+                          return [
+                            vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                          ];
+                        }
+                      }),
+                      _: 2
+                    }, _parent3, _scopeId2));
+                  });
+                  _push3(`<!--]-->`);
+                } else {
+                  return [
+                    (vue_cjs_prod.openBlock(true), vue_cjs_prod.createBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(scope.row.tag, (item) => {
+                      return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_tag, {
+                        key: item.tid,
+                        class: "margin-xs"
+                      }, {
+                        default: vue_cjs_prod.withCtx(() => [
+                          vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                        ]),
+                        _: 2
+                      }, 1024);
+                    }), 128))
                   ];
                 }
               }),
@@ -6236,7 +6284,8 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             }, _parent2, _scopeId));
             _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
               prop: "created",
-              label: "\u521B\u5EFA\u65F6\u95F4"
+              label: "\u521B\u5EFA\u65F6\u95F4",
+              width: "110"
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
@@ -6251,7 +6300,8 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
             }, _parent2, _scopeId));
             _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
               prop: "modified",
-              label: "\u66F4\u65B0\u65F6\u95F4"
+              label: "\u66F4\u65B0\u65F6\u95F4",
+              width: "110"
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
@@ -6280,9 +6330,29 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
                 default: vue_cjs_prod.withCtx((scope) => [
                   vue_cjs_prod.createVNode(_component_el_image, {
                     src: scope.row.fields.thumb,
-                    fit: "scale",
+                    fit: "cover",
                     style: { "width": "180px", "height": "60px" }
                   }, null, 8, ["src"])
+                ]),
+                _: 1
+              }),
+              vue_cjs_prod.createVNode(_component_el_table_column, {
+                label: "\u6807\u7B7E",
+                prop: "title",
+                width: "160"
+              }, {
+                default: vue_cjs_prod.withCtx((scope) => [
+                  (vue_cjs_prod.openBlock(true), vue_cjs_prod.createBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(scope.row.tag, (item) => {
+                    return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_tag, {
+                      key: item.tid,
+                      class: "margin-xs"
+                    }, {
+                      default: vue_cjs_prod.withCtx(() => [
+                        vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                      ]),
+                      _: 2
+                    }, 1024);
+                  }), 128))
                 ]),
                 _: 1
               }),
@@ -6315,7 +6385,8 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
               }),
               vue_cjs_prod.createVNode(_component_el_table_column, {
                 prop: "created",
-                label: "\u521B\u5EFA\u65F6\u95F4"
+                label: "\u521B\u5EFA\u65F6\u95F4",
+                width: "110"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
                   vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.created * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
@@ -6324,7 +6395,8 @@ const _sfc_main$2M = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(
               }),
               vue_cjs_prod.createVNode(_component_el_table_column, {
                 prop: "modified",
-                label: "\u66F4\u65B0\u65F6\u95F4"
+                label: "\u66F4\u65B0\u65F6\u95F4",
+                width: "110"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
                   vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.modified * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
@@ -51824,6 +51896,10 @@ const _47home_47runner_47work_47web_45ui_47web_45ui_47node_modules_47_46pnpm_47_
 };
 const _47home_47runner_47work_47web_45ui_47web_45ui_47plugins_47element_45ui_46ts = defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(installer);
+  nuxtApp.vueApp.provide(ID_INJECTION_KEY, {
+    prefix: Math.floor(Math.random() * 1e4),
+    current: 0
+  });
   Object.keys(Icons).forEach((key) => {
     nuxtApp.vueApp.component(`icon-${key}`, Icons[key]);
   });
@@ -52199,6 +52275,9 @@ const __default__$2 = vue_cjs_prod.defineComponent({
       if (!this.article.category_id) {
         return this.$message.error("\u8BF7\u9009\u62E9\u6587\u7AE0\u5206\u7C7B");
       }
+      if (!this.article.fields.length) {
+        return this.$message.error("\u8BF7\u9009\u62E9\u6587\u7AE0\u6807\u7B7E");
+      }
       PostApi[op](this.article).then(() => {
         this.$message.success("\u4FDD\u5B58\u6210\u529F");
         location.href = "/admin/post-list";
@@ -52505,6 +52584,7 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
       const _component_el_table = vue_cjs_prod.resolveComponent("el-table");
       const _component_el_table_column = vue_cjs_prod.resolveComponent("el-table-column");
       const _component_el_image = vue_cjs_prod.resolveComponent("el-image");
+      const _component_el_tag = vue_cjs_prod.resolveComponent("el-tag");
       const _component_el_link = vue_cjs_prod.resolveComponent("el-link");
       const _component_el_pagination = vue_cjs_prod.resolveComponent("el-pagination");
       _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)}>`);
@@ -52530,16 +52610,60 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
                 if (_push3) {
                   _push3(serverRenderer.exports.ssrRenderComponent(_component_el_image, {
                     src: scope.row.fields.thumb,
-                    fit: "scale",
+                    fit: "cover",
                     style: { "width": "180px", "height": "60px" }
                   }, null, _parent3, _scopeId2));
                 } else {
                   return [
                     vue_cjs_prod.createVNode(_component_el_image, {
                       src: scope.row.fields.thumb,
-                      fit: "scale",
+                      fit: "cover",
                       style: { "width": "180px", "height": "60px" }
                     }, null, 8, ["src"])
+                  ];
+                }
+              }),
+              _: 1
+            }, _parent2, _scopeId));
+            _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
+              label: "\u6807\u7B7E",
+              prop: "title",
+              width: "160"
+            }, {
+              default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
+                if (_push3) {
+                  _push3(`<!--[-->`);
+                  serverRenderer.exports.ssrRenderList(scope.row.tag, (item) => {
+                    _push3(serverRenderer.exports.ssrRenderComponent(_component_el_tag, {
+                      key: item.tid,
+                      class: "margin-xs"
+                    }, {
+                      default: vue_cjs_prod.withCtx((_22, _push4, _parent4, _scopeId3) => {
+                        if (_push4) {
+                          _push4(`${serverRenderer.exports.ssrInterpolate(item.name)}`);
+                        } else {
+                          return [
+                            vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                          ];
+                        }
+                      }),
+                      _: 2
+                    }, _parent3, _scopeId2));
+                  });
+                  _push3(`<!--]-->`);
+                } else {
+                  return [
+                    (vue_cjs_prod.openBlock(true), vue_cjs_prod.createBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(scope.row.tag, (item) => {
+                      return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_tag, {
+                        key: item.tid,
+                        class: "margin-xs"
+                      }, {
+                        default: vue_cjs_prod.withCtx(() => [
+                          vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                        ]),
+                        _: 2
+                      }, 1024);
+                    }), 128))
                   ];
                 }
               }),
@@ -52599,7 +52723,8 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
             }, _parent2, _scopeId));
             _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
               prop: "created",
-              label: "\u521B\u5EFA\u65F6\u95F4"
+              label: "\u521B\u5EFA\u65F6\u95F4",
+              width: "110"
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
@@ -52614,7 +52739,8 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
             }, _parent2, _scopeId));
             _push2(serverRenderer.exports.ssrRenderComponent(_component_el_table_column, {
               prop: "modified",
-              label: "\u66F4\u65B0\u65F6\u95F4"
+              label: "\u66F4\u65B0\u65F6\u95F4",
+              width: "110"
             }, {
               default: vue_cjs_prod.withCtx((scope, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
@@ -52643,9 +52769,29 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
                 default: vue_cjs_prod.withCtx((scope) => [
                   vue_cjs_prod.createVNode(_component_el_image, {
                     src: scope.row.fields.thumb,
-                    fit: "scale",
+                    fit: "cover",
                     style: { "width": "180px", "height": "60px" }
                   }, null, 8, ["src"])
+                ]),
+                _: 1
+              }),
+              vue_cjs_prod.createVNode(_component_el_table_column, {
+                label: "\u6807\u7B7E",
+                prop: "title",
+                width: "160"
+              }, {
+                default: vue_cjs_prod.withCtx((scope) => [
+                  (vue_cjs_prod.openBlock(true), vue_cjs_prod.createBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList(scope.row.tag, (item) => {
+                    return vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_el_tag, {
+                      key: item.tid,
+                      class: "margin-xs"
+                    }, {
+                      default: vue_cjs_prod.withCtx(() => [
+                        vue_cjs_prod.createTextVNode(vue_cjs_prod.toDisplayString(item.name), 1)
+                      ]),
+                      _: 2
+                    }, 1024);
+                  }), 128))
                 ]),
                 _: 1
               }),
@@ -52678,7 +52824,8 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
               }),
               vue_cjs_prod.createVNode(_component_el_table_column, {
                 prop: "created",
-                label: "\u521B\u5EFA\u65F6\u95F4"
+                label: "\u521B\u5EFA\u65F6\u95F4",
+                width: "110"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
                   vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.created * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
@@ -52687,7 +52834,8 @@ const _sfc_main$e = /* @__PURE__ */ vue_cjs_prod.defineComponent(__spreadProps(_
               }),
               vue_cjs_prod.createVNode(_component_el_table_column, {
                 prop: "modified",
-                label: "\u66F4\u65B0\u65F6\u95F4"
+                label: "\u66F4\u65B0\u65F6\u95F4",
+                width: "110"
               }, {
                 default: vue_cjs_prod.withCtx((scope) => [
                   vue_cjs_prod.createVNode("span", null, vue_cjs_prod.toDisplayString(vue_cjs_prod.unref(formatTime$1)(scope.row.modified * 1e3, "YYYY/MM/DD HH:mm:ss")), 1)
