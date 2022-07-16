@@ -26,7 +26,6 @@ const route = useRoute();
 
 const { data: article } = await useAsyncData('article', () => PostApi.getDetail({ cid: route.params.cid }));
 
-console.log(article);
 const url = `https://www.thinkmoon.cn/post/${route.params.cid}`;
 
 if (article.value.fields instanceof Array) {
