@@ -1,22 +1,24 @@
 <template>
   <div>
-    <DefaultMenu />
-    <div class="app-container">
-      <div class="layout">
-        <div class="main-content">
-          <slot />
-        </div>
-        <div class="page-section">
-          <Search />
-          <GoogleAd />
+    <div>
+      <DefaultMenu />
+      <div class="app-container">
+        <div class="layout">
+          <div class="main-content">
+            <slot />
+          </div>
+          <div class="page-section">
+            <Search />
+            <GoogleAd />
+          </div>
         </div>
       </div>
+      <ClientOnly>
+        <el-backtop :bottom="100" />
+      </ClientOnly>
     </div>
-    <ClientOnly>
-      <el-backtop :bottom="100" />
-    </ClientOnly>
+    <Footer />
   </div>
-  <Footer />
 </template>
 <script lang="ts" setup>
 import Search from '~~/components/section/Search.vue';
