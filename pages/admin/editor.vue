@@ -81,7 +81,7 @@ definePageMeta({
 });
 </script>
 <script lang="ts">
-import PostApi from '~/api/PostApi';
+import ArticleApi from '~/api/ArticleApi';
 import AttachmentApi from '~/api/AttachmentApi';
 import * as qiniu from 'qiniu-js';
 import dayjs from 'dayjs';
@@ -115,7 +115,7 @@ export default defineComponent({
   },
   activated() {
     if (this.$route.query.cid) {
-      PostApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
+      ArticleApi.getDetail({ cid: this.$route.query.cid }).then((res) => {
         this.article = {
           ...this.article,
           ...res,
@@ -153,7 +153,7 @@ export default defineComponent({
       if (!this.article.fields.length) {
         return this.$message.error('请选择文章标签');
       }
-      PostApi[op](this.article).then(() => {
+      ArticleApi[op](this.article).then(() => {
         this.$message.success('保存成功');
         location.href = '/admin/post-list';
       }).catch((err) => {

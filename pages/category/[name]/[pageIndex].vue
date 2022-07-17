@@ -7,8 +7,8 @@
 
 <script lang="ts" setup>
 import CategoryApi from '~/api/CategoryApi';
-import {useRoute} from 'vue-router';
-import PostApi from '~/api/PostApi';
+import { useRoute } from 'vue-router';
+import ArticleApi from '~/api/ArticleApi';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -19,7 +19,7 @@ const pageData = {
 pageData.current = Number(route.params.pageIndex);
 const [{data: category}, {data: post}] = await Promise.all([
   useAsyncData('category', () => CategoryApi.getCategory({name: route.params.name})),
-  useAsyncData('post', () => PostApi.getList({...pageData, category: route.params.name})),
+  useAsyncData('post', () => ArticleApi.getList({...pageData, category: route.params.name})),
 ]);
 const postList = reactive(post.value.records);
 postList.forEach((item) => {

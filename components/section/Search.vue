@@ -12,14 +12,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {Search} from '@element-plus/icons-vue';</script>
-<script lang="ts">
-export default defineComponent({
-  name: 'Search',
-  data() {
-    return {
-      keywords: '',
-    };
-  },
-});
+import { Search } from '@element-plus/icons-vue';
+
+const keywords = ref('');
 </script>

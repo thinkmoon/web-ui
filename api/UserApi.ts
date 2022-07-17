@@ -1,4 +1,4 @@
-import request from '~/api/request';
+import request from '~/utils/RequestAdapter';
 
 export default class UserApi {
   static login(data) {

@@ -1,7 +1,7 @@
-import request from '~/api/request';
+import request from '~/utils/RequestAdapter';
 
-export default class attachmentApi {
-  static getUploadToken() {
+export default class AttachmentApi {
+  static getUploadToken(): Promise<unknown> {
     return request({
       method: 'get',
       url: `/attachment/upload_code`,

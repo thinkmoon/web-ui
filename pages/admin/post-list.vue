@@ -90,66 +90,58 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { formatTime } from '~/utils/time';
+import ArticleApi from '~/api/ArticleApi';
+import { formatTime } from '~/utils/TimeUtils';
+import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
 
 definePageMeta({
   keepalive: true,
 });
-</script>
-<script lang="ts">
-import { defineComponent } from 'vue';
-import PostApi from '~/api/PostApi';
 
-export default defineComponent({
-  data() {
-    return {
-      tableData: [],
-      pagination: {
-        total: 0,
-        index: 0,
-        size: 10,
-      },
-    };
-  },
-  created() {
-    this.loadData();
-  },
-  methods: {
-    addPost() {
-      this.$router.push('/admin/editor');
-    },
-    loadData() {
-      PostApi.getList({
-        current: this.pagination.index,
-        size: this.pagination.size,
-      }).then((res: any) => {
-        this.tableData = res.records;
-        this.tableData.forEach((item) => {
-          if (item.fields instanceof Array) {
-            const fields = {};
-            item.fields.forEach((i) => {
-              fields[i.name] = i.value;
-            });
-            item.fields = fields;
-          }
-        });
-        this.pagination.index = res.current;
-        this.pagination.total = res.total;
-      });
-    },
-    handleSizeChange(val) {
-      this.pagination.size = val;
-      this.loadData();
-    },
-    handleCurrentChange(val) {
-      this.pagination.index = val;
-      this.loadData();
-    },
-    handleEdit(index, row) {
-      this.$router.push(`/admin/editor?cid=${row.cid}`);
-    },
-  },
+const router = useRouter();
+const tableData = ref([]);
+const pagination = reactive({
+  total: 0,
+  index: 0,
+  size: 10,
 });
+
+loadData();
+
+function loadData() {
+  ArticleApi.getList({
+    current: pagination.index,
+    size: pagination.size,
+  }).then((res: any) => {
+    tableData.value = res.records;
+    tableData.value.forEach((item) => {
+      if (item.fields instanceof Array) {
+        const fields = {};
+        item.fields.forEach((i) => {
+          fields[i.name] = i.value;
+        });
+        item.fields = fields;
+      }
+    });
+    pagination.index = res.current;
+    pagination.total = res.total;
+  });
+}
+
+function handleSizeChange(val) {
+  pagination.size = val;
+  loadData();
+}
+
+function handleCurrentChange(val) {
+  pagination.index = val;
+  loadData();
+}
+
+function handleEdit(index, row) {
+  router.push(`/admin/editor?cid=${row.cid}`);
+}
 </script>
 <style lang="less" scoped>
 </style>

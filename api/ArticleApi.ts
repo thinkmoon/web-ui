@@ -1,6 +1,6 @@
-import request from '~/api/request';
+import request from '~/utils/RequestAdapter';
 
-export default class PostApi {
+export default class ArticleApi {
   static getList(params) {
     return request({
       method: 'get',

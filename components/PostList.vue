@@ -104,7 +104,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { formatTime } from '~/utils/time';
+import { formatTime } from '~/utils/TimeUtils';
 
 defineProps({
   postList: Array,

@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import TagApi from '~/api/TagApi';
 import { useRoute } from 'vue-router';
-import PostApi from '~/api/PostApi';
+import ArticleApi from '~/api/ArticleApi';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -20,7 +20,7 @@ const pageData = {
 pageData.current = Number(route.params.pageIndex);
 const [{ data: tag }, { data: post }] = await Promise.all([
   useAsyncData('tag', () => TagApi.getTag({ name: route.params.name })),
-  useAsyncData('post', () => PostApi.getListByTag({ name: route.params.name })),
+  useAsyncData('post', () => ArticleApi.getListByTag({ name: route.params.name })),
 ]);
 const postList = reactive(post.value);
 postList.forEach((item) => {

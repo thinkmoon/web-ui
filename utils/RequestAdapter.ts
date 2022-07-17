@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 axios.defaults.withCredentials = true;
 
-function request(options: AxiosRequestConfig): Promise<any> {
+function doRequest(options: AxiosRequestConfig): Promise<any> {
   return new Promise((resolve, reject) => {
     axios.defaults.baseURL = useRuntimeConfig().serviceUrl;
 
@@ -31,4 +31,4 @@ function request(options: AxiosRequestConfig): Promise<any> {
   });
 }
 
-export default request;
+export default doRequest;

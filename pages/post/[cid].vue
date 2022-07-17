@@ -16,15 +16,15 @@
 </template>
 
 <script lang="ts" setup>
-import PostApi from '~/api/PostApi';
+import ArticleApi from '~/api/ArticleApi';
 import { useRoute } from 'vue-router';
-import { pushUrl } from '~/utils/baiduSite';
+import { pushUrl } from '~/utils/BaiduSite';
 import { computed } from 'vue';
 
 const config = useRuntimeConfig();
 const route = useRoute();
 
-const { data: article } = await useAsyncData('article', () => PostApi.getDetail({ cid: route.params.cid }));
+const { data: article } = await useAsyncData('article', () => ArticleApi.getDetail({ cid: route.params.cid }));
 
 const url = `https://www.thinkmoon.cn/post/${route.params.cid}`;
 

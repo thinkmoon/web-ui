@@ -28,10 +28,10 @@
 </template>
 
 <script lang="ts" setup>
-import PostApi from '~/api/PostApi';
+import ArticleApi from '~/api/ArticleApi';
 import { useRoute } from 'vue-router';
 
-import { pushUrl } from '~/utils/baiduSite';
+import { pushUrl } from '~/utils/BaiduSite';
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -41,7 +41,7 @@ const pageData = {
 };
 const pageIndex = route.params.pageIndex;
 pageData.current = Number(pageIndex);
-const { data } = await useAsyncData('res', () => PostApi.getList({ current: pageIndex }));
+const { data } = await useAsyncData('res', () => ArticleApi.getList({ current: pageIndex }));
 
 const postList = reactive(data.value.records);
 postList.forEach((item) => {

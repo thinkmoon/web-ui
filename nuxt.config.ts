@@ -1,12 +1,9 @@
 import { defineNuxtConfig } from 'nuxt';
 import runtimeConfig from './runtime.config';
 
-const lifecycle = process.env.npm_lifecycle_event
+const lifecycle = process.env.npm_lifecycle_event;
 
 export default defineNuxtConfig({
-  app: {
-    buildAssetsDir: '/nuxt-asset/',
-  },
   publicRuntimeConfig: runtimeConfig,
   meta: {
     meta: [
@@ -22,6 +19,7 @@ export default defineNuxtConfig({
       },
     ],
   },
+  // srcDir: './src/',
   css: ['assets/css/index.less'],
   // auto import components
   components: true,
