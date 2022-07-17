@@ -1,4 +1,4 @@
-import {defineNuxtPlugin} from '#app';
+import { defineNuxtPlugin } from '#app';
 
 import VMdEditor from '@kangc/v-md-editor';
 import '@kangc/v-md-editor/lib/style/base-editor.css';

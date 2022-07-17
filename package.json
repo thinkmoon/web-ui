@@ -1,5 +1,6 @@
 {
   "private": true,
+  "name": "think-blog-web",
   "version": "0.2.0",
   "scripts": {
     "dev": "nuxt dev",

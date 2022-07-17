@@ -19,7 +19,7 @@ export default defineNuxtConfig({
       },
     ],
   },
-  // srcDir: './src/',
+  rootDir: 'src/',
   css: ['assets/css/index.less'],
   // auto import components
   components: true,
