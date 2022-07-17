@@ -19,6 +19,7 @@ export default defineNuxtConfig({
       },
     ],
   },
+  buildDir: '../.nuxt',
   rootDir: 'src/',
   css: ['assets/css/index.less'],
   // auto import components
