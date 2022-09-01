@@ -11,7 +11,7 @@ import { joinURL, hasProtocol, isEqual as isEqual$1 } from 'ufo';
 import defu from 'defu';
 import { getContext, executeAsync } from 'unctx';
 import * as qiniu from 'qiniu-js';
-import { ElBacktop, ElBreadcrumb, ElBreadcrumbItem, ElButton, ElContainer, ElForm, ElFormItem, ElHeader, ElIcon, ElImage, ElInput, ElLink, ElMain, ElMenu, ElMenuItem, ElOption, ElPagination, ElScrollbar, ElSelect, ElSubMenu, ElTable, ElTableColumn, ElTag } from 'element-plus';
+import ElementPlus, { ID_INJECTION_KEY } from 'element-plus';
 import * as Icons from '@element-plus/icons-vue';
 import VMdEditor from '@kangc/v-md-editor';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
@@ -3950,7 +3950,7 @@ const routes = [
     children: [],
     meta: meta$c,
     alias: (meta$c == null ? void 0 : meta$c.alias) || [],
-    component: () => import('./_nuxt/404.4a4f806f.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/404.f4586651.mjs').then((m) => m.default || m)
   },
   {
     path: "/admin",
@@ -3963,7 +3963,7 @@ const routes = [
         children: [],
         meta: meta$a,
         alias: (meta$a == null ? void 0 : meta$a.alias) || [],
-        component: () => import('./_nuxt/editor.dcdf265b.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/editor.b9e5ab9f.mjs').then((m) => m.default || m)
       },
       {
         name: "admin",
@@ -3972,7 +3972,7 @@ const routes = [
         children: [],
         meta: meta$9,
         alias: [],
-        component: () => import('./_nuxt/index.d96cfa73.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/index.d0e91509.mjs').then((m) => m.default || m)
       },
       {
         name: "admin-post-list",
@@ -3981,12 +3981,12 @@ const routes = [
         children: [],
         meta: meta$8,
         alias: (meta$8 == null ? void 0 : meta$8.alias) || [],
-        component: () => import('./_nuxt/post-list.056c787e.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/post-list.2d4a5ab0.mjs').then((m) => m.default || m)
       }
     ],
     meta: meta$b,
     alias: (meta$b == null ? void 0 : meta$b.alias) || [],
-    component: () => import('./_nuxt/admin.ffd1247a.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/admin.b74d0f1a.mjs').then((m) => m.default || m)
   },
   {
     name: "category-name-pageIndex",
@@ -3995,7 +3995,7 @@ const routes = [
     children: [],
     meta: meta$7,
     alias: [],
-    component: () => import('./_nuxt/_pageIndex_.712aca89.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/_pageIndex_.a722974d.mjs').then((m) => m.default || m)
   },
   {
     name: "category",
@@ -4004,7 +4004,7 @@ const routes = [
     children: [],
     meta: meta$6,
     alias: [],
-    component: () => import('./_nuxt/index.29bdf10d.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index.f461c503.mjs').then((m) => m.default || m)
   },
   {
     name: "index",
@@ -4013,7 +4013,7 @@ const routes = [
     children: [],
     meta: meta$5,
     alias: (meta$5 == null ? void 0 : meta$5.alias) || [],
-    component: () => import('./_nuxt/index.42314ced.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index.77861b4b.mjs').then((m) => m.default || m)
   },
   {
     name: "login",
@@ -4022,7 +4022,7 @@ const routes = [
     children: [],
     meta: meta$4,
     alias: (meta$4 == null ? void 0 : meta$4.alias) || [],
-    component: () => import('./_nuxt/login.67a868d9.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/login.92701e4d.mjs').then((m) => m.default || m)
   },
   {
     name: "page-pageIndex",
@@ -4031,7 +4031,7 @@ const routes = [
     children: [],
     meta: meta$3,
     alias: [],
-    component: () => import('./_nuxt/_pageIndex_.4c2261f4.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/_pageIndex_.de1315e2.mjs').then((m) => m.default || m)
   },
   {
     name: "post-cid",
@@ -4040,7 +4040,7 @@ const routes = [
     children: [],
     meta: meta$2,
     alias: [],
-    component: () => import('./_nuxt/_cid_.1404e027.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/_cid_.b6ebcde9.mjs').then((m) => m.default || m)
   },
   {
     name: "tag-name-pageIndex",
@@ -4049,7 +4049,7 @@ const routes = [
     children: [],
     meta: meta$1,
     alias: [],
-    component: () => import('./_nuxt/_pageIndex_.e600d1cc.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/_pageIndex_.99d5ea54.mjs').then((m) => m.default || m)
   },
   {
     name: "tag",
@@ -4058,7 +4058,7 @@ const routes = [
     children: [],
     meta,
     alias: [],
-    component: () => import('./_nuxt/index.625d4ccd.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index.27c488ba.mjs').then((m) => m.default || m)
   }
 ];
 const configRouterOptions = {};
@@ -4067,7 +4067,7 @@ const routerOptions = {
 };
 const globalMiddleware = [];
 const namedMiddleware = {
-  auth: () => import('./_nuxt/auth.10584c5b.mjs')
+  auth: () => import('./_nuxt/auth.7e768643.mjs')
 };
 const ___node_modules_nuxt_dist_pages_runtime_router_mjs_UsqjubUPgV = defineNuxtPlugin(async (nuxtApp) => {
   let __temp, __restore;
@@ -4191,29 +4191,11 @@ const ___node_modules_nuxt_dist_pages_runtime_router_mjs_UsqjubUPgV = defineNuxt
   return { provide: { router } };
 });
 const plugins_element_ui_ts_ZTSG7iP71M = defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.use(ElBacktop);
-  nuxtApp.vueApp.use(ElBreadcrumb);
-  nuxtApp.vueApp.use(ElBreadcrumbItem);
-  nuxtApp.vueApp.use(ElButton);
-  nuxtApp.vueApp.use(ElContainer);
-  nuxtApp.vueApp.use(ElForm);
-  nuxtApp.vueApp.use(ElFormItem);
-  nuxtApp.vueApp.use(ElHeader);
-  nuxtApp.vueApp.use(ElIcon);
-  nuxtApp.vueApp.use(ElImage);
-  nuxtApp.vueApp.use(ElInput);
-  nuxtApp.vueApp.use(ElLink);
-  nuxtApp.vueApp.use(ElMain);
-  nuxtApp.vueApp.use(ElMenu);
-  nuxtApp.vueApp.use(ElMenuItem);
-  nuxtApp.vueApp.use(ElOption);
-  nuxtApp.vueApp.use(ElPagination);
-  nuxtApp.vueApp.use(ElScrollbar);
-  nuxtApp.vueApp.use(ElSelect);
-  nuxtApp.vueApp.use(ElSubMenu);
-  nuxtApp.vueApp.use(ElTable);
-  nuxtApp.vueApp.use(ElTableColumn);
-  nuxtApp.vueApp.use(ElTag);
+  nuxtApp.vueApp.use(ElementPlus);
+  nuxtApp.vueApp.provide(ID_INJECTION_KEY, {
+    prefix: Math.floor(Math.random() * 1e4),
+    current: 0
+  });
   Object.keys(Icons).forEach((key) => {
     nuxtApp.vueApp.component(`icon-${key}`, Icons[key]);
   });
@@ -4257,7 +4239,7 @@ const _sfc_main$5 = {
   __name: "nuxt-root",
   __ssrInlineRender: true,
   setup(__props) {
-    const ErrorComponent = vue_cjs_prod.defineAsyncComponent(() => import('./_nuxt/error-component.172cafc7.mjs'));
+    const ErrorComponent = vue_cjs_prod.defineAsyncComponent(() => import('./_nuxt/error-component.d6c49145.mjs'));
     const nuxtApp = useNuxtApp();
     vue_cjs_prod.provide("_route", useRoute());
     nuxtApp.hooks.callHookWith((hooks) => hooks.map((hook) => hook()), "vue:setup");
@@ -4290,8 +4272,8 @@ _sfc_main$5.setup = (props, ctx) => {
   return _sfc_setup$4 ? _sfc_setup$4(props, ctx) : void 0;
 };
 const layouts = {
-  admin: vue_cjs_prod.defineAsyncComponent(() => import('./_nuxt/admin.562556da.mjs')),
-  default: vue_cjs_prod.defineAsyncComponent(() => import('./_nuxt/default.fdfe899b.mjs'))
+  admin: vue_cjs_prod.defineAsyncComponent(() => import('./_nuxt/admin.6322d85b.mjs')),
+  default: vue_cjs_prod.defineAsyncComponent(() => import('./_nuxt/default.640063f9.mjs'))
 };
 const defaultLayoutTransition = { name: "layout", mode: "out-in" };
 const __nuxt_component_0 = vue_cjs_prod.defineComponent({
