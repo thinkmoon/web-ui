@@ -89,7 +89,14 @@ function executeAsync(fn) {
       restore2();
     }
   };
-  return [fn(), restore];
+  let awaitable = fn();
+  if ("catch" in awaitable) {
+    awaitable = awaitable.catch((e) => {
+      restore();
+      throw e;
+    });
+  }
+  return [awaitable, restore];
 }
 function withAsyncContext(fn, transformed) {
   if (!transformed) {

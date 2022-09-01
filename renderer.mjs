@@ -521,29 +521,29 @@ function makeMap(str, expectsLowerCase) {
  * dev only flag -> name mapping
  */
 const PatchFlagNames = {
-    [1 /* TEXT */]: `TEXT`,
-    [2 /* CLASS */]: `CLASS`,
-    [4 /* STYLE */]: `STYLE`,
-    [8 /* PROPS */]: `PROPS`,
-    [16 /* FULL_PROPS */]: `FULL_PROPS`,
-    [32 /* HYDRATE_EVENTS */]: `HYDRATE_EVENTS`,
-    [64 /* STABLE_FRAGMENT */]: `STABLE_FRAGMENT`,
-    [128 /* KEYED_FRAGMENT */]: `KEYED_FRAGMENT`,
-    [256 /* UNKEYED_FRAGMENT */]: `UNKEYED_FRAGMENT`,
-    [512 /* NEED_PATCH */]: `NEED_PATCH`,
-    [1024 /* DYNAMIC_SLOTS */]: `DYNAMIC_SLOTS`,
-    [2048 /* DEV_ROOT_FRAGMENT */]: `DEV_ROOT_FRAGMENT`,
-    [-1 /* HOISTED */]: `HOISTED`,
-    [-2 /* BAIL */]: `BAIL`
+    [1 /* PatchFlags.TEXT */]: `TEXT`,
+    [2 /* PatchFlags.CLASS */]: `CLASS`,
+    [4 /* PatchFlags.STYLE */]: `STYLE`,
+    [8 /* PatchFlags.PROPS */]: `PROPS`,
+    [16 /* PatchFlags.FULL_PROPS */]: `FULL_PROPS`,
+    [32 /* PatchFlags.HYDRATE_EVENTS */]: `HYDRATE_EVENTS`,
+    [64 /* PatchFlags.STABLE_FRAGMENT */]: `STABLE_FRAGMENT`,
+    [128 /* PatchFlags.KEYED_FRAGMENT */]: `KEYED_FRAGMENT`,
+    [256 /* PatchFlags.UNKEYED_FRAGMENT */]: `UNKEYED_FRAGMENT`,
+    [512 /* PatchFlags.NEED_PATCH */]: `NEED_PATCH`,
+    [1024 /* PatchFlags.DYNAMIC_SLOTS */]: `DYNAMIC_SLOTS`,
+    [2048 /* PatchFlags.DEV_ROOT_FRAGMENT */]: `DEV_ROOT_FRAGMENT`,
+    [-1 /* PatchFlags.HOISTED */]: `HOISTED`,
+    [-2 /* PatchFlags.BAIL */]: `BAIL`
 };
 
 /**
  * Dev only
  */
 const slotFlagsText = {
-    [1 /* STABLE */]: 'STABLE',
-    [2 /* DYNAMIC */]: 'DYNAMIC',
-    [3 /* FORWARDED */]: 'FORWARDED'
+    [1 /* SlotFlags.STABLE */]: 'STABLE',
+    [2 /* SlotFlags.DYNAMIC */]: 'DYNAMIC',
+    [3 /* SlotFlags.FORWARDED */]: 'FORWARDED'
 };
 
 const GLOBALS_WHITE_LISTED = 'Infinity,undefined,NaN,isFinite,isNaN,parseFloat,parseInt,decodeURI,' +
@@ -1445,7 +1445,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
         return;
     }
     let deps = [];
-    if (type === "clear" /* CLEAR */) {
+    if (type === "clear" /* TriggerOpTypes.CLEAR */) {
         // collection being cleared
         // trigger all effects for target
         deps = [...depsMap.values()];
@@ -1464,7 +1464,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
         }
         // also run for iteration key on ADD | DELETE | Map.SET
         switch (type) {
-            case "add" /* ADD */:
+            case "add" /* TriggerOpTypes.ADD */:
                 if (!shared$1.isArray(target)) {
                     deps.push(depsMap.get(ITERATE_KEY));
                     if (shared$1.isMap(target)) {
@@ -1476,7 +1476,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
                     deps.push(depsMap.get('length'));
                 }
                 break;
-            case "delete" /* DELETE */:
+            case "delete" /* TriggerOpTypes.DELETE */:
                 if (!shared$1.isArray(target)) {
                     deps.push(depsMap.get(ITERATE_KEY));
                     if (shared$1.isMap(target)) {
@@ -1484,7 +1484,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
                     }
                 }
                 break;
-            case "set" /* SET */:
+            case "set" /* TriggerOpTypes.SET */:
                 if (shared$1.isMap(target)) {
                     deps.push(depsMap.get(ITERATE_KEY));
                 }
@@ -1556,7 +1556,7 @@ function createArrayInstrumentations() {
         instrumentations[key] = function (...args) {
             const arr = toRaw(this);
             for (let i = 0, l = this.length; i < l; i++) {
-                track(arr, "get" /* GET */, i + '');
+                track(arr, "get" /* TrackOpTypes.GET */, i + '');
             }
             // we run the method using the original args first (which may be reactive)
             const res = arr[key](...args);
@@ -1581,16 +1581,16 @@ function createArrayInstrumentations() {
 }
 function createGetter(isReadonly = false, shallow = false) {
     return function get(target, key, receiver) {
-        if (key === "__v_isReactive" /* IS_REACTIVE */) {
+        if (key === "__v_isReactive" /* ReactiveFlags.IS_REACTIVE */) {
             return !isReadonly;
         }
-        else if (key === "__v_isReadonly" /* IS_READONLY */) {
+        else if (key === "__v_isReadonly" /* ReactiveFlags.IS_READONLY */) {
             return isReadonly;
         }
-        else if (key === "__v_isShallow" /* IS_SHALLOW */) {
+        else if (key === "__v_isShallow" /* ReactiveFlags.IS_SHALLOW */) {
             return shallow;
         }
-        else if (key === "__v_raw" /* RAW */ &&
+        else if (key === "__v_raw" /* ReactiveFlags.RAW */ &&
             receiver ===
                 (isReadonly
                     ? shallow
@@ -1610,7 +1610,7 @@ function createGetter(isReadonly = false, shallow = false) {
             return res;
         }
         if (!isReadonly) {
-            track(target, "get" /* GET */, key);
+            track(target, "get" /* TrackOpTypes.GET */, key);
         }
         if (shallow) {
             return res;
@@ -1636,10 +1636,10 @@ function createSetter(shallow = false) {
         if (isReadonly(oldValue) && isRef(oldValue) && !isRef(value)) {
             return false;
         }
-        if (!shallow && !isReadonly(value)) {
-            if (!isShallow(value)) {
-                value = toRaw(value);
+        if (!shallow) {
+            if (!isShallow(value) && !isReadonly(value)) {
                 oldValue = toRaw(oldValue);
+                value = toRaw(value);
             }
             if (!shared$1.isArray(target) && isRef(oldValue) && !isRef(value)) {
                 oldValue.value = value;
@@ -1653,10 +1653,10 @@ function createSetter(shallow = false) {
         // don't trigger if target is something up in the prototype chain of original
         if (target === toRaw(receiver)) {
             if (!hadKey) {
-                trigger(target, "add" /* ADD */, key, value);
+                trigger(target, "add" /* TriggerOpTypes.ADD */, key, value);
             }
             else if (shared$1.hasChanged(value, oldValue)) {
-                trigger(target, "set" /* SET */, key, value);
+                trigger(target, "set" /* TriggerOpTypes.SET */, key, value);
             }
         }
         return result;
@@ -1667,19 +1667,19 @@ function deleteProperty(target, key) {
     target[key];
     const result = Reflect.deleteProperty(target, key);
     if (result && hadKey) {
-        trigger(target, "delete" /* DELETE */, key, undefined);
+        trigger(target, "delete" /* TriggerOpTypes.DELETE */, key, undefined);
     }
     return result;
 }
 function has(target, key) {
     const result = Reflect.has(target, key);
     if (!shared$1.isSymbol(key) || !builtInSymbols.has(key)) {
-        track(target, "has" /* HAS */, key);
+        track(target, "has" /* TrackOpTypes.HAS */, key);
     }
     return result;
 }
 function ownKeys(target) {
-    track(target, "iterate" /* ITERATE */, shared$1.isArray(target) ? 'length' : ITERATE_KEY);
+    track(target, "iterate" /* TrackOpTypes.ITERATE */, shared$1.isArray(target) ? 'length' : ITERATE_KEY);
     return Reflect.ownKeys(target);
 }
 const mutableHandlers = {
@@ -1714,14 +1714,14 @@ const getProto = (v) => Reflect.getPrototypeOf(v);
 function get$1(target, key, isReadonly = false, isShallow = false) {
     // #1772: readonly(reactive(Map)) should return readonly + reactive version
     // of the value
-    target = target["__v_raw" /* RAW */];
+    target = target["__v_raw" /* ReactiveFlags.RAW */];
     const rawTarget = toRaw(target);
     const rawKey = toRaw(key);
     if (!isReadonly) {
         if (key !== rawKey) {
-            track(rawTarget, "get" /* GET */, key);
+            track(rawTarget, "get" /* TrackOpTypes.GET */, key);
         }
-        track(rawTarget, "get" /* GET */, rawKey);
+        track(rawTarget, "get" /* TrackOpTypes.GET */, rawKey);
     }
     const { has } = getProto(rawTarget);
     const wrap = isShallow ? toShallow : isReadonly ? toReadonly : toReactive;
@@ -1738,22 +1738,22 @@ function get$1(target, key, isReadonly = false, isShallow = false) {
     }
 }
 function has$1(key, isReadonly = false) {
-    const target = this["__v_raw" /* RAW */];
+    const target = this["__v_raw" /* ReactiveFlags.RAW */];
     const rawTarget = toRaw(target);
     const rawKey = toRaw(key);
     if (!isReadonly) {
         if (key !== rawKey) {
-            track(rawTarget, "has" /* HAS */, key);
+            track(rawTarget, "has" /* TrackOpTypes.HAS */, key);
         }
-        track(rawTarget, "has" /* HAS */, rawKey);
+        track(rawTarget, "has" /* TrackOpTypes.HAS */, rawKey);
     }
     return key === rawKey
         ? target.has(key)
         : target.has(key) || target.has(rawKey);
 }
 function size(target, isReadonly = false) {
-    target = target["__v_raw" /* RAW */];
-    !isReadonly && track(toRaw(target), "iterate" /* ITERATE */, ITERATE_KEY);
+    target = target["__v_raw" /* ReactiveFlags.RAW */];
+    !isReadonly && track(toRaw(target), "iterate" /* TrackOpTypes.ITERATE */, ITERATE_KEY);
     return Reflect.get(target, 'size', target);
 }
 function add(value) {
@@ -1763,7 +1763,7 @@ function add(value) {
     const hadKey = proto.has.call(target, value);
     if (!hadKey) {
         target.add(value);
-        trigger(target, "add" /* ADD */, value, value);
+        trigger(target, "add" /* TriggerOpTypes.ADD */, value, value);
     }
     return this;
 }
@@ -1779,10 +1779,10 @@ function set$1(key, value) {
     const oldValue = get.call(target, key);
     target.set(key, value);
     if (!hadKey) {
-        trigger(target, "add" /* ADD */, key, value);
+        trigger(target, "add" /* TriggerOpTypes.ADD */, key, value);
     }
     else if (shared$1.hasChanged(value, oldValue)) {
-        trigger(target, "set" /* SET */, key, value);
+        trigger(target, "set" /* TriggerOpTypes.SET */, key, value);
     }
     return this;
 }
@@ -1798,7 +1798,7 @@ function deleteEntry(key) {
     // forward the operation before queueing reactions
     const result = target.delete(key);
     if (hadKey) {
-        trigger(target, "delete" /* DELETE */, key, undefined);
+        trigger(target, "delete" /* TriggerOpTypes.DELETE */, key, undefined);
     }
     return result;
 }
@@ -1808,17 +1808,17 @@ function clear() {
     // forward the operation before queueing reactions
     const result = target.clear();
     if (hadItems) {
-        trigger(target, "clear" /* CLEAR */, undefined, undefined);
+        trigger(target, "clear" /* TriggerOpTypes.CLEAR */, undefined, undefined);
     }
     return result;
 }
 function createForEach(isReadonly, isShallow) {
     return function forEach(callback, thisArg) {
         const observed = this;
-        const target = observed["__v_raw" /* RAW */];
+        const target = observed["__v_raw" /* ReactiveFlags.RAW */];
         const rawTarget = toRaw(target);
         const wrap = isShallow ? toShallow : isReadonly ? toReadonly : toReactive;
-        !isReadonly && track(rawTarget, "iterate" /* ITERATE */, ITERATE_KEY);
+        !isReadonly && track(rawTarget, "iterate" /* TrackOpTypes.ITERATE */, ITERATE_KEY);
         return target.forEach((value, key) => {
             // important: make sure the callback is
             // 1. invoked with the reactive map as `this` and 3rd arg
@@ -1829,7 +1829,7 @@ function createForEach(isReadonly, isShallow) {
 }
 function createIterableMethod(method, isReadonly, isShallow) {
     return function (...args) {
-        const target = this["__v_raw" /* RAW */];
+        const target = this["__v_raw" /* ReactiveFlags.RAW */];
         const rawTarget = toRaw(target);
         const targetIsMap = shared$1.isMap(rawTarget);
         const isPair = method === 'entries' || (method === Symbol.iterator && targetIsMap);
@@ -1837,7 +1837,7 @@ function createIterableMethod(method, isReadonly, isShallow) {
         const innerIterator = target[method](...args);
         const wrap = isShallow ? toShallow : isReadonly ? toReadonly : toReactive;
         !isReadonly &&
-            track(rawTarget, "iterate" /* ITERATE */, isKeyOnly ? MAP_KEY_ITERATE_KEY : ITERATE_KEY);
+            track(rawTarget, "iterate" /* TrackOpTypes.ITERATE */, isKeyOnly ? MAP_KEY_ITERATE_KEY : ITERATE_KEY);
         // return a wrapped iterator which returns observed versions of the
         // values emitted from the real iterator
         return {
@@ -1860,7 +1860,7 @@ function createIterableMethod(method, isReadonly, isShallow) {
 }
 function createReadonlyMethod(type) {
     return function (...args) {
-        return type === "delete" /* DELETE */ ? false : this;
+        return type === "delete" /* TriggerOpTypes.DELETE */ ? false : this;
     };
 }
 function createInstrumentations() {
@@ -1902,10 +1902,10 @@ function createInstrumentations() {
         has(key) {
             return has$1.call(this, key, true);
         },
-        add: createReadonlyMethod("add" /* ADD */),
-        set: createReadonlyMethod("set" /* SET */),
-        delete: createReadonlyMethod("delete" /* DELETE */),
-        clear: createReadonlyMethod("clear" /* CLEAR */),
+        add: createReadonlyMethod("add" /* TriggerOpTypes.ADD */),
+        set: createReadonlyMethod("set" /* TriggerOpTypes.SET */),
+        delete: createReadonlyMethod("delete" /* TriggerOpTypes.DELETE */),
+        clear: createReadonlyMethod("clear" /* TriggerOpTypes.CLEAR */),
         forEach: createForEach(true, false)
     };
     const shallowReadonlyInstrumentations = {
@@ -1918,10 +1918,10 @@ function createInstrumentations() {
         has(key) {
             return has$1.call(this, key, true);
         },
-        add: createReadonlyMethod("add" /* ADD */),
-        set: createReadonlyMethod("set" /* SET */),
-        delete: createReadonlyMethod("delete" /* DELETE */),
-        clear: createReadonlyMethod("clear" /* CLEAR */),
+        add: createReadonlyMethod("add" /* TriggerOpTypes.ADD */),
+        set: createReadonlyMethod("set" /* TriggerOpTypes.SET */),
+        delete: createReadonlyMethod("delete" /* TriggerOpTypes.DELETE */),
+        clear: createReadonlyMethod("clear" /* TriggerOpTypes.CLEAR */),
         forEach: createForEach(true, true)
     };
     const iteratorMethods = ['keys', 'values', 'entries', Symbol.iterator];
@@ -1948,13 +1948,13 @@ function createInstrumentationGetter(isReadonly, shallow) {
             ? readonlyInstrumentations
             : mutableInstrumentations;
     return (target, key, receiver) => {
-        if (key === "__v_isReactive" /* IS_REACTIVE */) {
+        if (key === "__v_isReactive" /* ReactiveFlags.IS_REACTIVE */) {
             return !isReadonly;
         }
-        else if (key === "__v_isReadonly" /* IS_READONLY */) {
+        else if (key === "__v_isReadonly" /* ReactiveFlags.IS_READONLY */) {
             return isReadonly;
         }
-        else if (key === "__v_raw" /* RAW */) {
+        else if (key === "__v_raw" /* ReactiveFlags.RAW */) {
             return target;
         }
         return Reflect.get(shared$1.hasOwn(instrumentations, key) && key in target
@@ -1983,19 +1983,19 @@ function targetTypeMap(rawType) {
     switch (rawType) {
         case 'Object':
         case 'Array':
-            return 1 /* COMMON */;
+            return 1 /* TargetType.COMMON */;
         case 'Map':
         case 'Set':
         case 'WeakMap':
         case 'WeakSet':
-            return 2 /* COLLECTION */;
+            return 2 /* TargetType.COLLECTION */;
         default:
-            return 0 /* INVALID */;
+            return 0 /* TargetType.INVALID */;
     }
 }
 function getTargetType(value) {
-    return value["__v_skip" /* SKIP */] || !Object.isExtensible(value)
-        ? 0 /* INVALID */
+    return value["__v_skip" /* ReactiveFlags.SKIP */] || !Object.isExtensible(value)
+        ? 0 /* TargetType.INVALID */
         : targetTypeMap(shared$1.toRawType(value));
 }
 function reactive(target) {
@@ -2035,8 +2035,8 @@ function createReactiveObject(target, isReadonly, baseHandlers, collectionHandle
     }
     // target is already a Proxy, return it.
     // exception: calling readonly() on a reactive object
-    if (target["__v_raw" /* RAW */] &&
-        !(isReadonly && target["__v_isReactive" /* IS_REACTIVE */])) {
+    if (target["__v_raw" /* ReactiveFlags.RAW */] &&
+        !(isReadonly && target["__v_isReactive" /* ReactiveFlags.IS_REACTIVE */])) {
         return target;
     }
     // target already has corresponding Proxy
@@ -2046,34 +2046,34 @@ function createReactiveObject(target, isReadonly, baseHandlers, collectionHandle
     }
     // only specific value types can be observed.
     const targetType = getTargetType(target);
-    if (targetType === 0 /* INVALID */) {
+    if (targetType === 0 /* TargetType.INVALID */) {
         return target;
     }
-    const proxy = new Proxy(target, targetType === 2 /* COLLECTION */ ? collectionHandlers : baseHandlers);
+    const proxy = new Proxy(target, targetType === 2 /* TargetType.COLLECTION */ ? collectionHandlers : baseHandlers);
     proxyMap.set(target, proxy);
     return proxy;
 }
 function isReactive(value) {
     if (isReadonly(value)) {
-        return isReactive(value["__v_raw" /* RAW */]);
+        return isReactive(value["__v_raw" /* ReactiveFlags.RAW */]);
     }
-    return !!(value && value["__v_isReactive" /* IS_REACTIVE */]);
+    return !!(value && value["__v_isReactive" /* ReactiveFlags.IS_REACTIVE */]);
 }
 function isReadonly(value) {
-    return !!(value && value["__v_isReadonly" /* IS_READONLY */]);
+    return !!(value && value["__v_isReadonly" /* ReactiveFlags.IS_READONLY */]);
 }
 function isShallow(value) {
-    return !!(value && value["__v_isShallow" /* IS_SHALLOW */]);
+    return !!(value && value["__v_isShallow" /* ReactiveFlags.IS_SHALLOW */]);
 }
 function isProxy(value) {
     return isReactive(value) || isReadonly(value);
 }
 function toRaw(observed) {
-    const raw = observed && observed["__v_raw" /* RAW */];
+    const raw = observed && observed["__v_raw" /* ReactiveFlags.RAW */];
     return raw ? toRaw(raw) : observed;
 }
 function markRaw(value) {
-    shared$1.def(value, "__v_skip" /* SKIP */, true);
+    shared$1.def(value, "__v_skip" /* ReactiveFlags.SKIP */, true);
     return value;
 }
 const toReactive = (value) => shared$1.isObject(value) ? reactive(value) : value;
@@ -2123,10 +2123,11 @@ class RefImpl {
         return this._value;
     }
     set value(newVal) {
-        newVal = this.__v_isShallow ? newVal : toRaw(newVal);
+        const useDirectValue = this.__v_isShallow || isShallow(newVal) || isReadonly(newVal);
+        newVal = useDirectValue ? newVal : toRaw(newVal);
         if (shared$1.hasChanged(newVal, this._rawValue)) {
             this._rawValue = newVal;
-            this._value = this.__v_isShallow ? newVal : toReactive(newVal);
+            this._value = useDirectValue ? newVal : toReactive(newVal);
             triggerRefValue(this);
         }
     }
@@ -2202,11 +2203,13 @@ function toRef(object, key, defaultValue) {
         : new ObjectRefImpl(object, key, defaultValue);
 }
 
+var _a;
 class ComputedRefImpl {
     constructor(getter, _setter, isReadonly, isSSR) {
         this._setter = _setter;
         this.dep = undefined;
         this.__v_isRef = true;
+        this[_a] = false;
         this._dirty = true;
         this.effect = new ReactiveEffect(getter, () => {
             if (!this._dirty) {
@@ -2216,7 +2219,7 @@ class ComputedRefImpl {
         });
         this.effect.computed = this;
         this.effect.active = this._cacheable = !isSSR;
-        this["__v_isReadonly" /* IS_READONLY */] = isReadonly;
+        this["__v_isReadonly" /* ReactiveFlags.IS_READONLY */] = isReadonly;
     }
     get value() {
         // the computed ref may get wrapped by other proxies e.g. readonly() #3376
@@ -2232,6 +2235,7 @@ class ComputedRefImpl {
         this._setter(newValue);
     }
 }
+_a = "__v_isReadonly" /* ReactiveFlags.IS_READONLY */;
 function computed(getterOrOptions, debugOptions, isSSR = false) {
     let getter;
     let setter;
@@ -2248,7 +2252,7 @@ function computed(getterOrOptions, debugOptions, isSSR = false) {
     return cRef;
 }
 
-var _a;
+var _a$1;
 const tick = /*#__PURE__*/ Promise.resolve();
 const queue = [];
 let queued = false;
@@ -2271,7 +2275,7 @@ class DeferredComputedRefImpl {
         this.dep = undefined;
         this._dirty = true;
         this.__v_isRef = true;
-        this[_a] = true;
+        this[_a$1] = true;
         let compareTarget;
         let hasCompareTarget = false;
         let scheduled = false;
@@ -2318,7 +2322,7 @@ class DeferredComputedRefImpl {
         return toRaw(this)._get();
     }
 }
-_a = "__v_isReadonly" /* IS_READONLY */;
+_a$1 = "__v_isReadonly" /* ReactiveFlags.IS_READONLY */;
 function deferredComputed(getter) {
     return new DeferredComputedRefImpl(getter);
 }
@@ -2381,7 +2385,7 @@ reactivity_cjs_prod.unref = unref;
 	    const appWarnHandler = instance && instance.appContext.config.warnHandler;
 	    const trace = getComponentTrace();
 	    if (appWarnHandler) {
-	        callWithErrorHandling(appWarnHandler, instance, 11 /* APP_WARN_HANDLER */, [
+	        callWithErrorHandling(appWarnHandler, instance, 11 /* ErrorCodes.APP_WARN_HANDLER */, [
 	            msg + args.join(''),
 	            instance && instance.proxy,
 	            trace
@@ -2528,7 +2532,7 @@ reactivity_cjs_prod.unref = unref;
 	        // app-level handling
 	        const appErrorHandler = instance.appContext.config.errorHandler;
 	        if (appErrorHandler) {
-	            callWithErrorHandling(appErrorHandler, null, 10 /* APP_ERROR_HANDLER */, [err, exposedInstance, errorInfo]);
+	            callWithErrorHandling(appErrorHandler, null, 10 /* ErrorCodes.APP_ERROR_HANDLER */, [err, exposedInstance, errorInfo]);
 	            return;
 	        }
 	    }
@@ -2545,15 +2549,11 @@ reactivity_cjs_prod.unref = unref;
 	let isFlushPending = false;
 	const queue = [];
 	let flushIndex = 0;
-	const pendingPreFlushCbs = [];
-	let activePreFlushCbs = null;
-	let preFlushIndex = 0;
 	const pendingPostFlushCbs = [];
 	let activePostFlushCbs = null;
 	let postFlushIndex = 0;
 	const resolvedPromise = /*#__PURE__*/ Promise.resolve();
 	let currentFlushPromise = null;
-	let currentPreFlushParentJob = null;
 	function nextTick(fn) {
 	    const p = currentFlushPromise || resolvedPromise;
 	    return fn ? p.then(this ? fn.bind(this) : fn) : p;
@@ -2580,9 +2580,8 @@ reactivity_cjs_prod.unref = unref;
 	    // if the job is a watch() callback, the search will start with a +1 index to
 	    // allow it recursively trigger itself - it is the user's responsibility to
 	    // ensure it doesn't end up in an infinite loop.
-	    if ((!queue.length ||
-	        !queue.includes(job, isFlushing && job.allowRecurse ? flushIndex + 1 : flushIndex)) &&
-	        job !== currentPreFlushParentJob) {
+	    if (!queue.length ||
+	        !queue.includes(job, isFlushing && job.allowRecurse ? flushIndex + 1 : flushIndex)) {
 	        if (job.id == null) {
 	            queue.push(job);
 	        }
@@ -2604,45 +2603,32 @@ reactivity_cjs_prod.unref = unref;
 	        queue.splice(i, 1);
 	    }
 	}
-	function queueCb(cb, activeQueue, pendingQueue, index) {
+	function queuePostFlushCb(cb) {
 	    if (!shared.isArray(cb)) {
-	        if (!activeQueue ||
-	            !activeQueue.includes(cb, cb.allowRecurse ? index + 1 : index)) {
-	            pendingQueue.push(cb);
+	        if (!activePostFlushCbs ||
+	            !activePostFlushCbs.includes(cb, cb.allowRecurse ? postFlushIndex + 1 : postFlushIndex)) {
+	            pendingPostFlushCbs.push(cb);
 	        }
 	    }
 	    else {
 	        // if cb is an array, it is a component lifecycle hook which can only be
 	        // triggered by a job, which is already deduped in the main queue, so
 	        // we can skip duplicate check here to improve perf
-	        pendingQueue.push(...cb);
+	        pendingPostFlushCbs.push(...cb);
 	    }
 	    queueFlush();
 	}
-	function queuePreFlushCb(cb) {
-	    queueCb(cb, activePreFlushCbs, pendingPreFlushCbs, preFlushIndex);
-	}
-	function queuePostFlushCb(cb) {
-	    queueCb(cb, activePostFlushCbs, pendingPostFlushCbs, postFlushIndex);
-	}
-	function flushPreFlushCbs(seen, parentJob = null) {
-	    if (pendingPreFlushCbs.length) {
-	        currentPreFlushParentJob = parentJob;
-	        activePreFlushCbs = [...new Set(pendingPreFlushCbs)];
-	        pendingPreFlushCbs.length = 0;
-	        for (preFlushIndex = 0; preFlushIndex < activePreFlushCbs.length; preFlushIndex++) {
-	            activePreFlushCbs[preFlushIndex]();
+	function flushPreFlushCbs(seen, i = flushIndex) {
+	    for (; i < queue.length; i++) {
+	        const cb = queue[i];
+	        if (cb && cb.pre) {
+	            queue.splice(i, 1);
+	            i--;
+	            cb();
 	        }
-	        activePreFlushCbs = null;
-	        preFlushIndex = 0;
-	        currentPreFlushParentJob = null;
-	        // recursively flush until it drains
-	        flushPreFlushCbs(seen, parentJob);
 	    }
 	}
 	function flushPostFlushCbs(seen) {
-	    // flush any pre cbs queued during the flush (e.g. pre watchers)
-	    flushPreFlushCbs();
 	    if (pendingPostFlushCbs.length) {
 	        const deduped = [...new Set(pendingPostFlushCbs)];
 	        pendingPostFlushCbs.length = 0;
@@ -2661,10 +2647,19 @@ reactivity_cjs_prod.unref = unref;
 	    }
 	}
 	const getId = (job) => job.id == null ? Infinity : job.id;
+	const comparator = (a, b) => {
+	    const diff = getId(a) - getId(b);
+	    if (diff === 0) {
+	        if (a.pre && !b.pre)
+	            return -1;
+	        if (b.pre && !a.pre)
+	            return 1;
+	    }
+	    return diff;
+	};
 	function flushJobs(seen) {
 	    isFlushPending = false;
 	    isFlushing = true;
-	    flushPreFlushCbs(seen);
 	    // Sort queue before flush.
 	    // This ensures that:
 	    // 1. Components are updated from parent to child. (because parent is always
@@ -2672,7 +2667,7 @@ reactivity_cjs_prod.unref = unref;
 	    //    priority number)
 	    // 2. If a component is unmounted during a parent component's update,
 	    //    its update can be skipped.
-	    queue.sort((a, b) => getId(a) - getId(b));
+	    queue.sort(comparator);
 	    // conditional usage of checkRecursiveUpdate must be determined out of
 	    // try ... catch block since Rollup by default de-optimizes treeshaking
 	    // inside try-catch. This can leave all warning code unshaked. Although
@@ -2685,7 +2680,7 @@ reactivity_cjs_prod.unref = unref;
 	            if (job && job.active !== false) {
 	                if (false && check(job)) ;
 	                // console.log(`running:`, job.id)
-	                callWithErrorHandling(job, null, 14 /* SCHEDULER */);
+	                callWithErrorHandling(job, null, 14 /* ErrorCodes.SCHEDULER */);
 	            }
 	        }
 	    }
@@ -2697,10 +2692,8 @@ reactivity_cjs_prod.unref = unref;
 	        currentFlushPromise = null;
 	        // some postFlushCb queued jobs!
 	        // keep flushing until it drains.
-	        if (queue.length ||
-	            pendingPreFlushCbs.length ||
-	            pendingPostFlushCbs.length) {
-	            flushJobs(seen);
+	        if (queue.length || pendingPostFlushCbs.length) {
+	            flushJobs();
 	        }
 	    }
 	}
@@ -2746,7 +2739,7 @@ reactivity_cjs_prod.unref = unref;
 	        handler = props[(handlerName = shared.toHandlerKey(shared.hyphenate(event)))];
 	    }
 	    if (handler) {
-	        callWithAsyncErrorHandling(handler, instance, 6 /* COMPONENT_EVENT_HANDLER */, args);
+	        callWithAsyncErrorHandling(handler, instance, 6 /* ErrorCodes.COMPONENT_EVENT_HANDLER */, args);
 	    }
 	    const onceHandler = props[handlerName + `Once`];
 	    if (onceHandler) {
@@ -2757,7 +2750,7 @@ reactivity_cjs_prod.unref = unref;
 	            return;
 	        }
 	        instance.emitted[handlerName] = true;
-	        callWithAsyncErrorHandling(onceHandler, instance, 6 /* COMPONENT_EVENT_HANDLER */, args);
+	        callWithAsyncErrorHandling(onceHandler, instance, 6 /* ErrorCodes.COMPONENT_EVENT_HANDLER */, args);
 	    }
 	}
 	function normalizeEmitsOptions(comp, appContext, asMixin = false) {
@@ -2789,7 +2782,9 @@ reactivity_cjs_prod.unref = unref;
 	        }
 	    }
 	    if (!raw && !hasExtends) {
-	        cache.set(comp, null);
+	        if (shared.isObject(comp)) {
+	            cache.set(comp, null);
+	        }
 	        return null;
 	    }
 	    if (shared.isArray(raw)) {
@@ -2798,7 +2793,9 @@ reactivity_cjs_prod.unref = unref;
 	    else {
 	        shared.extend(normalized, raw);
 	    }
-	    cache.set(comp, normalized);
+	    if (shared.isObject(comp)) {
+	        cache.set(comp, normalized);
+	    }
 	    return normalized;
 	}
 	// Check if an incoming prop key is a declared emit event listener.
@@ -2904,7 +2901,7 @@ reactivity_cjs_prod.unref = unref;
 	    let fallthroughAttrs;
 	    const prev = setCurrentRenderingInstance(instance);
 	    try {
-	        if (vnode.shapeFlag & 4 /* STATEFUL_COMPONENT */) {
+	        if (vnode.shapeFlag & 4 /* ShapeFlags.STATEFUL_COMPONENT */) {
 	            // withProxy is a proxy with a different `has` trap only for
 	            // runtime-compiled render functions using `with` block.
 	            const proxyToUse = withProxy || proxy;
@@ -2935,7 +2932,7 @@ reactivity_cjs_prod.unref = unref;
 	    }
 	    catch (err) {
 	        blockStack.length = 0;
-	        handleError(err, instance, 1 /* RENDER_FUNCTION */);
+	        handleError(err, instance, 1 /* ErrorCodes.RENDER_FUNCTION */);
 	        result = createVNode(Comment);
 	    }
 	    // attr merging
@@ -2946,7 +2943,7 @@ reactivity_cjs_prod.unref = unref;
 	        const keys = Object.keys(fallthroughAttrs);
 	        const { shapeFlag } = root;
 	        if (keys.length) {
-	            if (shapeFlag & (1 /* ELEMENT */ | 6 /* COMPONENT */)) {
+	            if (shapeFlag & (1 /* ShapeFlags.ELEMENT */ | 6 /* ShapeFlags.COMPONENT */)) {
 	                if (propsOptions && keys.some(shared.isModelListener)) {
 	                    // If a v-model listener (onUpdate:xxx) has a corresponding declared
 	                    // prop, it indicates this component expects to handle v-model and
@@ -3023,19 +3020,19 @@ reactivity_cjs_prod.unref = unref;
 	        return true;
 	    }
 	    if (optimized && patchFlag >= 0) {
-	        if (patchFlag & 1024 /* DYNAMIC_SLOTS */) {
+	        if (patchFlag & 1024 /* PatchFlags.DYNAMIC_SLOTS */) {
 	            // slot content that references values that might have changed,
 	            // e.g. in a v-for
 	            return true;
 	        }
-	        if (patchFlag & 16 /* FULL_PROPS */) {
+	        if (patchFlag & 16 /* PatchFlags.FULL_PROPS */) {
 	            if (!prevProps) {
 	                return !!nextProps;
 	            }
 	            // presence of this flag indicates props are always non-null
 	            return hasPropsChanged(prevProps, nextProps, emits);
 	        }
-	        else if (patchFlag & 8 /* PROPS */) {
+	        else if (patchFlag & 8 /* PatchFlags.PROPS */) {
 	            const dynamicProps = nextVNode.dynamicProps;
 	            for (let i = 0; i < dynamicProps.length; i++) {
 	                const key = dynamicProps[i];
@@ -3278,7 +3275,7 @@ reactivity_cjs_prod.unref = unref;
 	                if (delayEnter) {
 	                    activeBranch.transition.afterLeave = () => {
 	                        if (pendingId === suspense.pendingId) {
-	                            move(pendingBranch, container, anchor, 0 /* ENTER */);
+	                            move(pendingBranch, container, anchor, 0 /* MoveType.ENTER */);
 	                        }
 	                    };
 	                }
@@ -3293,7 +3290,7 @@ reactivity_cjs_prod.unref = unref;
 	                }
 	                if (!delayEnter) {
 	                    // move content from off-dom container to actual container
-	                    move(pendingBranch, container, anchor, 0 /* ENTER */);
+	                    move(pendingBranch, container, anchor, 0 /* MoveType.ENTER */);
 	                }
 	            }
 	            setActiveBranch(suspense, pendingBranch);
@@ -3367,7 +3364,7 @@ reactivity_cjs_prod.unref = unref;
 	            const hydratedEl = instance.vnode.el;
 	            instance
 	                .asyncDep.catch(err => {
-	                handleError(err, instance, 0 /* SETUP_FUNCTION */);
+	                handleError(err, instance, 0 /* ErrorCodes.SETUP_FUNCTION */);
 	            })
 	                .then(asyncSetupResult => {
 	                // retry when the setup() promise resolves.
@@ -3435,7 +3432,7 @@ reactivity_cjs_prod.unref = unref;
 	}
 	function normalizeSuspenseChildren(vnode) {
 	    const { shapeFlag, children } = vnode;
-	    const isSlotChildren = shapeFlag & 32 /* SLOTS_CHILDREN */;
+	    const isSlotChildren = shapeFlag & 32 /* ShapeFlags.SLOTS_CHILDREN */;
 	    vnode.ssContent = normalizeSuspenseSlot(isSlotChildren ? children.default : children);
 	    vnode.ssFallback = isSlotChildren
 	        ? normalizeSuspenseSlot(children.fallback)
@@ -3575,7 +3572,7 @@ reactivity_cjs_prod.unref = unref;
 	                return traverse(s);
 	            }
 	            else if (shared.isFunction(s)) {
-	                return callWithErrorHandling(s, instance, 2 /* WATCH_GETTER */);
+	                return callWithErrorHandling(s, instance, 2 /* ErrorCodes.WATCH_GETTER */);
 	            }
 	            else ;
 	        });
@@ -3583,7 +3580,7 @@ reactivity_cjs_prod.unref = unref;
 	    else if (shared.isFunction(source)) {
 	        if (cb) {
 	            // getter with cb
-	            getter = () => callWithErrorHandling(source, instance, 2 /* WATCH_GETTER */);
+	            getter = () => callWithErrorHandling(source, instance, 2 /* ErrorCodes.WATCH_GETTER */);
 	        }
 	        else {
 	            // no cb -> simple effect
@@ -3594,7 +3591,7 @@ reactivity_cjs_prod.unref = unref;
 	                if (cleanup) {
 	                    cleanup();
 	                }
-	                return callWithAsyncErrorHandling(source, instance, 3 /* WATCH_CALLBACK */, [onCleanup]);
+	                return callWithAsyncErrorHandling(source, instance, 3 /* ErrorCodes.WATCH_CALLBACK */, [onCleanup]);
 	            };
 	        }
 	    }
@@ -3608,7 +3605,7 @@ reactivity_cjs_prod.unref = unref;
 	    let cleanup;
 	    let onCleanup = (fn) => {
 	        cleanup = effect.onStop = () => {
-	            callWithErrorHandling(fn, instance, 4 /* WATCH_CLEANUP */);
+	            callWithErrorHandling(fn, instance, 4 /* ErrorCodes.WATCH_CLEANUP */);
 	        };
 	    };
 	    // in SSR there is no need to setup an actual effect, and it should be noop
@@ -3620,7 +3617,7 @@ reactivity_cjs_prod.unref = unref;
 	            getter();
 	        }
 	        else if (immediate) {
-	            callWithAsyncErrorHandling(cb, instance, 3 /* WATCH_CALLBACK */, [
+	            callWithAsyncErrorHandling(cb, instance, 3 /* ErrorCodes.WATCH_CALLBACK */, [
 	                getter(),
 	                isMultiSource ? [] : undefined,
 	                onCleanup
@@ -3646,7 +3643,7 @@ reactivity_cjs_prod.unref = unref;
 	                if (cleanup) {
 	                    cleanup();
 	                }
-	                callWithAsyncErrorHandling(cb, instance, 3 /* WATCH_CALLBACK */, [
+	                callWithAsyncErrorHandling(cb, instance, 3 /* ErrorCodes.WATCH_CALLBACK */, [
 	                    newValue,
 	                    // pass undefined as the old value when it's changed for the first time
 	                    oldValue === INITIAL_WATCHER_VALUE ? undefined : oldValue,
@@ -3672,7 +3669,10 @@ reactivity_cjs_prod.unref = unref;
 	    }
 	    else {
 	        // default: 'pre'
-	        scheduler = () => queuePreFlushCb(job);
+	        job.pre = true;
+	        if (instance)
+	            job.id = instance.uid;
+	        scheduler = () => queueJob(job);
 	    }
 	    const effect = new reactivity$1.ReactiveEffect(getter, scheduler);
 	    // initial run
@@ -3735,7 +3735,7 @@ reactivity_cjs_prod.unref = unref;
 	    };
 	}
 	function traverse(value, seen) {
-	    if (!shared.isObject(value) || value["__v_skip" /* SKIP */]) {
+	    if (!shared.isObject(value) || value["__v_skip" /* ReactiveFlags.SKIP */]) {
 	        return value;
 	    }
 	    seen = seen || new Set();
@@ -3905,7 +3905,7 @@ reactivity_cjs_prod.unref = unref;
 	    const leavingVNodesCache = getLeavingNodesForType(state, vnode);
 	    const callHook = (hook, args) => {
 	        hook &&
-	            callWithAsyncErrorHandling(hook, instance, 9 /* TRANSITION_HOOK */, args);
+	            callWithAsyncErrorHandling(hook, instance, 9 /* ErrorCodes.TRANSITION_HOOK */, args);
 	    };
 	    const callAsyncHook = (hook, args) => {
 	        const done = args[1];
@@ -4041,10 +4041,10 @@ reactivity_cjs_prod.unref = unref;
 	        : vnode;
 	}
 	function setTransitionHooks(vnode, hooks) {
-	    if (vnode.shapeFlag & 6 /* COMPONENT */ && vnode.component) {
+	    if (vnode.shapeFlag & 6 /* ShapeFlags.COMPONENT */ && vnode.component) {
 	        setTransitionHooks(vnode.component.subTree, hooks);
 	    }
-	    else if (vnode.shapeFlag & 128 /* SUSPENSE */) {
+	    else if (vnode.shapeFlag & 128 /* ShapeFlags.SUSPENSE */) {
 	        vnode.ssContent.transition = hooks.clone(vnode.ssContent);
 	        vnode.ssFallback.transition = hooks.clone(vnode.ssFallback);
 	    }
@@ -4063,7 +4063,7 @@ reactivity_cjs_prod.unref = unref;
 	            : String(parentKey) + String(child.key != null ? child.key : i);
 	        // handle fragment children case, e.g. v-for
 	        if (child.type === Fragment) {
-	            if (child.patchFlag & 128 /* KEYED_FRAGMENT */)
+	            if (child.patchFlag & 128 /* PatchFlags.KEYED_FRAGMENT */)
 	                keyedFragmentCount++;
 	            ret = ret.concat(getTransitionRawChildren(child.children, keepComment, key));
 	        }
@@ -4078,7 +4078,7 @@ reactivity_cjs_prod.unref = unref;
 	    // these children to force full diffs to ensure correct behavior.
 	    if (keyedFragmentCount > 1) {
 	        for (let i = 0; i < ret.length; i++) {
-	            ret[i].patchFlag = -2 /* BAIL */;
+	            ret[i].patchFlag = -2 /* PatchFlags.BAIL */;
 	        }
 	    }
 	    return ret;
@@ -4149,7 +4149,7 @@ reactivity_cjs_prod.unref = unref;
 	            }
 	            const onError = (err) => {
 	                pendingRequest = null;
-	                handleError(err, instance, 13 /* ASYNC_COMPONENT_LOADER */, !errorComponent /* do not throw in dev if user provided error component */);
+	                handleError(err, instance, 13 /* ErrorCodes.ASYNC_COMPONENT_LOADER */, !errorComponent /* do not throw in dev if user provided error component */);
 	            };
 	            // suspense-controlled or SSR.
 	            if ((suspensible && instance.suspense) ||
@@ -4256,7 +4256,7 @@ reactivity_cjs_prod.unref = unref;
 	        const storageContainer = createElement('div');
 	        sharedContext.activate = (vnode, container, anchor, isSVG, optimized) => {
 	            const instance = vnode.component;
-	            move(vnode, container, anchor, 0 /* ENTER */, parentSuspense);
+	            move(vnode, container, anchor, 0 /* MoveType.ENTER */, parentSuspense);
 	            // in case props have changed
 	            patch(instance.vnode, vnode, container, anchor, instance, parentSuspense, isSVG, vnode.slotScopeIds, optimized);
 	            queuePostRenderEffect(() => {
@@ -4272,7 +4272,7 @@ reactivity_cjs_prod.unref = unref;
 	        };
 	        sharedContext.deactivate = (vnode) => {
 	            const instance = vnode.component;
-	            move(vnode, storageContainer, null, 1 /* LEAVE */, parentSuspense);
+	            move(vnode, storageContainer, null, 1 /* MoveType.LEAVE */, parentSuspense);
 	            queuePostRenderEffect(() => {
 	                if (instance.da) {
 	                    shared.invokeArrayFns(instance.da);
@@ -4354,8 +4354,8 @@ reactivity_cjs_prod.unref = unref;
 	                return children;
 	            }
 	            else if (!isVNode(rawVNode) ||
-	                (!(rawVNode.shapeFlag & 4 /* STATEFUL_COMPONENT */) &&
-	                    !(rawVNode.shapeFlag & 128 /* SUSPENSE */))) {
+	                (!(rawVNode.shapeFlag & 4 /* ShapeFlags.STATEFUL_COMPONENT */) &&
+	                    !(rawVNode.shapeFlag & 128 /* ShapeFlags.SUSPENSE */))) {
 	                current = null;
 	                return rawVNode;
 	            }
@@ -4377,7 +4377,7 @@ reactivity_cjs_prod.unref = unref;
 	            // clone vnode if it's reused because we are going to mutate it
 	            if (vnode.el) {
 	                vnode = cloneVNode(vnode);
-	                if (rawVNode.shapeFlag & 128 /* SUSPENSE */) {
+	                if (rawVNode.shapeFlag & 128 /* ShapeFlags.SUSPENSE */) {
 	                    rawVNode.ssContent = vnode;
 	                }
 	            }
@@ -4396,7 +4396,7 @@ reactivity_cjs_prod.unref = unref;
 	                    setTransitionHooks(vnode, vnode.transition);
 	                }
 	                // avoid vnode being mounted as fresh
-	                vnode.shapeFlag |= 512 /* COMPONENT_KEPT_ALIVE */;
+	                vnode.shapeFlag |= 512 /* ShapeFlags.COMPONENT_KEPT_ALIVE */;
 	                // make this key the freshest
 	                keys.delete(key);
 	                keys.add(key);
@@ -4409,7 +4409,7 @@ reactivity_cjs_prod.unref = unref;
 	                }
 	            }
 	            // avoid vnode being unmounted
-	            vnode.shapeFlag |= 256 /* COMPONENT_SHOULD_KEEP_ALIVE */;
+	            vnode.shapeFlag |= 256 /* ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE */;
 	            current = vnode;
 	            return isSuspense(rawVNode.type) ? rawVNode : vnode;
 	        };
@@ -4432,10 +4432,10 @@ reactivity_cjs_prod.unref = unref;
 	    return false;
 	}
 	function onActivated(hook, target) {
-	    registerKeepAliveHook(hook, "a" /* ACTIVATED */, target);
+	    registerKeepAliveHook(hook, "a" /* LifecycleHooks.ACTIVATED */, target);
 	}
 	function onDeactivated(hook, target) {
-	    registerKeepAliveHook(hook, "da" /* DEACTIVATED */, target);
+	    registerKeepAliveHook(hook, "da" /* LifecycleHooks.DEACTIVATED */, target);
 	}
 	function registerKeepAliveHook(hook, type, target = currentInstance) {
 	    // cache the deactivate branch check wrapper for injected hooks so the same
@@ -4479,16 +4479,16 @@ reactivity_cjs_prod.unref = unref;
 	}
 	function resetShapeFlag(vnode) {
 	    let shapeFlag = vnode.shapeFlag;
-	    if (shapeFlag & 256 /* COMPONENT_SHOULD_KEEP_ALIVE */) {
-	        shapeFlag -= 256 /* COMPONENT_SHOULD_KEEP_ALIVE */;
+	    if (shapeFlag & 256 /* ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE */) {
+	        shapeFlag -= 256 /* ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE */;
 	    }
-	    if (shapeFlag & 512 /* COMPONENT_KEPT_ALIVE */) {
-	        shapeFlag -= 512 /* COMPONENT_KEPT_ALIVE */;
+	    if (shapeFlag & 512 /* ShapeFlags.COMPONENT_KEPT_ALIVE */) {
+	        shapeFlag -= 512 /* ShapeFlags.COMPONENT_KEPT_ALIVE */;
 	    }
 	    vnode.shapeFlag = shapeFlag;
 	}
 	function getInnerChild(vnode) {
-	    return vnode.shapeFlag & 128 /* SUSPENSE */ ? vnode.ssContent : vnode;
+	    return vnode.shapeFlag & 128 /* ShapeFlags.SUSPENSE */ ? vnode.ssContent : vnode;
 	}
 
 	function injectHook(type, hook, target = currentInstance, prepend = false) {
@@ -4525,19 +4525,19 @@ reactivity_cjs_prod.unref = unref;
 	}
 	const createHook = (lifecycle) => (hook, target = currentInstance) => 
 	// post-create lifecycle registrations are noops during SSR (except for serverPrefetch)
-	(!isInSSRComponentSetup || lifecycle === "sp" /* SERVER_PREFETCH */) &&
+	(!isInSSRComponentSetup || lifecycle === "sp" /* LifecycleHooks.SERVER_PREFETCH */) &&
 	    injectHook(lifecycle, hook, target);
-	const onBeforeMount = createHook("bm" /* BEFORE_MOUNT */);
-	const onMounted = createHook("m" /* MOUNTED */);
-	const onBeforeUpdate = createHook("bu" /* BEFORE_UPDATE */);
-	const onUpdated = createHook("u" /* UPDATED */);
-	const onBeforeUnmount = createHook("bum" /* BEFORE_UNMOUNT */);
-	const onUnmounted = createHook("um" /* UNMOUNTED */);
-	const onServerPrefetch = createHook("sp" /* SERVER_PREFETCH */);
-	const onRenderTriggered = createHook("rtg" /* RENDER_TRIGGERED */);
-	const onRenderTracked = createHook("rtc" /* RENDER_TRACKED */);
+	const onBeforeMount = createHook("bm" /* LifecycleHooks.BEFORE_MOUNT */);
+	const onMounted = createHook("m" /* LifecycleHooks.MOUNTED */);
+	const onBeforeUpdate = createHook("bu" /* LifecycleHooks.BEFORE_UPDATE */);
+	const onUpdated = createHook("u" /* LifecycleHooks.UPDATED */);
+	const onBeforeUnmount = createHook("bum" /* LifecycleHooks.BEFORE_UNMOUNT */);
+	const onUnmounted = createHook("um" /* LifecycleHooks.UNMOUNTED */);
+	const onServerPrefetch = createHook("sp" /* LifecycleHooks.SERVER_PREFETCH */);
+	const onRenderTriggered = createHook("rtg" /* LifecycleHooks.RENDER_TRIGGERED */);
+	const onRenderTracked = createHook("rtc" /* LifecycleHooks.RENDER_TRACKED */);
 	function onErrorCaptured(hook, target = currentInstance) {
-	    injectHook("ec" /* ERROR_CAPTURED */, hook, target);
+	    injectHook("ec" /* LifecycleHooks.ERROR_CAPTURED */, hook, target);
 	}
 
 	/**
@@ -4598,7 +4598,7 @@ reactivity_cjs_prod.unref = unref;
 	            // disable tracking inside all lifecycle hooks
 	            // since they can potentially be called inside effects.
 	            reactivity$1.pauseTracking();
-	            callWithAsyncErrorHandling(hook, instance, 8 /* DIRECTIVE_HOOK */, [
+	            callWithAsyncErrorHandling(hook, instance, 8 /* ErrorCodes.DIRECTIVE_HOOK */, [
 	                vnode.el,
 	                binding,
 	                vnode,
@@ -4726,7 +4726,13 @@ reactivity_cjs_prod.unref = unref;
 	        }
 	        else if (slot) {
 	            // conditional single slot generated by <template v-if="..." #foo>
-	            slots[slot.name] = slot.fn;
+	            slots[slot.name] = slot.key
+	                ? (...args) => {
+	                    const res = slot.fn(...args);
+	                    res.key = slot.key;
+	                    return res;
+	                }
+	                : slot.fn;
 	        }
 	    }
 	    return slots;
@@ -4756,9 +4762,15 @@ reactivity_cjs_prod.unref = unref;
 	    }
 	    openBlock();
 	    const validSlotContent = slot && ensureValidVNode(slot(props));
-	    const rendered = createBlock(Fragment, { key: props.key || `_${name}` }, validSlotContent || (fallback ? fallback() : []), validSlotContent && slots._ === 1 /* STABLE */
-	        ? 64 /* STABLE_FRAGMENT */
-	        : -2 /* BAIL */);
+	    const rendered = createBlock(Fragment, {
+	        key: props.key ||
+	            // slot content array of a dynamic conditional slot may have a branch
+	            // key attached in the `createSlots` helper, respect that
+	            (validSlotContent && validSlotContent.key) ||
+	            `_${name}`
+	    }, validSlotContent || (fallback ? fallback() : []), validSlotContent && slots._ === 1 /* SlotFlags.STABLE */
+	        ? 64 /* PatchFlags.STABLE_FRAGMENT */
+	        : -2 /* PatchFlags.BAIL */);
 	    if (!noSlotted && rendered.scopeId) {
 	        rendered.slotScopeIds = [rendered.scopeId + '-s'];
 	    }
@@ -4786,10 +4798,12 @@ reactivity_cjs_prod.unref = unref;
 	 * For prefixing keys in v-on="obj" with "on"
 	 * @private
 	 */
-	function toHandlers(obj) {
+	function toHandlers(obj, preserveCaseIfNecessary) {
 	    const ret = {};
 	    for (const key in obj) {
-	        ret[shared.toHandlerKey(key)] = obj[key];
+	        ret[preserveCaseIfNecessary && /[A-Z]/.test(key)
+	            ? `on:${key}`
+	            : shared.toHandlerKey(key)] = obj[key];
 	    }
 	    return ret;
 	}
@@ -4839,23 +4853,23 @@ reactivity_cjs_prod.unref = unref;
 	            const n = accessCache[key];
 	            if (n !== undefined) {
 	                switch (n) {
-	                    case 1 /* SETUP */:
+	                    case 1 /* AccessTypes.SETUP */:
 	                        return setupState[key];
-	                    case 2 /* DATA */:
+	                    case 2 /* AccessTypes.DATA */:
 	                        return data[key];
-	                    case 4 /* CONTEXT */:
+	                    case 4 /* AccessTypes.CONTEXT */:
 	                        return ctx[key];
-	                    case 3 /* PROPS */:
+	                    case 3 /* AccessTypes.PROPS */:
 	                        return props[key];
 	                    // default: just fallthrough
 	                }
 	            }
 	            else if (setupState !== shared.EMPTY_OBJ && shared.hasOwn(setupState, key)) {
-	                accessCache[key] = 1 /* SETUP */;
+	                accessCache[key] = 1 /* AccessTypes.SETUP */;
 	                return setupState[key];
 	            }
 	            else if (data !== shared.EMPTY_OBJ && shared.hasOwn(data, key)) {
-	                accessCache[key] = 2 /* DATA */;
+	                accessCache[key] = 2 /* AccessTypes.DATA */;
 	                return data[key];
 	            }
 	            else if (
@@ -4863,15 +4877,15 @@ reactivity_cjs_prod.unref = unref;
 	            // props
 	            (normalizedProps = instance.propsOptions[0]) &&
 	                shared.hasOwn(normalizedProps, key)) {
-	                accessCache[key] = 3 /* PROPS */;
+	                accessCache[key] = 3 /* AccessTypes.PROPS */;
 	                return props[key];
 	            }
 	            else if (ctx !== shared.EMPTY_OBJ && shared.hasOwn(ctx, key)) {
-	                accessCache[key] = 4 /* CONTEXT */;
+	                accessCache[key] = 4 /* AccessTypes.CONTEXT */;
 	                return ctx[key];
 	            }
 	            else if (shouldCacheAccess) {
-	                accessCache[key] = 0 /* OTHER */;
+	                accessCache[key] = 0 /* AccessTypes.OTHER */;
 	            }
 	        }
 	        const publicGetter = publicPropertiesMap[key];
@@ -4879,7 +4893,7 @@ reactivity_cjs_prod.unref = unref;
 	        // public $xxx properties
 	        if (publicGetter) {
 	            if (key === '$attrs') {
-	                reactivity$1.track(instance, "get" /* GET */, key);
+	                reactivity$1.track(instance, "get" /* TrackOpTypes.GET */, key);
 	            }
 	            return publicGetter(instance);
 	        }
@@ -4891,7 +4905,7 @@ reactivity_cjs_prod.unref = unref;
 	        }
 	        else if (ctx !== shared.EMPTY_OBJ && shared.hasOwn(ctx, key)) {
 	            // user may set custom properties to `this` that start with `$`
-	            accessCache[key] = 4 /* CONTEXT */;
+	            accessCache[key] = 4 /* AccessTypes.CONTEXT */;
 	            return ctx[key];
 	        }
 	        else if (
@@ -4972,7 +4986,7 @@ reactivity_cjs_prod.unref = unref;
 	    // call beforeCreate first before accessing other options since
 	    // the hook may mutate resolved options (#2791)
 	    if (options.beforeCreate) {
-	        callHook(options.beforeCreate, instance, "bc" /* BEFORE_CREATE */);
+	        callHook(options.beforeCreate, instance, "bc" /* LifecycleHooks.BEFORE_CREATE */);
 	    }
 	    const { 
 	    // state
@@ -5053,7 +5067,7 @@ reactivity_cjs_prod.unref = unref;
 	        });
 	    }
 	    if (created) {
-	        callHook(created, instance, "c" /* CREATED */);
+	        callHook(created, instance, "c" /* LifecycleHooks.CREATED */);
 	    }
 	    function registerLifecycleHook(register, hook) {
 	        if (shared.isArray(hook)) {
@@ -5199,7 +5213,9 @@ reactivity_cjs_prod.unref = unref;
 	        }
 	        mergeOptions(resolved, base, optionMergeStrategies);
 	    }
-	    cache.set(base, resolved);
+	    if (shared.isObject(base)) {
+	        cache.set(base, resolved);
+	    }
 	    return resolved;
 	}
 	function mergeOptions(to, from, strats, asMixin = false) {
@@ -5331,8 +5347,8 @@ reactivity_cjs_prod.unref = unref;
 	    // - #1942 if hmr is enabled with sfc component
 	    // - vite#872 non-sfc component used by sfc component
 	    (optimized || patchFlag > 0) &&
-	        !(patchFlag & 16 /* FULL_PROPS */)) {
-	        if (patchFlag & 8 /* PROPS */) {
+	        !(patchFlag & 16 /* PatchFlags.FULL_PROPS */)) {
+	        if (patchFlag & 8 /* PatchFlags.PROPS */) {
 	            // Compiler-generated props & no keys change, just set the updated
 	            // the props.
 	            const propsToUpdate = instance.vnode.dynamicProps;
@@ -5411,7 +5427,7 @@ reactivity_cjs_prod.unref = unref;
 	    }
 	    // trigger updates for $attrs in case it's used in component slots
 	    if (hasAttrsChanged) {
-	        reactivity$1.trigger(instance, "set" /* SET */, '$attrs');
+	        reactivity$1.trigger(instance, "set" /* TriggerOpTypes.SET */, '$attrs');
 	    }
 	}
 	function setFullProps(instance, rawProps, props, attrs) {
@@ -5477,11 +5493,11 @@ reactivity_cjs_prod.unref = unref;
 	            }
 	        }
 	        // boolean casting
-	        if (opt[0 /* shouldCast */]) {
+	        if (opt[0 /* BooleanFlags.shouldCast */]) {
 	            if (isAbsent && !hasDefault) {
 	                value = false;
 	            }
-	            else if (opt[1 /* shouldCastTrue */] &&
+	            else if (opt[1 /* BooleanFlags.shouldCastTrue */] &&
 	                (value === '' || value === shared.hyphenate(key))) {
 	                value = true;
 	            }
@@ -5519,7 +5535,9 @@ reactivity_cjs_prod.unref = unref;
 	        }
 	    }
 	    if (!raw && !hasExtends) {
-	        cache.set(comp, shared.EMPTY_ARR);
+	        if (shared.isObject(comp)) {
+	            cache.set(comp, shared.EMPTY_ARR);
+	        }
 	        return shared.EMPTY_ARR;
 	    }
 	    if (shared.isArray(raw)) {
@@ -5540,8 +5558,8 @@ reactivity_cjs_prod.unref = unref;
 	                if (prop) {
 	                    const booleanIndex = getTypeIndex(Boolean, prop.type);
 	                    const stringIndex = getTypeIndex(String, prop.type);
-	                    prop[0 /* shouldCast */] = booleanIndex > -1;
-	                    prop[1 /* shouldCastTrue */] =
+	                    prop[0 /* BooleanFlags.shouldCast */] = booleanIndex > -1;
+	                    prop[1 /* BooleanFlags.shouldCastTrue */] =
 	                        stringIndex < 0 || booleanIndex < stringIndex;
 	                    // if the prop needs boolean casting or default value
 	                    if (booleanIndex > -1 || shared.hasOwn(prop, 'default')) {
@@ -5552,7 +5570,9 @@ reactivity_cjs_prod.unref = unref;
 	        }
 	    }
 	    const res = [normalized, needCastKeys];
-	    cache.set(comp, res);
+	    if (shared.isObject(comp)) {
+	        cache.set(comp, res);
+	    }
 	    return res;
 	}
 	function validatePropName(key) {
@@ -5615,7 +5635,7 @@ reactivity_cjs_prod.unref = unref;
 	    instance.slots.default = () => normalized;
 	};
 	const initSlots = (instance, children) => {
-	    if (instance.vnode.shapeFlag & 32 /* SLOTS_CHILDREN */) {
+	    if (instance.vnode.shapeFlag & 32 /* ShapeFlags.SLOTS_CHILDREN */) {
 	        const type = children._;
 	        if (type) {
 	            // users can get the shallow readonly version of the slots object through `this.$slots`,
@@ -5640,11 +5660,11 @@ reactivity_cjs_prod.unref = unref;
 	    const { vnode, slots } = instance;
 	    let needDeletionCheck = true;
 	    let deletionComparisonTarget = shared.EMPTY_OBJ;
-	    if (vnode.shapeFlag & 32 /* SLOTS_CHILDREN */) {
+	    if (vnode.shapeFlag & 32 /* ShapeFlags.SLOTS_CHILDREN */) {
 	        const type = children._;
 	        if (type) {
 	            // compiled slots.
-	            if (optimized && type === 1 /* STABLE */) {
+	            if (optimized && type === 1 /* SlotFlags.STABLE */) {
 	                // compiled AND stable.
 	                // no need to update, and skip stale slots removal.
 	                needDeletionCheck = false;
@@ -5657,7 +5677,7 @@ reactivity_cjs_prod.unref = unref;
 	                // when rendering the optimized slots by manually written render function,
 	                // we need to delete the `slots._` flag if necessary to make subsequent updates reliable,
 	                // i.e. let the `renderSlot` create the bailed Fragment
-	                if (!optimized && type === 1 /* STABLE */) {
+	                if (!optimized && type === 1 /* SlotFlags.STABLE */) {
 	                    delete slots._;
 	                }
 	            }
@@ -5810,7 +5830,7 @@ reactivity_cjs_prod.unref = unref;
 	        // because the template ref is forwarded to inner component
 	        return;
 	    }
-	    const refValue = vnode.shapeFlag & 4 /* STATEFUL_COMPONENT */
+	    const refValue = vnode.shapeFlag & 4 /* ShapeFlags.STATEFUL_COMPONENT */
 	        ? getExposeProxy(vnode.component) || vnode.component.proxy
 	        : vnode.el;
 	    const value = isUnmount ? null : refValue;
@@ -5831,7 +5851,7 @@ reactivity_cjs_prod.unref = unref;
 	        }
 	    }
 	    if (shared.isFunction(ref)) {
-	        callWithErrorHandling(ref, owner, 12 /* FUNCTION_REF */, [value, refs]);
+	        callWithErrorHandling(ref, owner, 12 /* ErrorCodes.FUNCTION_REF */, [value, refs]);
 	    }
 	    else {
 	        const _isString = shared.isString(ref);
@@ -5888,7 +5908,7 @@ reactivity_cjs_prod.unref = unref;
 
 	let hasMismatch = false;
 	const isSVGContainer = (container) => /svg/.test(container.namespaceURI) && container.tagName !== 'foreignObject';
-	const isComment = (node) => node.nodeType === 8 /* COMMENT */;
+	const isComment = (node) => node.nodeType === 8 /* DOMNodeTypes.COMMENT */;
 	// Note: hydration is DOM-specific
 	// But we have to place it in core due to tight coupling with core - splitting
 	// it out creates a ton of unnecessary complexity.
@@ -5918,14 +5938,14 @@ reactivity_cjs_prod.unref = unref;
 	        const { type, ref, shapeFlag, patchFlag } = vnode;
 	        const domType = node.nodeType;
 	        vnode.el = node;
-	        if (patchFlag === -2 /* BAIL */) {
+	        if (patchFlag === -2 /* PatchFlags.BAIL */) {
 	            optimized = false;
 	            vnode.dynamicChildren = null;
 	        }
 	        let nextNode = null;
 	        switch (type) {
 	            case Text:
-	                if (domType !== 3 /* TEXT */) {
+	                if (domType !== 3 /* DOMNodeTypes.TEXT */) {
 	                    // #5728 empty text node inside a slot can cause hydration failure
 	                    // because the server rendered HTML won't contain a text node
 	                    if (vnode.children === '') {
@@ -5945,7 +5965,7 @@ reactivity_cjs_prod.unref = unref;
 	                }
 	                break;
 	            case Comment:
-	                if (domType !== 8 /* COMMENT */ || isFragmentStart) {
+	                if (domType !== 8 /* DOMNodeTypes.COMMENT */ || isFragmentStart) {
 	                    nextNode = onMismatch();
 	                }
 	                else {
@@ -5953,7 +5973,7 @@ reactivity_cjs_prod.unref = unref;
 	                }
 	                break;
 	            case Static:
-	                if (domType !== 1 /* ELEMENT */ && domType !== 3 /* TEXT */) {
+	                if (domType !== 1 /* DOMNodeTypes.ELEMENT */ && domType !== 3 /* DOMNodeTypes.TEXT */) {
 	                    nextNode = onMismatch();
 	                }
 	                else {
@@ -5965,7 +5985,7 @@ reactivity_cjs_prod.unref = unref;
 	                    for (let i = 0; i < vnode.staticCount; i++) {
 	                        if (needToAdoptContent)
 	                            vnode.children +=
-	                                nextNode.nodeType === 1 /* ELEMENT */
+	                                nextNode.nodeType === 1 /* DOMNodeTypes.ELEMENT */
 	                                    ? nextNode.outerHTML
 	                                    : nextNode.data;
 	                        if (i === vnode.staticCount - 1) {
@@ -5985,8 +6005,8 @@ reactivity_cjs_prod.unref = unref;
 	                }
 	                break;
 	            default:
-	                if (shapeFlag & 1 /* ELEMENT */) {
-	                    if (domType !== 1 /* ELEMENT */ ||
+	                if (shapeFlag & 1 /* ShapeFlags.ELEMENT */) {
+	                    if (domType !== 1 /* DOMNodeTypes.ELEMENT */ ||
 	                        vnode.type.toLowerCase() !==
 	                            node.tagName.toLowerCase()) {
 	                        nextNode = onMismatch();
@@ -5995,7 +6015,7 @@ reactivity_cjs_prod.unref = unref;
 	                        nextNode = hydrateElement(node, vnode, parentComponent, parentSuspense, slotScopeIds, optimized);
 	                    }
 	                }
-	                else if (shapeFlag & 6 /* COMPONENT */) {
+	                else if (shapeFlag & 6 /* ShapeFlags.COMPONENT */) {
 	                    // when setting up the render effect, if the initial vnode already
 	                    // has .el set, the component will perform hydration instead of mount
 	                    // on its sub-tree.
@@ -6034,15 +6054,15 @@ reactivity_cjs_prod.unref = unref;
 	                        vnode.component.subTree = subTree;
 	                    }
 	                }
-	                else if (shapeFlag & 64 /* TELEPORT */) {
-	                    if (domType !== 8 /* COMMENT */) {
+	                else if (shapeFlag & 64 /* ShapeFlags.TELEPORT */) {
+	                    if (domType !== 8 /* DOMNodeTypes.COMMENT */) {
 	                        nextNode = onMismatch();
 	                    }
 	                    else {
 	                        nextNode = vnode.type.hydrate(node, vnode, parentComponent, parentSuspense, slotScopeIds, optimized, rendererInternals, hydrateChildren);
 	                    }
 	                }
-	                else if (shapeFlag & 128 /* SUSPENSE */) {
+	                else if (shapeFlag & 128 /* ShapeFlags.SUSPENSE */) {
 	                    nextNode = vnode.type.hydrate(node, vnode, parentComponent, parentSuspense, isSVGContainer(parentNode(node)), slotScopeIds, optimized, rendererInternals, hydrateNode);
 	                }
 	                else ;
@@ -6060,7 +6080,7 @@ reactivity_cjs_prod.unref = unref;
 	        const forcePatchValue = (type === 'input' && dirs) || type === 'option';
 	        // skip props & children if this is hoisted static nodes
 	        // #5405 in dev, always hydrate children for HMR
-	        if (forcePatchValue || patchFlag !== -1 /* HOISTED */) {
+	        if (forcePatchValue || patchFlag !== -1 /* PatchFlags.HOISTED */) {
 	            if (dirs) {
 	                invokeDirectiveHook(vnode, null, parentComponent, 'created');
 	            }
@@ -6068,7 +6088,7 @@ reactivity_cjs_prod.unref = unref;
 	            if (props) {
 	                if (forcePatchValue ||
 	                    !optimized ||
-	                    patchFlag & (16 /* FULL_PROPS */ | 32 /* HYDRATE_EVENTS */)) {
+	                    patchFlag & (16 /* PatchFlags.FULL_PROPS */ | 32 /* PatchFlags.HYDRATE_EVENTS */)) {
 	                    for (const key in props) {
 	                        if ((forcePatchValue && key.endsWith('value')) ||
 	                            (shared.isOn(key) && !shared.isReservedProp(key))) {
@@ -6097,7 +6117,7 @@ reactivity_cjs_prod.unref = unref;
 	                }, parentSuspense);
 	            }
 	            // children
-	            if (shapeFlag & 16 /* ARRAY_CHILDREN */ &&
+	            if (shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */ &&
 	                // skip if element has innerHTML / textContent
 	                !(props && (props.innerHTML || props.textContent))) {
 	                let next = hydrateChildren(el.firstChild, vnode, el, parentComponent, parentSuspense, slotScopeIds, optimized);
@@ -6109,7 +6129,7 @@ reactivity_cjs_prod.unref = unref;
 	                    remove(cur);
 	                }
 	            }
-	            else if (shapeFlag & 8 /* TEXT_CHILDREN */) {
+	            else if (shapeFlag & 8 /* ShapeFlags.TEXT_CHILDREN */) {
 	                if (el.textContent !== vnode.children) {
 	                    hasMismatch = true;
 	                    el.textContent = vnode.children;
@@ -6248,7 +6268,7 @@ reactivity_cjs_prod.unref = unref;
 	            unmount(n1, parentComponent, parentSuspense, true);
 	            n1 = null;
 	        }
-	        if (n2.patchFlag === -2 /* BAIL */) {
+	        if (n2.patchFlag === -2 /* PatchFlags.BAIL */) {
 	            optimized = false;
 	            n2.dynamicChildren = null;
 	        }
@@ -6269,16 +6289,16 @@ reactivity_cjs_prod.unref = unref;
 	                processFragment(n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized);
 	                break;
 	            default:
-	                if (shapeFlag & 1 /* ELEMENT */) {
+	                if (shapeFlag & 1 /* ShapeFlags.ELEMENT */) {
 	                    processElement(n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized);
 	                }
-	                else if (shapeFlag & 6 /* COMPONENT */) {
+	                else if (shapeFlag & 6 /* ShapeFlags.COMPONENT */) {
 	                    processComponent(n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized);
 	                }
-	                else if (shapeFlag & 64 /* TELEPORT */) {
+	                else if (shapeFlag & 64 /* ShapeFlags.TELEPORT */) {
 	                    type.process(n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized, internals);
 	                }
-	                else if (shapeFlag & 128 /* SUSPENSE */) {
+	                else if (shapeFlag & 128 /* ShapeFlags.SUSPENSE */) {
 	                    type.process(n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized, internals);
 	                }
 	                else ;
@@ -6344,7 +6364,7 @@ reactivity_cjs_prod.unref = unref;
 	        const { type, props, shapeFlag, transition, patchFlag, dirs } = vnode;
 	        if (vnode.el &&
 	            hostCloneNode !== undefined &&
-	            patchFlag === -1 /* HOISTED */) {
+	            patchFlag === -1 /* PatchFlags.HOISTED */) {
 	            // If a vnode has non-null el, it means it's being reused.
 	            // Only static vnodes can be reused, so its mounted DOM nodes should be
 	            // exactly the same, and we can simply do a clone here.
@@ -6355,10 +6375,10 @@ reactivity_cjs_prod.unref = unref;
 	            el = vnode.el = hostCreateElement(vnode.type, isSVG, props && props.is, props);
 	            // mount children first, since some props may rely on child content
 	            // being already rendered, e.g. `<select value>`
-	            if (shapeFlag & 8 /* TEXT_CHILDREN */) {
+	            if (shapeFlag & 8 /* ShapeFlags.TEXT_CHILDREN */) {
 	                hostSetElementText(el, vnode.children);
 	            }
-	            else if (shapeFlag & 16 /* ARRAY_CHILDREN */) {
+	            else if (shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
 	                mountChildren(vnode.children, el, null, parentComponent, parentSuspense, isSVG && type !== 'foreignObject', slotScopeIds, optimized);
 	            }
 	            if (dirs) {
@@ -6442,7 +6462,7 @@ reactivity_cjs_prod.unref = unref;
 	        let { patchFlag, dynamicChildren, dirs } = n2;
 	        // #1426 take the old vnode's patch flag into account since user may clone a
 	        // compiler-generated vnode, which de-opts to FULL_PROPS
-	        patchFlag |= n1.patchFlag & 16 /* FULL_PROPS */;
+	        patchFlag |= n1.patchFlag & 16 /* PatchFlags.FULL_PROPS */;
 	        const oldProps = n1.props || shared.EMPTY_OBJ;
 	        const newProps = n2.props || shared.EMPTY_OBJ;
 	        let vnodeHook;
@@ -6468,21 +6488,21 @@ reactivity_cjs_prod.unref = unref;
 	            // generated by the compiler and can take the fast path.
 	            // in this path old node and new node are guaranteed to have the same shape
 	            // (i.e. at the exact same position in the source template)
-	            if (patchFlag & 16 /* FULL_PROPS */) {
+	            if (patchFlag & 16 /* PatchFlags.FULL_PROPS */) {
 	                // element props contain dynamic keys, full diff needed
 	                patchProps(el, n2, oldProps, newProps, parentComponent, parentSuspense, isSVG);
 	            }
 	            else {
 	                // class
 	                // this flag is matched when the element has dynamic class bindings.
-	                if (patchFlag & 2 /* CLASS */) {
+	                if (patchFlag & 2 /* PatchFlags.CLASS */) {
 	                    if (oldProps.class !== newProps.class) {
 	                        hostPatchProp(el, 'class', null, newProps.class, isSVG);
 	                    }
 	                }
 	                // style
 	                // this flag is matched when the element has dynamic style bindings
-	                if (patchFlag & 4 /* STYLE */) {
+	                if (patchFlag & 4 /* PatchFlags.STYLE */) {
 	                    hostPatchProp(el, 'style', oldProps.style, newProps.style, isSVG);
 	                }
 	                // props
@@ -6491,7 +6511,7 @@ reactivity_cjs_prod.unref = unref;
 	                // faster iteration.
 	                // Note dynamic keys like :[foo]="bar" will cause this optimization to
 	                // bail out and go through a full diff because we need to unset the old key
-	                if (patchFlag & 8 /* PROPS */) {
+	                if (patchFlag & 8 /* PatchFlags.PROPS */) {
 	                    // if the flag is present then dynamicProps must be non-null
 	                    const propsToUpdate = n2.dynamicProps;
 	                    for (let i = 0; i < propsToUpdate.length; i++) {
@@ -6507,7 +6527,7 @@ reactivity_cjs_prod.unref = unref;
 	            }
 	            // text
 	            // This flag is matched when the element has only dynamic text children.
-	            if (patchFlag & 1 /* TEXT */) {
+	            if (patchFlag & 1 /* PatchFlags.TEXT */) {
 	                if (n1.children !== n2.children) {
 	                    hostSetElementText(el, n2.children);
 	                }
@@ -6541,7 +6561,7 @@ reactivity_cjs_prod.unref = unref;
 	                    // which also requires the correct parent container
 	                    !isSameVNodeType(oldVNode, newVNode) ||
 	                    // - In the case of a component, it could contain anything.
-	                    oldVNode.shapeFlag & (6 /* COMPONENT */ | 64 /* TELEPORT */))
+	                    oldVNode.shapeFlag & (6 /* ShapeFlags.COMPONENT */ | 64 /* ShapeFlags.TELEPORT */))
 	                ? hostParentNode(oldVNode.el)
 	                : // In other cases, the parent container is not actually used so we
 	                    // just pass the block element here to avoid a DOM parentNode call.
@@ -6594,7 +6614,7 @@ reactivity_cjs_prod.unref = unref;
 	        }
 	        else {
 	            if (patchFlag > 0 &&
-	                patchFlag & 64 /* STABLE_FRAGMENT */ &&
+	                patchFlag & 64 /* PatchFlags.STABLE_FRAGMENT */ &&
 	                dynamicChildren &&
 	                // #2715 the previous fragment could've been a BAILed one as a result
 	                // of renderSlot() with no valid children
@@ -6624,7 +6644,7 @@ reactivity_cjs_prod.unref = unref;
 	    const processComponent = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized) => {
 	        n2.slotScopeIds = slotScopeIds;
 	        if (n1 == null) {
-	            if (n2.shapeFlag & 512 /* COMPONENT_KEPT_ALIVE */) {
+	            if (n2.shapeFlag & 512 /* ShapeFlags.COMPONENT_KEPT_ALIVE */) {
 	                parentComponent.ctx.activate(n2, container, anchor, isSVG, optimized);
 	            }
 	            else {
@@ -6737,10 +6757,10 @@ reactivity_cjs_prod.unref = unref;
 	                // activated hook for keep-alive roots.
 	                // #1742 activated hook must be accessed after first render
 	                // since the hook may be injected by a child keep-alive
-	                if (initialVNode.shapeFlag & 256 /* COMPONENT_SHOULD_KEEP_ALIVE */ ||
+	                if (initialVNode.shapeFlag & 256 /* ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE */ ||
 	                    (parent &&
 	                        isAsyncWrapper(parent.vnode) &&
-	                        parent.vnode.shapeFlag & 256 /* COMPONENT_SHOULD_KEEP_ALIVE */)) {
+	                        parent.vnode.shapeFlag & 256 /* ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE */)) {
 	                    instance.a && queuePostRenderEffect(instance.a, parentSuspense);
 	                }
 	                instance.isMounted = true;
@@ -6817,7 +6837,7 @@ reactivity_cjs_prod.unref = unref;
 	        reactivity$1.pauseTracking();
 	        // props update may have triggered pre-flush watchers.
 	        // flush them before the render update.
-	        flushPreFlushCbs(undefined, instance.update);
+	        flushPreFlushCbs();
 	        reactivity$1.resetTracking();
 	    };
 	    const patchChildren = (n1, n2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized = false) => {
@@ -6827,22 +6847,22 @@ reactivity_cjs_prod.unref = unref;
 	        const { patchFlag, shapeFlag } = n2;
 	        // fast path
 	        if (patchFlag > 0) {
-	            if (patchFlag & 128 /* KEYED_FRAGMENT */) {
+	            if (patchFlag & 128 /* PatchFlags.KEYED_FRAGMENT */) {
 	                // this could be either fully-keyed or mixed (some keyed some not)
 	                // presence of patchFlag means children are guaranteed to be arrays
 	                patchKeyedChildren(c1, c2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized);
 	                return;
 	            }
-	            else if (patchFlag & 256 /* UNKEYED_FRAGMENT */) {
+	            else if (patchFlag & 256 /* PatchFlags.UNKEYED_FRAGMENT */) {
 	                // unkeyed
 	                patchUnkeyedChildren(c1, c2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized);
 	                return;
 	            }
 	        }
 	        // children has 3 possibilities: text, array or no children.
-	        if (shapeFlag & 8 /* TEXT_CHILDREN */) {
+	        if (shapeFlag & 8 /* ShapeFlags.TEXT_CHILDREN */) {
 	            // text children fast path
-	            if (prevShapeFlag & 16 /* ARRAY_CHILDREN */) {
+	            if (prevShapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
 	                unmountChildren(c1, parentComponent, parentSuspense);
 	            }
 	            if (c2 !== c1) {
@@ -6850,9 +6870,9 @@ reactivity_cjs_prod.unref = unref;
 	            }
 	        }
 	        else {
-	            if (prevShapeFlag & 16 /* ARRAY_CHILDREN */) {
+	            if (prevShapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
 	                // prev children was array
-	                if (shapeFlag & 16 /* ARRAY_CHILDREN */) {
+	                if (shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
 	                    // two arrays, cannot assume anything, do full diff
 	                    patchKeyedChildren(c1, c2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized);
 	                }
@@ -6864,11 +6884,11 @@ reactivity_cjs_prod.unref = unref;
 	            else {
 	                // prev children was text OR null
 	                // new children is array OR null
-	                if (prevShapeFlag & 8 /* TEXT_CHILDREN */) {
+	                if (prevShapeFlag & 8 /* ShapeFlags.TEXT_CHILDREN */) {
 	                    hostSetElementText(container, '');
 	                }
 	                // mount new if array
-	                if (shapeFlag & 16 /* ARRAY_CHILDREN */) {
+	                if (shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
 	                    mountChildren(c2, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized);
 	                }
 	            }
@@ -7056,7 +7076,7 @@ reactivity_cjs_prod.unref = unref;
 	                    // There is no stable subsequence (e.g. a reverse)
 	                    // OR current node is not among the stable sequence
 	                    if (j < 0 || i !== increasingNewIndexSequence[j]) {
-	                        move(nextChild, container, anchor, 2 /* REORDER */);
+	                        move(nextChild, container, anchor, 2 /* MoveType.REORDER */);
 	                    }
 	                    else {
 	                        j--;
@@ -7067,15 +7087,15 @@ reactivity_cjs_prod.unref = unref;
 	    };
 	    const move = (vnode, container, anchor, moveType, parentSuspense = null) => {
 	        const { el, type, transition, children, shapeFlag } = vnode;
-	        if (shapeFlag & 6 /* COMPONENT */) {
+	        if (shapeFlag & 6 /* ShapeFlags.COMPONENT */) {
 	            move(vnode.component.subTree, container, anchor, moveType);
 	            return;
 	        }
-	        if (shapeFlag & 128 /* SUSPENSE */) {
+	        if (shapeFlag & 128 /* ShapeFlags.SUSPENSE */) {
 	            vnode.suspense.move(container, anchor, moveType);
 	            return;
 	        }
-	        if (shapeFlag & 64 /* TELEPORT */) {
+	        if (shapeFlag & 64 /* ShapeFlags.TELEPORT */) {
 	            type.move(vnode, container, anchor, internals);
 	            return;
 	        }
@@ -7092,11 +7112,11 @@ reactivity_cjs_prod.unref = unref;
 	            return;
 	        }
 	        // single nodes
-	        const needTransition = moveType !== 2 /* REORDER */ &&
-	            shapeFlag & 1 /* ELEMENT */ &&
+	        const needTransition = moveType !== 2 /* MoveType.REORDER */ &&
+	            shapeFlag & 1 /* ShapeFlags.ELEMENT */ &&
 	            transition;
 	        if (needTransition) {
-	            if (moveType === 0 /* ENTER */) {
+	            if (moveType === 0 /* MoveType.ENTER */) {
 	                transition.beforeEnter(el);
 	                hostInsert(el, container, anchor);
 	                queuePostRenderEffect(() => transition.enter(el), parentSuspense);
@@ -7128,42 +7148,42 @@ reactivity_cjs_prod.unref = unref;
 	        if (ref != null) {
 	            setRef(ref, null, parentSuspense, vnode, true);
 	        }
-	        if (shapeFlag & 256 /* COMPONENT_SHOULD_KEEP_ALIVE */) {
+	        if (shapeFlag & 256 /* ShapeFlags.COMPONENT_SHOULD_KEEP_ALIVE */) {
 	            parentComponent.ctx.deactivate(vnode);
 	            return;
 	        }
-	        const shouldInvokeDirs = shapeFlag & 1 /* ELEMENT */ && dirs;
+	        const shouldInvokeDirs = shapeFlag & 1 /* ShapeFlags.ELEMENT */ && dirs;
 	        const shouldInvokeVnodeHook = !isAsyncWrapper(vnode);
 	        let vnodeHook;
 	        if (shouldInvokeVnodeHook &&
 	            (vnodeHook = props && props.onVnodeBeforeUnmount)) {
 	            invokeVNodeHook(vnodeHook, parentComponent, vnode);
 	        }
-	        if (shapeFlag & 6 /* COMPONENT */) {
+	        if (shapeFlag & 6 /* ShapeFlags.COMPONENT */) {
 	            unmountComponent(vnode.component, parentSuspense, doRemove);
 	        }
 	        else {
-	            if (shapeFlag & 128 /* SUSPENSE */) {
+	            if (shapeFlag & 128 /* ShapeFlags.SUSPENSE */) {
 	                vnode.suspense.unmount(parentSuspense, doRemove);
 	                return;
 	            }
 	            if (shouldInvokeDirs) {
 	                invokeDirectiveHook(vnode, null, parentComponent, 'beforeUnmount');
 	            }
-	            if (shapeFlag & 64 /* TELEPORT */) {
+	            if (shapeFlag & 64 /* ShapeFlags.TELEPORT */) {
 	                vnode.type.remove(vnode, parentComponent, parentSuspense, optimized, internals, doRemove);
 	            }
 	            else if (dynamicChildren &&
 	                // #1153: fast path should not be taken for non-stable (v-for) fragments
 	                (type !== Fragment ||
-	                    (patchFlag > 0 && patchFlag & 64 /* STABLE_FRAGMENT */))) {
+	                    (patchFlag > 0 && patchFlag & 64 /* PatchFlags.STABLE_FRAGMENT */))) {
 	                // fast path for block nodes: only need to unmount dynamic children.
 	                unmountChildren(dynamicChildren, parentComponent, parentSuspense, false, true);
 	            }
 	            else if ((type === Fragment &&
 	                patchFlag &
-	                    (128 /* KEYED_FRAGMENT */ | 256 /* UNKEYED_FRAGMENT */)) ||
-	                (!optimized && shapeFlag & 16 /* ARRAY_CHILDREN */)) {
+	                    (128 /* PatchFlags.KEYED_FRAGMENT */ | 256 /* PatchFlags.UNKEYED_FRAGMENT */)) ||
+	                (!optimized && shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */)) {
 	                unmountChildren(children, parentComponent, parentSuspense);
 	            }
 	            if (doRemove) {
@@ -7198,7 +7218,7 @@ reactivity_cjs_prod.unref = unref;
 	                transition.afterLeave();
 	            }
 	        };
-	        if (vnode.shapeFlag & 1 /* ELEMENT */ &&
+	        if (vnode.shapeFlag & 1 /* ShapeFlags.ELEMENT */ &&
 	            transition &&
 	            !transition.persisted) {
 	            const { leave, delayLeave } = transition;
@@ -7268,10 +7288,10 @@ reactivity_cjs_prod.unref = unref;
 	        }
 	    };
 	    const getNextHostNode = vnode => {
-	        if (vnode.shapeFlag & 6 /* COMPONENT */) {
+	        if (vnode.shapeFlag & 6 /* ShapeFlags.COMPONENT */) {
 	            return getNextHostNode(vnode.component.subTree);
 	        }
-	        if (vnode.shapeFlag & 128 /* SUSPENSE */) {
+	        if (vnode.shapeFlag & 128 /* ShapeFlags.SUSPENSE */) {
 	            return vnode.suspense.next();
 	        }
 	        return hostNextSibling((vnode.anchor || vnode.el));
@@ -7285,6 +7305,7 @@ reactivity_cjs_prod.unref = unref;
 	        else {
 	            patch(container._vnode || null, vnode, container, null, null, null, isSVG);
 	        }
+	        flushPreFlushCbs();
 	        flushPostFlushCbs();
 	        container._vnode = vnode;
 	    };
@@ -7334,8 +7355,8 @@ reactivity_cjs_prod.unref = unref;
 	            // guaranteed to be vnodes
 	            const c1 = ch1[i];
 	            let c2 = ch2[i];
-	            if (c2.shapeFlag & 1 /* ELEMENT */ && !c2.dynamicChildren) {
-	                if (c2.patchFlag <= 0 || c2.patchFlag === 32 /* HYDRATE_EVENTS */) {
+	            if (c2.shapeFlag & 1 /* ShapeFlags.ELEMENT */ && !c2.dynamicChildren) {
+	                if (c2.patchFlag <= 0 || c2.patchFlag === 32 /* PatchFlags.HYDRATE_EVENTS */) {
 	                    c2 = ch2[i] = cloneIfMounted(ch2[i]);
 	                    c2.el = c1.el;
 	                }
@@ -7428,7 +7449,7 @@ reactivity_cjs_prod.unref = unref;
 	            const mount = (container, anchor) => {
 	                // Teleport *always* has Array children. This is enforced in both the
 	                // compiler and vnode children normalization.
-	                if (shapeFlag & 16 /* ARRAY_CHILDREN */) {
+	                if (shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
 	                    mountChildren(children, container, anchor, parentComponent, parentSuspense, isSVG, slotScopeIds, optimized);
 	                }
 	            };
@@ -7464,7 +7485,7 @@ reactivity_cjs_prod.unref = unref;
 	                if (!wasDisabled) {
 	                    // enabled -> disabled
 	                    // move into main container
-	                    moveTeleport(n2, container, mainAnchor, internals, 1 /* TOGGLE */);
+	                    moveTeleport(n2, container, mainAnchor, internals, 1 /* TeleportMoveTypes.TOGGLE */);
 	                }
 	            }
 	            else {
@@ -7472,13 +7493,13 @@ reactivity_cjs_prod.unref = unref;
 	                if ((n2.props && n2.props.to) !== (n1.props && n1.props.to)) {
 	                    const nextTarget = (n2.target = resolveTarget(n2.props, querySelector));
 	                    if (nextTarget) {
-	                        moveTeleport(n2, nextTarget, null, internals, 0 /* TARGET_CHANGE */);
+	                        moveTeleport(n2, nextTarget, null, internals, 0 /* TeleportMoveTypes.TARGET_CHANGE */);
 	                    }
 	                }
 	                else if (wasDisabled) {
 	                    // disabled -> enabled
 	                    // move into teleport target
-	                    moveTeleport(n2, target, targetAnchor, internals, 1 /* TOGGLE */);
+	                    moveTeleport(n2, target, targetAnchor, internals, 1 /* TeleportMoveTypes.TOGGLE */);
 	                }
 	            }
 	        }
@@ -7491,7 +7512,7 @@ reactivity_cjs_prod.unref = unref;
 	        // an unmounted teleport should always remove its children if not disabled
 	        if (doRemove || !isTeleportDisabled(props)) {
 	            hostRemove(anchor);
-	            if (shapeFlag & 16 /* ARRAY_CHILDREN */) {
+	            if (shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
 	                for (let i = 0; i < children.length; i++) {
 	                    const child = children[i];
 	                    unmount(child, parentComponent, parentSuspense, true, !!child.dynamicChildren);
@@ -7502,13 +7523,13 @@ reactivity_cjs_prod.unref = unref;
 	    move: moveTeleport,
 	    hydrate: hydrateTeleport
 	};
-	function moveTeleport(vnode, container, parentAnchor, { o: { insert }, m: move }, moveType = 2 /* REORDER */) {
+	function moveTeleport(vnode, container, parentAnchor, { o: { insert }, m: move }, moveType = 2 /* TeleportMoveTypes.REORDER */) {
 	    // move target anchor if this is a target change.
-	    if (moveType === 0 /* TARGET_CHANGE */) {
+	    if (moveType === 0 /* TeleportMoveTypes.TARGET_CHANGE */) {
 	        insert(vnode.targetAnchor, container, parentAnchor);
 	    }
 	    const { el, anchor, shapeFlag, children, props } = vnode;
-	    const isReorder = moveType === 2 /* REORDER */;
+	    const isReorder = moveType === 2 /* TeleportMoveTypes.REORDER */;
 	    // move main view anchor if this is a re-order.
 	    if (isReorder) {
 	        insert(el, container, parentAnchor);
@@ -7518,9 +7539,9 @@ reactivity_cjs_prod.unref = unref;
 	    // is not a reorder, or the teleport is disabled
 	    if (!isReorder || isTeleportDisabled(props)) {
 	        // Teleport has either Array children or no children.
-	        if (shapeFlag & 16 /* ARRAY_CHILDREN */) {
+	        if (shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
 	            for (let i = 0; i < children.length; i++) {
-	                move(children[i], container, parentAnchor, 2 /* REORDER */);
+	                move(children[i], container, parentAnchor, 2 /* MoveType.REORDER */);
 	            }
 	        }
 	    }
@@ -7535,7 +7556,7 @@ reactivity_cjs_prod.unref = unref;
 	        // if multiple teleports rendered to the same target element, we need to
 	        // pick up from where the last teleport finished instead of the first node
 	        const targetNode = target._lpa || target.firstChild;
-	        if (vnode.shapeFlag & 16 /* ARRAY_CHILDREN */) {
+	        if (vnode.shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
 	            if (isTeleportDisabled(vnode.props)) {
 	                vnode.anchor = hydrateChildren(nextSibling(node), vnode, parentNode(node), parentComponent, parentSuspense, slotScopeIds, optimized);
 	                vnode.targetAnchor = targetNode;
@@ -7676,7 +7697,7 @@ reactivity_cjs_prod.unref = unref;
 	            : ref
 	        : null);
 	};
-	function createBaseVNode(type, props = null, children = null, patchFlag = 0, dynamicProps = null, shapeFlag = type === Fragment ? 0 : 1 /* ELEMENT */, isBlockNode = false, needFullChildrenNormalization = false) {
+	function createBaseVNode(type, props = null, children = null, patchFlag = 0, dynamicProps = null, shapeFlag = type === Fragment ? 0 : 1 /* ShapeFlags.ELEMENT */, isBlockNode = false, needFullChildrenNormalization = false) {
 	    const vnode = {
 	        __v_isVNode: true,
 	        __v_skip: true,
@@ -7707,7 +7728,7 @@ reactivity_cjs_prod.unref = unref;
 	    if (needFullChildrenNormalization) {
 	        normalizeChildren(vnode, children);
 	        // normalize suspense children
-	        if (shapeFlag & 128 /* SUSPENSE */) {
+	        if (shapeFlag & 128 /* ShapeFlags.SUSPENSE */) {
 	            type.normalize(vnode);
 	        }
 	    }
@@ -7715,8 +7736,8 @@ reactivity_cjs_prod.unref = unref;
 	        // compiled element vnode - if children is passed, only possible types are
 	        // string or Array.
 	        vnode.shapeFlag |= shared.isString(children)
-	            ? 8 /* TEXT_CHILDREN */
-	            : 16 /* ARRAY_CHILDREN */;
+	            ? 8 /* ShapeFlags.TEXT_CHILDREN */
+	            : 16 /* ShapeFlags.ARRAY_CHILDREN */;
 	    }
 	    // track vnode for block tree
 	    if (isBlockTreeEnabled > 0 &&
@@ -7728,10 +7749,10 @@ reactivity_cjs_prod.unref = unref;
 	        // component nodes also should always be patched, because even if the
 	        // component doesn't need to update, it needs to persist the instance on to
 	        // the next vnode so that it can be properly unmounted later.
-	        (vnode.patchFlag > 0 || shapeFlag & 6 /* COMPONENT */) &&
+	        (vnode.patchFlag > 0 || shapeFlag & 6 /* ShapeFlags.COMPONENT */) &&
 	        // the EVENTS flag is only for hydration and if it is the only flag, the
 	        // vnode should not be considered dynamic due to handler caching.
-	        vnode.patchFlag !== 32 /* HYDRATE_EVENTS */) {
+	        vnode.patchFlag !== 32 /* PatchFlags.HYDRATE_EVENTS */) {
 	        currentBlock.push(vnode);
 	    }
 	    return vnode;
@@ -7750,14 +7771,14 @@ reactivity_cjs_prod.unref = unref;
 	            normalizeChildren(cloned, children);
 	        }
 	        if (isBlockTreeEnabled > 0 && !isBlockNode && currentBlock) {
-	            if (cloned.shapeFlag & 6 /* COMPONENT */) {
+	            if (cloned.shapeFlag & 6 /* ShapeFlags.COMPONENT */) {
 	                currentBlock[currentBlock.indexOf(type)] = cloned;
 	            }
 	            else {
 	                currentBlock.push(cloned);
 	            }
 	        }
-	        cloned.patchFlag |= -2 /* BAIL */;
+	        cloned.patchFlag |= -2 /* PatchFlags.BAIL */;
 	        return cloned;
 	    }
 	    // class component normalization.
@@ -7783,15 +7804,15 @@ reactivity_cjs_prod.unref = unref;
 	    }
 	    // encode the vnode type information into a bitmap
 	    const shapeFlag = shared.isString(type)
-	        ? 1 /* ELEMENT */
+	        ? 1 /* ShapeFlags.ELEMENT */
 	        : isSuspense(type)
-	            ? 128 /* SUSPENSE */
+	            ? 128 /* ShapeFlags.SUSPENSE */
 	            : isTeleport(type)
-	                ? 64 /* TELEPORT */
+	                ? 64 /* ShapeFlags.TELEPORT */
 	                : shared.isObject(type)
-	                    ? 4 /* STATEFUL_COMPONENT */
+	                    ? 4 /* ShapeFlags.STATEFUL_COMPONENT */
 	                    : shared.isFunction(type)
-	                        ? 2 /* FUNCTIONAL_COMPONENT */
+	                        ? 2 /* ShapeFlags.FUNCTIONAL_COMPONENT */
 	                        : 0;
 	    return createBaseVNode(type, props, children, patchFlag, dynamicProps, shapeFlag, isBlockNode, true);
 	}
@@ -7836,8 +7857,8 @@ reactivity_cjs_prod.unref = unref;
 	        // fast paths only.
 	        patchFlag: extraProps && vnode.type !== Fragment
 	            ? patchFlag === -1 // hoisted node
-	                ? 16 /* FULL_PROPS */
-	                : patchFlag | 16 /* FULL_PROPS */
+	                ? 16 /* PatchFlags.FULL_PROPS */
+	                : patchFlag | 16 /* PatchFlags.FULL_PROPS */
 	            : patchFlag,
 	        dynamicProps: vnode.dynamicProps,
 	        dynamicChildren: vnode.dynamicChildren,
@@ -7916,10 +7937,10 @@ reactivity_cjs_prod.unref = unref;
 	        children = null;
 	    }
 	    else if (shared.isArray(children)) {
-	        type = 16 /* ARRAY_CHILDREN */;
+	        type = 16 /* ShapeFlags.ARRAY_CHILDREN */;
 	    }
 	    else if (typeof children === 'object') {
-	        if (shapeFlag & (1 /* ELEMENT */ | 64 /* TELEPORT */)) {
+	        if (shapeFlag & (1 /* ShapeFlags.ELEMENT */ | 64 /* ShapeFlags.TELEPORT */)) {
 	            // Normalize slot to plain children for plain element and Teleport
 	            const slot = children.default;
 	            if (slot) {
@@ -7931,37 +7952,37 @@ reactivity_cjs_prod.unref = unref;
 	            return;
 	        }
 	        else {
-	            type = 32 /* SLOTS_CHILDREN */;
+	            type = 32 /* ShapeFlags.SLOTS_CHILDREN */;
 	            const slotFlag = children._;
 	            if (!slotFlag && !(InternalObjectKey in children)) {
 	                children._ctx = currentRenderingInstance;
 	            }
-	            else if (slotFlag === 3 /* FORWARDED */ && currentRenderingInstance) {
+	            else if (slotFlag === 3 /* SlotFlags.FORWARDED */ && currentRenderingInstance) {
 	                // a child component receives forwarded slots from the parent.
 	                // its slot type is determined by its parent's slot type.
-	                if (currentRenderingInstance.slots._ === 1 /* STABLE */) {
-	                    children._ = 1 /* STABLE */;
+	                if (currentRenderingInstance.slots._ === 1 /* SlotFlags.STABLE */) {
+	                    children._ = 1 /* SlotFlags.STABLE */;
 	                }
 	                else {
-	                    children._ = 2 /* DYNAMIC */;
-	                    vnode.patchFlag |= 1024 /* DYNAMIC_SLOTS */;
+	                    children._ = 2 /* SlotFlags.DYNAMIC */;
+	                    vnode.patchFlag |= 1024 /* PatchFlags.DYNAMIC_SLOTS */;
 	                }
 	            }
 	        }
 	    }
 	    else if (shared.isFunction(children)) {
 	        children = { default: children, _ctx: currentRenderingInstance };
-	        type = 32 /* SLOTS_CHILDREN */;
+	        type = 32 /* ShapeFlags.SLOTS_CHILDREN */;
 	    }
 	    else {
 	        children = String(children);
 	        // force teleport children to array so it can be moved around
-	        if (shapeFlag & 64 /* TELEPORT */) {
-	            type = 16 /* ARRAY_CHILDREN */;
+	        if (shapeFlag & 64 /* ShapeFlags.TELEPORT */) {
+	            type = 16 /* ShapeFlags.ARRAY_CHILDREN */;
 	            children = [createTextVNode(children)];
 	        }
 	        else {
-	            type = 8 /* TEXT_CHILDREN */;
+	            type = 8 /* ShapeFlags.TEXT_CHILDREN */;
 	        }
 	    }
 	    vnode.children = children;
@@ -7999,7 +8020,7 @@ reactivity_cjs_prod.unref = unref;
 	    return ret;
 	}
 	function invokeVNodeHook(hook, instance, vnode, prevVNode = null) {
-	    callWithAsyncErrorHandling(hook, instance, 7 /* VNODE_HOOK */, [
+	    callWithAsyncErrorHandling(hook, instance, 7 /* ErrorCodes.VNODE_HOOK */, [
 	        vnode,
 	        prevVNode
 	    ]);
@@ -8100,7 +8121,7 @@ reactivity_cjs_prod.unref = unref;
 	    currentInstance = null;
 	};
 	function isStatefulComponent(instance) {
-	    return instance.vnode.shapeFlag & 4 /* STATEFUL_COMPONENT */;
+	    return instance.vnode.shapeFlag & 4 /* ShapeFlags.STATEFUL_COMPONENT */;
 	}
 	let isInSSRComponentSetup = false;
 	function setupComponent(instance, isSSR = false) {
@@ -8129,7 +8150,7 @@ reactivity_cjs_prod.unref = unref;
 	            setup.length > 1 ? createSetupContext(instance) : null);
 	        setCurrentInstance(instance);
 	        reactivity$1.pauseTracking();
-	        const setupResult = callWithErrorHandling(setup, instance, 0 /* SETUP_FUNCTION */, [instance.props, setupContext]);
+	        const setupResult = callWithErrorHandling(setup, instance, 0 /* ErrorCodes.SETUP_FUNCTION */, [instance.props, setupContext]);
 	        reactivity$1.resetTracking();
 	        unsetCurrentInstance();
 	        if (shared.isPromise(setupResult)) {
@@ -8141,7 +8162,7 @@ reactivity_cjs_prod.unref = unref;
 	                    handleSetupResult(instance, resolvedResult, isSSR);
 	                })
 	                    .catch(e => {
-	                    handleError(e, instance, 0 /* SETUP_FUNCTION */);
+	                    handleError(e, instance, 0 /* ErrorCodes.SETUP_FUNCTION */);
 	                });
 	            }
 	            else {
@@ -8231,7 +8252,7 @@ reactivity_cjs_prod.unref = unref;
 	function createAttrsProxy(instance) {
 	    return new Proxy(instance.attrs, {
 	            get(target, key) {
-	                reactivity$1.track(instance, "get" /* GET */, '$attrs');
+	                reactivity$1.track(instance, "get" /* TrackOpTypes.GET */, '$attrs');
 	                return target[key];
 	            }
 	        });
@@ -8509,7 +8530,7 @@ reactivity_cjs_prod.unref = unref;
 	}
 
 	// Core API ------------------------------------------------------------------
-	const version = "3.2.37";
+	const version = "3.2.38";
 	const _ssrUtils = {
 	    createComponentInstance,
 	    setupComponent,
@@ -9003,7 +9024,8 @@ reactivity_cjs_prod.unref = unref;
 	            options[m[0].toLowerCase()] = true;
 	        }
 	    }
-	    return [shared.hyphenate(name.slice(2)), options];
+	    const event = name[2] === ':' ? name.slice(3) : shared.hyphenate(name.slice(2));
+	    return [event, options];
 	}
 	function createInvoker(initialValue, instance) {
 	    const invoker = (e) => {
@@ -9015,7 +9037,7 @@ reactivity_cjs_prod.unref = unref;
 	        // AFTER it was attached.
 	        const timeStamp = e.timeStamp || _getNow();
 	        if (skipTimestampCheck || timeStamp >= invoker.attached - 1) {
-	            runtimeCore$1.callWithAsyncErrorHandling(patchStopImmediatePropagation(e, invoker.value), instance, 5 /* NATIVE_EVENT_HANDLER */, [e]);
+	            runtimeCore$1.callWithAsyncErrorHandling(patchStopImmediatePropagation(e, invoker.value), instance, 5 /* ErrorCodes.NATIVE_EVENT_HANDLER */, [e]);
 	        }
 	    };
 	    invoker.value = initialValue;
@@ -10268,11 +10290,15 @@ const require$$1 = /*@__PURE__*/getDefaultExportFromCjs(runtimeDom.exports);
 	        // by the server, the template should not contain any user data.
 	        template = el ? el.innerHTML : ``;
 	    }
-	    const { code } = compilerDom.compile(template, shared.extend({
+	    const opts = shared.extend({
 	        hoistStatic: true,
 	        onError: undefined,
 	        onWarn: shared.NOOP
-	    }, options));
+	    }, options);
+	    if (!opts.isCustomElement && typeof customElements !== 'undefined') {
+	        opts.isCustomElement = tag => !!customElements.get(tag);
+	    }
+	    const { code } = compilerDom.compile(template, opts);
 	    // The wildcard import results in a huge object with every export
 	    // with keys that cannot be mangled, and can be quite heavy size-wise.
 	    // In the global build we know `Vue` is available globally so we can avoid
@@ -10576,16 +10602,16 @@ function renderVNode(push, vnode, parentComponent, slotScopeId) {
             push(`<!--]-->`); // close
             break;
         default:
-            if (shapeFlag & 1 /* ELEMENT */) {
+            if (shapeFlag & 1 /* ShapeFlags.ELEMENT */) {
                 renderElementVNode(push, vnode, parentComponent, slotScopeId);
             }
-            else if (shapeFlag & 6 /* COMPONENT */) {
+            else if (shapeFlag & 6 /* ShapeFlags.COMPONENT */) {
                 push(renderComponentVNode(vnode, parentComponent, slotScopeId));
             }
-            else if (shapeFlag & 64 /* TELEPORT */) {
+            else if (shapeFlag & 64 /* ShapeFlags.TELEPORT */) {
                 renderTeleportVNode(push, vnode, parentComponent, slotScopeId);
             }
-            else if (shapeFlag & 128 /* SUSPENSE */) {
+            else if (shapeFlag & 128 /* ShapeFlags.SUSPENSE */) {
                 renderVNode(push, vnode.ssContent, parentComponent, slotScopeId);
             }
             else {
@@ -10642,10 +10668,10 @@ function renderElementVNode(push, vnode, parentComponent, slotScopeId) {
             }
         }
         if (!hasChildrenOverride) {
-            if (shapeFlag & 8 /* TEXT_CHILDREN */) {
+            if (shapeFlag & 8 /* ShapeFlags.TEXT_CHILDREN */) {
                 push(shared.escapeHtml(children));
             }
-            else if (shapeFlag & 16 /* ARRAY_CHILDREN */) {
+            else if (shapeFlag & 16 /* ShapeFlags.ARRAY_CHILDREN */) {
                 renderVNodeChildren(push, children, parentComponent, slotScopeId);
             }
         }
@@ -10742,7 +10768,7 @@ async function resolveTeleports(context) {
         for (const key in context.__teleportBuffers) {
             // note: it's OK to await sequentially here because the Promises were
             // created eagerly in parallel.
-            context.teleports[key] = await unrollBuffer((await Promise.all(context.__teleportBuffers[key])));
+            context.teleports[key] = await unrollBuffer(await Promise.all([context.__teleportBuffers[key]]));
         }
     }
 }
@@ -10945,11 +10971,15 @@ function ssrRenderSlotInner(slots, slotName, slotProps, fallbackRenderFn, push, 
         fallbackRenderFn();
     }
 }
+const commentTestRE = /^<!--.*-->$/s;
 const commentRE = /<!--[^]*?-->/gm;
 function isComment(item) {
-    return (typeof item === 'string' &&
-        commentRE.test(item) &&
-        !item.replace(commentRE, '').trim());
+    if (typeof item !== 'string' || !commentTestRE.test(item))
+        return false;
+    // if item is '<!---->' or '<!--[-->' or '<!--]-->', return true directly
+    if (item.length <= 8)
+        return true;
+    return !item.replace(commentRE, '').trim();
 }
 
 function ssrInterpolate(value) {
