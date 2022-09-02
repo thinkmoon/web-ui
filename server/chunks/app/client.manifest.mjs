@@ -381,30 +381,15 @@ const client_manifest = {
     "file": "editor.88ae71a2.css",
     "src": "pages/admin/editor.css"
   },
-  "pages/page/[pageIndex].css": {
+  "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css": {
     "resourceType": "style",
-    "file": "[pageIndex].5f2a6f76.css",
-    "src": "pages/page/[pageIndex].css"
+    "file": "error-500.423c5935.css",
+    "src": "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css"
   },
-  "pages/admin.css": {
+  "pages/post/[cid].css": {
     "resourceType": "style",
-    "file": "admin.6e91f5a2.css",
-    "src": "pages/admin.css"
-  },
-  "pages/category/index.css": {
-    "resourceType": "style",
-    "file": "index.c7621f5e.css",
-    "src": "pages/category/index.css"
-  },
-  "pages/index.css": {
-    "resourceType": "style",
-    "file": "index.a35aea3f.css",
-    "src": "pages/index.css"
-  },
-  "pages/login.css": {
-    "resourceType": "style",
-    "file": "login.09fb4b8b.css",
-    "src": "pages/login.css"
+    "file": "[cid].8ad160ce.css",
+    "src": "pages/post/[cid].css"
   },
   "pages/tag/index.css": {
     "resourceType": "style",
@@ -416,20 +401,35 @@ const client_manifest = {
     "file": "default.d0648ab5.css",
     "src": "layouts/default.css"
   },
-  "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css": {
-    "resourceType": "style",
-    "file": "error-500.423c5935.css",
-    "src": "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css"
-  },
   "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-404.css": {
     "resourceType": "style",
     "file": "error-404.b45b841a.css",
     "src": "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-404.css"
   },
-  "pages/post/[cid].css": {
+  "pages/category/index.css": {
     "resourceType": "style",
-    "file": "[cid].8ad160ce.css",
-    "src": "pages/post/[cid].css"
+    "file": "index.c7621f5e.css",
+    "src": "pages/category/index.css"
+  },
+  "pages/admin.css": {
+    "resourceType": "style",
+    "file": "admin.6e91f5a2.css",
+    "src": "pages/admin.css"
+  },
+  "pages/index.css": {
+    "resourceType": "style",
+    "file": "index.a35aea3f.css",
+    "src": "pages/index.css"
+  },
+  "pages/login.css": {
+    "resourceType": "style",
+    "file": "login.09fb4b8b.css",
+    "src": "pages/login.css"
+  },
+  "pages/page/[pageIndex].css": {
+    "resourceType": "style",
+    "file": "[pageIndex].5f2a6f76.css",
+    "src": "pages/page/[pageIndex].css"
   },
   "node_modules/.pnpm/registry.npmmirror.com+nuxt@3.0.0-rc.8_less@4.1.3+webpack@5.74.0/node_modules/nuxt/dist/app/entry.css": {
     "resourceType": "style",
