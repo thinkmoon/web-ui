@@ -1,4 +1,3 @@
-import { computed, unref } from 'vue';
 import { useGlobalConfig } from '../use-global-config/index.mjs';
 
 const defaultNamespace = "el";
@@ -17,15 +16,14 @@ const _bem = (namespace, block, blockSuffix, element, modifier) => {
   return cls;
 };
 const useNamespace = (block) => {
-  const globalConfig = useGlobalConfig("namespace");
-  const namespace = computed(() => globalConfig.value || defaultNamespace);
-  const b = (blockSuffix = "") => _bem(unref(namespace), block, blockSuffix, "", "");
-  const e = (element) => element ? _bem(unref(namespace), block, "", element, "") : "";
-  const m = (modifier) => modifier ? _bem(unref(namespace), block, "", "", modifier) : "";
-  const be = (blockSuffix, element) => blockSuffix && element ? _bem(unref(namespace), block, blockSuffix, element, "") : "";
-  const em = (element, modifier) => element && modifier ? _bem(unref(namespace), block, "", element, modifier) : "";
-  const bm = (blockSuffix, modifier) => blockSuffix && modifier ? _bem(unref(namespace), block, blockSuffix, "", modifier) : "";
-  const bem = (blockSuffix, element, modifier) => blockSuffix && element && modifier ? _bem(unref(namespace), block, blockSuffix, element, modifier) : "";
+  const namespace = useGlobalConfig("namespace", defaultNamespace);
+  const b = (blockSuffix = "") => _bem(namespace.value, block, blockSuffix, "", "");
+  const e = (element) => element ? _bem(namespace.value, block, "", element, "") : "";
+  const m = (modifier) => modifier ? _bem(namespace.value, block, "", "", modifier) : "";
+  const be = (blockSuffix, element) => blockSuffix && element ? _bem(namespace.value, block, blockSuffix, element, "") : "";
+  const em = (element, modifier) => element && modifier ? _bem(namespace.value, block, "", element, modifier) : "";
+  const bm = (blockSuffix, modifier) => blockSuffix && modifier ? _bem(namespace.value, block, blockSuffix, "", modifier) : "";
+  const bem = (blockSuffix, element, modifier) => blockSuffix && element && modifier ? _bem(namespace.value, block, blockSuffix, element, modifier) : "";
   const is = (name, ...args) => {
     const state = args.length >= 1 ? args[0] : true;
     return name && state ? `${statePrefix}${name}` : "";

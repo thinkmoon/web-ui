@@ -154,8 +154,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }
       if (isComposing.value)
         return;
-      if (value === nativeInputValue.value)
+      if (value === nativeInputValue.value) {
+        setNativeInputValue();
         return;
+      }
       emit(UPDATE_MODEL_EVENT, value);
       emit("input", value);
       await nextTick();

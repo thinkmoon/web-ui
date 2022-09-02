@@ -1,6 +1,5 @@
 import { computed } from 'vue';
 import { NOOP } from '@vue/shared';
-import { ExpandTrigger } from './node.mjs';
 
 const CommonProps = {
   modelValue: [Number, String, Array],
@@ -14,7 +13,7 @@ const CommonProps = {
   }
 };
 const DefaultProps = {
-  expandTrigger: ExpandTrigger.CLICK,
+  expandTrigger: "click",
   multiple: false,
   checkStrictly: false,
   emitPath: true,

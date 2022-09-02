@@ -36,6 +36,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           unref(ns).b(),
           unref(ns).is("fullscreen", _ctx.fullscreen),
           unref(ns).is("draggable", unref(draggable)),
+          unref(ns).is("align-center", _ctx.alignCenter),
           { [unref(ns).m("center")]: _ctx.center },
           _ctx.customClass
         ]),

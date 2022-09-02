@@ -61,9 +61,9 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return withDirectives((openBlock(), createElementBlock("div", {
     ref: "selectRef",
     class: normalizeClass([_ctx.nsSelectV2.b(), _ctx.nsSelectV2.m(_ctx.selectSize)]),
-    onClick: _cache[23] || (_cache[23] = withModifiers((...args) => _ctx.toggleMenu && _ctx.toggleMenu(...args), ["stop"])),
-    onMouseenter: _cache[24] || (_cache[24] = ($event) => _ctx.states.comboBoxHovering = true),
-    onMouseleave: _cache[25] || (_cache[25] = ($event) => _ctx.states.comboBoxHovering = false)
+    onClick: _cache[25] || (_cache[25] = withModifiers((...args) => _ctx.toggleMenu && _ctx.toggleMenu(...args), ["stop"])),
+    onMouseenter: _cache[26] || (_cache[26] = ($event) => _ctx.states.comboBoxHovering = true),
+    onMouseleave: _cache[27] || (_cache[27] = ($event) => _ctx.states.comboBoxHovering = false)
   }, [
     createVNode(_component_el_tooltip, {
       ref: "popper",
@@ -81,7 +81,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       trigger: "click",
       persistent: _ctx.persistent,
       onBeforeShow: _ctx.handleMenuEnter,
-      onHide: _cache[22] || (_cache[22] = ($event) => _ctx.states.inputValue = _ctx.states.displayInputValue)
+      onHide: _cache[24] || (_cache[24] = ($event) => _ctx.states.inputValue = _ctx.states.displayInputValue)
     }, {
       default: withCtx(() => {
         var _a;
@@ -248,16 +248,17 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
                   unselectable: _ctx.expanded ? "on" : void 0,
                   "onUpdate:modelValue": _cache[1] || (_cache[1] = (...args) => _ctx.onUpdateInputValue && _ctx.onUpdateInputValue(...args)),
                   onFocus: _cache[2] || (_cache[2] = (...args) => _ctx.handleFocus && _ctx.handleFocus(...args)),
-                  onInput: _cache[3] || (_cache[3] = (...args) => _ctx.onInput && _ctx.onInput(...args)),
-                  onCompositionstart: _cache[4] || (_cache[4] = (...args) => _ctx.handleCompositionStart && _ctx.handleCompositionStart(...args)),
-                  onCompositionupdate: _cache[5] || (_cache[5] = (...args) => _ctx.handleCompositionUpdate && _ctx.handleCompositionUpdate(...args)),
-                  onCompositionend: _cache[6] || (_cache[6] = (...args) => _ctx.handleCompositionEnd && _ctx.handleCompositionEnd(...args)),
+                  onBlur: _cache[3] || (_cache[3] = (...args) => _ctx.handleBlur && _ctx.handleBlur(...args)),
+                  onInput: _cache[4] || (_cache[4] = (...args) => _ctx.onInput && _ctx.onInput(...args)),
+                  onCompositionstart: _cache[5] || (_cache[5] = (...args) => _ctx.handleCompositionStart && _ctx.handleCompositionStart(...args)),
+                  onCompositionupdate: _cache[6] || (_cache[6] = (...args) => _ctx.handleCompositionUpdate && _ctx.handleCompositionUpdate(...args)),
+                  onCompositionend: _cache[7] || (_cache[7] = (...args) => _ctx.handleCompositionEnd && _ctx.handleCompositionEnd(...args)),
                   onKeydown: [
-                    _cache[7] || (_cache[7] = withKeys(withModifiers(($event) => _ctx.onKeyboardNavigate("backward"), ["stop", "prevent"]), ["up"])),
-                    _cache[8] || (_cache[8] = withKeys(withModifiers(($event) => _ctx.onKeyboardNavigate("forward"), ["stop", "prevent"]), ["down"])),
-                    _cache[9] || (_cache[9] = withKeys(withModifiers((...args) => _ctx.onKeyboardSelect && _ctx.onKeyboardSelect(...args), ["stop", "prevent"]), ["enter"])),
-                    _cache[10] || (_cache[10] = withKeys(withModifiers((...args) => _ctx.handleEsc && _ctx.handleEsc(...args), ["stop", "prevent"]), ["esc"])),
-                    _cache[11] || (_cache[11] = withKeys(withModifiers((...args) => _ctx.handleDel && _ctx.handleDel(...args), ["stop"]), ["delete"]))
+                    _cache[8] || (_cache[8] = withKeys(withModifiers(($event) => _ctx.onKeyboardNavigate("backward"), ["stop", "prevent"]), ["up"])),
+                    _cache[9] || (_cache[9] = withKeys(withModifiers(($event) => _ctx.onKeyboardNavigate("forward"), ["stop", "prevent"]), ["down"])),
+                    _cache[10] || (_cache[10] = withKeys(withModifiers((...args) => _ctx.onKeyboardSelect && _ctx.onKeyboardSelect(...args), ["stop", "prevent"]), ["enter"])),
+                    _cache[11] || (_cache[11] = withKeys(withModifiers((...args) => _ctx.handleEsc && _ctx.handleEsc(...args), ["stop", "prevent"]), ["esc"])),
+                    _cache[12] || (_cache[12] = withKeys(withModifiers((...args) => _ctx.handleDel && _ctx.handleDel(...args), ["stop"]), ["delete"]))
                   ]
                 }, null, 42, _hoisted_2), [
                   [_directive_model_text, _ctx.states.displayInputValue]
@@ -294,18 +295,19 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
                   spellcheck: "false",
                   type: "text",
                   unselectable: _ctx.expanded ? "on" : void 0,
-                  onCompositionstart: _cache[12] || (_cache[12] = (...args) => _ctx.handleCompositionStart && _ctx.handleCompositionStart(...args)),
-                  onCompositionupdate: _cache[13] || (_cache[13] = (...args) => _ctx.handleCompositionUpdate && _ctx.handleCompositionUpdate(...args)),
-                  onCompositionend: _cache[14] || (_cache[14] = (...args) => _ctx.handleCompositionEnd && _ctx.handleCompositionEnd(...args)),
-                  onFocus: _cache[15] || (_cache[15] = (...args) => _ctx.handleFocus && _ctx.handleFocus(...args)),
-                  onInput: _cache[16] || (_cache[16] = (...args) => _ctx.onInput && _ctx.onInput(...args)),
+                  onCompositionstart: _cache[13] || (_cache[13] = (...args) => _ctx.handleCompositionStart && _ctx.handleCompositionStart(...args)),
+                  onCompositionupdate: _cache[14] || (_cache[14] = (...args) => _ctx.handleCompositionUpdate && _ctx.handleCompositionUpdate(...args)),
+                  onCompositionend: _cache[15] || (_cache[15] = (...args) => _ctx.handleCompositionEnd && _ctx.handleCompositionEnd(...args)),
+                  onFocus: _cache[16] || (_cache[16] = (...args) => _ctx.handleFocus && _ctx.handleFocus(...args)),
+                  onBlur: _cache[17] || (_cache[17] = (...args) => _ctx.handleBlur && _ctx.handleBlur(...args)),
+                  onInput: _cache[18] || (_cache[18] = (...args) => _ctx.onInput && _ctx.onInput(...args)),
                   onKeydown: [
-                    _cache[17] || (_cache[17] = withKeys(withModifiers(($event) => _ctx.onKeyboardNavigate("backward"), ["stop", "prevent"]), ["up"])),
-                    _cache[18] || (_cache[18] = withKeys(withModifiers(($event) => _ctx.onKeyboardNavigate("forward"), ["stop", "prevent"]), ["down"])),
-                    _cache[19] || (_cache[19] = withKeys(withModifiers((...args) => _ctx.onKeyboardSelect && _ctx.onKeyboardSelect(...args), ["stop", "prevent"]), ["enter"])),
-                    _cache[20] || (_cache[20] = withKeys(withModifiers((...args) => _ctx.handleEsc && _ctx.handleEsc(...args), ["stop", "prevent"]), ["esc"]))
+                    _cache[19] || (_cache[19] = withKeys(withModifiers(($event) => _ctx.onKeyboardNavigate("backward"), ["stop", "prevent"]), ["up"])),
+                    _cache[20] || (_cache[20] = withKeys(withModifiers(($event) => _ctx.onKeyboardNavigate("forward"), ["stop", "prevent"]), ["down"])),
+                    _cache[21] || (_cache[21] = withKeys(withModifiers((...args) => _ctx.onKeyboardSelect && _ctx.onKeyboardSelect(...args), ["stop", "prevent"]), ["enter"])),
+                    _cache[22] || (_cache[22] = withKeys(withModifiers((...args) => _ctx.handleEsc && _ctx.handleEsc(...args), ["stop", "prevent"]), ["esc"]))
                   ],
-                  "onUpdate:modelValue": _cache[21] || (_cache[21] = (...args) => _ctx.onUpdateInputValue && _ctx.onUpdateInputValue(...args))
+                  "onUpdate:modelValue": _cache[23] || (_cache[23] = (...args) => _ctx.onUpdateInputValue && _ctx.onUpdateInputValue(...args))
                 }, null, 42, _hoisted_4), [
                   [_directive_model_text, _ctx.states.displayInputValue]
                 ])

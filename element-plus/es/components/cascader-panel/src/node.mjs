@@ -2,11 +2,6 @@ import { isFunction, capitalize } from '@vue/shared';
 import '../../../utils/index.mjs';
 import { isEmpty, isUndefined } from '../../../utils/types.mjs';
 
-var ExpandTrigger = /* @__PURE__ */ ((ExpandTrigger2) => {
-  ExpandTrigger2["CLICK"] = "click";
-  ExpandTrigger2["HOVER"] = "hover";
-  return ExpandTrigger2;
-})(ExpandTrigger || {});
 let uid = 0;
 const calculatePathNodes = (node) => {
   const nodes = [node];
@@ -122,5 +117,5 @@ class Node {
   }
 }
 
-export { ExpandTrigger, Node as default };
+export { Node as default };
 //# sourceMappingURL=node.mjs.map

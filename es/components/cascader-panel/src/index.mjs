@@ -6,7 +6,7 @@ import '../../../constants/index.mjs';
 import '../../../hooks/index.mjs';
 import ElCascaderMenu from './menu.mjs';
 import Store from './store.mjs';
-import Node, { ExpandTrigger } from './node.mjs';
+import Node from './node.mjs';
 import { CommonProps, useCascaderConfig } from './config.mjs';
 import { sortByOriginalOrder, checkNode, getMenuIndex } from './utils.mjs';
 import { CASCADER_PANEL_INJECTION_KEY } from './types.mjs';
@@ -44,7 +44,7 @@ const _sfc_main = defineComponent({
     const menus = ref([]);
     const expandingNode = ref(null);
     const checkedNodes = ref([]);
-    const isHoverMenu = computed(() => config.value.expandTrigger === ExpandTrigger.HOVER);
+    const isHoverMenu = computed(() => config.value.expandTrigger === "hover");
     const renderLabelFn = computed(() => props.renderLabel || slots.default);
     const initStore = () => {
       const { options } = props;

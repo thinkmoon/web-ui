@@ -229,7 +229,7 @@ const useSelect = (props, states, ctx) => {
       }
     });
   };
-  const handleQueryChange = (val) => {
+  const handleQueryChange = async (val) => {
     if (states.previousQuery === val || states.isOnComposition)
       return;
     if (states.previousQuery === null && (typeof props.filterMethod === "function" || typeof props.remoteMethod === "function")) {
@@ -264,6 +264,7 @@ const useSelect = (props, states, ctx) => {
       triggerRef(groupQueryChange);
     }
     if (props.defaultFirstOption && (props.filterable || props.remote) && states.filteredOptionsCount) {
+      await nextTick();
       checkDefaultFirstOption();
     }
   };

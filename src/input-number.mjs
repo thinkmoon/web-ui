@@ -26,6 +26,7 @@ const inputNumberProps = buildProps({
     default: Number.NEGATIVE_INFINITY
   },
   modelValue: Number,
+  readonly: Boolean,
   disabled: Boolean,
   size: useSizeProp,
   controls: {

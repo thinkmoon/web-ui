@@ -51,6 +51,14 @@ var DatePicker = defineComponent({
       focus: (focusStartInput = true) => {
         var _a;
         (_a = commonPicker.value) == null ? void 0 : _a.focus(focusStartInput);
+      },
+      handleOpen: () => {
+        var _a;
+        (_a = commonPicker.value) == null ? void 0 : _a.handleOpen();
+      },
+      handleClose: () => {
+        var _a;
+        (_a = commonPicker.value) == null ? void 0 : _a.handleClose();
       }
     };
     expose(refProps);

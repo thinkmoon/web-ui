@@ -1,5 +1,6 @@
 import { defineComponent, ref, computed, unref, watch, nextTick, openBlock, createElementBlock, normalizeClass, createElementVNode, toDisplayString, createCommentVNode, Fragment, renderList, createVNode } from 'vue';
 import dayjs from 'dayjs';
+import { flatten } from 'lodash-unified';
 import '../../../../hooks/index.mjs';
 import '../../../../utils/index.mjs';
 import { basicDateTableProps } from '../props/basic-date-table.mjs';
@@ -44,7 +45,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       return WEEKS_CONSTANT.concat(WEEKS_CONSTANT).slice(firstDayOfWeek, firstDayOfWeek + 7);
     });
     const hasCurrent = computed(() => {
-      return rows.value.flat().some((row) => {
+      return flatten(rows.value).some((row) => {
         return row.isCurrent;
       });
     });

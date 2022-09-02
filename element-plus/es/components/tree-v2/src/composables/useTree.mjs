@@ -179,8 +179,8 @@ function useTree(props, emit) {
     if (tree.value && props.accordion) {
       const { treeNodeMap } = tree.value;
       keySet.forEach((key) => {
-        const node2 = treeNodeMap.get(key);
-        if (node2 && node2.level === node2.level) {
+        const treeNode = treeNodeMap.get(key);
+        if (node && node.level === treeNode.level) {
           keySet.delete(key);
         }
       });

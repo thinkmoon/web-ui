@@ -38,6 +38,12 @@ const useDialog = (props, targetRef) => {
     }
     return style2;
   });
+  const overlayDialogStyle = computed(() => {
+    if (props.alignCenter) {
+      return { display: "flex" };
+    }
+    return {};
+  });
   function afterEnter() {
     emit("opened");
   }
@@ -161,6 +167,7 @@ const useDialog = (props, targetRef) => {
     bodyId,
     closed,
     style,
+    overlayDialogStyle,
     rendered,
     visible,
     zIndex

@@ -602,7 +602,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
                     createElementVNode("div", {
                       class: normalizeClass(_ctx.nsCascader.e("collapse-tags"))
                     }, [
-                      (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.allPresentTags, (tag2, idx) => {
+                      (openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.allPresentTags.slice(1), (tag2, idx) => {
                         return openBlock(), createElementBlock("div", {
                           key: idx,
                           class: normalizeClass(_ctx.nsCascader.e("collapse-tag"))

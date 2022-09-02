@@ -18,11 +18,12 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const props = __props;
     const ns = useNamespace("icon");
     const style = computed(() => {
-      if (!props.size && !props.color)
+      const { size, color } = props;
+      if (!size && !color)
         return {};
       return {
-        fontSize: isUndefined(props.size) ? void 0 : addUnit(props.size),
-        "--color": props.color
+        fontSize: isUndefined(size) ? void 0 : addUnit(size),
+        "--color": color
       };
     });
     return (_ctx, _cache) => {

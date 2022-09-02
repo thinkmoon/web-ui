@@ -57,6 +57,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
             modelValue: unref(allChecked),
             "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => isRef(allChecked) ? allChecked.value = $event : null),
             indeterminate: unref(isIndeterminate),
+            "validate-event": false,
             onChange: unref(handleAllCheckedChange)
           }, {
             default: withCtx(() => [
@@ -78,12 +79,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
             placeholder: _ctx.placeholder,
             "prefix-icon": unref(Search),
             clearable: "",
+            "validate-event": false,
             onMouseenter: _cache[2] || (_cache[2] = ($event) => inputHover.value = true),
             onMouseleave: _cache[3] || (_cache[3] = ($event) => inputHover.value = false)
           }, null, 8, ["modelValue", "class", "placeholder", "prefix-icon"])) : createCommentVNode("v-if", true),
           withDirectives(createVNode(unref(ElCheckboxGroup), {
             modelValue: unref(checked),
             "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => isRef(checked) ? checked.value = $event : null),
+            "validate-event": false,
             class: normalizeClass([unref(ns).is("filterable", _ctx.filterable), unref(ns).be("panel", "list")])
           }, {
             default: withCtx(() => [
@@ -92,7 +95,8 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                   key: item[unref(propsAlias).key],
                   class: normalizeClass(unref(ns).be("panel", "item")),
                   label: item[unref(propsAlias).key],
-                  disabled: item[unref(propsAlias).disabled]
+                  disabled: item[unref(propsAlias).disabled],
+                  "validate-event": false
                 }, {
                   default: withCtx(() => {
                     var _a;

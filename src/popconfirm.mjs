@@ -23,7 +23,7 @@ const popconfirmProps = buildProps({
   },
   icon: {
     type: iconPropType,
-    default: QuestionFilled
+    default: () => QuestionFilled
   },
   iconColor: {
     type: String,

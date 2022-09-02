@@ -52,7 +52,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const handleYearTableClick = (event) => {
       const clickTarget = event.target;
       const target = clickTarget.closest("td");
-      if (target) {
+      if (target && target.textContent) {
         if (hasClass(target, "disabled"))
           return;
         const year = target.textContent || target.innerText;

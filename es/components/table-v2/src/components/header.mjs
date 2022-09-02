@@ -28,7 +28,7 @@ const TableV2Header = defineComponent({
     const scrollToLeft = (left) => {
       const headerEl = unref(headerRef);
       nextTick(() => {
-        headerEl == null ? void 0 : headerEl.scroll({
+        (headerEl == null ? void 0 : headerEl.scroll) && headerEl.scroll({
           left
         });
       });

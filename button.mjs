@@ -25,8 +25,7 @@ const buttonProps = buildProps({
     default: ""
   },
   icon: {
-    type: iconPropType,
-    default: ""
+    type: iconPropType
   },
   nativeType: {
     type: String,

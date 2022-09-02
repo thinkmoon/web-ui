@@ -41,6 +41,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const regionRef = ref();
     const popperRef = ref();
     const listboxRef = ref();
+    let readonly = false;
     let ignoreFocusEvent = false;
     const suggestions = ref([]);
     const highlightedIndex = ref(-1);
@@ -127,7 +128,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         return;
       activated.value = true;
       emit("focus", evt);
-      if (props.triggerOnFocus) {
+      if (props.triggerOnFocus && !readonly) {
         debouncedGetData(String(props.modelValue));
       }
     };
@@ -208,6 +209,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       inputRef.value.ref.setAttribute("aria-autocomplete", "list");
       inputRef.value.ref.setAttribute("aria-controls", "id");
       inputRef.value.ref.setAttribute("aria-activedescendant", `${listboxId.value}-item-${highlightedIndex.value}`);
+      readonly = inputRef.value.ref.hasAttribute("readonly");
     });
     expose({
       highlightedIndex,

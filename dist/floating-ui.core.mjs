@@ -885,9 +885,7 @@ const limitShift = function (options) {
       const crossAxis = getCrossAxis(mainAxis);
       let mainAxisCoord = coords[mainAxis];
       let crossAxisCoord = coords[crossAxis];
-      const rawOffset = typeof offset === 'function' ? offset({ ...rects,
-        placement
-      }) : offset;
+      const rawOffset = typeof offset === 'function' ? offset(middlewareArguments) : offset;
       const computedOffset = typeof rawOffset === 'number' ? {
         mainAxis: rawOffset,
         crossAxis: 0
@@ -956,7 +954,7 @@ const size = function (options) {
         elements
       } = middlewareArguments;
       const {
-        apply,
+        apply = () => {},
         ...detectOverflowOptions
       } = options;
       const overflow = await detectOverflow(middlewareArguments, detectOverflowOptions);
@@ -981,13 +979,12 @@ const size = function (options) {
         availableHeight: rects.floating.height - (['left', 'right'].includes(placement) ? 2 * (yMin !== 0 || yMax !== 0 ? yMin + yMax : max(overflow.top, overflow.bottom)) : overflow[heightSide]),
         availableWidth: rects.floating.width - (['top', 'bottom'].includes(placement) ? 2 * (xMin !== 0 || xMax !== 0 ? xMin + xMax : max(overflow.left, overflow.right)) : overflow[widthSide])
       };
-      const prevDimensions = await platform.getDimensions(elements.floating);
-      apply == null ? void 0 : apply({ ...middlewareArguments,
+      await apply({ ...middlewareArguments,
         ...dimensions
       });
       const nextDimensions = await platform.getDimensions(elements.floating);
 
-      if (prevDimensions.width !== nextDimensions.width || prevDimensions.height !== nextDimensions.height) {
+      if (rects.floating.width !== nextDimensions.width || rects.floating.height !== nextDimensions.height) {
         return {
           reset: {
             rects: true

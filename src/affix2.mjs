@@ -95,7 +95,8 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     useEventListener(scrollContainer, "scroll", handleScroll);
     watchEffect(update);
     expose({
-      update
+      update,
+      updateRoot
     });
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {

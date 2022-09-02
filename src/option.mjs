@@ -31,9 +31,9 @@ const _sfc_main = defineComponent({
     const { currentLabel, itemSelected, isDisabled, select, hoverItem } = useOption(props, states);
     const { visible, hover } = toRefs(states);
     const vm = getCurrentInstance().proxy;
-    const key = vm.value;
     select.onOptionCreate(vm);
     onBeforeUnmount(() => {
+      const key = vm.value;
       const { selected } = select;
       const selectedOptions = select.props.multiple ? selected : [selected];
       const doesSelected = selectedOptions.some((item) => {

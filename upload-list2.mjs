@@ -21,15 +21,11 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   props: uploadListProps,
   emits: uploadListEmits,
   setup(__props, { emit }) {
-    const props = __props;
     const { t } = useLocale();
     const nsUpload = useNamespace("upload");
     const nsIcon = useNamespace("icon");
     const nsList = useNamespace("list");
     const focusing = ref(false);
-    const handleClick = (file) => {
-      props.handlePreview(file);
-    };
     const handleRemove = (file) => {
       emit("remove", file);
     };
@@ -65,13 +61,13 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                   src: file.url,
                   alt: ""
                 }, null, 10, _hoisted_2)) : createCommentVNode("v-if", true),
-                _ctx.listType !== "picture" && (file.status === "uploading" || _ctx.listType !== "picture-card") ? (openBlock(), createElementBlock("div", {
+                file.status === "uploading" || _ctx.listType !== "picture-card" ? (openBlock(), createElementBlock("div", {
                   key: 1,
                   class: normalizeClass(unref(nsUpload).be("list", "item-info"))
                 }, [
                   createElementVNode("a", {
                     class: normalizeClass(unref(nsUpload).be("list", "item-name")),
-                    onClick: withModifiers(($event) => handleClick(file), ["prevent"])
+                    onClick: withModifiers(($event) => _ctx.handlePreview(file), ["prevent"])
                   }, [
                     createVNode(unref(ElIcon), {
                       class: normalizeClass(unref(nsIcon).m("document"))

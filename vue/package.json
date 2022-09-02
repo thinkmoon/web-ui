@@ -1,6 +1,6 @@
 {
   "name": "vue",
-  "version": "3.2.38",
+  "version": "3.2.37",
   "description": "The progressive JavaScript framework for building modern web UI.",
   "main": "index.js",
   "module": "dist/vue.runtime.esm-bundler.js",
@@ -28,13 +28,11 @@
     },
     "./server-renderer": {
       "import": "./server-renderer/index.mjs",
-      "require": "./server-renderer/index.js",
-      "types": "./server-renderer/index.d.ts"
+      "require": "./server-renderer/index.js"
     },
     "./compiler-sfc": {
       "import": "./compiler-sfc/index.mjs",
-      "require": "./compiler-sfc/index.js",
-      "types": "./compiler-sfc/index.d.ts"
+      "require": "./compiler-sfc/index.js"
     },
     "./dist/*": "./dist/*",
     "./package.json": "./package.json",
@@ -68,10 +66,10 @@
   },
   "homepage": "https://github.com/vuejs/core/tree/main/packages/vue#readme",
   "dependencies": {
-    "@vue/shared": "3.2.38",
-    "@vue/compiler-dom": "3.2.38",
-    "@vue/runtime-dom": "3.2.38",
-    "@vue/compiler-sfc": "3.2.38",
-    "@vue/server-renderer": "3.2.38"
+    "@vue/shared": "3.2.37",
+    "@vue/compiler-dom": "3.2.37",
+    "@vue/runtime-dom": "3.2.37",
+    "@vue/compiler-sfc": "3.2.37",
+    "@vue/server-renderer": "3.2.37"
   }
 }

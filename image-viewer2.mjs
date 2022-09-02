@@ -23,7 +23,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   ...__default__,
   props: imageViewerProps,
   emits: imageViewerEmits,
-  setup(__props, { emit }) {
+  setup(__props, { expose, emit }) {
     const props = __props;
     const modes = {
       CONTAIN: {
@@ -43,7 +43,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const imgRefs = ref([]);
     const scopeEventListener = effectScope();
     const loading = ref(true);
-    const index = ref(props.initialIndex);
+    const activeIndex = ref(props.initialIndex);
     const mode = shallowRef(modes.CONTAIN);
     const transform = ref({
       scale: 1,
@@ -57,13 +57,13 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       return urlList.length <= 1;
     });
     const isFirst = computed(() => {
-      return index.value === 0;
+      return activeIndex.value === 0;
     });
     const isLast = computed(() => {
-      return index.value === props.urlList.length - 1;
+      return activeIndex.value === props.urlList.length - 1;
     });
     const currentImg = computed(() => {
-      return props.urlList[index.value];
+      return props.urlList[activeIndex.value];
     });
     const imgStyle = computed(() => {
       const { scale, deg, offsetX, offsetY, enableTransition } = transform.value;
@@ -189,22 +189,24 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       const modeNames = keysOf(modes);
       const modeValues = Object.values(modes);
       const currentMode = mode.value.name;
-      const index2 = modeValues.findIndex((i) => i.name === currentMode);
-      const nextIndex = (index2 + 1) % modeNames.length;
+      const index = modeValues.findIndex((i) => i.name === currentMode);
+      const nextIndex = (index + 1) % modeNames.length;
       mode.value = modes[modeNames[nextIndex]];
       reset();
+    }
+    function setActiveItem(index) {
+      const len = props.urlList.length;
+      activeIndex.value = (index + len) % len;
     }
     function prev() {
       if (isFirst.value && !props.infinite)
         return;
-      const len = props.urlList.length;
-      index.value = (index.value - 1 + len) % len;
+      setActiveItem(activeIndex.value - 1);
     }
     function next() {
       if (isLast.value && !props.infinite)
         return;
-      const len = props.urlList.length;
-      index.value = (index.value + 1) % len;
+      setActiveItem(activeIndex.value + 1);
     }
     function handleActions(action, options = {}) {
       if (loading.value)
@@ -243,7 +245,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         }
       });
     });
-    watch(index, (val) => {
+    watch(activeIndex, (val) => {
       reset();
       emit("switch", val);
     });
@@ -251,6 +253,9 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       var _a, _b;
       registerEventListener();
       (_b = (_a = wrapper.value) == null ? void 0 : _a.focus) == null ? void 0 : _b.call(_a);
+    });
+    expose({
+      setActiveItem
     });
     return (_ctx, _cache) => {
       return openBlock(), createBlock(Teleport, {
@@ -387,7 +392,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                     onError: handleImgError,
                     onMousedown: handleMouseDown
                   }, null, 46, _hoisted_1)), [
-                    [vShow, i === index.value]
+                    [vShow, i === activeIndex.value]
                   ]);
                 }), 128))
               ], 2),

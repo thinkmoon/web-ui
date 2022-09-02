@@ -1,6 +1,6 @@
 {
   "name": "unctx",
-  "version": "2.0.2",
+  "version": "2.0.1",
   "description": "Composition-api in Vanilla js",
   "repository": "unjs/unctx",
   "license": "MIT",
@@ -38,14 +38,13 @@
     "acorn": "^8.8.0",
     "estree-walker": "^3.0.1",
     "magic-string": "^0.26.2",
-    "unplugin": "^0.9.5"
+    "unplugin": "^0.8.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "latest",
     "@types/estree": "latest",
     "@types/jest": "latest",
     "@types/node": "latest",
-    "@vitest/coverage-c8": "^0.22.1",
     "c8": "latest",
     "eslint": "latest",
     "jiti": "^1.14.0",
@@ -54,7 +53,7 @@
     "unbuild": "latest",
     "vitest": "latest"
   },
-  "packageManager": "pnpm@7.9.5",
+  "packageManager": "pnpm@7.8.0",
   "scripts": {
     "build": "unbuild",
     "dev": "vitest",

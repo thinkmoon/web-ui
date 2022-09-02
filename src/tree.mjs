@@ -1,4 +1,5 @@
 import { defineComponent, ref, computed, watch, provide, getCurrentInstance, resolveComponent, openBlock, createElementBlock, normalizeClass, Fragment, renderList, createBlock, createElementVNode, toDisplayString, createCommentVNode, withDirectives, vShow } from 'vue';
+import '../../../utils/index.mjs';
 import '../../../hooks/index.mjs';
 import '../../../tokens/index.mjs';
 import TreeStore from './model/tree-store.mjs';
@@ -8,6 +9,7 @@ import { useNodeExpandEventBroadcast } from './model/useNodeExpandEventBroadcast
 import { useDragNodeHandler } from './model/useDragNode.mjs';
 import { useKeydown } from './model/useKeydown.mjs';
 import _export_sfc from '../../../_virtual/plugin-vue_export-helper.mjs';
+import { iconPropType } from '../../../utils/vue/icon.mjs';
 import { useLocale } from '../../../hooks/use-locale/index.mjs';
 import { useNamespace } from '../../../hooks/use-namespace/index.mjs';
 import { formItemContextKey } from '../../../tokens/form.mjs';
@@ -77,7 +79,9 @@ const _sfc_main = defineComponent({
       type: Number,
       default: 18
     },
-    icon: [String, Object]
+    icon: {
+      type: iconPropType
+    }
   },
   emits: [
     "check-change",
@@ -129,6 +133,9 @@ const _sfc_main = defineComponent({
     const isEmpty = computed(() => {
       const { childNodes } = root.value;
       return !childNodes || childNodes.length === 0 || childNodes.every(({ visible }) => !visible);
+    });
+    watch(() => props.currentNodeKey, (newVal) => {
+      store.value.setCurrentNodeKey(newVal);
     });
     watch(() => props.defaultCheckedKeys, (newVal) => {
       store.value.setDefaultCheckedKey(newVal);
@@ -202,12 +209,22 @@ const _sfc_main = defineComponent({
     const setCurrentNode = (node, shouldAutoExpandParent = true) => {
       if (!props.nodeKey)
         throw new Error("[Tree] nodeKey is required in setCurrentNode");
+      const preNode = store.value.currentNode;
       store.value.setUserCurrentNode(node, shouldAutoExpandParent);
+      const currNode = store.value.currentNode;
+      if (preNode !== currNode) {
+        ctx.emit("current-change", currNode ? currNode.data : null, currNode);
+      }
     };
     const setCurrentKey = (key, shouldAutoExpandParent = true) => {
       if (!props.nodeKey)
         throw new Error("[Tree] nodeKey is required in setCurrentKey");
+      const preNode = store.value.currentNode;
       store.value.setCurrentNodeKey(key, shouldAutoExpandParent);
+      const currNode = store.value.currentNode;
+      if (preNode !== currNode) {
+        ctx.emit("current-change", currNode ? currNode.data : null, currNode);
+      }
     };
     const getNode = (data) => {
       return store.value.getNode(data);

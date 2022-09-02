@@ -32,6 +32,14 @@ var TimePicker = defineComponent({
       blur: (e) => {
         var _a;
         (_a = commonPicker.value) == null ? void 0 : _a.handleBlurInput(e);
+      },
+      handleOpen: () => {
+        var _a;
+        (_a = commonPicker.value) == null ? void 0 : _a.handleOpen();
+      },
+      handleClose: () => {
+        var _a;
+        (_a = commonPicker.value) == null ? void 0 : _a.handleClose();
       }
     });
     return () => {

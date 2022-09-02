@@ -1,5 +1,6 @@
 import '../../../utils/index.mjs';
 import { buildProps, definePropType } from '../../../utils/vue/props/runtime.mjs';
+import { iconPropType } from '../../../utils/vue/icon.mjs';
 
 const notificationTypes = [
   "success",
@@ -21,8 +22,7 @@ const notificationProps = buildProps({
     default: 4500
   },
   icon: {
-    type: definePropType([String, Object]),
-    default: ""
+    type: iconPropType
   },
   id: {
     type: String,

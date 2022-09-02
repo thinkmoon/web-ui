@@ -156,6 +156,9 @@ function treeCellPrefix({
   const ele = [];
   const callback = function(e) {
     e.stopPropagation();
+    if (treeNode.loading) {
+      return;
+    }
     store.loadOrToggle(row);
   };
   if (treeNode.indent) {

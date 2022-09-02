@@ -33,7 +33,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     });
     const iconComponent = computed(() => {
       if (!props.type)
-        return "";
+        return props.icon;
       return TypeComponentsMap[props.type] || props.icon;
     });
     const horizontalClass = computed(() => props.position.endsWith("right") ? "right" : "left");

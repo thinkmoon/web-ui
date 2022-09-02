@@ -1,28 +1,34 @@
+const REPEAT_INTERVAL = 100;
+const REPEAT_DELAY = 600;
 const RepeatClick = {
   beforeMount(el, binding) {
     let interval = null;
-    let isHandlerCalled = false;
+    let delay = null;
     const handler = () => binding.value && binding.value();
     const clear = () => {
-      clearInterval(interval);
-      interval = null;
-      if (!isHandlerCalled) {
-        handler();
+      if (delay) {
+        clearTimeout(delay);
+        delay = null;
       }
-      isHandlerCalled = false;
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
     };
     el.addEventListener("mousedown", (e) => {
       if (e.button !== 0)
         return;
+      handler();
       document.addEventListener("mouseup", clear, { once: true });
-      clearInterval(interval);
-      interval = setInterval(() => {
-        isHandlerCalled = true;
-        handler();
-      }, 100);
+      clear();
+      delay = setTimeout(() => {
+        interval = setInterval(() => {
+          handler();
+        }, REPEAT_INTERVAL);
+      }, REPEAT_DELAY);
     });
   }
 };
 
-export { RepeatClick as default };
+export { REPEAT_DELAY, REPEAT_INTERVAL, RepeatClick as default };
 //# sourceMappingURL=index.mjs.map

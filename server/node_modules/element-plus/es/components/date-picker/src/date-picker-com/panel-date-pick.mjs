@@ -452,6 +452,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                   placeholder: unref(t)("el.datepicker.selectDate"),
                   "model-value": unref(visibleDate),
                   size: "small",
+                  "validate-event": false,
                   onInput: _cache[0] || (_cache[0] = (val) => userInputDate.value = val),
                   onChange: handleVisibleDateChange
                 }, null, 8, ["placeholder", "model-value"])
@@ -463,6 +464,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                   placeholder: unref(t)("el.datepicker.selectTime"),
                   "model-value": unref(visibleTime),
                   size: "small",
+                  "validate-event": false,
                   onFocus: onTimePickerInputFocus,
                   onInput: _cache[1] || (_cache[1] = (val) => userInputTime.value = val),
                   onChange: handleVisibleTimeChange

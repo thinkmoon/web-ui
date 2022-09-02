@@ -7,9 +7,12 @@ const dialogContentProps = buildProps({
     type: Boolean,
     default: false
   },
+  alignCenter: {
+    type: Boolean,
+    default: false
+  },
   closeIcon: {
-    type: iconPropType,
-    default: ""
+    type: iconPropType
   },
   customClass: {
     type: String,

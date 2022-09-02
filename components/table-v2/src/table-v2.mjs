@@ -217,23 +217,29 @@ const TableV2 = defineComponent({
       const tableSlots = {
         row: (props2) => createVNode(RowRenderer, mergeProps(props2, tableRowProps), {
           row: slots.row,
-          cell: (props3) => slots.cell ? createVNode(CellRenderer, mergeProps(props3, tableCellProps, {
-            "style": _columnsStyles[props3.column.key]
-          }), {
-            default: () => [slots.cell]
-          }) : createVNode(CellRenderer, mergeProps(props3, tableCellProps, {
-            "style": _columnsStyles[props3.column.key]
-          }), null)
+          cell: (props3) => {
+            let _slot;
+            return slots.cell ? createVNode(CellRenderer, mergeProps(props3, tableCellProps, {
+              "style": _columnsStyles[props3.column.key]
+            }), _isSlot(_slot = slots.cell()) ? _slot : {
+              default: () => [_slot]
+            }) : createVNode(CellRenderer, mergeProps(props3, tableCellProps, {
+              "style": _columnsStyles[props3.column.key]
+            }), null);
+          }
         }),
         header: (props2) => createVNode(HeaderRenderer, mergeProps(props2, tableHeaderProps), {
           header: slots.header,
-          cell: (props3) => slots["header-cell"] ? createVNode(HeaderCellRenderer, mergeProps(props3, tableHeaderCellProps, {
-            "style": _columnsStyles[props3.column.key]
-          }), {
-            default: () => [slots["header-cell"]]
-          }) : createVNode(HeaderCellRenderer, mergeProps(props3, tableHeaderCellProps, {
-            "style": _columnsStyles[props3.column.key]
-          }), null)
+          cell: (props3) => {
+            let _slot2;
+            return slots["header-cell"] ? createVNode(HeaderCellRenderer, mergeProps(props3, tableHeaderCellProps, {
+              "style": _columnsStyles[props3.column.key]
+            }), _isSlot(_slot2 = slots["header-cell"]()) ? _slot2 : {
+              default: () => [_slot2]
+            }) : createVNode(HeaderCellRenderer, mergeProps(props3, tableHeaderCellProps, {
+              "style": _columnsStyles[props3.column.key]
+            }), null);
+          }
         })
       };
       const rootKls = [props.class, ns.b(), ns.e("root"), {

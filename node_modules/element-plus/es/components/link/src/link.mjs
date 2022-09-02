@@ -15,8 +15,7 @@ const linkProps = buildProps({
   disabled: { type: Boolean, default: false },
   href: { type: String, default: "" },
   icon: {
-    type: iconPropType,
-    default: ""
+    type: iconPropType
   }
 });
 const linkEmits = {

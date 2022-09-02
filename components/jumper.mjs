@@ -42,6 +42,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           max: unref(pageCount),
           disabled: unref(disabled),
           "model-value": unref(innerValue),
+          "validate-event": false,
           type: "number",
           "onUpdate:modelValue": handleInput,
           onChange: handleChange

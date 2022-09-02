@@ -1,4 +1,4 @@
-import { defineComponent, useSlots, computed, ref, provide, openBlock, createBlock, Teleport, createVNode, Transition, unref, withCtx, withDirectives, createElementVNode, normalizeClass, createSlots, renderSlot, createCommentVNode, vShow } from 'vue';
+import { defineComponent, useSlots, computed, ref, provide, openBlock, createBlock, Teleport, createVNode, Transition, unref, withCtx, withDirectives, createElementVNode, normalizeClass, normalizeStyle, mergeProps, createSlots, renderSlot, createCommentVNode, vShow } from 'vue';
 import { ElOverlay } from '../../overlay/index.mjs';
 import '../../../hooks/index.mjs';
 import '../../../tokens/index.mjs';
@@ -15,7 +15,8 @@ import ElFocusTrap from '../../focus-trap/src/focus-trap.mjs';
 
 const _hoisted_1 = ["aria-label", "aria-labelledby", "aria-describedby"];
 const __default__ = {
-  name: "ElDialog"
+  name: "ElDialog",
+  inheritAttrs: false
 };
 const _sfc_main = /* @__PURE__ */ defineComponent({
   ...__default__,
@@ -31,6 +32,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       version: "3.0.0",
       ref: "https://element-plus.org/en-US/component/dialog.html#slots"
     }, computed(() => !!slots.title));
+    useDeprecated({
+      scope: "el-dialog",
+      from: "custom-class",
+      replacement: "class",
+      version: "2.3.0",
+      ref: "https://element-plus.org/en-US/component/dialog.html#attributes",
+      type: "Attribute"
+    }, computed(() => !!props.customClass));
     const ns = useNamespace("dialog");
     const dialogRef = ref();
     const headerRef = ref();
@@ -40,6 +49,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       titleId,
       bodyId,
       style,
+      overlayDialogStyle,
       rendered,
       zIndex,
       afterEnter,
@@ -92,6 +102,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                   "aria-labelledby": !_ctx.title ? unref(titleId) : void 0,
                   "aria-describedby": unref(bodyId),
                   class: normalizeClass(`${unref(ns).namespace.value}-overlay-dialog`),
+                  style: normalizeStyle(unref(overlayDialogStyle)),
                   onClick: _cache[0] || (_cache[0] = (...args) => unref(overlayEvent).onClick && unref(overlayEvent).onClick(...args)),
                   onMousedown: _cache[1] || (_cache[1] = (...args) => unref(overlayEvent).onMousedown && unref(overlayEvent).onMousedown(...args)),
                   onMouseup: _cache[2] || (_cache[2] = (...args) => unref(overlayEvent).onMouseup && unref(overlayEvent).onMouseup(...args))
@@ -105,19 +116,21 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                     onReleaseRequested: unref(onCloseRequested)
                   }, {
                     default: withCtx(() => [
-                      unref(rendered) ? (openBlock(), createBlock(ElDialogContent, {
+                      unref(rendered) ? (openBlock(), createBlock(ElDialogContent, mergeProps({
                         key: 0,
                         ref_key: "dialogContentRef",
-                        ref: dialogContentRef,
+                        ref: dialogContentRef
+                      }, _ctx.$attrs, {
                         "custom-class": _ctx.customClass,
                         center: _ctx.center,
+                        "align-center": _ctx.alignCenter,
                         "close-icon": _ctx.closeIcon,
                         draggable: unref(draggable),
                         fullscreen: _ctx.fullscreen,
                         "show-close": _ctx.showClose,
                         title: _ctx.title,
                         onClose: unref(handleClose)
-                      }, createSlots({
+                      }), createSlots({
                         header: withCtx(() => [
                           !_ctx.$slots.title ? renderSlot(_ctx.$slots, "header", {
                             key: 0,
@@ -137,11 +150,11 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                             renderSlot(_ctx.$slots, "footer")
                           ])
                         } : void 0
-                      ]), 1032, ["custom-class", "center", "close-icon", "draggable", "fullscreen", "show-close", "title", "onClose"])) : createCommentVNode("v-if", true)
+                      ]), 1040, ["custom-class", "center", "align-center", "close-icon", "draggable", "fullscreen", "show-close", "title", "onClose"])) : createCommentVNode("v-if", true)
                     ]),
                     _: 3
                   }, 8, ["trapped", "onFocusAfterTrapped", "onFocusAfterReleased", "onReleaseRequested"])
-                ], 42, _hoisted_1)
+                ], 46, _hoisted_1)
               ]),
               _: 3
             }, 8, ["mask", "overlay-class", "z-index"]), [

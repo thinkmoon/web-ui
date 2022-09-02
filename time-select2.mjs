@@ -8,6 +8,7 @@ import { timeSelectProps } from './time-select.mjs';
 import { parseTime, formatTime, compareTime, nextTime } from './utils.mjs';
 import _export_sfc from '../../../_virtual/plugin-vue_export-helper.mjs';
 import { useNamespace } from '../../../hooks/use-namespace/index.mjs';
+import { useDisabled } from '../../../hooks/use-common-props/index.mjs';
 
 const __default__ = {
   name: "ElTimeSelect"
@@ -22,6 +23,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const { Option: ElOption } = ElSelect;
     const nsInput = useNamespace("input");
     const select = ref();
+    const _disabled = useDisabled();
     const value = computed(() => props.modelValue);
     const start = computed(() => {
       const time = parseTime(props.start);
@@ -76,7 +78,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         ref_key: "select",
         ref: select,
         "model-value": unref(value),
-        disabled: _ctx.disabled,
+        disabled: unref(_disabled),
         clearable: _ctx.clearable,
         "clear-icon": _ctx.clearIcon,
         size: _ctx.size,

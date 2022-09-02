@@ -7,12 +7,21 @@ const Effect = {
   LIGHT: "light",
   DARK: "dark"
 };
+const roleTypes = [
+  "dialog",
+  "grid",
+  "listbox",
+  "menu",
+  "tooltip",
+  "tree"
+];
 const usePopperProps = buildProps({
   role: {
     type: String,
+    values: roleTypes,
     default: "tooltip"
   }
 });
 
-export { Effect, usePopperProps };
+export { Effect, roleTypes, usePopperProps };
 //# sourceMappingURL=popper.mjs.map

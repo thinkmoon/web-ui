@@ -69,12 +69,10 @@ const inputProps = buildProps({
     default: false
   },
   suffixIcon: {
-    type: iconPropType,
-    default: ""
+    type: iconPropType
   },
   prefixIcon: {
-    type: iconPropType,
-    default: ""
+    type: iconPropType
   },
   containerRole: {
     type: String,

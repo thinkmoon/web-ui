@@ -8,8 +8,7 @@ const breadcrumbProps = buildProps({
     default: "/"
   },
   separatorIcon: {
-    type: iconPropType,
-    default: ""
+    type: iconPropType
   }
 });
 

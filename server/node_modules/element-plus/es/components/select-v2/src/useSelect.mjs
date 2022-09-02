@@ -364,7 +364,7 @@ const useSelect = (props, emit) => {
       states.softFocus = false;
     }
   };
-  const handleBlur = () => {
+  const handleBlur = (event) => {
     states.softFocus = false;
     return nextTick(() => {
       var _a, _b;
@@ -376,7 +376,7 @@ const useSelect = (props, emit) => {
         states.isSilentBlur = false;
       } else {
         if (states.isComposing) {
-          emit("blur");
+          emit("blur", event);
         }
       }
       states.isComposing = false;

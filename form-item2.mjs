@@ -1,6 +1,6 @@
 import { defineComponent, useSlots, inject, ref, computed, nextTick, watch, reactive, toRefs, provide, onMounted, onBeforeUnmount, openBlock, createElementBlock, normalizeClass, unref, createVNode, withCtx, createBlock, resolveDynamicComponent, normalizeStyle, renderSlot, createTextVNode, toDisplayString, createCommentVNode, createElementVNode, Transition } from 'vue';
 import AsyncValidator from 'async-validator';
-import { castArray, isEqual, clone } from 'lodash-unified';
+import { castArray, clone } from 'lodash-unified';
 import { refDebounced, isBoolean } from '@vueuse/core';
 import '../../../utils/index.mjs';
 import '../../../tokens/index.mjs';
@@ -163,7 +163,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
     const validate = async (trigger, callback) => {
       if (isResettingField) {
-        isResettingField = false;
         return false;
       }
       const hasCallback = isFunction(callback);
@@ -189,18 +188,18 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const clearValidate = () => {
       setValidationState("");
       validateMessage.value = "";
+      isResettingField = false;
     };
     const resetField = async () => {
       const model = formContext == null ? void 0 : formContext.model;
       if (!model || !props.prop)
         return;
       const computedValue = getProp(model, props.prop);
-      if (!isEqual(computedValue.value, initialValue)) {
-        isResettingField = true;
-        computedValue.value = clone(initialValue);
-      }
+      isResettingField = true;
+      computedValue.value = clone(initialValue);
       await nextTick();
       clearValidate();
+      isResettingField = false;
     };
     const addInputId = (id) => {
       if (!inputIds.value.includes(id)) {

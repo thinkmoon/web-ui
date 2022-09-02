@@ -29,12 +29,10 @@ const switchProps = buildProps({
     default: false
   },
   activeIcon: {
-    type: iconPropType,
-    default: ""
+    type: iconPropType
   },
   inactiveIcon: {
-    type: iconPropType,
-    default: ""
+    type: iconPropType
   },
   activeText: {
     type: String,

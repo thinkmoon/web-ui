@@ -107,14 +107,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       return toPrecision(val + props.step * coefficient);
     };
     const increase = () => {
-      if (inputNumberDisabled.value || maxDisabled.value)
+      if (props.readonly || inputNumberDisabled.value || maxDisabled.value)
         return;
       const value = props.modelValue || 0;
       const newVal = ensurePrecision(value);
       setCurrentValue(newVal);
     };
     const decrease = () => {
-      if (inputNumberDisabled.value || minDisabled.value)
+      if (props.readonly || inputNumberDisabled.value || minDisabled.value)
         return;
       const value = props.modelValue || 0;
       const newVal = ensurePrecision(value, -1);
@@ -277,6 +277,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           step: _ctx.step,
           "model-value": unref(displayValue),
           placeholder: _ctx.placeholder,
+          readonly: _ctx.readonly,
           disabled: unref(inputNumberDisabled),
           size: unref(inputNumberSize),
           max: _ctx.max,
@@ -292,7 +293,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           onFocus: handleFocus,
           onInput: handleInput,
           onChange: handleInputChange
-        }, null, 8, ["id", "step", "model-value", "placeholder", "disabled", "size", "max", "min", "name", "label", "onKeydown"])
+        }, null, 8, ["id", "step", "model-value", "placeholder", "readonly", "disabled", "size", "max", "min", "name", "label", "onKeydown"])
       ], 34);
     };
   }

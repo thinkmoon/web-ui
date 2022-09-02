@@ -49,6 +49,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           disabled: _ctx.disabled,
           "popper-class": _ctx.popperClass,
           size: _ctx.size,
+          "validate-event": false,
           onChange: handleChange
         }, {
           default: withCtx(() => [

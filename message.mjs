@@ -10,7 +10,7 @@ const messageDefaults = mutable({
   center: false,
   dangerouslyUseHTMLString: false,
   duration: 3e3,
-  icon: "",
+  icon: void 0,
   id: "",
   message: "",
   onClose: void 0,

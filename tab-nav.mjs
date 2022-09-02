@@ -216,6 +216,7 @@ const TabNav = defineComponent({
       })])] : null;
       const tabs = props.panes.map((pane, index) => {
         var _a, _b, _c, _d;
+        const uid = pane.uid;
         const disabled = pane.props.disabled;
         const tabName = (_b = (_a = pane.props.name) != null ? _a : pane.index) != null ? _b : `${index}`;
         const closable = !disabled && (pane.isClosable || props.editable);
@@ -229,10 +230,10 @@ const TabNav = defineComponent({
         const tabLabelContent = ((_d = (_c = pane.slots).label) == null ? void 0 : _d.call(_c)) || pane.props.label;
         const tabindex = !disabled && pane.active ? 0 : -1;
         return createVNode("div", {
-          "ref": `tab-${tabName}`,
+          "ref": `tab-${uid}`,
           "class": [ns.e("item"), ns.is(rootTabs.props.tabPosition), ns.is("active", pane.active), ns.is("disabled", disabled), ns.is("closable", closable), ns.is("focus", isFocus.value)],
           "id": `tab-${tabName}`,
-          "key": `tab-${tabName}`,
+          "key": `tab-${uid}`,
           "aria-controls": `pane-${tabName}`,
           "role": "tab",
           "aria-selected": pane.active,

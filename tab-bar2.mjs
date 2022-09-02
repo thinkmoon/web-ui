@@ -33,7 +33,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       const sizeDir = sizeName === "width" ? "x" : "y";
       props.tabs.every((tab) => {
         var _a, _b, _c, _d;
-        const $el = (_b = (_a = instance.parent) == null ? void 0 : _a.refs) == null ? void 0 : _b[`tab-${tab.paneName}`];
+        const $el = (_b = (_a = instance.parent) == null ? void 0 : _a.refs) == null ? void 0 : _b[`tab-${tab.uid}`];
         if (!$el)
           return false;
         if (!tab.active) {

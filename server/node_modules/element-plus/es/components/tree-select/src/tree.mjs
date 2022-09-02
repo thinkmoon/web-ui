@@ -47,7 +47,7 @@ const useTree = (props, { attrs, slots, emit }, {
     ...attrs,
     nodeKey: key,
     expandOnClickNode: computed(() => {
-      return !props.checkStrictly;
+      return !props.checkStrictly && props.expandOnClickNode;
     }),
     defaultExpandedKeys: computed(() => {
       return props.defaultExpandedKeys ? props.defaultExpandedKeys.concat(defaultExpandedParentKeys) : defaultExpandedParentKeys;
@@ -77,7 +77,7 @@ const useTree = (props, { attrs, slots, emit }, {
           const option = (_b = select.value) == null ? void 0 : _b.options.get(getNodeValByProp("value", data));
           (_c = select.value) == null ? void 0 : _c.handleOptionSelect(option, true);
         }
-      } else {
+      } else if (props.expandOnClickNode) {
         e.proxy.handleExpandIconClick();
       }
     },

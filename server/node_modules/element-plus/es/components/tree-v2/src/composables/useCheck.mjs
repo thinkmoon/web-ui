@@ -5,7 +5,7 @@ function useCheck(props, tree) {
   const checkedKeys = ref(/* @__PURE__ */ new Set());
   const indeterminateKeys = ref(/* @__PURE__ */ new Set());
   const { emit } = getCurrentInstance();
-  watch(() => tree.value, () => {
+  watch([() => tree.value, () => props.defaultCheckedKeys], () => {
     return nextTick(() => {
       _setCheckedKeys(props.defaultCheckedKeys);
     });

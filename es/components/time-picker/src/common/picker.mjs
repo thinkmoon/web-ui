@@ -137,6 +137,12 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       ignoreFocusEvent = false;
       emit("visible-change", false);
     };
+    const handleOpen = () => {
+      pickerVisible.value = true;
+    };
+    const handleClose = () => {
+      pickerVisible.value = false;
+    };
     const focus = (focusStartInput = true, isIgnoreFocusEvent = false) => {
       ignoreFocusEvent = isIgnoreFocusEvent;
       const [leftInput, rightInput] = unref(refInput);
@@ -444,6 +450,8 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       focus,
       handleFocusInput,
       handleBlurInput,
+      handleOpen,
+      handleClose,
       onPick
     });
     return (_ctx, _cache) => {
@@ -486,7 +494,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
             readonly: !_ctx.editable || _ctx.readonly || unref(isDatesPicker) || _ctx.type === "week",
             label: _ctx.label,
             tabindex: _ctx.tabindex,
-            "validate-event": _ctx.validateEvent,
+            "validate-event": false,
             onInput: onUserInput,
             onFocus: handleFocusInput,
             onBlur: handleBlurInput,
@@ -525,7 +533,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
               }, 8, ["class", "onClick"])) : createCommentVNode("v-if", true)
             ]),
             _: 1
-          }, 8, ["id", "model-value", "name", "size", "disabled", "placeholder", "class", "style", "readonly", "label", "tabindex", "validate-event", "onKeydown"])) : (openBlock(), createElementBlock("div", {
+          }, 8, ["id", "model-value", "name", "size", "disabled", "placeholder", "class", "style", "readonly", "label", "tabindex", "onKeydown"])) : (openBlock(), createElementBlock("div", {
             key: 1,
             ref_key: "inputRef",
             ref: inputRef,

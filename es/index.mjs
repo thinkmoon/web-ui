@@ -32,7 +32,7 @@ export { carouselEmits, carouselProps } from './components/carousel/src/carousel
 export { carouselItemProps } from './components/carousel/src/carousel-item.mjs';
 export { ElCarousel, ElCarouselItem } from './components/carousel/index.mjs';
 export { ElCascader } from './components/cascader/index.mjs';
-export { CASCADER_PANEL_INJECTION_KEY, ExpandTrigger } from './components/cascader-panel/src/types.mjs';
+export { CASCADER_PANEL_INJECTION_KEY } from './components/cascader-panel/src/types.mjs';
 export { CommonProps, DefaultProps, useCascaderConfig } from './components/cascader-panel/src/config.mjs';
 export { ElCascaderPanel } from './components/cascader-panel/index.mjs';
 export { checkTagEmits, checkTagProps } from './components/check-tag/src/check-tag.mjs';
@@ -92,7 +92,7 @@ export { paginationEmits, paginationProps } from './components/pagination/src/pa
 export { ElPagination } from './components/pagination/index.mjs';
 export { popconfirmProps } from './components/popconfirm/src/popconfirm.mjs';
 export { ElPopconfirm } from './components/popconfirm/index.mjs';
-export { Effect, usePopperProps } from './components/popper/src/popper.mjs';
+export { Effect, roleTypes, usePopperProps } from './components/popper/src/popper.mjs';
 export { usePopperTriggerProps } from './components/popper/src/trigger.mjs';
 export { usePopperContentEmits, usePopperContentProps, usePopperCoreConfigProps } from './components/popper/src/content.mjs';
 export { usePopperArrowProps } from './components/popper/src/arrow.mjs';
@@ -113,7 +113,7 @@ export { ElResult } from './components/result/index.mjs';
 export { RowAlign, RowJustify, rowProps } from './components/row/src/row.mjs';
 export { ElRow } from './components/row/index.mjs';
 export { BAR_MAP, GAP, renderThumbStyle } from './components/scrollbar/src/util.mjs';
-export { scrollbarEmits, scrollbarProps } from './components/scrollbar/src/scrollbar2.mjs';
+export { scrollbarEmits, scrollbarProps } from './components/scrollbar/src/scrollbar.mjs';
 export { thumbProps } from './components/scrollbar/src/thumb.mjs';
 export { ElScrollbar } from './components/scrollbar/index.mjs';
 export { selectGroupKey, selectKey } from './components/select/src/token.mjs';

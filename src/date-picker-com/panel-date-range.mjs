@@ -392,6 +392,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                     placeholder: unref(t)("el.datepicker.startDate"),
                     class: normalizeClass(unref(drpNs).e("editor")),
                     "model-value": unref(minVisibleDate),
+                    "validate-event": false,
                     onInput: _cache[0] || (_cache[0] = (val) => handleDateInput(val, "min")),
                     onChange: _cache[1] || (_cache[1] = (val) => handleDateChange(val, "min"))
                   }, null, 8, ["disabled", "placeholder", "class", "model-value"])
@@ -405,6 +406,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                     disabled: unref(rangeState).selecting,
                     placeholder: unref(t)("el.datepicker.startTime"),
                     "model-value": unref(minVisibleTime),
+                    "validate-event": false,
                     onFocus: _cache[2] || (_cache[2] = ($event) => minTimePickerVisible.value = true),
                     onInput: _cache[3] || (_cache[3] = (val) => handleTimeInput(val, "min")),
                     onChange: _cache[4] || (_cache[4] = (val) => handleTimeChange(val, "min"))
@@ -442,6 +444,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                     placeholder: unref(t)("el.datepicker.endDate"),
                     "model-value": unref(maxVisibleDate),
                     readonly: !unref(minDate),
+                    "validate-event": false,
                     onInput: _cache[5] || (_cache[5] = (val) => handleDateInput(val, "max")),
                     onChange: _cache[6] || (_cache[6] = (val) => handleDateChange(val, "max"))
                   }, null, 8, ["class", "disabled", "placeholder", "model-value", "readonly"])
@@ -456,6 +459,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                     placeholder: unref(t)("el.datepicker.endTime"),
                     "model-value": unref(maxVisibleTime),
                     readonly: !unref(minDate),
+                    "validate-event": false,
                     onFocus: _cache[7] || (_cache[7] = ($event) => unref(minDate) && (maxTimePickerVisible.value = true)),
                     onInput: _cache[8] || (_cache[8] = (val) => handleTimeInput(val, "max")),
                     onChange: _cache[9] || (_cache[9] = (val) => handleTimeChange(val, "max"))

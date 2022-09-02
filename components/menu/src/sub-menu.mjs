@@ -8,9 +8,11 @@ import { ArrowDown, ArrowRight } from '@element-plus/icons-vue';
 import { ElIcon } from '../../icon/index.mjs';
 import useMenu from './use-menu.mjs';
 import { useMenuCssVar } from './use-menu-css-var.mjs';
-import { buildProps, definePropType } from '../../../utils/vue/props/runtime.mjs';
+import { buildProps } from '../../../utils/vue/props/runtime.mjs';
+import { iconPropType } from '../../../utils/vue/icon.mjs';
 import { useNamespace } from '../../../hooks/use-namespace/index.mjs';
 import { throwError } from '../../../utils/error.mjs';
+import { isString } from '@vue/shared';
 
 const subMenuProps = buildProps({
   index: {
@@ -36,16 +38,16 @@ const subMenuProps = buildProps({
     default: 6
   },
   expandCloseIcon: {
-    type: definePropType([Object, Function])
+    type: iconPropType
   },
   expandOpenIcon: {
-    type: definePropType([Object, Function])
+    type: iconPropType
   },
   collapseCloseIcon: {
-    type: definePropType([Object, Function])
+    type: iconPropType
   },
   collapseOpenIcon: {
-    type: definePropType([Object, Function])
+    type: iconPropType
   }
 });
 const COMPONENT_NAME = "ElSubMenu";
@@ -215,7 +217,9 @@ var SubMenu = defineComponent({
           style: {
             transform: opened.value ? props.expandCloseIcon && props.expandOpenIcon || props.collapseCloseIcon && props.collapseOpenIcon && rootMenu.props.collapse ? "none" : "rotateZ(180deg)" : "none"
           }
-        }, { default: () => h(subMenuTitleIcon.value) })
+        }, {
+          default: () => isString(subMenuTitleIcon.value) ? h(instance.appContext.components[subMenuTitleIcon.value]) : h(subMenuTitleIcon.value)
+        })
       ];
       const ulStyle = useMenuCssVar(rootMenu.props, subMenu.level + 1);
       const child = rootMenu.isMenuPopup ? h(ElTooltip, {

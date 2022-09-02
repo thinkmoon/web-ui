@@ -90,7 +90,6 @@ function useRender(props, slots, owner) {
       };
     }
     let originRenderCell = column.renderCell;
-    const hasTreeColumnValue = hasTreeColumn.value;
     if (column.type === "expand") {
       column.renderCell = (data) => h("div", {
         class: "cell"
@@ -108,7 +107,7 @@ function useRender(props, slots, owner) {
         } else {
           children = originRenderCell(data);
         }
-        const shouldCreatePlaceholder = hasTreeColumnValue && data.cellIndex === 0;
+        const shouldCreatePlaceholder = hasTreeColumn.value && data.cellIndex === 0;
         const prefix = treeCellPrefix(data, shouldCreatePlaceholder);
         const props2 = {
           class: "cell",

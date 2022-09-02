@@ -17,7 +17,7 @@ function getWindow(node) {
   return node;
 }
 
-function getComputedStyle$1(element) {
+function getComputedStyle(element) {
   return getWindow(element).getComputedStyle(element);
 }
 
@@ -59,7 +59,7 @@ function isOverflowElement(element) {
     overflow,
     overflowX,
     overflowY
-  } = getComputedStyle$1(element);
+  } = getComputedStyle(element);
   return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
 }
 function isTableElement(element) {
@@ -68,7 +68,7 @@ function isTableElement(element) {
 function isContainingBlock(element) {
   // TODO: Try and use feature detection here instead
   const isFirefox = /firefox/i.test(getUAString());
-  const css = getComputedStyle$1(element); // This is non-exhaustive but covers the most common CSS properties that
+  const css = getComputedStyle(element); // This is non-exhaustive but covers the most common CSS properties that
   // create a containing block.
   // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
 
@@ -211,7 +211,55 @@ function getTrueOffsetParent(element) {
     return null;
   }
 
-  return element.offsetParent;
+  return composedOffsetParent(element);
+}
+/**
+ * Polyfills the old offsetParent behavior from before the spec was changed:
+ * https://github.com/w3c/csswg-drafts/issues/159
+ */
+
+
+function composedOffsetParent(element) {
+  let {
+    offsetParent
+  } = element;
+  let ancestor = element;
+  let foundInsideSlot = false;
+
+  while (ancestor && ancestor !== offsetParent) {
+    const {
+      assignedSlot
+    } = ancestor;
+
+    if (assignedSlot) {
+      let newOffsetParent = assignedSlot.offsetParent;
+
+      if (getComputedStyle(assignedSlot).display === 'contents') {
+        const hadStyleAttribute = assignedSlot.hasAttribute('style');
+        const oldDisplay = assignedSlot.style.display;
+        assignedSlot.style.display = getComputedStyle(ancestor).display;
+        newOffsetParent = assignedSlot.offsetParent;
+        assignedSlot.style.display = oldDisplay;
+
+        if (!hadStyleAttribute) {
+          assignedSlot.removeAttribute('style');
+        }
+      }
+
+      ancestor = assignedSlot;
+
+      if (offsetParent !== newOffsetParent) {
+        offsetParent = newOffsetParent;
+        foundInsideSlot = true;
+      }
+    } else if (isShadowRoot(ancestor) && ancestor.host && foundInsideSlot) {
+      break;
+    }
+
+    ancestor = isShadowRoot(ancestor) && ancestor.host || ancestor.parentNode;
+  }
+
+  return offsetParent;
 }
 
 function getContainingBlock(element) {
@@ -225,7 +273,8 @@ function getContainingBlock(element) {
     if (isContainingBlock(currentNode)) {
       return currentNode;
     } else {
-      currentNode = currentNode.parentNode;
+      const parent = currentNode.parentNode;
+      currentNode = isShadowRoot(parent) ? parent.host : parent;
     }
   }
 
@@ -349,7 +398,7 @@ function getDocumentRect(element) {
   let x = -scroll.scrollLeft + getWindowScrollBarX(element);
   const y = -scroll.scrollTop;
 
-  if (getComputedStyle$1(body || html).direction === 'rtl') {
+  if (getComputedStyle(body || html).direction === 'rtl') {
     x += max(html.clientWidth, body ? body.clientWidth : 0) - width;
   }
 
@@ -448,7 +497,7 @@ function getClientRectFromClippingAncestor(element, clippingParent, strategy) {
 
 function getClippingAncestors(element) {
   const clippingAncestors = getOverflowAncestors(element);
-  const canEscapeClipping = ['absolute', 'fixed'].includes(getComputedStyle$1(element).position);
+  const canEscapeClipping = ['absolute', 'fixed'].includes(getComputedStyle(element).position);
   const clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
 
   if (!isElement(clipperElement)) {
@@ -509,7 +558,7 @@ const platform = {
     };
   },
   getClientRects: element => Array.from(element.getClientRects()),
-  isRTL: element => getComputedStyle$1(element).direction === 'rtl'
+  isRTL: element => getComputedStyle(element).direction === 'rtl'
 };
 
 /**

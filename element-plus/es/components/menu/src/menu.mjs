@@ -139,6 +139,8 @@ var Menu = defineComponent({
     };
     const calcSliceIndex = () => {
       var _a, _b;
+      if (!menu.value)
+        return -1;
       const items2 = Array.from((_b = (_a = menu.value) == null ? void 0 : _a.childNodes) != null ? _b : []).filter((item) => item.nodeName !== "#text" || item.nodeValue);
       const moreItemWidth = 64;
       const paddingLeft = Number.parseInt(getComputedStyle(menu.value).paddingLeft, 10);

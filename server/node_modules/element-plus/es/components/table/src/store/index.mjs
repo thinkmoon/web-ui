@@ -108,18 +108,19 @@ function useStore() {
       }
     },
     changeSortCondition(states, options) {
-      const { sortingColumn: column, sortProp: prop, sortOrder: order } = states;
-      if (unref(order) === null) {
+      const { sortingColumn, sortProp, sortOrder } = states;
+      const columnValue = unref(sortingColumn), propValue = unref(sortProp), orderValue = unref(sortOrder);
+      if (orderValue === null) {
         states.sortingColumn.value = null;
         states.sortProp.value = null;
       }
-      const ingore = { filter: true };
-      instance.store.execQuery(ingore);
+      const ignore = { filter: true };
+      instance.store.execQuery(ignore);
       if (!options || !(options.silent || options.init)) {
         instance.emit("sort-change", {
-          column: unref(column),
-          prop: unref(prop),
-          order: unref(order)
+          column: columnValue,
+          prop: propValue,
+          order: orderValue
         });
       }
       instance.store.updateTableScrollY();

@@ -34,6 +34,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const isPictureCard = computed(() => props.listType === "picture-card");
     const uploadContentProps = computed(() => ({
       ...props,
+      fileList: uploadFiles.value,
       onStart: handleStart,
       onProgress: handleProgress,
       onSuccess: handleSuccess,
