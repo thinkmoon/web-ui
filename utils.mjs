@@ -1,37 +1,25 @@
-import '../../../utils/index.mjs';
-import { isLeaf } from '../../../utils/dom/aria.mjs';
-
-const getMenuIndex = (el) => {
-  if (!el)
-    return 0;
-  const pieces = el.id.split("-");
-  return Number(pieces[pieces.length - 2]);
-};
-const checkNode = (el) => {
-  if (!el)
-    return;
-  const input = el.querySelector("input");
-  if (input) {
-    input.click();
-  } else if (isLeaf(el)) {
-    el.click();
-  }
-};
-const sortByOriginalOrder = (oldNodes, newNodes) => {
-  const newNodesCopy = newNodes.slice(0);
-  const newIds = newNodesCopy.map((node) => node.uid);
-  const res = oldNodes.reduce((acc, item) => {
-    const index = newIds.indexOf(item.uid);
-    if (index > -1) {
-      acc.push(item);
-      newNodesCopy.splice(index, 1);
-      newIds.splice(index, 1);
+export function rawHeaders(headers) {
+  const rawHeaders2 = [];
+  for (const key in headers) {
+    if (Array.isArray(headers[key])) {
+      for (const h of headers[key]) {
+        rawHeaders2.push(key, h);
+      }
+    } else {
+      rawHeaders2.push(key, headers[key]);
     }
-    return acc;
-  }, []);
-  res.push(...newNodesCopy);
-  return res;
-};
-
-export { checkNode, getMenuIndex, sortByOriginalOrder };
-//# sourceMappingURL=utils.mjs.map
+  }
+  return rawHeaders2;
+}
+export function mergeFns(...functions) {
+  return function(...args) {
+    for (const fn of functions) {
+      fn(...args);
+    }
+  };
+}
+export function notImplemented(name) {
+  return () => {
+    throw new Error(`[unenv] ${name} is not implemented yet!`);
+  };
+}
