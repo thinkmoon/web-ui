@@ -27,6 +27,11 @@ export default defineNuxtConfig({
   vueuse: {
     ssrHandlers: true,
   },
+  // build
+  build: {
+    transpile:
+      lifecycle === 'build' || lifecycle === 'generate' ? ['element-plus'] : [],
+  },
   buildModules: [
     '@vueuse/nuxt',
   ],
