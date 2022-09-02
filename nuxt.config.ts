@@ -19,8 +19,6 @@ export default defineNuxtConfig({
       },
     ],
   },
-  buildDir: '../.nuxt',
-  rootDir: 'src/',
   css: ['assets/css/index.less'],
   // auto import components
   components: true,
@@ -28,11 +26,6 @@ export default defineNuxtConfig({
   // vueuse
   vueuse: {
     ssrHandlers: true,
-  },
-  // build
-  build: {
-    transpile:
-      lifecycle === 'build' || lifecycle === 'generate' ? ['element-plus'] : [],
   },
   buildModules: [
     '@vueuse/nuxt',
