@@ -363,15 +363,35 @@ const client_manifest = {
     "file": "error-500.423c5935.css",
     "resourceType": "style"
   },
-  "pages/admin/editor.css": {
-    "resourceType": "style",
-    "file": "editor.46f3a4ca.css",
-    "src": "pages/admin/editor.css"
-  },
   "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css": {
     "resourceType": "style",
     "file": "error-500.423c5935.css",
     "src": "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css"
+  },
+  "pages/admin.css": {
+    "resourceType": "style",
+    "file": "admin.6e91f5a2.css",
+    "src": "pages/admin.css"
+  },
+  "pages/category/index.css": {
+    "resourceType": "style",
+    "file": "index.c7621f5e.css",
+    "src": "pages/category/index.css"
+  },
+  "pages/index.css": {
+    "resourceType": "style",
+    "file": "index.5fae6cf9.css",
+    "src": "pages/index.css"
+  },
+  "pages/login.css": {
+    "resourceType": "style",
+    "file": "login.2248ea52.css",
+    "src": "pages/login.css"
+  },
+  "pages/page/[pageIndex].css": {
+    "resourceType": "style",
+    "file": "_pageIndex_.5f2a6f76.css",
+    "src": "pages/page/[pageIndex].css"
   },
   "pages/post/[cid].css": {
     "resourceType": "style",
@@ -393,30 +413,10 @@ const client_manifest = {
     "file": "error-404.dbc0c239.css",
     "src": "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-404.css"
   },
-  "pages/page/[pageIndex].css": {
+  "pages/admin/editor.css": {
     "resourceType": "style",
-    "file": "_pageIndex_.5f2a6f76.css",
-    "src": "pages/page/[pageIndex].css"
-  },
-  "pages/admin.css": {
-    "resourceType": "style",
-    "file": "admin.6e91f5a2.css",
-    "src": "pages/admin.css"
-  },
-  "pages/category/index.css": {
-    "resourceType": "style",
-    "file": "index.c7621f5e.css",
-    "src": "pages/category/index.css"
-  },
-  "pages/index.css": {
-    "resourceType": "style",
-    "file": "index.5fae6cf9.css",
-    "src": "pages/index.css"
-  },
-  "pages/login.css": {
-    "resourceType": "style",
-    "file": "login.2248ea52.css",
-    "src": "pages/login.css"
+    "file": "editor.46f3a4ca.css",
+    "src": "pages/admin/editor.css"
   },
   "node_modules/.pnpm/registry.npmmirror.com+nuxt@3.0.0-rc.9_x7qu6lqgqpc5njcn324rvujlvy/node_modules/nuxt/dist/app/entry.css": {
     "resourceType": "style",
