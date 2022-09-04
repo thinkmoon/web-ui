@@ -52,34 +52,34 @@ class Hookable {
     this._hooks = {};
     this._before = null;
     this._after = null;
+    this._deprecatedMessages = null;
     this._deprecatedHooks = {};
     this.hook = this.hook.bind(this);
     this.callHook = this.callHook.bind(this);
     this.callHookWith = this.callHookWith.bind(this);
   }
-  hook(name, fn) {
+  hook(name, fn, opts = {}) {
     if (!name || typeof fn !== "function") {
       return () => {
       };
     }
     const originalName = name;
-    let deprecatedHookObj;
+    let dep;
     while (this._deprecatedHooks[name]) {
-      const deprecatedHook = this._deprecatedHooks[name];
-      if (typeof deprecatedHook === "string") {
-        deprecatedHookObj = { to: deprecatedHook };
-      } else {
-        deprecatedHookObj = deprecatedHook;
-      }
-      name = deprecatedHookObj.to;
+      dep = this._deprecatedHooks[name];
+      name = dep.to;
     }
-    if (deprecatedHookObj) {
-      if (!deprecatedHookObj.message) {
-        console.warn(
-          `${originalName} hook has been deprecated` + (deprecatedHookObj.to ? `, please use ${deprecatedHookObj.to}` : "")
-        );
-      } else {
-        console.warn(deprecatedHookObj.message);
+    if (dep && !opts.allowDeprecated) {
+      let message = dep.message;
+      if (!message) {
+        message = `${originalName} hook has been deprecated` + (dep.to ? `, please use ${dep.to}` : "");
+      }
+      if (!this._deprecatedMessages) {
+        this._deprecatedMessages = /* @__PURE__ */ new Set();
+      }
+      if (!this._deprecatedMessages.has(message)) {
+        console.warn(message);
+        this._deprecatedMessages.add(message);
       }
     }
     this._hooks[name] = this._hooks[name] || [];
@@ -114,7 +114,7 @@ class Hookable {
     }
   }
   deprecateHook(name, deprecated) {
-    this._deprecatedHooks[name] = deprecated;
+    this._deprecatedHooks[name] = typeof deprecated === "string" ? { to: deprecated } : deprecated;
     const _hooks = this._hooks[name] || [];
     this._hooks[name] = void 0;
     for (const hook of _hooks) {

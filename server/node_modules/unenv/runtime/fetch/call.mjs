@@ -6,13 +6,22 @@ export function createCall(handle) {
     const res = new ServerResponse(req);
     req.url = context.url || "/";
     req.method = context.method || "GET";
-    req.headers = context.headers || {};
-    req.headers.host = req.headers.host || context.host || void 0;
+    req.headers = {};
+    if (context.headers) {
+      const headerEntries = typeof context.headers.entries === "function" ? context.headers.entries() : Object.entries(context.headers);
+      for (const [name, value] of headerEntries) {
+        if (!value) {
+          continue;
+        }
+        req.headers[name.toLowerCase()] = value;
+      }
+    }
+    req.headers.host = req.headers.host || context.host || "localhost";
     req.connection.encrypted = req.connection.encrypted || context.protocol === "https";
     req.body = context.body || null;
     return handle(req, res).then(() => {
       const r = {
-        body: res._data?.toString() ?? "",
+        body: res._data || "",
         headers: res._headers,
         status: res.statusCode,
         statusText: res.statusMessage

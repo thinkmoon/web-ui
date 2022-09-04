@@ -1,7 +1,80 @@
 import { getQuery as getQuery$1, withoutTrailingSlash, withoutBase } from 'ufo';
-import { createRouter as createRouter$1 } from 'radix3';
 import destr from 'destr';
 import { parse, serialize } from 'cookie-es';
+import { createRouter as createRouter$1 } from 'radix3';
+
+class H3Error extends Error {
+  constructor() {
+    super(...arguments);
+    this.statusCode = 500;
+    this.fatal = false;
+    this.unhandled = false;
+    this.statusMessage = "Internal Server Error";
+  }
+}
+H3Error.__h3_error__ = true;
+function createError(input) {
+  if (typeof input === "string") {
+    return new H3Error(input);
+  }
+  if (isError(input)) {
+    return input;
+  }
+  const err = new H3Error(input.message ?? input.statusMessage, input.cause ? { cause: input.cause } : void 0);
+  if ("stack" in input) {
+    try {
+      Object.defineProperty(err, "stack", { get() {
+        return input.stack;
+      } });
+    } catch {
+      try {
+        err.stack = input.stack;
+      } catch {
+      }
+    }
+  }
+  if (input.statusCode) {
+    err.statusCode = input.statusCode;
+  }
+  if (input.statusMessage) {
+    err.statusMessage = input.statusMessage;
+  }
+  if (input.data) {
+    err.data = input.data;
+  }
+  if (input.fatal !== void 0) {
+    err.fatal = input.fatal;
+  }
+  if (input.unhandled !== void 0) {
+    err.unhandled = input.unhandled;
+  }
+  return err;
+}
+function sendError(event, error, debug) {
+  if (event.res.writableEnded) {
+    return;
+  }
+  const h3Error = isError(error) ? error : createError(error);
+  const responseBody = {
+    statusCode: h3Error.statusCode,
+    statusMessage: h3Error.statusMessage,
+    stack: [],
+    data: h3Error.data
+  };
+  if (debug) {
+    responseBody.stack = (h3Error.stack || "").split("\n").map((l) => l.trim());
+  }
+  if (event.res.writableEnded) {
+    return;
+  }
+  event.res.statusCode = h3Error.statusCode;
+  event.res.statusMessage = h3Error.statusMessage;
+  event.res.setHeader("Content-Type", MIMES.json);
+  event.res.end(JSON.stringify(responseBody, null, 2));
+}
+function isError(input) {
+  return input?.constructor?.__h3_error__ === true;
+}
 
 function getQuery(event) {
   return getQuery$1(event.req.url || "");
@@ -51,8 +124,8 @@ function getRequestHeader(event, name) {
 }
 const getHeader = getRequestHeader;
 
-const RawBodySymbol = Symbol("h3RawBody");
-const ParsedBodySymbol = Symbol("h3RawBody");
+const RawBodySymbol = Symbol.for("h3RawBody");
+const ParsedBodySymbol = Symbol.for("h3ParsedBody");
 const PayloadMethods = ["PATCH", "POST", "PUT", "DELETE"];
 function readRawBody(event, encoding = "utf-8") {
   assertMethod(event, PayloadMethods);
@@ -148,11 +221,8 @@ function defaultContentType(event, type) {
 function sendRedirect(event, location, code = 302) {
   event.res.statusCode = code;
   event.res.setHeader("Location", location);
-  const html = `<!DOCTYPE html>
-<html>
-  <head><meta http-equiv="refresh" content="0; url=${encodeURI(location)}"></head>
-  <body>Redirecting to <a href=${JSON.stringify(location)}>${encodeURI(location)}</a></body>
-</html>`;
+  const encodedLoc = location.replace(/"/g, "%22");
+  const html = `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=${encodedLoc}"></head></html>`;
   return send(event, html, MIMES.html);
 }
 function getResponseHeaders(event) {
@@ -218,77 +288,129 @@ function deleteCookie(event, name, serializeOptions) {
   });
 }
 
-class H3Error extends Error {
-  constructor() {
-    super(...arguments);
-    this.statusCode = 500;
-    this.fatal = false;
-    this.unhandled = false;
-    this.statusMessage = "Internal Server Error";
-  }
-}
-H3Error.__h3_error__ = true;
-function createError(input) {
-  if (typeof input === "string") {
-    return new H3Error(input);
-  }
-  if (isError(input)) {
-    return input;
-  }
-  const err = new H3Error(input.message ?? input.statusMessage, input.cause ? { cause: input.cause } : void 0);
-  if ("stack" in input) {
-    try {
-      Object.defineProperty(err, "stack", { get() {
-        return input.stack;
-      } });
-    } catch {
-      try {
-        err.stack = input.stack;
-      } catch {
-      }
+class H3Headers {
+  constructor(init) {
+    if (!init) {
+      this._headers = {};
+    } else if (Array.isArray(init)) {
+      this._headers = Object.fromEntries(init.map(([key, value]) => [key.toLowerCase(), value]));
+    } else if (init && "append" in init) {
+      this._headers = Object.fromEntries([...init.entries()]);
+    } else {
+      this._headers = Object.fromEntries(Object.entries(init).map(([key, value]) => [key.toLowerCase(), value]));
     }
   }
-  if (input.statusCode) {
-    err.statusCode = input.statusCode;
+  append(name, value) {
+    const _name = name.toLowerCase();
+    this.set(_name, [this.get(_name), value].filter(Boolean).join(", "));
   }
-  if (input.statusMessage) {
-    err.statusMessage = input.statusMessage;
+  delete(name) {
+    delete this._headers[name.toLowerCase()];
   }
-  if (input.data) {
-    err.data = input.data;
+  get(name) {
+    return this._headers[name.toLowerCase()];
   }
-  if (input.fatal !== void 0) {
-    err.fatal = input.fatal;
+  has(name) {
+    return name.toLowerCase() in this._headers;
   }
-  if (input.unhandled !== void 0) {
-    err.unhandled = input.unhandled;
+  set(name, value) {
+    this._headers[name.toLowerCase()] = String(value);
   }
-  return err;
+  forEach(callbackfn) {
+    Object.entries(this._headers).forEach(([key, value]) => callbackfn(value, key, this));
+  }
 }
-function sendError(event, error, debug) {
-  if (event.res.writableEnded) {
-    return;
+
+class H3Response {
+  constructor(body = null, init = {}) {
+    this.body = null;
+    this.type = "default";
+    this.bodyUsed = false;
+    this.headers = new H3Headers(init.headers);
+    this.status = init.status ?? 200;
+    this.statusText = init.statusText || "";
+    this.redirected = !!init.status && [301, 302, 307, 308].includes(init.status);
+    this._body = body;
+    this.url = "";
+    this.ok = this.status < 300 && this.status > 199;
   }
-  const h3Error = isError(error) ? error : createError(error);
-  const responseBody = {
-    statusCode: h3Error.statusCode,
-    statusMessage: h3Error.statusMessage,
-    stack: [],
-    data: h3Error.data
-  };
-  if (debug) {
-    responseBody.stack = (h3Error.stack || "").split("\n").map((l) => l.trim());
+  clone() {
+    return new H3Response(this.body, {
+      headers: this.headers,
+      status: this.status,
+      statusText: this.statusText
+    });
   }
-  if (event.res.writableEnded) {
-    return;
+  arrayBuffer() {
+    return Promise.resolve(this._body);
   }
-  event.res.statusCode = h3Error.statusCode;
-  event.res.statusMessage = h3Error.statusMessage;
-  event.res.setHeader("Content-Type", MIMES.json);
-  event.res.end(JSON.stringify(responseBody, null, 2));
+  blob() {
+    return Promise.resolve(this._body);
+  }
+  formData() {
+    return Promise.resolve(this._body);
+  }
+  json() {
+    return Promise.resolve(this._body);
+  }
+  text() {
+    return Promise.resolve(this._body);
+  }
 }
-function isError(input) {
-  return input?.constructor?.__h3_error__ === true;
+
+class H3Event {
+  constructor(req, res) {
+    this["__is_event__"] = true;
+    this.context = {};
+    this.req = req;
+    this.res = res;
+    this.event = this;
+    req.event = this;
+    req.context = this.context;
+    req.req = req;
+    req.res = res;
+    res.event = this;
+    res.res = res;
+    res.req = res.req || {};
+    res.req.res = res;
+    res.req.req = req;
+  }
+  respondWith(r) {
+    Promise.resolve(r).then((_response) => {
+      if (this.res.writableEnded) {
+        return;
+      }
+      const response = _response instanceof H3Response ? _response : new H3Response(_response);
+      response.headers.forEach((value, key) => {
+        this.res.setHeader(key, value);
+      });
+      if (response.status) {
+        this.res.statusCode = response.status;
+      }
+      if (response.statusText) {
+        this.res.statusMessage = response.statusText;
+      }
+      if (response.redirected) {
+        this.res.setHeader("Location", response.url);
+      }
+      if (!response._body) {
+        return this.res.end();
+      }
+      if (typeof response._body === "string" || "buffer" in response._body || "byteLength" in response._body) {
+        return this.res.end(response._body);
+      }
+      if (!response.headers.has("content-type")) {
+        response.headers.set("content-type", MIMES.json);
+      }
+      this.res.end(JSON.stringify(response._body));
+    });
+  }
+}
+function isEvent(input) {
+  return "__is_event__" in input;
+}
+function createEvent(req, res) {
+  return new H3Event(req, res);
 }
 
 const defineHandler = (handler) => handler;
@@ -353,6 +475,32 @@ function defineEventHandler(handler) {
   return handler;
 }
 const eventHandler = defineEventHandler;
+function isEventHandler(input) {
+  return "__is_handler__" in input;
+}
+function toEventHandler(handler) {
+  if (isEventHandler(handler)) {
+    return handler;
+  }
+  if (typeof handler !== "function") {
+    throw new TypeError("Invalid handler. It should be a function:", handler);
+  }
+  return eventHandler((event) => {
+    return callHandler(handler, event.req, event.res);
+  });
+}
+function dynamicEventHandler(initial) {
+  let current = initial;
+  const wrapper = eventHandler((event) => {
+    if (current) {
+      return current(event);
+    }
+  });
+  wrapper.set = (handler) => {
+    current = handler;
+  };
+  return wrapper;
+}
 function defineLazyEventHandler(factory) {
   let _promise;
   let _resolved;
@@ -380,54 +528,6 @@ function defineLazyEventHandler(factory) {
   });
 }
 const lazyEventHandler = defineLazyEventHandler;
-function dynamicEventHandler(initial) {
-  let current = initial;
-  const wrapper = eventHandler((event) => {
-    if (current) {
-      return current(event);
-    }
-  });
-  wrapper.set = (handler) => {
-    current = handler;
-  };
-  return wrapper;
-}
-function isEventHandler(input) {
-  return "__is_handler__" in input;
-}
-function toEventHandler(handler) {
-  if (isEventHandler(handler)) {
-    return handler;
-  }
-  if (typeof handler !== "function") {
-    throw new TypeError("Invalid handler. It should be a function:", handler);
-  }
-  return eventHandler((event) => {
-    return callHandler(handler, event.req, event.res);
-  });
-}
-function createEvent(req, res) {
-  const event = {
-    __is_event__: true,
-    req,
-    res,
-    context: {}
-  };
-  event.event = event;
-  req.event = event;
-  req.context = event.context;
-  req.req = req;
-  req.res = res;
-  res.event = event;
-  res.res = res;
-  res.req = res.req || {};
-  res.req.res = res;
-  res.req.req = req;
-  return event;
-}
-function isEvent(input) {
-  return "__is_event__" in input;
-}
 
 function createApp(options = {}) {
   const stack = [];
@@ -586,4 +686,4 @@ function createRouter() {
   return router;
 }
 
-export { H3Error, MIMES, appendHeader, appendHeaders, appendResponseHeader, appendResponseHeaders, assertMethod, callHandler, createApp, createAppEventHandler, createError, createEvent, createRouter, defaultContentType, defineEventHandler, defineHandle, defineHandler, defineLazyEventHandler, defineLazyHandler, defineMiddleware, deleteCookie, dynamicEventHandler, eventHandler, getCookie, getHeader, getHeaders, getMethod, getQuery, getRequestHeader, getRequestHeaders, getResponseHeader, getResponseHeaders, getRouterParam, getRouterParams, handleCacheHeaders, isError, isEvent, isEventHandler, isMethod, isStream, lazyEventHandler, lazyHandle, parseCookies, promisifyHandle, promisifyHandler, readBody, readRawBody, send, sendError, sendRedirect, sendStream, setCookie, setHeader, setHeaders, setResponseHeader, setResponseHeaders, toEventHandler, use, useBase, useBody, useCookie, useCookies, useMethod, useQuery, useRawBody };
+export { H3Error, H3Event, H3Headers, H3Response, MIMES, appendHeader, appendHeaders, appendResponseHeader, appendResponseHeaders, assertMethod, callHandler, createApp, createAppEventHandler, createError, createEvent, createRouter, defaultContentType, defineEventHandler, defineHandle, defineHandler, defineLazyEventHandler, defineLazyHandler, defineMiddleware, deleteCookie, dynamicEventHandler, eventHandler, getCookie, getHeader, getHeaders, getMethod, getQuery, getRequestHeader, getRequestHeaders, getResponseHeader, getResponseHeaders, getRouterParam, getRouterParams, handleCacheHeaders, isError, isEvent, isEventHandler, isMethod, isStream, lazyEventHandler, lazyHandle, parseCookies, promisifyHandle, promisifyHandler, readBody, readRawBody, send, sendError, sendRedirect, sendStream, setCookie, setHeader, setHeaders, setResponseHeader, setResponseHeaders, toEventHandler, use, useBase, useBody, useCookie, useCookies, useMethod, useQuery, useRawBody };
