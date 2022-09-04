@@ -7,10 +7,6 @@ module.exports = {
     'eslint:recommended',
     '@vue/typescript/recommended',
   ],
-  'parserOptions': {
-    'ecmaVersion': 13,
-    'sourceType': 'module',
-  },
   'rules': {
     'object-curly-spacing': ['error', 'always'],
     'max-len': ['error', { 'code': 120 }],
