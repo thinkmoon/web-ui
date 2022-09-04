@@ -8,7 +8,7 @@ module.exports = {
     '@vue/typescript/recommended',
   ],
   'parserOptions': {
-    'ecmaVersion': 'latest',
+    'ecmaVersion': 13,
     'sourceType': 'module',
   },
   'rules': {
