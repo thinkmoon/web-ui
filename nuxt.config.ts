@@ -20,9 +20,6 @@ export default defineNuxtConfig({
     ],
   },
   css: ['assets/css/index.less'],
-  // auto import components
-  components: true,
-
   // vueuse
   vueuse: {
     ssrHandlers: true,
