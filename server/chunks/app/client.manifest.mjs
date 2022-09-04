@@ -363,10 +363,10 @@ const client_manifest = {
     "file": "error-500.423c5935.css",
     "resourceType": "style"
   },
-  "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css": {
+  "pages/admin/editor.css": {
     "resourceType": "style",
-    "file": "error-500.423c5935.css",
-    "src": "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css"
+    "file": "editor.46f3a4ca.css",
+    "src": "pages/admin/editor.css"
   },
   "pages/admin.css": {
     "resourceType": "style",
@@ -398,25 +398,25 @@ const client_manifest = {
     "file": "_cid_.d85db5b7.css",
     "src": "pages/post/[cid].css"
   },
-  "pages/tag/index.css": {
-    "resourceType": "style",
-    "file": "index.506c05f8.css",
-    "src": "pages/tag/index.css"
-  },
   "layouts/default.css": {
     "resourceType": "style",
     "file": "default.e87c0fd5.css",
     "src": "layouts/default.css"
+  },
+  "pages/tag/index.css": {
+    "resourceType": "style",
+    "file": "index.506c05f8.css",
+    "src": "pages/tag/index.css"
   },
   "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-404.css": {
     "resourceType": "style",
     "file": "error-404.dbc0c239.css",
     "src": "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-404.css"
   },
-  "pages/admin/editor.css": {
+  "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css": {
     "resourceType": "style",
-    "file": "editor.46f3a4ca.css",
-    "src": "pages/admin/editor.css"
+    "file": "error-500.423c5935.css",
+    "src": "node_modules/.pnpm/registry.npmmirror.com+@nuxt+ui-templates@0.3.2/node_modules/@nuxt/ui-templates/dist/templates/error-500.css"
   },
   "node_modules/.pnpm/registry.npmmirror.com+nuxt@3.0.0-rc.9_x7qu6lqgqpc5njcn324rvujlvy/node_modules/nuxt/dist/app/entry.css": {
     "resourceType": "style",
