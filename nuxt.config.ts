@@ -27,18 +27,12 @@ export default defineNuxtConfig({
     ],
   },
   css: ['assets/css/index.less'],
-  // vueuse
-  vueuse: {
-    ssrHandlers: true,
-  },
   // build
   build: {
     transpile:
-      lifecycle === 'build' || lifecycle === 'generate' ? ['element-plus'] : [],
+      lifecycle === 'build' || lifecycle === 'generate' ? ['element-plus', '@popperjs/core', '@vueuse/core', 'lodash-unified', '@element-plus/icons-vue', '@floating-ui/dom'] : [],
   },
-  buildModules: [
-    '@vueuse/nuxt',
-  ],
+  experimental: {externalVue: false},
   vite: {
     plugins: [
       AutoImport({
@@ -65,8 +59,5 @@ export default defineNuxtConfig({
       }),
       viteCompression()
     ],
-    build: {
-      minify: 'esbuild',
-    }
   }
 });
