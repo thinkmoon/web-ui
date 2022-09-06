@@ -5,7 +5,7 @@ import runtimeConfig from './runtime.config';
 const lifecycle = process.env.npm_lifecycle_event;
 
 export default defineNuxtConfig({
-  cdnUrl: 'https://thinkmoon.github.io/thinkblog/_nuxt/public',
+  cdnURL: 'https://thinkmoon.github.io/thinkblog/_nuxt/public',
   publicRuntimeConfig: runtimeConfig,
   meta: {
     meta: [
@@ -33,7 +33,6 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [
-      viteCompression()
     ]
   }
 });
