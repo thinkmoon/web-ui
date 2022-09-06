@@ -368,55 +368,55 @@ const client_manifest = {
     "file": "editor.46f3a4ca.css",
     "src": "pages/admin/editor.css"
   },
-  "pages/category/index.css": {
+  "pages/login.css": {
     "resourceType": "style",
-    "file": "index.c7621f5e.css",
-    "src": "pages/category/index.css"
+    "file": "login.2248ea52.css",
+    "src": "pages/login.css"
   },
   "pages/admin.css": {
     "resourceType": "style",
     "file": "admin.6e91f5a2.css",
     "src": "pages/admin.css"
   },
-  "pages/page/[pageIndex].css": {
+  "pages/category/index.css": {
     "resourceType": "style",
-    "file": "_pageIndex_.5f2a6f76.css",
-    "src": "pages/page/[pageIndex].css"
+    "file": "index.c7621f5e.css",
+    "src": "pages/category/index.css"
   },
   "pages/index.css": {
     "resourceType": "style",
     "file": "index.5fae6cf9.css",
     "src": "pages/index.css"
   },
-  "pages/login.css": {
+  "pages/post/[cid].css": {
     "resourceType": "style",
-    "file": "login.2248ea52.css",
-    "src": "pages/login.css"
+    "file": "_cid_.d85db5b7.css",
+    "src": "pages/post/[cid].css"
+  },
+  "pages/page/[pageIndex].css": {
+    "resourceType": "style",
+    "file": "_pageIndex_.5f2a6f76.css",
+    "src": "pages/page/[pageIndex].css"
   },
   "pages/tag/index.css": {
     "resourceType": "style",
     "file": "index.506c05f8.css",
     "src": "pages/tag/index.css"
   },
-  "pages/post/[cid].css": {
+  "layouts/default.css": {
     "resourceType": "style",
-    "file": "_cid_.d85db5b7.css",
-    "src": "pages/post/[cid].css"
-  },
-  "node_modules/@nuxt/ui-templates/dist/templates/error-500.css": {
-    "resourceType": "style",
-    "file": "error-500.08851880.css",
-    "src": "node_modules/@nuxt/ui-templates/dist/templates/error-500.css"
+    "file": "default.e87c0fd5.css",
+    "src": "layouts/default.css"
   },
   "node_modules/@nuxt/ui-templates/dist/templates/error-404.css": {
     "resourceType": "style",
     "file": "error-404.7729cee9.css",
     "src": "node_modules/@nuxt/ui-templates/dist/templates/error-404.css"
   },
-  "layouts/default.css": {
+  "node_modules/@nuxt/ui-templates/dist/templates/error-500.css": {
     "resourceType": "style",
-    "file": "default.e87c0fd5.css",
-    "src": "layouts/default.css"
+    "file": "error-500.08851880.css",
+    "src": "node_modules/@nuxt/ui-templates/dist/templates/error-500.css"
   },
   "node_modules/nuxt/dist/app/entry.css": {
     "resourceType": "style",
