@@ -70,6 +70,7 @@
               </div>
               <div class="ico-warp">
                 <el-icon>
+                  <icon-FolderOpened />
                 </el-icon>
                 <el-link :href="`/category/${item.category}/1`">
                   {{ item.category }}
@@ -77,6 +78,7 @@
               </div>
               <div class="ico-warp">
                 <el-icon>
+                  <icon-Calendar />
                 </el-icon>
                 <a>{{ formatTime(item.created * 1000) }}</a>
               </div>
@@ -84,11 +86,13 @@
             <div class="right">
               <div class="ico-warp">
                 <el-icon>
+                  <icon-View />
                 </el-icon>
                 <span>{{ item.views }}</span>
               </div>
               <div class="ico-warp">
                 <el-icon>
+                  <icon-Star />
                 </el-icon>
                 <span>{{ item.likes }}</span>
               </div>

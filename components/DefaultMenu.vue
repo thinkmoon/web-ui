@@ -33,7 +33,7 @@
           :size="26"
           class="pointer"
         >
-          <IconEqUser></IconEqUser>
+          <icon-User />
         </el-icon>
       </el-link>
     </div>
@@ -41,7 +41,6 @@
 </template>
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
-import IconEqUser from '~icons/ep/user'
 
 const route = useRoute();
 const defaultActive = route.path;
