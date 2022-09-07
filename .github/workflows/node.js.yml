@@ -25,6 +25,13 @@ jobs:
           filename: server.zip
           # Base path for archive files
           path: .output/server
+      - name: Upload Release Assets
+        # You may pin to the exact commit or the version.
+        # uses: alexellis/upload-assets@5586bc227f8525a5e3525e6edf64da5350bfb5b1
+        uses: alexellis/upload-assets@0.3.0
+        with: 
+          # The paths to the assets you want to upload as a JSON array. You can use a glob pattern.
+          asset_paths: server.zip
       - name: GitHub Pages v3
         uses: peaceiris/actions-github-pages@v3.1.12
         with:
