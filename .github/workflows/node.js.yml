@@ -20,6 +20,6 @@ jobs:
         uses: peaceiris/actions-github-pages@v3.1.12
         with:
           personal_token: ${{ secrets.ACCESS_TOKEN }}
-          publish_dir: .output
+          publish_dir: .output/public
 
 
