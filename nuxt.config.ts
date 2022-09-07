@@ -6,7 +6,7 @@ const lifecycle = process.env.npm_lifecycle_event;
 
 export default defineNuxtConfig({
   app: {
-    cdnURL: 'https://thinkmoon.github.io/thinkblog/_nuxt/public',
+    cdnURL: 'https://thinkmoon.github.io/thinkblog/',
   },
   publicRuntimeConfig: runtimeConfig,
   meta: {
