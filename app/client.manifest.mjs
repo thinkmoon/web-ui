@@ -373,45 +373,45 @@ const client_manifest = {
     "file": "login.2248ea52.css",
     "src": "pages/login.css"
   },
-  "pages/admin.css": {
+  "layouts/default.css": {
     "resourceType": "style",
-    "file": "admin.6e91f5a2.css",
-    "src": "pages/admin.css"
-  },
-  "pages/category/index.css": {
-    "resourceType": "style",
-    "file": "index.c7621f5e.css",
-    "src": "pages/category/index.css"
-  },
-  "pages/index.css": {
-    "resourceType": "style",
-    "file": "index.5fae6cf9.css",
-    "src": "pages/index.css"
-  },
-  "pages/post/[cid].css": {
-    "resourceType": "style",
-    "file": "_cid_.d85db5b7.css",
-    "src": "pages/post/[cid].css"
+    "file": "default.e87c0fd5.css",
+    "src": "layouts/default.css"
   },
   "pages/page/[pageIndex].css": {
     "resourceType": "style",
     "file": "_pageIndex_.5f2a6f76.css",
     "src": "pages/page/[pageIndex].css"
   },
+  "pages/post/[cid].css": {
+    "resourceType": "style",
+    "file": "_cid_.d85db5b7.css",
+    "src": "pages/post/[cid].css"
+  },
+  "pages/category/index.css": {
+    "resourceType": "style",
+    "file": "index.c7621f5e.css",
+    "src": "pages/category/index.css"
+  },
   "pages/tag/index.css": {
     "resourceType": "style",
     "file": "index.506c05f8.css",
     "src": "pages/tag/index.css"
   },
-  "layouts/default.css": {
+  "pages/index.css": {
     "resourceType": "style",
-    "file": "default.e87c0fd5.css",
-    "src": "layouts/default.css"
+    "file": "index.5fae6cf9.css",
+    "src": "pages/index.css"
   },
   "node_modules/@nuxt/ui-templates/dist/templates/error-404.css": {
     "resourceType": "style",
     "file": "error-404.7729cee9.css",
     "src": "node_modules/@nuxt/ui-templates/dist/templates/error-404.css"
+  },
+  "pages/admin.css": {
+    "resourceType": "style",
+    "file": "admin.6e91f5a2.css",
+    "src": "pages/admin.css"
   },
   "node_modules/@nuxt/ui-templates/dist/templates/error-500.css": {
     "resourceType": "style",
