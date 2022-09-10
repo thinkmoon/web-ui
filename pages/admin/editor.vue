@@ -87,6 +87,7 @@ import * as qiniu from 'qiniu-js';
 import dayjs from 'dayjs';
 import CategoryApi from '~/api/CategoryApi';
 import TagApi from '~/api/TagApi';
+import VMdEditor from "@kangc/v-md-editor";
 
 const fields = [
   {
@@ -99,6 +100,9 @@ const fields = [
   },
 ];
 export default defineComponent({
+  components:{
+    'v-md-editor': VMdEditor
+  },
   data() {
     return {
       article: {

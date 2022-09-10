@@ -2,7 +2,7 @@
   <div class="">
     <Title>{{ article.title }} | {{ config.TITLE }}</Title>
     <div class="article-content">
-      <v-md-preview :text="content" />
+      <VMdPreview :text="content" />
       <ins
         class="adsbygoogle"
         data-ad-client="ca-pub-3208634444966567"
@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts" setup>
+import VMdPreview from "~/components/VMdPreview";
 import ArticleApi from '~/api/ArticleApi';
 import { useRoute } from 'vue-router';
 import { pushUrl } from '~/utils/BaiduSite';
