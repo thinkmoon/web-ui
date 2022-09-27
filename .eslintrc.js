@@ -1,12 +1,15 @@
+require('@rushstack/eslint-patch/modern-module-resolution')
+
 module.exports = {
-  'env': {
-    'browser': true,
-  },
+  root: true,
   'extends': [
-    'plugin:vue/vue3-recommended',
+    'plugin:vue/vue3-essential',
     'eslint:recommended',
-    '@vue/typescript/recommended',
+    '@vue/eslint-config-typescript'
   ],
+  parserOptions: {
+    ecmaVersion: 'latest'
+  },
   'rules': {
     'object-curly-spacing': ['error', 'always'],
     'max-len': ['error', { 'code': 120 }],
@@ -15,4 +18,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
-};
+}
+
+

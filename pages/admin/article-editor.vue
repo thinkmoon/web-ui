@@ -83,7 +83,6 @@ definePageMeta({
 <script lang="ts">
 import ArticleApi from '~/api/ArticleApi';
 import AttachmentApi from '~/api/AttachmentApi';
-import * as qiniu from 'qiniu-js';
 import dayjs from 'dayjs';
 import CategoryApi from '~/api/CategoryApi';
 import TagApi from '~/api/TagApi';

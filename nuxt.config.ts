@@ -1,8 +1,5 @@
-import { defineNuxtConfig } from 'nuxt';
 import viteCompression from 'vite-plugin-compression';
 import runtimeConfig from './runtime.config';
-
-const lifecycle = process.env.npm_lifecycle_event;
 
 export default defineNuxtConfig({
   app: {
@@ -17,23 +14,51 @@ export default defineNuxtConfig({
     ],
     script: [
       {
+        src: 'https://cdn.staticfile.org/qiniu-js/3.4.1/qiniu.min.js',
+      },
+      {
         async: true,
         src: '/ads.js',
         crossorigin: 'anonymous',
       },
     ],
   },
+  hooks: {
+    "vite:extendConfig"(
+      clientConfig,
+      { isClient }
+    ) {
+      if (isClient) {
+        console.log("允许")
+        // clientConfig.build.rollupOptions.output.manualChunks = (id) => {
+        //   let pkgName = 'other';
+        //   const pkgMatch = id.match(/(pages|components|node_modules)\/(.*?)(\/|\.|$)/);
+        //   if (pkgMatch?.length >= 3) {
+        //     pkgName = pkgMatch[2] || pkgName
+        //   }
+        //   return pkgName
+        // }
+      }else{
+        console.log("不允许")
+      }
+    }
+  },
   css: ['assets/css/index.less'],
-  // build
-  build: {
-    transpile:
-      lifecycle === 'build' || lifecycle === 'generate' ?
-        ['element-plus'] : [],
-  },
-  experimental: {
-    externalVue: false
-  },
   vite: {
-    plugins: [viteCompression()]
+    plugins: [viteCompression()],
+    build: {
+      rollupOptions: {
+        output: {
+          // manualChunks(id) {
+          //   let pkgName = 'other';
+          //   const pkgMatch = id.match(/(pages|components|node_modules)\/(.*?)(\/|\.|$)/);
+          //   if (pkgMatch?.length >= 3) {
+          //     pkgName = pkgMatch[2] || pkgName
+          //   }
+          //   return pkgName
+          // }
+        },
+      }
+    }
   }
 });
