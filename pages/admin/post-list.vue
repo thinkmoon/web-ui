@@ -140,7 +140,7 @@ function handleCurrentChange(val) {
 }
 
 function handleEdit(index, row) {
-  router.push(`/admin/editor?cid=${row.cid}`);
+  router.push(`/admin/article-editor?cid=${row.cid}`);
 }
 </script>
 <style lang="less" scoped>

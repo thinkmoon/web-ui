@@ -86,7 +86,7 @@ import AttachmentApi from '~/api/AttachmentApi';
 import dayjs from 'dayjs';
 import CategoryApi from '~/api/CategoryApi';
 import TagApi from '~/api/TagApi';
-import VMdEditor from "@kangc/v-md-editor";
+import VMdEditor from "~/components/MdEditor";
 
 const fields = [
   {

@@ -18,7 +18,7 @@
               <template #title>
                 文章
               </template>
-              <el-menu-item index="/admin/editor">
+              <el-menu-item index="/admin/article-editor">
                 新增文章
               </el-menu-item>
               <el-menu-item index="/admin/post-list">

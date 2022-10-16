@@ -92,7 +92,7 @@ onMounted(() => {
       starArr.push(star);
     }
     starGeo.setFromPoints(starArr);
-    let sprite = new THREE.TextureLoader().load('/assets/img/star.png');
+    let sprite = new THREE.TextureLoader().load('https://blog.cdn.thinkmoon.cn/2022-10-16/23-45-05');
     let starMaterial = new THREE.PointsMaterial({
       color: 0xaaaaaa,
       size: 0.7,
