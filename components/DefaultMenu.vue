@@ -43,7 +43,7 @@
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const defaultActive = route.path;
+const defaultActive = route?.path ?? '/';
 
 function select(url) {
   location.href = url;

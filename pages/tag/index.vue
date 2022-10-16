@@ -22,12 +22,11 @@
 import TagApi from '~/api/TagApi';
 
 const config = useRuntimeConfig();
-const {data} = await useAsyncData('tag', () => TagApi.getTag());
-
+const { data } = await useAsyncData('tag', () => TagApi.getTag());
 </script>
 
 <style scoped>
 .tag-list {
-	margin: 10px;
+  margin: 10px;
 }
 </style>

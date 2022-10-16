@@ -23,42 +23,8 @@ export default defineNuxtConfig({
       },
     ],
   },
-  hooks: {
-    "vite:extendConfig"(
-      clientConfig,
-      { isClient }
-    ) {
-      if (isClient) {
-        console.log("允许")
-        // clientConfig.build.rollupOptions.output.manualChunks = (id) => {
-        //   let pkgName = 'other';
-        //   const pkgMatch = id.match(/(pages|components|node_modules)\/(.*?)(\/|\.|$)/);
-        //   if (pkgMatch?.length >= 3) {
-        //     pkgName = pkgMatch[2] || pkgName
-        //   }
-        //   return pkgName
-        // }
-      }else{
-        console.log("不允许")
-      }
-    }
-  },
   css: ['assets/css/index.less'],
   vite: {
     plugins: [viteCompression()],
-    build: {
-      rollupOptions: {
-        output: {
-          // manualChunks(id) {
-          //   let pkgName = 'other';
-          //   const pkgMatch = id.match(/(pages|components|node_modules)\/(.*?)(\/|\.|$)/);
-          //   if (pkgMatch?.length >= 3) {
-          //     pkgName = pkgMatch[2] || pkgName
-          //   }
-          //   return pkgName
-          // }
-        },
-      }
-    }
   }
 });
