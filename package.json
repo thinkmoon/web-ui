@@ -19,12 +19,14 @@
     "highlight.js": "^11.6.0",
     "lodash": "^4.17.21",
     "markdown-it-external-links": "^0.0.6",
+    "three": "^0.145.0",
     "vue": "^3.2.40",
     "vue-router": "^4.1.4"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/node": "^18.8.3",
+    "@types/three": "^0.144.0",
     "@vitejs/plugin-vue": "^3.1.2",
     "@vue/eslint-config-typescript": "^11.0.0",
     "@vue/tsconfig": "^0.1.3",
