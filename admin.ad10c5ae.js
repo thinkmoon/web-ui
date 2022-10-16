@@ -1,0 +1,1 @@
+import{_ as t}from"./Footer.155a87f2.js";import{m as n,o as s,b as a,e as c,Q as r,f as _}from"./entry.90aab748.js";const d={},l={class:"app-container"};function m(e,f){const o=t;return s(),a("div",null,[c("div",l,[r(e.$slots,"default")]),_(o)])}const u=n(d,[["render",m]]);export{u as default};
