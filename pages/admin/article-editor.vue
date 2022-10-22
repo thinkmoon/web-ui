@@ -1,6 +1,5 @@
 <template>
   <div class="editor-wrapper">
-    <div class="flex-1" />
     <div class="editor-container">
       <el-input
         v-model="article.title"
@@ -8,28 +7,14 @@
       />
       <v-md-editor
         v-model="article.text"
-        mode="edit"
-        height="560px"
+        mode="editable"
+        height="620px"
         :disabled-menus="[]"
         @save="saveArticle"
         @upload-image="handleUploadImage"
       />
-      <div class="custom-options">
-        <template
-          v-for="(custom,index) in article.fields"
-          :key="custom.name"
-        >
-          <span>{{ custom.name }}</span>
-          <el-input
-            v-model="article.fields[index].value"
-            type="textarea"
-            class="input-with-select"
-            placeholder="请输入"
-          />
-        </template>
-      </div>
     </div>
-    <div class="flex-2 right">
+    <div class="right">
       <section>
         <span class="title">文章分类</span>
         <div class="content">
@@ -72,6 +57,22 @@
           </ClientOnly>
         </div>
       </section>
+      <div class="custom-options">
+        <template
+          v-for="(custom,index) in article.fields"
+          :key="custom.name"
+        >
+          <span>{{ custom.name }}</span>
+          <el-input
+            v-model="article.fields[index].value"
+            type="textarea"
+            rows="6"
+            class="input-with-select"
+            placeholder="请输入"
+          />
+        </template>
+      </div>
+
     </div>
   </div>
 </template>
@@ -92,10 +93,12 @@ const fields = [
   {
     name: 'thumb',
     value: '',
+    rows: 2,
   },
   {
     name: 'desc',
     value: '',
+    rows: 6,
   },
 ];
 export default defineComponent({
@@ -206,7 +209,7 @@ export default defineComponent({
 
 .editor-container {
   display: flex;
-  flex: 4;
+  flex-grow: 1;
   flex-direction: column;
 
   .title-input {
@@ -224,7 +227,7 @@ export default defineComponent({
   }
 
   #write {
-    min-height: 560px;
+    min-height: 620px;
     box-sizing: border-box;
   }
 }

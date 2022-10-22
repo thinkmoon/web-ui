@@ -2,7 +2,7 @@
   <div>
     <el-table
       :data="tableData"
-      height="960"
+      height="640"
       stripe
     >
       <el-table-column

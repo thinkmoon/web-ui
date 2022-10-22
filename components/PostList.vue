@@ -10,7 +10,7 @@
           :href="`/post/${item.cid}`"
           :title="item.title"
         >
-          <div class="overlay" />
+          <div class="overlay"/>
           <el-image
             v-if="item.fields.thumb"
             :src="item.fields.thumb"
@@ -56,7 +56,7 @@
               <div class="post-author">
                 <img
                   height="16"
-                  src="https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg"
+                  :src="avatar"
                   style="border-radius:50% "
                   width="16"
                   alt="醉月思"
@@ -70,7 +70,7 @@
               </div>
               <div class="ico-warp">
                 <el-icon>
-                  <icon-FolderOpened />
+                  <IconFolderOpened/>
                 </el-icon>
                 <el-link :href="`/category/${item.category}/1`">
                   {{ item.category }}
@@ -78,7 +78,7 @@
               </div>
               <div class="ico-warp">
                 <el-icon>
-                  <icon-Calendar />
+                  <IconCalendar/>
                 </el-icon>
                 <a>{{ formatTime(item.created * 1000) }}</a>
               </div>
@@ -86,13 +86,13 @@
             <div class="right">
               <div class="ico-warp">
                 <el-icon>
-                  <icon-View />
+                  <IconView/>
                 </el-icon>
                 <span>{{ item.views }}</span>
               </div>
               <div class="ico-warp">
                 <el-icon>
-                  <icon-Star />
+                  <IconStar/>
                 </el-icon>
                 <span>{{ item.likes }}</span>
               </div>
@@ -105,6 +105,8 @@
 </template>
 <script lang="ts" setup>
 import { formatTime } from '~/utils/TimeUtils';
+
+const avatar = 'https://blog.cdn.thinkmoon.cn/%E5%81%B7%E6%98%9F%E4%B9%9D%E6%9C%88%E5%A4%A9%E5%A4%B4%E5%83%8F.jpeg';
 
 defineProps({
   postList: Array,

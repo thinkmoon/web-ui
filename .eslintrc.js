@@ -1,4 +1,4 @@
-require('@rushstack/eslint-patch/modern-module-resolution')
+require('@rushstack/eslint-patch/modern-module-resolution');
 
 module.exports = {
     root: true,
@@ -11,6 +11,7 @@ module.exports = {
         ecmaVersion: 'latest'
     },
     'rules': {
+        'vue/multi-word-component-names': 'off',
         'object-curly-spacing': ['error', 'always'],
         'max-len': ['error', { 'code': 120 }],
         'no-undef': 'off',
@@ -19,6 +20,6 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'semi': 2
     },
-}
+};
 
 

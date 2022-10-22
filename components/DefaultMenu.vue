@@ -33,7 +33,7 @@
           :size="26"
           class="pointer"
         >
-          <icon-User />
+          <IconUser />
         </el-icon>
       </el-link>
     </div>
@@ -41,7 +41,7 @@
 </template>
 <script lang="ts" setup>
 const route = useRoute();
-const defaultActive = route?.path ?? '/';
+const defaultActive : string = route?.path ?? '/';
 
 function select(url) {
   location.href = url;
