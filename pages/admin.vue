@@ -24,7 +24,14 @@
             </el-menu-item>
           </el-sub-menu>
           <div class="flex-grow"/>
-          <div @click="switchCollapse" class="pointer">切换</div>
+          <div @click="switchCollapse" class="pointer switch-collapse">
+            <el-icon v-show="!isCollapse">
+              <icon-arrow-left></icon-arrow-left>
+            </el-icon>
+            <el-icon v-show="isCollapse">
+              <icon-arrow-right></icon-arrow-right>
+            </el-icon>
+          </div>
         </el-menu>
       </ClientOnly>
     </el-aside>
@@ -80,10 +87,16 @@ function select(url) {
     display: flex;
     padding: 0;
     max-width: 160px;
+    transition: 1s;
     width: auto;
 
     :deep(.el-menu) {
       width: 100%;
+    }
+
+    .switch-collapse {
+      display: flex;
+      justify-content: center;
     }
   }
 

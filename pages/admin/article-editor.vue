@@ -14,69 +14,12 @@
         @upload-image="handleUploadImage"
       />
     </div>
-    <div class="right">
-      <section>
-        <span class="title">文章分类</span>
-        <div class="content">
-          <ClientOnly>
-            <el-select
-              key="category"
-              v-model="article.category_id"
-            >
-              <el-option
-                v-for="item of categoryList"
-                :key="item.mid"
-                :label="item.name"
-                :value="item.mid"
-              >
-                {{ item.name }}
-              </el-option>
-            </el-select>
-          </ClientOnly>
-        </div>
-      </section>
-      <section>
-        <span class="title">文章标签</span>
-        <div class="content">
-          <ClientOnly>
-            <el-select
-              key="category"
-              v-model="article.selectedTag"
-              filterable
-              multiple
-            >
-              <el-option
-                v-for="item of tagList"
-                :key="item.tid"
-                :label="item.name"
-                :value="item.tid"
-              >
-                {{ item.name }}
-              </el-option>
-            </el-select>
-          </ClientOnly>
-        </div>
-      </section>
-      <div class="custom-options">
-        <template
-          v-for="(custom,index) in article.fields"
-          :key="custom.name"
-        >
-          <span>{{ custom.name }}</span>
-          <el-input
-            v-model="article.fields[index].value"
-            type="textarea"
-            rows="6"
-            class="input-with-select"
-            placeholder="请输入"
-          />
-        </template>
-      </div>
-
-    </div>
+    <EditorRight :article="article" :category-list="categoryList" :tag-list="tagList"/>
   </div>
 </template>
 <script lang="ts" setup>
+import EditorRight from "~/components/admin/EditorRight.vue";
+
 definePageMeta({
   keepalive: true,
 });
@@ -85,22 +28,10 @@ definePageMeta({
 import ArticleApi from '~/api/ArticleApi';
 import AttachmentApi from '~/api/AttachmentApi';
 import dayjs from 'dayjs';
-import CategoryApi from '~/api/CategoryApi';
-import TagApi from '~/api/TagApi';
 import VMdEditor from "~/components/MdEditor";
+import { useArticle } from "~/store/article";
 
-const fields = [
-  {
-    name: 'thumb',
-    value: '',
-    rows: 2,
-  },
-  {
-    name: 'desc',
-    value: '',
-    rows: 6,
-  },
-];
+
 export default defineComponent({
   components:{
     'v-md-editor': VMdEditor
@@ -115,8 +46,6 @@ export default defineComponent({
         selectedTag: [],
         fields: [],
       },
-      categoryList: [],
-      tagList: [],
     };
   },
   activated() {
@@ -127,30 +56,14 @@ export default defineComponent({
           ...res,
         };
         this.article.selectedTag = this.article.tag.map(item => item.tid);
-        if (!this.article.fields.length) {
-          this.article.fields = fields;
-        }
+        const articleStore = useArticle();
+        articleStore.setArticle(this.article);
       });
     } else {
       this.data = {};
-      this.article.fields = fields;
     }
-    this.getCategory();
-    this.getTag();
   },
   methods: {
-    getTag() {
-      TagApi.getTag()
-        .then((res) => {
-          this.tagList = res;
-        });
-    },
-    getCategory() {
-      CategoryApi.getCategory()
-        .then((res) => {
-          this.categoryList = res;
-        });
-    },
     saveArticle() {
       const op = this.$route.query.cid ? 'update' : 'add';
       if (!this.article.category_id) {
@@ -186,25 +99,7 @@ export default defineComponent({
 <style lang="less">
 .editor-wrapper {
   display: flex;
-
-  > .right {
-    margin: 42px 14px;
-
-    .title {
-      margin: 6px;
-    }
-
-    .content {
-      margin: 6px;
-    }
-  }
-}
-
-.custom-options {
-  > span {
-    margin: 4px 0;
-    display: flex;
-  }
+  position: relative;
 }
 
 .editor-container {
@@ -214,12 +109,6 @@ export default defineComponent({
 
   .title-input {
     margin: 6px 0;
-  }
-
-  .left,
-  .right {
-    flex: 1;
-    text-align: left;
   }
 
   .left textarea {

@@ -6,6 +6,10 @@ export default defineNuxtConfig({
     cdnURL: 'https://thinkmoon.github.io/thinkblog/',
   },
   publicRuntimeConfig: runtimeConfig,
+  sourcemap: {
+    "server": false,
+    "client": false
+  },
   meta: {
     meta: [
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -29,5 +33,15 @@ export default defineNuxtConfig({
   },
   experimental: {
     writeEarlyHints: false
-  }
+  },
+  modules: [
+    ['@pinia/nuxt', {
+      autoImports: [
+        // 自动引入 `usePinia()`
+        'defineStore',
+        // 自动引入 `usePinia()` 并重命名为 `usePiniaStore()`
+        ['defineStore', 'definePiniaStore'],
+      ],
+    }]
+  ],
 });

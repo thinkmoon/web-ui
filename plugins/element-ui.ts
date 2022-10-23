@@ -20,7 +20,7 @@ import {
   ElScrollbar, ElSelect, ElSubMenu, ElTable, ElTableColumn, ElTag,
   ID_INJECTION_KEY,
 } from 'element-plus';
-import { User, Star, View, Calendar, FolderOpened } from '@element-plus/icons-vue';
+import { User, Star, View, Calendar, FolderOpened, ArrowRight, ArrowLeft } from '@element-plus/icons-vue';
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(ElBacktop);
@@ -55,4 +55,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component('IconCalendar', Calendar);
   nuxtApp.vueApp.component('IconView', View);
   nuxtApp.vueApp.component('IconStar', Star);
+  nuxtApp.vueApp.component('icon-arrow-right', ArrowRight);
+  nuxtApp.vueApp.component('icon-arrow-left', ArrowLeft);
 });

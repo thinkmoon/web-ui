@@ -9,7 +9,7 @@ export default class CategoryApi {
    * @param {Object} params
    * @param {String} params.name
    */
-  static getCategory(params: { name?: string | string[] } = {}) : Promise<unknown> {
+  static getCategory(params: { name?: string | string[] } = {}) : Promise<Array<any>> {
     return request({
       method: 'get',
       url: `/category/list`,

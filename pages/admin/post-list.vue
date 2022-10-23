@@ -53,7 +53,6 @@
       <el-table-column
         prop="desc"
         label="摘要"
-        width="600"
       >
         <template #default="scope">
           {{ scope.row.fields.desc }}
