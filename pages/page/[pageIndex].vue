@@ -29,7 +29,6 @@
 
 <script lang="ts" setup>
 import ArticleApi from '~/api/ArticleApi';
-import { useRoute } from 'vue-router';
 
 import { pushUrl } from '~/utils/BaiduSite';
 
@@ -47,7 +46,7 @@ const postList = reactive(data.value.records);
 postList.forEach((item) => {
   if (item.fields instanceof Array) {
     const fields = {};
-    item.fields.forEach((i) => {
+    item.fields?.forEach((i) => {
       fields[i.name] = i.value;
     });
     item.fields = fields;

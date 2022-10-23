@@ -26,5 +26,8 @@ export default defineNuxtConfig({
   css: ['assets/css/index.less'],
   vite: {
     plugins: [viteCompression()],
+  },
+  experimental: {
+    writeEarlyHints: false
   }
 });
