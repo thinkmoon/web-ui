@@ -1,6 +1,9 @@
 <template>
   <el-container>
-    <el-aside class="admin-header">
+    <el-aside
+      class="admin-header"
+      :style="{width: isCollapse ? '70px' : '160px' }"
+    >
       <ClientOnly>
         <el-menu
           :collapse="isCollapse"
@@ -60,7 +63,7 @@ const isCollapse = ref(true);
 const route = useRoute();
 const defaultActive = route.path;
 
-function switchCollapse(){
+function switchCollapse() {
   isCollapse.value = !isCollapse.value;
 }
 
@@ -88,7 +91,6 @@ function select(url) {
     padding: 0;
     max-width: 160px;
     transition: 1s;
-    width: auto;
 
     :deep(.el-menu) {
       width: 100%;
