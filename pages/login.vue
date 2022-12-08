@@ -29,7 +29,7 @@
 import UserApi from '~/api/UserApi';
 import { ElMessage } from 'element-plus';
 
-const config = useRuntimeConfig();
+const config = useAppConfig();
 
 const auth = useCookie('auth', { domain: 'thinkmoon.cn', maxAge: 3600 });
 

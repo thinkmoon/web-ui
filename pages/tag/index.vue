@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import TagApi from '~/api/TagApi';
 
-const config = useRuntimeConfig();
+const config = useAppConfig();
 const { data } = await useAsyncData('tag', () => TagApi.getTag());
 </script>
 

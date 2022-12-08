@@ -10,7 +10,7 @@ import CategoryApi from '~/api/CategoryApi';
 import { useRoute } from 'vue-router';
 import ArticleApi from '~/api/ArticleApi';
 
-const config = useRuntimeConfig();
+const config = useAppConfig();
 const route = useRoute();
 const pageData = {
   total: 0,

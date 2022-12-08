@@ -32,7 +32,7 @@ import ArticleApi from '~/api/ArticleApi';
 
 import { pushUrl } from '~/utils/BaiduSite';
 
-const config = useRuntimeConfig();
+const config = useAppConfig();
 const route = useRoute();
 const pageData = {
   total: 0,

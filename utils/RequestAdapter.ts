@@ -4,7 +4,7 @@ axios.defaults.withCredentials = true;
 
 function doRequest(options: AxiosRequestConfig): Promise<any> {
   return new Promise((resolve, reject) => {
-    axios.defaults.baseURL = useRuntimeConfig().serviceUrl;
+    axios.defaults.baseURL = useAppConfig().serviceUrl;
 
     let auth = null;
     if (process.client) {

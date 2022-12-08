@@ -22,7 +22,7 @@ import { useRoute } from 'vue-router';
 import { pushUrl } from '~/utils/BaiduSite';
 import { computed } from 'vue';
 
-const config = useRuntimeConfig();
+const config = useAppConfig();
 const route = useRoute();
 
 const { data: article } = await useAsyncData('article', () => ArticleApi.getDetail({ cid: route.params.cid }));

@@ -1,13 +1,12 @@
 import viteCompression from 'vite-plugin-compression';
-import runtimeConfig from './runtime.config';
 
 export default defineNuxtConfig({
   app: {
     head: {
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'keywords', content: runtimeConfig.KEYWORDS.join() },
-        { name: 'description', content: runtimeConfig.DESCRIPTION },
+        { name: 'keywords', content: ['thinkmoon', '指尖魔法屋', '醉月思的博客'] },
+        { name: 'description', content: 'web前端开发工程师、面向高保真编程、总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！' },
       ],
       script: [
         {
@@ -21,7 +20,6 @@ export default defineNuxtConfig({
       ],
     },
   },
-  runtimeConfig,
   sourcemap: {
     "server": false,
     "client": false

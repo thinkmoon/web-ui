@@ -15,7 +15,7 @@
   </div>
 </template>
 <script setup lang="ts">
-const config = useRuntimeConfig();
+const config = useAppConfig();
 
 </script>
 <style lang="less" scoped>

@@ -48,7 +48,7 @@ function slowdown() {
   speed.value = DEFAULT_SPEED;
 }
 
-const config = useRuntimeConfig();
+const config = useAppConfig();
 definePageMeta({
   layout: false,
 });

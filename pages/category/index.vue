@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import CategoryApi from '~/api/CategoryApi';
 
-const config = useRuntimeConfig();
+const config = useAppConfig();
 const {data} = await useAsyncData('category', () => CategoryApi.getCategory());
 
 </script>
