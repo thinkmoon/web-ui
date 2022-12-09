@@ -17,7 +17,7 @@ import {
   ElMenuItem,
   ElOption,
   ElPagination,
-  ElScrollbar, ElSelect, ElSubMenu, ElTable, ElTableColumn, ElTag,
+  ElScrollbar, ElSelect, ElMessage, ElSubMenu, ElTable, ElTableColumn, ElTag,
   ID_INJECTION_KEY,
 } from 'element-plus';
 import { User, Star, View, Calendar, FolderOpened, ArrowRight, ArrowLeft } from '@element-plus/icons-vue';
@@ -42,6 +42,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(ElPagination);
   nuxtApp.vueApp.use(ElScrollbar);
   nuxtApp.vueApp.use(ElSelect);
+  nuxtApp.vueApp.use(ElMessage);
   nuxtApp.vueApp.use(ElSubMenu);
   nuxtApp.vueApp.use(ElTable);
   nuxtApp.vueApp.use(ElTableColumn);

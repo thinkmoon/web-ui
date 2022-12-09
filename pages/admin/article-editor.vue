@@ -66,7 +66,7 @@ export default defineComponent({
   methods: {
     saveArticle() {
       const op = this.$route.query.cid ? 'update' : 'add';
-      if (!this.article.category_id) {
+      if (!this.article.categoryId) {
         return this.$message.error('请选择文章分类');
       }
       if (!this.article.fields.length) {
