@@ -36,7 +36,7 @@ if (article.value.fields instanceof Array) {
   });
   article.value.fields = fields;
 }
-const copyRight = `> 版权声明: 本文首发于[指尖魔法屋-${article.value.title}](${url}),转载或引用必须申明原指尖魔法屋来源及源地址！`;
+const copyRight = `> 版权声明: （${url}）\n 本文首发于[指尖魔法屋-${article.value.title}](${url})\n转载或引用必须申明原指尖魔法屋来源及源地址！`;
 const content = computed(() => `# ${article.value.title} \r\n ${article.value.text} \r\n ${copyRight}`);
 pushUrl(`/post/${route.params.cid}`);
 if(process.client){

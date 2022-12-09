@@ -30,10 +30,10 @@ import AttachmentApi from '~/api/AttachmentApi';
 import dayjs from 'dayjs';
 import VMdEditor from "~/components/MdEditor";
 import { useArticle } from "~/store/article";
-
+import * as qiniu from 'qiniu-js';
 
 export default defineComponent({
-  components:{
+  components: {
     'v-md-editor': VMdEditor
   },
   data() {

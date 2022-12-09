@@ -1,5 +1,5 @@
 (function() {
-  if (!location.href.startsWith('https://www.thinkmoon.cn')) {
+  if (!location.href.includes('thinkmoon.cn')) {
     return;
   }
   const done = false;
