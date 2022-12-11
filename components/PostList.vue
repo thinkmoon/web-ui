@@ -144,6 +144,19 @@ defineProps({
   .post-tag {
     margin: 4px 6px;
   }
+
+  @media (max-aspect-ratio: 14/9) {
+    margin: 10px 0;
+    padding: 10px;
+    .posts-text {
+      color: #606266;
+      font-size: 12px;
+    }
+    .post-title {
+      font-size: 18px;
+      color: #000;
+    }
+  }
 }
 
 .posts-default-info {

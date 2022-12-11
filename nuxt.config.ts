@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     head: {
       meta: [
         { name: 'keywords', content: ['thinkmoon,指尖魔法屋,醉月思的博客'] },
-        { name: 'description', content: '醉月思的博客——指尖魔法屋：总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！' },
+        { name: 'description', content: '醉月思的博客——指尖魔法屋：前端工程师，分享和记录日常学习的笔记。总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！' },
       ],
     },
   },

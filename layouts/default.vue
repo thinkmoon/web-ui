@@ -78,7 +78,8 @@ useHead({
 
 @media (max-aspect-ratio: 14/9) {
   .layout {
-    width: 90%;
+    width: 96vw;
+    font-size: 12px;
   }
 }
 

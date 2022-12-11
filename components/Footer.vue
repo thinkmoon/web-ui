@@ -28,5 +28,8 @@ const config = useAppConfig();
   flex-direction: column;
   font-size: 14px;
   justify-content: center;
+  @media (max-aspect-ratio: 14/9) {
+    font-size: 12px;
+  }
 }
 </style>

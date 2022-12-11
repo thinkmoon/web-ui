@@ -59,5 +59,13 @@ if(process.client){
   .article-content {
     width: 100%;
   }
+  :deep(.github-markdown-body) {
+    padding: 4px 8px 8px;
+    font-size: 12px;
+    h1 {
+      font-size: 22px;
+      font-weight: bold;
+    }
+  }
 }
 </style>
