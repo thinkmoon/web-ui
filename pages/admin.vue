@@ -15,17 +15,9 @@
           <el-menu-item index="/admin">
             主页
           </el-menu-item>
-          <el-sub-menu index="2">
-            <template #title>
-              文章
-            </template>
-            <el-menu-item index="/admin/article-editor">
-              新增文章
-            </el-menu-item>
-            <el-menu-item index="/admin/post-list">
-              文章列表
-            </el-menu-item>
-          </el-sub-menu>
+          <el-menu-item index="/admin/post-list">
+            文章
+          </el-menu-item>
           <div class="flex-grow"/>
           <div @click="switchCollapse" class="pointer switch-collapse">
             <el-icon v-show="!isCollapse">
@@ -44,7 +36,10 @@
           管理端
         </el-breadcrumb-item>
         <el-breadcrumb-item>
-          <a href="/admin/post">文章</a>
+          <a href="/admin/post-list">文章</a>
+        </el-breadcrumb-item>
+        <el-breadcrumb-item>
+          <a href="/admin/article-editor"><el-button size="small">新增文章</el-button></a>
         </el-breadcrumb-item>
       </el-breadcrumb>
       <NuxtPage/>

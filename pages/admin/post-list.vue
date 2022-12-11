@@ -3,6 +3,7 @@
     <el-table
       :data="tableData"
       height="640"
+      size="small"
       stripe
     >
       <el-table-column
@@ -12,6 +13,7 @@
         align="center"
       />
       <el-table-column
+        align="center"
         label="缩略图"
         prop="title"
         width="100"
@@ -25,6 +27,17 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="title"
+        label="标题"
+        width="320"
+      >
+        <template #default="scope">
+          <el-link @click="handleEdit(scope.$index, scope.row)">
+            <strong>{{ scope.row.title }}</strong>
+          </el-link>
+        </template>
+      </el-table-column>
+      <el-table-column
         label="标签"
         prop="title"
         width="160"
@@ -34,20 +47,10 @@
             v-for="item of scope.row.tag"
             :key="item.tid"
             class="margin-xs"
+            size="small"
           >
             {{ item.name }}
           </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="title"
-        label="标题"
-        width="320"
-      >
-        <template #default="scope">
-          <el-link @click="handleEdit(scope.$index, scope.row)">
-            <strong>{{ scope.row.title }}</strong>
-          </el-link>
         </template>
       </el-table-column>
       <el-table-column

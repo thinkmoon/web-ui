@@ -55,6 +55,10 @@ if(process.client){
   background: #fff;
 }
 
+:deep(.github-markdown-body) {
+  font-size: 14px;
+}
+
 @media (max-width: 1024px) {
   .article-content {
     width: 100%;

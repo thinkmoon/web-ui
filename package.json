@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
-    "@types/node": "^18.11.12",
+    "@types/node": "^18.11.13",
     "@types/three": "^0.146.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^11.0.2",
@@ -48,6 +48,6 @@
     "vite": "^4.0.0",
     "vite-plugin-compression": "^0.5.1",
     "vue-tsc": "^1.0.12",
-    "wrangler": "^2.6.1"
+    "wrangler": "^2.6.2"
   }
 }
