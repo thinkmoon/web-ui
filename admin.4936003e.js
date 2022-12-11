@@ -1,0 +1,1 @@
+import{y as a,b as n,i as s,aP as t,o}from"./entry.f84076df.js";const _={},d={class:"app-container"};function c(e,r){return o(),n("div",null,[s("div",d,[t(e.$slots,"default",{},void 0,!0)])])}const l=a(_,[["render",c],["__scopeId","data-v-1652e7d2"]]);export{l as default};
