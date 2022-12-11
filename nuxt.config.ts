@@ -7,13 +7,6 @@ export default defineNuxtConfig({
         { name: 'keywords', content: ['thinkmoon,指尖魔法屋,醉月思的博客'] },
         { name: 'description', content: '醉月思的博客——指尖魔法屋：总结与记录是两个极其优秀的学习习惯、对知识和技术保持敬畏之心！' },
       ],
-      script: [
-        {
-          async: true,
-          src: '/ads.js',
-          crossorigin: 'anonymous',
-        },
-      ],
     },
   },
   sourcemap: {

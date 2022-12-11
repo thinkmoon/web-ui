@@ -1,28 +1,62 @@
 <template>
   <div>
     <div>
-      <DefaultMenu />
+      <DefaultMenu/>
       <div class="app-container">
         <div class="layout">
           <div class="main-content">
-            <slot />
+            <slot/>
           </div>
           <div class="page-section">
-            <Search />
-            <GoogleAd />
+            <Search/>
+            <GoogleAd/>
           </div>
         </div>
       </div>
       <ClientOnly>
-        <el-backtop :bottom="100" />
+        <el-backtop :bottom="100"/>
       </ClientOnly>
     </div>
-    <Footer />
+    <Footer/>
   </div>
 </template>
 <script lang="ts" setup>
 import Search from '~~/components/section/Search.vue';
-import GoogleAd from '~/components/section/GoogleAd.vue';</script>
+import GoogleAd from '~/components/section/GoogleAd.vue';
+
+useHead({
+  script: [
+    {
+      async: true,
+      src: '/sence.js',
+      crossorigin: 'anonymous',
+    },
+    {
+      async: true,
+      src: "https://fundingchoicesmessages.google.com/i/pub-3208634444966567?ers=1",
+      nonce: "vcvsX_7R-_sJtK2gpysclg",
+    },
+    {
+    nonce: "vcvsX_7R-_sJtK2gpysclg",
+    children: `(function () {
+      function signalGooglefcPresent() {
+        if (!window.frames['googlefcPresent']) {
+          if (document.body) {
+            const iframe = document.createElement('iframe');
+            iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;';
+            iframe.style.display = 'none';
+            iframe.name = 'googlefcPresent';
+            document.body.appendChild(iframe);
+          } else {
+            setTimeout(signalGooglefcPresent, 0);
+          }
+        }
+      }
+
+      signalGooglefcPresent();
+    })();` }]
+});
+</script>
 
 <style lang="less" scoped>
 .layout {

@@ -6,7 +6,7 @@ function doRequest(options: AxiosRequestConfig): Promise<any> {
   return new Promise((resolve, reject) => {
     axios.defaults.baseURL = useAppConfig().serviceUrl;
 
-    let auth = null;
+    let auth:any = null;
     if (process.client) {
       auth = useCookie('auth', { domain: 'thinkmoon.cn' });
       if(auth.value && auth.value !== 'undefined'){
