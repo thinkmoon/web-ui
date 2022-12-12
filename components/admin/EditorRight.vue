@@ -6,7 +6,7 @@
         <ClientOnly>
           <el-select
             key="category"
-            v-model="articleStore.article.category_id"
+            v-model="articleStore.article.categoryId"
           >
             <el-option
               v-for="item of categoryList"
